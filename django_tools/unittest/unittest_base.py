@@ -8,15 +8,17 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from django.test import TestCase
-from django.test.client import Client
+import os
+import unittest
+
+from django.core import management
 from django.contrib.auth.models import User
 
 from BrowserDebug import debug_response
 
 
 
-class BaseTestCase(TestCase):
+class BaseTestCase(unittest.TestCase):
     # Open only one traceback in a browser (=True) ?
     one_browser_traceback = True
     _open = []
@@ -56,6 +58,7 @@ class BaseTestCase(TestCase):
         ok = self.client.login(username=self.TEST_USERS[usertype]["username"],
                                password=self.TEST_USERS[usertype]["password"])
         self.failUnless(ok, "Can't login test user '%s'!" % usertype)
+        return self._get_user(usertype)
         
     def _get_user(self, usertype):
         return User.objects.get(username=self.TEST_USERS[usertype]["username"])
@@ -102,3 +105,14 @@ class BaseTestCase(TestCase):
                 error(response, "Text should not be in response: '%s'" % txt)
 
 
+def direct_run(raw_filename):
+    """
+    Run a test direct from a unittest file.
+    A unittest file should add something like this:
+    
+    if __name__ == "__main__":
+        # Run this unitest directly
+        direct_run(__file__)
+    """
+    filename = os.path.splitext(os.path.basename(raw_filename))[0]  
+    management.call_command('test', filename)
