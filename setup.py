@@ -20,7 +20,7 @@ import sys
 
 from setuptools import setup, find_packages
 
-from dbpreferences import VERSION_STRING
+from django_tools import VERSION_STRING
 
 
 def get_authors():
