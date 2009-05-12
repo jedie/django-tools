@@ -30,8 +30,8 @@ from xml.sax.saxutils import escape
 ONE_DEBUG_DISPLAYED = False
 
 RESPONSE_INFO_ATTR = (
-        "content", "context", "cookies", "request", "status_code",
-    )
+    "content", "context", "cookies", "request", "status_code", "_headers",
+)
 
 
 def debug_response(response, one_browser_traceback=True, msg="", \
@@ -64,7 +64,7 @@ def debug_response(response, one_browser_traceback=True, msg="", \
 
     stack_info = "".join(stack)
 
-    response_info = "<dl>\n"
+    response_info = "<dl>\n"    
     for attr in RESPONSE_INFO_ATTR:
         # FIXME: There must be exist a easier way to display the info
         response_info += "\t<dt>%s</dt>\n" % attr
