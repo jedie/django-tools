@@ -12,6 +12,7 @@ import os
 import unittest
 
 from django.core import management
+from django.utils.encoding import smart_str
 from django.contrib.auth.models import User
 
 from BrowserDebug import debug_response
@@ -97,10 +98,12 @@ class BaseTestCase(unittest.TestCase):
             raise self.failureException, msg
 
         for txt in must_contain:
+            txt = smart_str(txt, response._charset)
             if not txt in response.content:
                 error(response, "Text not in response: '%s'" % txt)
 
         for txt in must_not_contain:
+            txt = smart_str(txt, response._charset)
             if txt in response.content:
                 error(response, "Text should not be in response: '%s'" % txt)
 
