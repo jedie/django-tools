@@ -16,6 +16,15 @@
         )
         SLOWER_DEV_SERVER_SLEEP = 0.3 # time.sleep() value (in sec.)
     --------------------------------------------------------------------------
+    
+    Last commit info:
+    ~~~~~~~~~~~~~~~~~
+    $LastChangedDate$
+    $Rev$
+    $Author:$
+
+    :copyleft: 2009 by the django-tools team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 import time
