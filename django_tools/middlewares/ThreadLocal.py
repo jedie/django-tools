@@ -20,7 +20,12 @@
     Usage:
     --------------------------------------------------------------------------
     from django_tools.middlewares import ThreadLocal
+    
+    # Get the current request object:
     request = ThreadLocal.get_current_request()
+    
+    # You can get the current user directy with:
+    user = ThreadLocal.get_current_user()
     --------------------------------------------------------------------------
     
 
@@ -41,9 +46,17 @@ except ImportError:
 
 _thread_locals = local()
 
+
 def get_current_request():
     """ returns the request object for this thead """
-    return _thread_locals.request
+    return getattr(_thread_locals, "request", None)
+
+
+def get_current_user():
+    """ returns the current user, if exist, otherwise returns None """
+    request = get_current_request()
+    if request:
+        return getattr(request, "user", None)
 
 
 class ThreadLocalMiddleware(object):
