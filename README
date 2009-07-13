@@ -5,6 +5,17 @@
 
 miscellaneous tools for django
 
+=========
+ history
+=========
+
+- v0.2.0
+
+  - Add models_utils, see: http://www.jensdiemer.de/_command/118/blog/detail/67/ (de)
+
+- v0.1.0
+
+  - first version cut out from PyLucid CMS - http://www.pylucid.org
 
 =======
  links
