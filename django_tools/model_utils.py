@@ -18,6 +18,7 @@ from django.db.models import signals
 from django.utils.text import get_text_list
 from django.db import connection, IntegrityError
 from django.utils.translation import ugettext as _
+from django.db.models.fields import FieldDoesNotExist
 
 def check_unique_together(sender, **kwargs):
     """
@@ -32,7 +33,16 @@ def check_unique_together(sender, **kwargs):
     """
     instance = kwargs["instance"]
     for field_names in sender._meta.unique_together:
-        model_kwargs = dict([(field_name, getattr(instance, field_name)) for field_name in field_names])
+        model_kwargs = {}
+        for field_name in field_names:
+            try:
+                data = getattr(instance, field_name)
+            except FieldDoesNotExist:
+                # e.g.: a missing field, which is however necessary.
+                # The real exception on model creation should be raised. 
+                continue
+            model_kwargs[field_name] = data
+
         count = sender.objects.filter(**model_kwargs).count()
         if count > 0:
             field_names = get_text_list(field_names, _('and'))
