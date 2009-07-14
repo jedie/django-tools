@@ -27,28 +27,23 @@ from xml.sax.saxutils import escape
 #webbrowser._tryorder.insert(0, 'epiphany') # Use Epiphany, if installed.
 
 # Variable to save if the browser is opend in the past.
-ONE_DEBUG_DISPLAYED = False
+BROWSER_TRACEBACK_OPENED = False
 
 RESPONSE_INFO_ATTR = (
     "content", "context", "cookies", "request", "status_code", "_headers",
 )
 
 
-def debug_response(response, one_browser_traceback=True, msg="", \
-                                                            display_tb=True):
+def debug_response(response, browser_traceback=True, msg="", display_tb=True):
     """
     Display the response content with a error reaceback in a webbrowser.
     TODO: We should delete the temp files after viewing!
     """
-    if one_browser_traceback:
-        # Only one traceback should be opend in the browser.
-        global ONE_DEBUG_DISPLAYED
-        if ONE_DEBUG_DISPLAYED:
-            # One browser instance started in the past, skip this error
-            return
-        else:
-            # Save for the next traceback
-            ONE_DEBUG_DISPLAYED = True
+    global BROWSER_TRACEBACK_OPENED
+    if browser_traceback != True or BROWSER_TRACEBACK_OPENED == True:
+        return
+    # Save for the next traceback
+    BROWSER_TRACEBACK_OPENED = True
 
     content = response.content
     url = response.request["PATH_INFO"]
@@ -58,13 +53,13 @@ def debug_response(response, one_browser_traceback=True, msg="", \
     if display_tb:
         print
         print "debug_response:"
-        print "-"*80
+        print "-" * 80
         print "\n".join(stack)
-        print "-"*80
+        print "-" * 80
 
     stack_info = "".join(stack)
 
-    response_info = "<dl>\n"    
+    response_info = "<dl>\n"
     for attr in RESPONSE_INFO_ATTR:
         # FIXME: There must be exist a easier way to display the info
         response_info += "\t<dt>%s</dt>\n" % attr

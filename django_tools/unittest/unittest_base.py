@@ -20,10 +20,9 @@ from BrowserDebug import debug_response
 
 
 class BaseTestCase(unittest.TestCase):
-    # Open only one traceback in a browser (=True) ?
-    one_browser_traceback = True
-    _open = []
-    
+    # Should we open a bwoser traceback?
+    browser_traceback = True
+
     TEST_USERS = {
         "superuser": {
             "username": "superuser",
@@ -47,11 +46,11 @@ class BaseTestCase(unittest.TestCase):
             "is_superuser": False,
         },
     }
-    
+
     def _pre_setup(self):
         super(BaseTestCase, self).setUp()
         self._create_testusers()
-    
+
     def login(self, usertype):
         """
         Login the user defined in self.TEST_USERS
@@ -60,10 +59,10 @@ class BaseTestCase(unittest.TestCase):
                                password=self.TEST_USERS[usertype]["password"])
         self.failUnless(ok, "Can't login test user '%s'!" % usertype)
         return self._get_user(usertype)
-        
+
     def _get_user(self, usertype):
         return User.objects.get(username=self.TEST_USERS[usertype]["username"])
-        
+
     def _create_testusers(self):
         """
         Create all available testusers.
@@ -93,7 +92,7 @@ class BaseTestCase(unittest.TestCase):
         """
         def error(respose, msg):
             debug_response(
-                response, self.one_browser_traceback, msg, display_tb=False
+                response, self.browser_traceback, msg, display_tb=False
             )
             raise self.failureException, msg
 
@@ -117,5 +116,5 @@ def direct_run(raw_filename):
         # Run this unitest directly
         direct_run(__file__)
     """
-    filename = os.path.splitext(os.path.basename(raw_filename))[0]  
-    management.call_command('test', filename)
+    appname = os.path.splitext(os.path.basename(raw_filename))[0]
+    management.call_command('test', appname)
