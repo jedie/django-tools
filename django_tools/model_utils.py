@@ -43,7 +43,12 @@ def check_unique_together(sender, **kwargs):
                 continue
             model_kwargs[field_name] = data
 
-        count = sender.objects.filter(**model_kwargs).count()
+        query_set = sender.objects.filter(**model_kwargs)
+        if instance.pk != None:
+            # Exclude the instance if it was saved in the past
+            query_set = query_set.exclude(pk=instance.pk)
+
+        count = query_set.count()
         if count > 0:
             field_names = get_text_list(field_names, _('and'))
             msg = _(u"%(model_name)s with this %(field_names)s already exists.") % {
