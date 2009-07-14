@@ -9,6 +9,18 @@ miscellaneous tools for django
  history
 =========
 
+- v0.4.0
+
+  - Add experimental "warn_invalid_template_vars"
+
+- v0.3.1
+
+  - Bugfix: Exclude the instance if it was saved in the past.
+
+- v0.3.0
+
+  - Add utils.installed_apps_utils
+
 - v0.2.0
 
   - Add models_utils, see: http://www.jensdiemer.de/_command/118/blog/detail/67/ (de)
