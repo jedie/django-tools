@@ -4,6 +4,13 @@
     Send warnings if a template variable does not exist in the content.
     
     experimental.
+    
+    Put this into your settings.py:
+    --------------------------------------------------------------------------
+    if DEBUG:
+        from django_tools.template import warn_invalid_template_vars
+        warn_invalid_template_vars.add_warning()
+    --------------------------------------------------------------------------
 """
 
 import warnings
