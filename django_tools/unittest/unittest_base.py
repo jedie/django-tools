@@ -94,6 +94,7 @@ class BaseTestCase(unittest.TestCase):
             debug_response(
                 response, self.browser_traceback, msg, display_tb=False
             )
+            msg += " (url: %r)" % response.request.get("PATH_INFO", "???")
             raise self.failureException, msg
 
         for txt in must_contain:
