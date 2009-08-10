@@ -84,28 +84,50 @@ class BaseTestCase(unittest.TestCase):
         for usertype, userdata in self.TEST_USERS.iteritems():
             create_user(**userdata)
 
+    def raise_browser_traceback(self, response, msg):
+        debug_response(
+            response, self.browser_traceback, msg, display_tb=False
+        )
+        msg += " (url: %r)" % response.request.get("PATH_INFO", "???")
+        raise self.failureException, msg
+
+    def assertStatusCode(self, response, excepted_code=200):
+        """
+        assert response status code, if wrong, do a browser traceback.
+        """
+        if response.status_code == excepted_code:
+            return # Status code is ok.
+        msg = "assertStatusCode error: %r != %r" % (response.status_code, excepted_code)
+        self.raise_browser_traceback(response, msg)
+
+    def assertRedirect(self, response, url, status_code=302):
+        """
+        assert than response is a redirect to the right destination, if wrong, do a browser traceback.
+        """
+        self.assertStatusCode(response, excepted_code=status_code)
+        try:
+            location = response['Location']
+        except KeyError, err:
+            self.raise_browser_traceback(response, "No 'Location' in response: %s" % err)
+        else:
+            if location != url:
+                self.raise_browser_traceback(response, "Wrong destination url: %r != %r" % (location, url))
+
     def assertResponse(self, response, must_contain=(), must_not_contain=()):
         """
         Check the content of the response
         must_contain - a list with string how must be exists in the response.
         must_not_contain - a list of string how should not exists.
         """
-        def error(respose, msg):
-            debug_response(
-                response, self.browser_traceback, msg, display_tb=False
-            )
-            msg += " (url: %r)" % response.request.get("PATH_INFO", "???")
-            raise self.failureException, msg
-
         for txt in must_contain:
             txt = smart_str(txt, response._charset)
             if not txt in response.content:
-                error(response, "Text not in response: '%s'" % txt)
+                self.raise_browser_traceback(response, "Text not in response: '%s'" % txt)
 
         for txt in must_not_contain:
             txt = smart_str(txt, response._charset)
             if txt in response.content:
-                error(response, "Text should not be in response: '%s'" % txt)
+                self.raise_browser_traceback(response, "Text should not be in response: '%s'" % txt)
 
 
 def direct_run(raw_filename):
@@ -118,4 +140,5 @@ def direct_run(raw_filename):
         direct_run(__file__)
     """
     appname = os.path.splitext(os.path.basename(raw_filename))[0]
+    print "direct run %r" % appname
     management.call_command('test', appname)
