@@ -9,6 +9,10 @@ miscellaneous tools for django
  history
 =========
 
+- v0.5.0
+
+  - Add template/filters.py from PyLucid v0.8.x
+
 - v0.4.0
 
   - Add experimental "warn_invalid_template_vars"
