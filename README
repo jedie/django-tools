@@ -9,6 +9,10 @@ miscellaneous tools for django
  history
 =========
 
+- v0.6.0
+
+  - Add forms_utils.LimitManyToManyFields, crosspost: http://www.djangosnippets.org/snippets/1691/
+
 - v0.5.0
 
   - Add template/filters.py from PyLucid v0.8.x
