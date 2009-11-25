@@ -14,6 +14,11 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+if __name__ == "__main__":
+    # For doctest only
+    import os
+    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
+
 from django.template.defaultfilters import stringfilter
 from django.utils.translation import ugettext as _
 from django.utils.encoding import force_unicode
@@ -54,12 +59,28 @@ get_oct.is_safe = False
 def human_duration(t):
     """
     Converts a time duration into a friendly text representation.
-    Note: Used in the PyLucid cache middleware, too.
+    >>> human_duration(0.01)
+    u'10.0 ms'
+    >>> human_duration(1)
+    u'1.0 sec'
+    >>> human_duration(65.5)
+    u'1.1 min'
+    >>> human_duration(3540)
+    u'59.0 min'
+    >>> human_duration(3541)
+    u'1.0 h'
     """
     if t < 1:
-        return _("%.1f ms") % (t * 1000)
-    elif t > 60:
-        return _("%.1f min") % (t / 60.0)
+        return _("%.1f ms") % round(t * 1000, 1)
+    elif t > 60 * 59:
+        return _("%.1f h") % round(t / 60.0 / 60.0, 1)
+    elif t > 59:
+        return _("%.1f min") % round(t / 60.0, 1)
     else:
         return _("%.1f sec") % t
 human_duration.is_safe = True
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod(verbose=False)
+    print "DocTest end."
