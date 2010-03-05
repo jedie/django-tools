@@ -9,6 +9,10 @@ miscellaneous tools for django
  history
 =========
 
+- v0.7.0
+
+  - Add decorators.py
+
 - v0.6.0
 
   - Add forms_utils.LimitManyToManyFields, crosspost: http://www.djangosnippets.org/snippets/1691/

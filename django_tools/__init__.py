@@ -1,6 +1,6 @@
 
 
-__version__ = (0, 6, 0, 'beta')
+__version__ = (0, 7, 0, 'beta')
 
 # for setuptools
 # - Only use . as a separator
