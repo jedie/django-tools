@@ -23,20 +23,20 @@ from setuptools import setup, find_packages
 from django_tools import VERSION_STRING
 
 
+PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+
 def get_authors():
-    authors = []
-    f = file("AUTHORS", "r")
-    for line in f:
-        if line.startswith('*'):
-            authors.append(line[1:].strip())
+    f = file(os.path.join(PACKAGE_ROOT, "AUTHORS"), "r")
+    authors = [l.strip(" *\r\n") for l in f if l.strip().startswith("*")]
     f.close()
     return authors
 
+
 def get_long_description():
-    f = file("README", "r")
-    long_description = f.read()
+    f = file(os.path.join(PACKAGE_ROOT, "README"), "r")
+    long_description = f.read().strip()
     f.close()
-    long_description.strip()
     return long_description
 
 
@@ -44,16 +44,16 @@ setup(
     name='django-tools',
     version=VERSION_STRING,
     description='miscellaneous tools for django',
-    long_description = get_long_description(),
-    author = get_authors(),
-    maintainer = "Jens Diemer",
+    long_description=get_long_description(),
+    author=get_authors(),
+    maintainer="Jens Diemer",
     url='http://code.google.com/p/django-tools/',
     packages=find_packages(),
     include_package_data=True, # include package data under svn source control
     zip_safe=False,
-    classifiers = [
+    classifiers=[
         "Development Status :: 4 - Beta",
-#        "Development Status :: 5 - Production/Stable",
+        "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
 #        "Intended Audience :: Education",
