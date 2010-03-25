@@ -9,6 +9,10 @@ miscellaneous tools for django
  history
 =========
 
+- v0.8.0
+
+  - Add model LanguageCode field and form LanguageCode field in Accept-Language header format (RFC 2616) 
+
 - v0.7.0
 
   - Add decorators.py

@@ -50,7 +50,7 @@ class LimitManyToManyFields(object):
         ...
     --------------------------------------------------------------------------
     
-    crosspost: http://www.djangosnippets.org/snippets/1691/
+    crosspost: http://www.djangosnippets.org/snippets/1692/
     """
     def __init__(self, m2m_limit, *args, **kwargs):
         """
@@ -64,14 +64,17 @@ class LimitManyToManyFields(object):
 
         for field_name, limits in m2m_limit.iteritems():
             if len(limits) == 1:
-                value = limits[0][0]
+                value = int(limits[0][0])
                 # Only one item can be selected. Hide the ManyToMany field. To hide the field and
                 # for validation, we changed the MultipleChoiceField to a IntegerField.
+                print "XXX %r" % value
                 self.fields[field_name] = forms.IntegerField(
                     max_value=value, min_value=value, initial=value
                 )
-                self.fields[field_name].widget.input_type = 'hidden'
-                self.fields[field_name].widget.is_hidden = True
+#                self.fields[field_name].widget.input_type = 'hidden'
+#                self.fields[field_name].widget.is_hidden = True
             else:
                 # Limit the ManyToMany field choices
                 self.fields[field_name].choices = limits
+
+

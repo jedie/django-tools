@@ -1,9 +1,21 @@
+# coding: utf-8
+
+import os
 
 
-__version__ = (0, 7, 0, 'beta')
+__version__ = (0, 8, 0)
 
-# for setuptools
-# - Only use . as a separator
-# - No spaces: (0, 1, 0, 'beta') -> "0.1.0beta"
-# http://peak.telecommunity.com/DevCenter/setuptools#specifying-your-project-s-version
-VERSION_STRING = "%s.%s.%s%s" % __version__
+
+try:
+    from django.utils.version import get_svn_revision
+except ImportError:
+    pass
+else:
+    path = os.path.split(os.path.abspath(__file__))[0]
+    svn_revision = get_svn_revision(path)
+    if svn_revision != u'SVN-unknown':
+        svn_revision = svn_revision.replace("-", "").lower()
+        __version__ += (svn_revision,)
+
+
+VERSION_STRING = '.'.join(str(part) for part in __version__)
