@@ -13,7 +13,8 @@ import unittest
 
 from django.core import management
 from django.utils.encoding import smart_str
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
+from django.contrib.contenttypes.models import ContentType
 
 from BrowserDebug import debug_response
 
@@ -49,16 +50,43 @@ class BaseTestCase(unittest.TestCase):
 
     def _pre_setup(self):
         super(BaseTestCase, self)._pre_setup()
-        self._create_testusers()
 
     def login(self, usertype):
         """
         Login the user defined in self.TEST_USERS
         """
-        ok = self.client.login(username=self.TEST_USERS[usertype]["username"],
-                               password=self.TEST_USERS[usertype]["password"])
+        try:
+            test_user = self.TEST_USERS[usertype]
+        except KeyError, err:
+            etype, evalue, etb = sys.exc_info()
+            evalue = etype(
+                "Wrong usetype %s! Existing usertypes are: %s" % (err, ", ".join(self.TEST_USERS.keys()))
+            )
+            raise etype, evalue, etb
+
+        ok = self.client.login(username=test_user["username"],
+                               password=test_user["password"])
         self.failUnless(ok, "Can't login test user '%s'!" % usertype)
         return self._get_user(usertype)
+
+    def add_user_permissions(self, user, permissions):
+        """
+        add the given user the permissions.
+        permissions e.g.: ("AppLabel.add_Modelname", "auth.change_user")
+        """
+        assert(permissions, (list, tuple))
+        for permission in permissions:
+            # permission, e.g: blog.add_blogentry
+            app_label, permission_codename = permission.split(".", 1)
+            model_name = permission_codename.split("_", 1)[1]
+
+            content_type = ContentType.objects.get(app_label=app_label, model=model_name)
+
+            perm = Permission.objects.get(content_type=content_type, codename=permission_codename)
+            user.user_permissions.add(perm)
+            user.save()
+
+        self.assertTrue(user.has_perms(permissions))
 
     def _get_user(self, usertype):
         return User.objects.get(username=self.TEST_USERS[usertype]["username"])
