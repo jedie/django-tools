@@ -38,9 +38,15 @@ class InfoStdout(object):
     """ Insert in every stdout.write() a info line from witch code line this print comes."""
     def __init__(self, orig_stdout):
         self.orig_stdout = orig_stdout
+        self.old_fileinfo = None
 
     def write(self, txt):
-        self.orig_stdout.write("\n%s:\n%s" % (self._get_fileinfo(), txt))
+        fileinfo = self._get_fileinfo()
+        if fileinfo != self.old_fileinfo:
+            self.orig_stdout.write("\n%s:\n%s" % (fileinfo, txt))
+            self.old_fileinfo = fileinfo
+        else:
+            self.orig_stdout.write(txt)
 
     def flush(self):
         self.orig_stdout.flush()
