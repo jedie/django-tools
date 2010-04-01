@@ -21,7 +21,7 @@
     $Rev$
     $Author:$
 
-    :copyleft: 2009 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2009-2010 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -41,6 +41,9 @@ class InfoStdout(object):
 
     def write(self, txt):
         self.orig_stdout.write("\n%s:\n%s" % (self._get_fileinfo(), txt))
+
+    def flush(self):
+        self.orig_stdout.flush()
 
     def _get_fileinfo(self):
         """ return fileinfo: Where from the announcement comes? """
