@@ -9,6 +9,7 @@
 """
 
 import os
+import sys
 import unittest
 
 from django.core import management
@@ -54,15 +55,9 @@ class BaseTestCase(unittest.TestCase):
     def login(self, usertype):
         """
         Login the user defined in self.TEST_USERS
+        return User model instance
         """
-        try:
-            test_user = self.TEST_USERS[usertype]
-        except KeyError, err:
-            etype, evalue, etb = sys.exc_info()
-            evalue = etype(
-                "Wrong usetype %s! Existing usertypes are: %s" % (err, ", ".join(self.TEST_USERS.keys()))
-            )
-            raise etype, evalue, etb
+        test_user = self._get_userdata(usertype)
 
         ok = self.client.login(username=test_user["username"],
                                password=test_user["password"])
@@ -71,7 +66,7 @@ class BaseTestCase(unittest.TestCase):
 
     def add_user_permissions(self, user, permissions):
         """
-        add the given user the permissions.
+        add permissions to the given user instance.
         permissions e.g.: ("AppLabel.add_Modelname", "auth.change_user")
         """
         assert(permissions, (list, tuple))
@@ -80,7 +75,15 @@ class BaseTestCase(unittest.TestCase):
             app_label, permission_codename = permission.split(".", 1)
             model_name = permission_codename.split("_", 1)[1]
 
-            content_type = ContentType.objects.get(app_label=app_label, model=model_name)
+            try:
+                content_type = ContentType.objects.get(app_label=app_label, model=model_name)
+            except ContentType.DoesNotExist:
+                etype, evalue, etb = sys.exc_info()
+                evalue = etype("Can't get ContentType for app %r and model %r: %s" % (
+                    app_label, model_name, evalue
+                ))
+                raise etype, evalue, etb
+
 
             perm = Permission.objects.get(content_type=content_type, codename=permission_codename)
             user.user_permissions.add(perm)
@@ -88,13 +91,24 @@ class BaseTestCase(unittest.TestCase):
 
         self.assertTrue(user.has_perms(permissions))
 
+    def _get_userdata(self, usertype):
+        """ return userdata from self.TEST_USERS for the given usertype """
+        try:
+            return self.TEST_USERS[usertype]
+        except KeyError, err:
+            etype, evalue, etb = sys.exc_info()
+            evalue = etype(
+                "Wrong usetype %s! Existing usertypes are: %s" % (err, ", ".join(self.TEST_USERS.keys()))
+            )
+            raise etype, evalue, etb
+
     def _get_user(self, usertype):
-        return User.objects.get(username=self.TEST_USERS[usertype]["username"])
+        """ return User model instance for the goven usertype"""
+        test_user = self._get_userdata(usertype)
+        return User.objects.get(username=test_user["username"])
 
     def _create_testusers(self):
-        """
-        Create all available testusers.
-        """
+        """ Create all available testusers. """
         def create_user(username, password, email, is_staff, is_superuser):
             """
             Create a user and return the instance.
