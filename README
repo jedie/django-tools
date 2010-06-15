@@ -9,6 +9,11 @@ miscellaneous tools for django
  history
 =========
 
+- v0.8.2
+
+  - New: widgets.SelectMediaPath(): Select a sub directory in settings.MEDIA_ROOT
+  - New: fields.SignSeparatedField()
+  
 - v0.8.1
 
   - Add "no_args" keyword argument to installed_apps_utils.get_filtered_apps()

@@ -68,6 +68,52 @@ class LanguageCodeFormField(forms.CharField):
         self.validators.append(validators.validate_language_code)
 
 
+class SignSeparatedField(forms.CharField):
+    """
+    >>> SignSeparatedField().clean("one, two")
+    (u'one', u'two')
+    
+    >>> SignSeparatedField().clean("one , two, 3,4")
+    (u'one', u'two', u'3', u'4')
+    >>> SignSeparatedField(strip_entities=False).clean("one , two, 3,4")
+    (u'one ', u' two', u' 3', u'4')
+    
+    >>> SignSeparatedField(separator=" ").clean("one  two 3")
+    (u'one', u'two', u'3')
+    >>> SignSeparatedField(separator=" ", skip_empty=False).clean("one  two 3")
+    (u'one', u'', u'two', u'3')
+    """
+    def __init__(self, separator=",", strip_entities=True, skip_empty=True, *args, **kwargs):
+        self.separator = separator
+        self.strip_entities = strip_entities
+        self.skip_empty = skip_empty
+        super(SignSeparatedField, self).__init__(*args, **kwargs)
+
+    def clean(self, value):
+        value = super(SignSeparatedField, self).clean(value)
+
+        if not value:
+            return ""
+
+        if isinstance(value, (list, tuple)):
+            return value
+
+        values = []
+        for item in value.split(self.separator):
+            if self.strip_entities:
+                item = item.strip()
+
+            if item in values or self.skip_empty and not item:
+                continue
+
+            values.append(item)
+
+        values = tuple(values)
+        return values
+
+
+
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod(
