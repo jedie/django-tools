@@ -11,17 +11,25 @@ if __name__ == "__main__":
         'django.contrib.flatpages',
     )
 
+
 from django.conf import settings
 from django.core import urlresolvers
 from django.utils.importlib import import_module
 
-def get_filtered_apps(resolve_url="/"):
+
+def get_filtered_apps(resolve_url="/", no_args=True):
     """
     Filter settings.INSTALLED_APPS and create a list
     of all Apps witch can resolve the given url >resolve_url<
+
+    @param resolve_url: url used for RegexURLResolver
+    @param no_args: Only views without args/kwargs ?
     
     >>> get_filtered_apps()
     ['django.contrib.admindocs']
+    
+    >>> get_filtered_apps(no_args=False)
+    ['django.contrib.admindocs', 'django.contrib.flatpages']
     """
     root_apps = []
     for app_label in settings.INSTALLED_APPS:
@@ -44,9 +52,10 @@ def get_filtered_apps(resolve_url="/"):
         except urlresolvers.Resolver404:
             continue
 
-        if func_args == () and func_kwargs == {}:
+        if not no_args or func_args == () and func_kwargs == {}:
             root_apps.append(app_label)
     return root_apps
+
 
 if __name__ == "__main__":
     import doctest

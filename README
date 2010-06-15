@@ -9,6 +9,10 @@ miscellaneous tools for django
  history
 =========
 
+- v0.8.1
+
+  - Add "no_args" keyword argument to installed_apps_utils.get_filtered_apps()
+
 - v0.8.0
 
   - Add model LanguageCode field and form LanguageCode field in Accept-Language header format (RFC 2616) 
@@ -52,8 +56,6 @@ miscellaneous tools for django
 :homepage:
   http://code.google.com/p/django-tools/
 
-:SVN:
- http://django-tools.googlecode.com/svn/trunk/
+:GIT:
+  http://github.com/jedie/django-tools
 
-
-*(Readme text $Rev$)*
