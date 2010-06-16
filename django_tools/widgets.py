@@ -34,7 +34,7 @@ class SelectMediaPath(forms.Select):
     def _get_path_choices(self):
         media_dirs_choices = []
         cut_pos = len(settings.MEDIA_ROOT)
-        for root, dirs, files in os.walk(settings.MEDIA_ROOT, followlinks=True):
+        for root, dirs, files in os.walk(settings.MEDIA_ROOT):
             rel_dir = root[cut_pos:]
             if rel_dir:
                 media_dirs_choices.append((rel_dir, rel_dir))
