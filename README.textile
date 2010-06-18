@@ -1,0 +1,67 @@
+
+h2. description
+
+miscellaneous tools for django
+
+
+
+h2. Backwards-incompatible changes
+
+
+h3. v0.9
+
+Language code field and SelectMediaPath are renamed.
+
+change:
+*from django_tools.fields import LanguageCodeFormField*
+to:
+*from django_tools.fields.language_code import LanguageCodeFormField*
+
+change and rename:
+*from django_tools.fields import LanguageCodeField*
+to:
+*from django_tools.fields.language_code import LanguageCodeModelField*
+
+change and rename:
+*from django_tools.widgets import SelectMediaPath*
+to:
+*from django_tools.fields.media_path import MediaPathWidget*
+
+
+
+h2. history
+
+* v0.9
+** New: stuff in /django_tools/fields/
+** see also backwards-incompatible changes, above!
+* v0.8.2
+** New: widgets.SelectMediaPath(): Select a sub directory in settings.MEDIA_ROOT
+** New: fields.SignSeparatedField()
+* v0.8.1
+** Add "no_args" keyword argument to installed_apps_utils.get_filtered_apps()
+* v0.8.0
+** Add model LanguageCode field and form LanguageCode field in Accept-Language header format (RFC 2616) 
+* v0.7.0
+** Add decorators.py
+* v0.6.0
+** Add forms_utils.LimitManyToManyFields, crosspost: http://www.djangosnippets.org/snippets/1691/
+* v0.5.0
+** Add template/filters.py from PyLucid v0.8.x
+* v0.4.0
+** Add experimental "warn_invalid_template_vars"
+* v0.3.1
+** Bugfix: Exclude the instance if it was saved in the past.
+* v0.3.0
+** Add utils.installed_apps_utils
+* v0.2.0
+** Add models_utils, see: http://www.jensdiemer.de/_command/118/blog/detail/67/ (de)
+* v0.1.0
+** first version cut out from PyLucid CMS - http://www.pylucid.org
+
+
+
+h2. links
+
+* Homepage: http://code.google.com/p/django-tools/
+* Sourcecode: http://github.com/jedie/django-tools
+
