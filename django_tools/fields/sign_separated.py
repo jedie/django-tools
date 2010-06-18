@@ -150,9 +150,6 @@ class SignSeparatedModelField(models.TextField):
         self.skip_empty = skip_empty
         super(SignSeparatedModelField, self).__init__(*args, **kwargs)
 
-    def get_internal_type(self):
-        return "SignSeparatedFormField"
-
     def to_python(self, value):
         """
         Converts the input value into the expected Python data type, raising
