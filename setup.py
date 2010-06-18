@@ -34,7 +34,7 @@ def get_authors():
 
 
 def get_long_description():
-    f = file(os.path.join(PACKAGE_ROOT, "README"), "r")
+    f = file(os.path.join(PACKAGE_ROOT, "README.textile"), "r")
     long_description = f.read().strip()
     f.close()
     return long_description
