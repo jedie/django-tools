@@ -31,6 +31,8 @@ to:
 
 h2. history
 
+* v0.10.0
+** NEW: utils around django messages, see: /django_tools/utils/messages.py
 * v0.9.1
 ** Bugfix: database column was not created: don't overwrite get_internal_type()
 * v0.9
