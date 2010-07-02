@@ -64,8 +64,37 @@ h2. history
 
 
 
+h2. pip upgrade
+
+To do a pip upgrade in a virtual environment, run this:
+   
+pre. ~$ cd /YourVirtualEnv/bin
+~/YourVirtualEnv/bin$ source activate
+(YourVirtualEnv)~/YourVirtualEnv/bin$ pip install --upgrade --verbose --editable=git+git://github.com/jedie/django-tools.git#egg=django-tools
+
+The example used git readonly clone url. If you use subversion do this:
+
+pre. (YourVirtualEnv)~/YourVirtualEnv/bin$ pip install --upgrade --verbose --editable=http://svn.github.com/jedie/django-tools.git#egg=django-tools
+
+If you have git write access, use this:
+
+pre. (YourVirtualEnv)~/YourVirtualEnv/bin$ pip install --upgrade --verbose --editable=git+git@github.com:jedie/django-tools.git#egg=django-tools
+
+
+
+
+h2. fast repo update
+
+To made a fast repository update, you can run this simple shell script:
+
+pre. ~$ cd /path/to/django-tools
+/path/to/django-tools$ ./update.sh
+
+the update script runs "git pull origin master" or "svn update".
+
+
+
 h2. links
 
 * Homepage: http://code.google.com/p/django-tools/
 * Sourcecode: http://github.com/jedie/django-tools
-
