@@ -16,6 +16,7 @@ from django.conf import settings
 from django.core import urlresolvers
 from django.utils.importlib import import_module
 
+DEBUG = 1
 
 def get_filtered_apps(resolve_url="/", no_args=True):
     """
@@ -37,21 +38,29 @@ def get_filtered_apps(resolve_url="/", no_args=True):
         try:
             url_mod = import_module(urls_pkg)
         except ImportError, err:
+            if DEBUG > 2:
+                print "Skip %r: has no urls.py" % app_label
             if str(err) == "No module named urls":
                 continue
             raise
 
+        if DEBUG > 1:
+            print "found %r with urls.py" % app_label
+
         try:
             urlpatterns = url_mod.urlpatterns
         except AttributeError:
+            if DEBUG:
+                print "Skip %r: urls.py has no 'urlpatterns'" % app_label
             continue
 
         resolver = urlresolvers.RegexURLResolver(r'^/', urlpatterns)
         try:
             func, func_args, func_kwargs = resolver.resolve(resolve_url)
-        except urlresolvers.Resolver404:
+        except urlresolvers.Resolver404, err:
+            if DEBUG:
+                print "Skip %r: Can't handle root url - %s" % (app_label, err)
             continue
-
         if not no_args or func_args == () and func_kwargs == {}:
             root_apps.append(app_label)
     return root_apps
