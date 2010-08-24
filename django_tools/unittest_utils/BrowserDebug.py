@@ -70,7 +70,10 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
         
     response_info += "\t<dt>template</dt>\n"
     if hasattr(response, "template"):
-        templates = [template.name for template in response.template]
+        try:
+            templates = [template.name for template in response.template]
+        except AttributeError:
+            templates = "---"
     else:
         templates = "---"
     response_info += "\t<dd><pre>%s</pre></dd>\n" % templates
