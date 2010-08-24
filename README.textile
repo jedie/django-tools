@@ -31,6 +31,9 @@ to:
 
 h2. history
 
+* v0.10.1
+** New: Display used templates in unittest BrowserDebug
+** Bugfix: catch if last usermessages exist
 * v0.10.0
 ** NEW: utils around django messages, see: /django_tools/utils/messages.py
 * v0.9.1
