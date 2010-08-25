@@ -76,10 +76,15 @@ class StackInfoStorage(LegacyFallbackStorage):
 
         if self._add_stackinfo:
             # info: self._queued_messages is a normal list, defined in BaseStorage()
-            last_message = self._queued_messages[-1]
-            last_message.full_path = self.request.get_full_path()
-            last_message.stack_limit = STACK_LIMIT
-            last_message.stack_info = self._get_stack_info()
+            message_list = self._queued_messages
+            try:
+                last_message = message_list[-1]
+            except IndexError:
+                pass
+            else:
+                last_message.full_path = self.request.get_full_path()
+                last_message.stack_limit = STACK_LIMIT
+                last_message.stack_info = self._get_stack_info()
 
     def _get_stack_info(self):
         """
