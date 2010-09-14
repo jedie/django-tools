@@ -22,6 +22,8 @@ from pprint import pformat
 
 from xml.sax.saxutils import escape
 
+from django.contrib import messages
+
 # Bug with Firefox under Ubuntu.
 # http://www.python-forum.de/topic-11568.html
 #webbrowser._tryorder.insert(0, 'epiphany') # Use Epiphany, if installed.
@@ -67,7 +69,7 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
         value = pformat(value)
         value = escape(value)
         response_info += "\t<dd><pre>%s</pre></dd>\n" % value
-        
+
     response_info += "\t<dt>template</dt>\n"
     if hasattr(response, "template") and response.template:
         try:
@@ -77,7 +79,15 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
     else:
         templates = "---"
     response_info += "\t<dd><pre>%s</pre></dd>\n" % templates
-            
+
+    response_info += "\t<dt>messages</dt>\n"
+    msg = messages.get_messages(response.request)
+    if msg:
+        msg = "".join(["%s\n" % x for x in msg])
+    else:
+        msg = "---"
+    response_info += "\t<dd><pre>%s</pre></dd>\n" % msg
+
     response_info += "</dl>\n"
 
     if "</body>" in content:

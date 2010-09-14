@@ -1,1 +1,2 @@
 django_tools.egg-info/*
+*.pyc
