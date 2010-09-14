@@ -16,9 +16,8 @@ from django.conf import settings
 from django.core import urlresolvers
 from django.utils.importlib import import_module
 
-DEBUG = 1
 
-def get_filtered_apps(resolve_url="/", no_args=True):
+def get_filtered_apps(resolve_url="/", no_args=True, debug=False):
     """
     Filter settings.INSTALLED_APPS and create a list
     of all Apps witch can resolve the given url >resolve_url<
@@ -31,6 +30,13 @@ def get_filtered_apps(resolve_url="/", no_args=True):
     
     >>> get_filtered_apps(no_args=False)
     ['django.contrib.admindocs', 'django.contrib.flatpages']
+    
+    >>> get_filtered_apps(debug=True)
+    found 'django.contrib.admindocs' with urls.py
+    found 'django.contrib.auth' with urls.py
+    Skip 'django.contrib.auth': Can't handle root url.
+    found 'django.contrib.flatpages' with urls.py
+    ['django.contrib.admindocs']
     """
     root_apps = []
     for app_label in settings.INSTALLED_APPS:
@@ -38,19 +44,19 @@ def get_filtered_apps(resolve_url="/", no_args=True):
         try:
             url_mod = import_module(urls_pkg)
         except ImportError, err:
-            if DEBUG > 2:
+            if debug:
                 print "Skip %r: has no urls.py" % app_label
             if str(err) == "No module named urls":
                 continue
             raise
 
-        if DEBUG > 1:
+        if debug:
             print "found %r with urls.py" % app_label
 
         try:
             urlpatterns = url_mod.urlpatterns
         except AttributeError:
-            if DEBUG:
+            if debug:
                 print "Skip %r: urls.py has no 'urlpatterns'" % app_label
             continue
 
@@ -58,8 +64,8 @@ def get_filtered_apps(resolve_url="/", no_args=True):
         try:
             func, func_args, func_kwargs = resolver.resolve(resolve_url)
         except urlresolvers.Resolver404, err:
-            if DEBUG:
-                print "Skip %r: Can't handle root url - %s" % (app_label, err)
+            if debug:
+                print "Skip %r: Can't handle root url." % app_label
             continue
         if not no_args or func_args == () and func_kwargs == {}:
             root_apps.append(app_label)
