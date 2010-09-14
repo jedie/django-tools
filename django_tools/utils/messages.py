@@ -11,10 +11,13 @@
 """
 
 import inspect
+import warnings
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.messages.storage.user_messages import LegacyFallbackStorage
+
+from django_tools.middlewares import ThreadLocal
 
 
 STACK_LIMIT = 6 # Display only the last X stack lines
@@ -115,3 +118,21 @@ class StackInfoStorage(LegacyFallbackStorage):
             stack_info.append("%s %4s %s" % (filename, lineno, func_name))
 
         return "\\n\\n".join(stack_info)
+
+
+#------------------------------------------------------------------------------
+
+
+def failsafe_message(msg, level=messages.INFO):
+    """
+    Display a message to the user.
+    Use ThreadLocalMiddleware to get the current request object.
+    If no request object is available, create a warning.
+    """
+    request = ThreadLocal.get_current_request()
+    if request:
+        # create a normal user message
+        messages.add_message(request, level, msg)
+    else:
+        # fallback: Create a warning
+        warnings.warn(msg)

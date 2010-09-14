@@ -22,6 +22,8 @@ from django import forms
 from django.db import models
 from django.conf import settings
 
+from django_tools.utils.messages import failsafe_message
+
 
 def directory_walk(path):
     """
@@ -58,7 +60,12 @@ class MediaPathWidget(forms.Select):
     """
     def __init__(self, attrs=None):
         super(MediaPathWidget, self).__init__(attrs)
-        self.choices = self._get_path_choices()
+        try:
+            self.choices = self._get_path_choices()
+        except OSError, err:
+            self.choices = []
+            if settings.DEBUG:
+                failsafe_message("Can't read MEDIA_ROOT: %s" % err)
 
     def _get_path_choices(self):
         media_dirs_choices = []

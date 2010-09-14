@@ -31,6 +31,8 @@ to:
 
 h2. history
 
+* v0.12
+** NEW: django_tools.utils.messages.failsafe_message
 * v0.11
 ** NEW: Store data in a secure cookie, see: utils/client_storage.py
 * v0.10.1
