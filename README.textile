@@ -31,6 +31,8 @@ to:
 
 h2. history
 
+* v0.13
+** Bugfix UnicodeEncodeError in Browser debug
 * v0.12
 ** NEW: django_tools.utils.messages.failsafe_message
 * v0.11

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# coding: utf-8
 
 """
     Show responses in webbrowser
@@ -7,13 +7,7 @@
 
     Helper functions for displaying test responses in webbrowser.
 
-    Last commit info:
-    ~~~~~~~~~~~~~~~~~
-    $LastChangedDate: 2008-06-13 22:35:31 +0200 (Fr, 13 Jun 2008) $
-    $Rev: 1644 $
-    $Author: JensDiemer $
-
-    :copyleft: 2009 by the django-dbpreferences team, see AUTHORS for more details.
+    :copyleft: 2009-2010 by the django-dbpreferences team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -47,7 +41,7 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
     # Save for the next traceback
     BROWSER_TRACEBACK_OPENED = True
 
-    content = response.content
+    content = response.content.decode("utf-8")
     url = response.request["PATH_INFO"]
 
     stack = traceback.format_stack(limit=3)[:-1]
@@ -116,7 +110,7 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
 
 
     fd, file_path = tempfile.mkstemp(prefix="PyLucid_unittest_", suffix=".html")
-    os.write(fd, content)
+    os.write(fd, content.encode("utf-8"))
     os.close(fd)
     url = "file://%s" % file_path
     print "\nDEBUG html page in Browser! (url: %s)" % url
