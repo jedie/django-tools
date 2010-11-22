@@ -17,6 +17,7 @@ from pprint import pformat
 from xml.sax.saxutils import escape
 
 from django.contrib import messages
+from django.views.debug import get_safe_settings
 
 # Bug with Firefox under Ubuntu.
 # http://www.python-forum.de/topic-11568.html
@@ -82,7 +83,11 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
         msg = "---"
     response_info += "\t<dd><pre>%s</pre></dd>\n" % msg
 
+    response_info += "\t<dt>settings</dt>\n"
+    response_info += "\t<dd><pre>%s</pre></dd>\n" % pformat(get_safe_settings())
+
     response_info += "</dl>\n"
+
 
     if "</body>" in content:
         info = (
