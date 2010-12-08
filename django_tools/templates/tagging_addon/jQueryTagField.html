@@ -1,0 +1,39 @@
+{{ html }}
+
+<div class="field_help_text jQueryTagInput" id="tag_cloud_{{ field_id }}">
+{% for tag in tag_cloud %}
+    {% if not forloop.first %}|{% endif %}
+    <span style="font-size:{{ tag.font_size }}em;">{{ tag.name }}</span>
+{% endfor %}
+</div>
+
+<style>
+#tag_cloud_{{ field_id }} span {
+    color: #888;
+}
+#tag_cloud_{{ field_id }} span:hover {
+    cursor:pointer;
+    color: #000;
+}
+</style>
+
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+    $("#tag_cloud_{{ field_id }} span").each(function() {
+        $(this).click(function () {
+            // Add tag to input value. Skip existing tags.
+            var tag = $(this).text();
+            var value = $("#{{ field_id }}").val();
+            if (value == "") {
+                value = tag;
+            } else {
+                if (value.indexOf(tag) == -1) {
+                    // Add only if not added before
+                    value += ", " + tag;
+                }
+            }
+            $("#{{ field_id }}").val(value);
+        });
+    });
+});
+</script>
