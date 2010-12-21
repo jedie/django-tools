@@ -31,6 +31,8 @@ to:
 
 h2. history
 
+* v0.14.1
+** Bugfix: make path in MediaPathModelField relativ (remove slashes) 
 * v0.14
 ** NEW: django-tagging addon: Display existing tags under a tag field
 * v0.13

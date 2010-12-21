@@ -4,6 +4,9 @@
     media path selection
     ~~~~~~~~~~~~~~~~~~~~
     
+    TODO: Made this generic and don't use settings.MEDIA_ROOT direct, let it
+    be set as a argument to widget/fields etc.
+    
      * model field
      * form field
      * widget
@@ -60,6 +63,9 @@ class MediaPathWidget(forms.Select):
     """
     def __init__(self, attrs=None):
         super(MediaPathWidget, self).__init__(attrs)
+
+        self._base_path = os.path.abspath(os.path.normpath(settings.MEDIA_ROOT))
+
         try:
             self.choices = self._get_path_choices()
         except OSError, err:
@@ -69,9 +75,9 @@ class MediaPathWidget(forms.Select):
 
     def _get_path_choices(self):
         media_dirs_choices = []
-        cut_pos = len(settings.MEDIA_ROOT)
-        for root in directory_walk(settings.MEDIA_ROOT):
-            rel_dir = root[cut_pos:]
+        cut_pos = len(self._base_path)
+        for root in directory_walk(self._base_path):
+            rel_dir = root[cut_pos:].strip(os.sep)
             if rel_dir:
                 media_dirs_choices.append((rel_dir, rel_dir))
         return media_dirs_choices
