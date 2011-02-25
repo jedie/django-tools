@@ -31,6 +31,8 @@ to:
 
 h2. history
 
+* v0.15.0
+** NEW: Add a flexible URL field (own validator, model- and form-field)
 * v0.14.1
 ** Bugfix: make path in MediaPathModelField relativ (remove slashes) 
 * v0.14
