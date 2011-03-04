@@ -9,12 +9,12 @@
 """
 
 
+import os
 import re
 import urlparse
 
 if __name__ == "__main__":
     # For doctest only
-    import os
     os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
 
 from django.conf import settings
@@ -31,6 +31,57 @@ validate_language_code = RegexValidator(
     _(u'Enter a valid language code (Accept-Language header format, see RFC2616)'),
     'invalid'
 )
+
+
+class ExistingDirValidator(object):
+    """
+    >>> settings.DEBUG = False
+    
+    >>> v = ExistingDirValidator()
+    >>> v(settings.MEDIA_ROOT)
+    >>> v("does/not/exist")
+    Traceback (most recent call last):
+        ...
+    ValidationError: [u"Directory doesn't exist!"]
+    
+    >>> v("../")
+    Traceback (most recent call last):
+        ...
+    ValidationError: [u'Directory is not in base path!']
+    
+    >>> v("//")
+    Traceback (most recent call last):
+        ...
+    ValidationError: [u'Directory is not in base path!']
+    
+    
+    >>> v = ExistingDirValidator("/")
+    >>> v("/etc/default/")
+    >>> v("var/log")
+    """
+    def __init__(self, base_path=settings.MEDIA_ROOT):
+        self.base_path = os.path.normpath(os.path.abspath(base_path))
+
+    def __call__(self, value):
+        value = smart_unicode(value)
+
+        abs_path = os.path.normpath(os.path.abspath(os.path.join(self.base_path, value)))
+
+        if not abs_path.startswith(self.base_path):
+            if settings.DEBUG:
+                msg = _(u"Directory %r is not in base path ('%s')" % (abs_path, self.base_path))
+            else:
+                msg = _(u"Directory is not in base path!")
+            raise ValidationError(msg)
+
+        if not os.path.isdir(abs_path):
+            if settings.DEBUG:
+                msg = _(u"Directory %r doesn't exist!") % abs_path
+            else:
+                msg = _(u"Directory doesn't exist!")
+
+            raise ValidationError(msg)
+
 
 
 class URLValidator2(URLValidator):
