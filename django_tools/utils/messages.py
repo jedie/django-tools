@@ -6,7 +6,7 @@
     
     http://docs.djangoproject.com/en/dev/ref/contrib/messages/
     
-    :copyleft: 2010 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2010-2011 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -15,7 +15,7 @@ import warnings
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.messages.storage.user_messages import LegacyFallbackStorage
+from django.contrib.messages.storage.fallback import FallbackStorage
 
 from django_tools.middlewares import ThreadLocal
 
@@ -47,7 +47,7 @@ class FileLikeMessages(object):
 #------------------------------------------------------------------------------
 
 
-class StackInfoStorage(LegacyFallbackStorage):
+class StackInfoStorage(FallbackStorage):
     """
     Message storage like LegacyFallbackStorage, except, every message
     would have a stack info, witch is helpful, for debugging.
