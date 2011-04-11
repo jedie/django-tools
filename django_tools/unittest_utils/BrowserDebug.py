@@ -53,7 +53,7 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
     url = response.request["PATH_INFO"]
 
     stack_info = get_stack_info(filepath_filter="django_tools")
-    stack_info += msg
+    stack_info.append(escape(msg))
     if display_tb:
         print
         print "debug_response:"
