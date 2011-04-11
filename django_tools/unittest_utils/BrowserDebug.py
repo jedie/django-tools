@@ -7,17 +7,21 @@
 
     Helper functions for displaying test responses in webbrowser.
 
-    :copyleft: 2009-2010 by the django-dbpreferences team, see AUTHORS for more details.
+    :copyleft: 2009-2011 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-import os, webbrowser, traceback, tempfile
 from pprint import pformat
-
 from xml.sax.saxutils import escape
+import os
+import tempfile
+import webbrowser
 
 from django.contrib import messages
 from django.views.debug import get_safe_settings
+
+from django_tools.utils.stack_info import get_stack_info
+
 
 # Bug with Firefox under Ubuntu.
 # http://www.python-forum.de/topic-11568.html
@@ -29,6 +33,9 @@ BROWSER_TRACEBACK_OPENED = False
 RESPONSE_INFO_ATTR = (
     "content", "context", "cookies", "request", "status_code", "_headers",
 )
+
+
+
 
 
 def debug_response(response, browser_traceback=True, msg="", display_tb=True):
@@ -45,16 +52,15 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
     content = response.content.decode("utf-8")
     url = response.request["PATH_INFO"]
 
-    stack = traceback.format_stack(limit=3)[:-1]
-    stack.append(escape(msg))
+    stack_info = get_stack_info(filepath_filter="django_tools")
     if display_tb:
         print
         print "debug_response:"
         print "-" * 80
-        print "\n".join(stack)
+        print "\n".join(stack_info)
         print "-" * 80
 
-    stack_info = "".join(stack)
+    stack_info = "".join(stack_info)
 
     response_info = "<dl>\n"
     for attr in RESPONSE_INFO_ATTR:

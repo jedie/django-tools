@@ -31,8 +31,10 @@ to:
 
 h2. history
 
+* v0.16.2
+** Merge stack info code and display better stack info on browser debug page
 * v0.16.1
-** Update django_tools.utils.messages.StackInfoStorage for django code changes. 
+** Update django_tools.utils.messages.StackInfoStorage for django code changes.
 * v0.16.0
 ** NEW: path model field (check if direcotry exist)
 * v0.15.0

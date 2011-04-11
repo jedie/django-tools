@@ -18,6 +18,7 @@ from django.contrib import messages
 from django.contrib.messages.storage.fallback import FallbackStorage
 
 from django_tools.middlewares import ThreadLocal
+from django_tools.utils.stack_info import get_stack_info
 
 
 STACK_LIMIT = 6 # Display only the last X stack lines
@@ -83,41 +84,14 @@ class StackInfoStorage(FallbackStorage):
             try:
                 last_message = message_list[-1]
             except IndexError:
-                pass
-            else:
-                last_message.full_path = self.request.get_full_path()
-                last_message.stack_limit = STACK_LIMIT
-                last_message.stack_info = self._get_stack_info()
+                return
 
-    def _get_stack_info(self):
-        """
-        return stack_info: Where from the announcement comes?
-        """
-        stack_list = inspect.stack()
-        stack_list.reverse()
+            last_message.full_path = self.request.get_full_path()
+            last_message.stack_limit = STACK_LIMIT
 
-        # go forward in the stack, till outside of this file.
-        for no, stack_line in enumerate(stack_list):
-            filepath = stack_line[1]
-            if filepath == __file__:
-                break
-
-        # Display only the last entries, till outside of this file
-        stack_list = stack_list[:no]
-        stack_list = stack_list[-STACK_LIMIT:]
-
-        stack_info = []
-        for stack_line in stack_list:
-            filename = stack_line[1]
-            if len(filename) >= MAX_FILEPATH_LEN:
-                filename = "...%s" % filename[-MAX_FILEPATH_LEN:]
-
-            lineno = stack_line[2]
-            func_name = stack_line[3]
-
-            stack_info.append("%s %4s %s" % (filename, lineno, func_name))
-
-        return "\\n\\n".join(stack_info)
+            stack_info = get_stack_info(filepath_filter="django_tools", stack_limit=STACK_LIMIT, max_filepath_len=MAX_FILEPATH_LEN)
+            stack_info_safe = "\\n".join([l.replace("\n", "\\n") for l in stack_info])
+            last_message.stack_info = stack_info_safe
 
 
 #------------------------------------------------------------------------------
