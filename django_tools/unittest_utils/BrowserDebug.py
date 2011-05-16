@@ -31,7 +31,7 @@ from django_tools.utils.stack_info import get_stack_info
 BROWSER_TRACEBACK_OPENED = False
 
 RESPONSE_INFO_ATTR = (
-    "content", "context", "cookies", "request", "status_code", "_headers",
+    "content", "cookies", "request", "status_code", "_headers", "context",
 )
 
 
@@ -64,25 +64,18 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
     stack_info = "".join(stack_info)
 
     response_info = "<dl>\n"
-    for attr in RESPONSE_INFO_ATTR:
-        # FIXME: There must be exist a easier way to display the info
-        response_info += "\t<dt>%s</dt>\n" % attr
-        value = getattr(response, attr, "---")
-        value = pformat(value)
-        value = escape(value)
-        response_info += "\t<dd><pre>%s</pre></dd>\n" % value
 
-    response_info += "\t<dt>template</dt>\n"
-    if hasattr(response, "template") and response.template:
+    response_info += "\t<dt><h3>template</h3></dt>\n"
+    if hasattr(response, "templates") and response.templates:
         try:
-            templates = pformat([template.name for template in response.template])
+            templates = pformat([template.name for template in response.templates])
         except AttributeError:
             templates = "---"
     else:
         templates = "---"
     response_info += "\t<dd><pre>%s</pre></dd>\n" % templates
 
-    response_info += "\t<dt>messages</dt>\n"
+    response_info += "\t<dt><h3>messages</h3></dt>\n"
     msg = messages.get_messages(response.request)
     if msg:
         msg = "".join(["%s\n" % x for x in msg])
@@ -90,7 +83,15 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
         msg = "---"
     response_info += "\t<dd><pre>%s</pre></dd>\n" % msg
 
-    response_info += "\t<dt>settings</dt>\n"
+    for attr in RESPONSE_INFO_ATTR:
+        # FIXME: There must be exist a easier way to display the info
+        response_info += "\t<dt><h3>%s</h3></dt>\n" % attr
+        value = getattr(response, attr, "---")
+        value = pformat(value)
+        value = escape(value)
+        response_info += "\t<dd><pre>%s</pre></dd>\n" % value
+
+    response_info += "\t<dt><h3>settings</h3></dt>\n"
     response_info += "\t<dd><pre>%s</pre></dd>\n" % pformat(get_safe_settings())
 
     response_info += "</dl>\n"
@@ -99,11 +100,11 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
     if "</body>" in content:
         info = (
             "\n<br /><hr />\n"
-            "<h3>Unittest info</h3>\n"
+            "<h2>Unittest info</h2>\n"
             "<dl>\n"
-            "<dt>url:</dt><dd>%s</dd>\n"
-            "<dt>traceback:</dt><dd><pre>%s</pre></dd>\n"
-            "<dt>response info:</dt>%s\n"
+            "<dt><h3>url:</h3></dt><dd>%s</dd>\n"
+            "<dt><h3>traceback:</h3></dt><dd><pre>%s</pre></dd>\n"
+            "<dt><h2>response info:</h2></dt>%s\n"
             "</dl>\n"
             "</body>"
         ) % (url, stack_info, response_info)

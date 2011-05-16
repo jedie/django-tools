@@ -31,6 +31,8 @@ to:
 
 h2. history
 
+* v0.16.3
+** Update BrowserDebug: Use response.templates instead of response.template and make output nicer
 * v0.16.2
 ** Merge stack info code and display better stack info on browser debug page
 * v0.16.1
