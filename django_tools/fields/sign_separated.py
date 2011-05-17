@@ -8,14 +8,14 @@
      * form field
      * widget
 
-    :copyleft: 2010 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2010-2011 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 if __name__ == "__main__":
     # For doctest only
     import os
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
+    os.environ["DJANGO_SETTINGS_MODULE"] = "django_tools.tests.test_settings"
 
 from django import forms
 from django.db import models
@@ -122,14 +122,19 @@ class SignSeparatedModelField(models.TextField):
     >>> f.clean("1x2x x 3")
     ('1', '2', ' ', ' 3')
     
+    
+    >>> from django.db import models
     >>> from django.forms.models import ModelForm
+        
     >>> class TestModel(models.Model):
     ...     test = SignSeparatedModelField(separator=";")
     ...     class Meta:
-    ...         app_label = "test_app"
+    ...         app_label = "django_tools"
+    
     >>> class TestForm(ModelForm):
     ...     class Meta:
     ...         model = TestModel
+    
     >>> f = TestForm({'test': None})
     >>> f.is_valid()
     False
@@ -141,6 +146,10 @@ class SignSeparatedModelField(models.TextField):
     True
     >>> f.cleaned_data
     {'test': ('one', 'two', 'three')}
+    >>> from django.core import management
+    >>> management.call_command("syncdb", interactive=False, verbosity=0)
+    >>> f.save()
+    <TestModel: TestModel object>
     """
     __metaclass__ = models.SubfieldBase
 
@@ -159,7 +168,7 @@ class SignSeparatedModelField(models.TextField):
         values = _split(value, self.separator, self.strip_items, self.skip_empty)
         return values
 
-    def get_db_prep_save(self, value):
+    def get_db_prep_save(self, value, **kwargs):
         "Returns field's value prepared for saving into a database."
         value = _join(value, self.separator)
         return value
@@ -177,9 +186,10 @@ class SignSeparatedModelField(models.TextField):
 
 
 if __name__ == "__main__":
+    # Run all unittest directly
     import doctest
-    doctest.testmod(
+    print doctest.testmod(
 #        verbose=True
-        verbose=False
+        verbose=False,
     )
     print "DocTest end."
