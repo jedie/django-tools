@@ -18,6 +18,7 @@
 
 import sys
 import warnings
+from django.contrib import messages
 try:
     from functools import wraps
 except ImportError:
@@ -96,8 +97,6 @@ def render_to(template_name=None, debug=False):
         def PyLucidPluginFoo(request):
             bar = Bar.object.all()  
             return {'bar': bar, 'template_name': 'foo/template.html'}
-
-    TODO: merge render_to() and render_pylucid_response()
     """
     def renderer(function):
         @wraps(function)
@@ -106,7 +105,11 @@ def render_to(template_name=None, debug=False):
 
             if not isinstance(context, dict):
                 if debug:
-                    print function.__name__, template_name, type(context), function.func_code
+                    msg = (
+                        "renter_to info: %s (template: %r)"
+                        " has not return a dict, has return: %r (%r)"
+                    ) % (function.__name__, template_name, type(context), function.func_code)
+                    messages.info(request, msg)
                 return context
 
             template_name2 = context.pop('template_name', template_name)
@@ -117,9 +120,9 @@ def render_to(template_name=None, debug=False):
             response = render_to_response(template_name2, context, context_instance=RequestContext(request))
 
             if debug:
-                print "render debug for %r (template: %r):" % (function.__name__, template_name2)
-                print "local view context:", context
-                print "response:", response.content
+                messages.info(request, "render debug for %r (template: %r):" % (function.__name__, template_name2))
+                messages.info(request, "local view context:", context)
+                messages.info(request, "response:", response.content)
 
             return response
         return wrapper
