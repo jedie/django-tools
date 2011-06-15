@@ -30,7 +30,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth.models import Permission
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 
 
 def check_permissions(superuser_only, permissions=()):
@@ -100,8 +100,16 @@ def render_to(template_name=None, debug=False):
     """
     def renderer(function):
         @wraps(function)
-        def wrapper(request, *args, **kwargs):
-            context = function(request, *args, **kwargs)
+        def wrapper(*args, **kwargs):
+            context = function(*args, **kwargs)
+
+            request = None
+            for arg in args:
+                if isinstance(arg, HttpRequest):
+                    request = arg
+
+            if not request:
+                raise AttributeError("Can't get request object from function arguments!")
 
             if not isinstance(context, dict):
                 if debug:
