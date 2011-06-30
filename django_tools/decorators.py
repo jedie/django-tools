@@ -80,7 +80,7 @@ def check_permissions(superuser_only, permissions=()):
     return _inner
 
 
-def render_to(template_name=None, debug=False):
+def render_to(template_name=None, debug=False, **response_kwargs):
     """
     Based on the decorators from django-annoying.
 
@@ -125,7 +125,7 @@ def render_to(template_name=None, debug=False):
                 ("Template name must be passed as render_to parameter"
                 " or 'template_name' must be inserted into context!")
 
-            response = render_to_response(template_name2, context, context_instance=RequestContext(request))
+            response = render_to_response(template_name2, context, context_instance=RequestContext(request), **response_kwargs)
 
             if debug:
                 messages.info(request, "render debug for %r (template: %r):" % (function.__name__, template_name2))

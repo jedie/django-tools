@@ -34,6 +34,7 @@ h2. history
 * v0.17
 ** Add models.UpdateInfoBaseModel
 ** Update decorators.render_to
+** render_to pass keyword arguments to render_to_response() (e.g.: mimetype="text/plain")
 * v0.16.4
 ** Bugfix: """get_db_prep_save() got an unexpected keyword argument 'connection'""" when save a SignSeparatedModelField()
 * v0.16.3
