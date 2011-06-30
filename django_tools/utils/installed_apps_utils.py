@@ -17,13 +17,14 @@ from django.core import urlresolvers
 from django.utils.importlib import import_module
 
 
-def get_filtered_apps(resolve_url="/", no_args=True, debug=False):
+def get_filtered_apps(resolve_url="/", no_args=True, debug=False, skip_fail=False):
     """
     Filter settings.INSTALLED_APPS and create a list
     of all Apps witch can resolve the given url >resolve_url<
 
     @param resolve_url: url used for RegexURLResolver
     @param no_args: Only views without args/kwargs ?
+    @parm skip_fail: If True: raise excaption if app is not importable
     
     >>> get_filtered_apps()
     ['django.contrib.admindocs']
@@ -48,7 +49,16 @@ def get_filtered_apps(resolve_url="/", no_args=True, debug=False):
                 print "Skip %r: has no urls.py" % app_label
             if str(err) == "No module named urls":
                 continue
-            raise
+            if not skip_fail:
+                raise
+        except Exception, err:
+            if debug:
+                print "Error importing %r: %s" % (app_label, err)
+            if not skip_fail:
+                raise
+            else:
+                continue
+
 
         if debug:
             print "found %r with urls.py" % app_label
