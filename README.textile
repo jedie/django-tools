@@ -32,6 +32,7 @@ to:
 h2. history
 
 * v0.17
+** Add "local sync cache"
 ** Add models.UpdateInfoBaseModel
 ** Update decorators.render_to
 ** render_to pass keyword arguments to render_to_response() (e.g.: mimetype="text/plain")

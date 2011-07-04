@@ -13,6 +13,15 @@ DATABASES = {
         'NAME': ":memory:"
     }
 }
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake'
+    }
+}
+
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -21,6 +30,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
 
     'django_tools',
+    'django_tools.local_sync_cache',
     'django_tools.tests',
 )
 SITE_ID = 1
