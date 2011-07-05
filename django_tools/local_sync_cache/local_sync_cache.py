@@ -70,9 +70,10 @@
     
     To enable logging, add this to your settings, e.g.:
     
-        log.logging.basicConfig(format='%(created)f pid:%(process)d %(message)s')
+        from django.utils import log
+        logger = log.getLogger("django_tools.local_sync_cache")
         logger.setLevel(log.logging.DEBUG)
-        logger.addHandler(log.logging.StreamHandler())
+        logger.addHandler(log.logging.FileHandler("local_sync_cache.log"))
     
     
     :copyleft: 2011 by the django-tools team, see AUTHORS for more details.
