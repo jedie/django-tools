@@ -82,6 +82,7 @@
 
 import sys
 import time
+import datetime
 
 from django.conf import settings
 from django.core import cache
@@ -188,4 +189,34 @@ class LocalSyncCache(dict):
         if cached_value != self.last_reset:
             logger.error("Cache seems not to work: %r != %r" % (cached_value, self.last_reset))
 
+    @staticmethod
+    def get_cache_information():
+        cache_information = []
+        django_cache = _get_cache()
+        for instance in LocalSyncCache.CACHES:
+            try:
+                instance_size = sys.getsizeof(instance) # New in version 2.6
+            except AttributeError:
+                instance_size = None
 
+            id = instance.id
+
+            cleared = id in LocalSyncCache._OWN_RESET_TIMES
+            global_update_time = django_cache.get(id)
+
+            last_reset_datetime = datetime.datetime.fromtimestamp(instance.last_reset)
+            if global_update_time:
+                global_update_datetime = datetime.datetime.fromtimestamp(global_update_time)
+            else:
+                global_update_datetime = None
+
+            cache_information.append({
+                "instance": instance,
+                "length": len(instance),
+                "size": instance_size,
+                "cleared": cleared,
+                "global_update_time": global_update_time,
+                "global_update_datetime": global_update_datetime,
+                "last_reset_datetime": last_reset_datetime
+            })
+        return cache_information
