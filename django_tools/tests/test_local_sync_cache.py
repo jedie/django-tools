@@ -1,5 +1,15 @@
 # coding: utf-8
 
+"""
+    Test Local sync cache
+    ~~~~~~~~~~~~~~~~~~~~~
+    
+    For more information look into DocString in local_sync_cache.py !
+    
+    :copyleft: 2011 by the django-tools team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
+"""
+
 import unittest
 import time
 
@@ -50,7 +60,7 @@ class LocalSyncCacheTest(unittest.TestCase):
         c1.clear()
         self.assertEqual(c1, {})
 
-        # "new request"
+        # In a "new request" all the same caches should be cleared
         c2.check_state()
         self.assertEqual(c2, {})
 
@@ -59,23 +69,46 @@ class LocalSyncCacheTest(unittest.TestCase):
 
         c1 = LocalSyncCache(id="test1")
         c2 = LocalSyncCache(id="test1")
-        self.assertEqual(len(LocalSyncCache.CACHES), 2)
+
+        c3 = LocalSyncCache(id="test2")
+
+        self.assertEqual(len(LocalSyncCache.CACHES), 3)
 
         c1["c1"] = "foo"
         c2["c2"] = "bar"
+        c3["foo"] = "bar"
 
         middleware.process_request(None)
 
         self.assertEqual(c1, {'c1': 'foo'})
         self.assertEqual(c2, {'c2': 'bar'})
+        self.assertEqual(c3, {'foo': 'bar'})
 
         c1.clear()
         self.assertEqual(c1, {})
 
-        # "new request"
+        # In a "new request" all the same caches should be cleared
         middleware.process_request(None)
         self.assertEqual(c2, {})
 
+        # Other caches should be not affected by clear()
+        self.assertEqual(c3, {'foo': 'bar'})
+
+        c1["c1"] = "foo2"
+        c2["c2"] = "bar2"
+
+        middleware.process_request(None)
+
+        self.assertEqual(c1, {'c1': 'foo2'})
+        self.assertEqual(c2, {'c2': 'bar2'})
+        self.assertEqual(c3, {'foo': 'bar'})
+
+        c2.clear()
+        self.assertEqual(c2, {})
+
+        # In a "new request" all the same caches should be cleared
+        middleware.process_request(None)
+        self.assertEqual(c1, {})
 
 
 
