@@ -129,20 +129,38 @@ def _get_cache():
 
 
 class LocalSyncCache(dict):
+    INIT_COUNTER = {} # Counts how often __init__ used, should allways be 1!
+
     # Stores all existing instance, used in middleware to call check_state()
     CACHES = []
 
     # Store the last reset times secondary in this local thread.
     _OWN_RESET_TIMES = {}
 
-    def __init__(self, id=None):
+    def __init__(self, id=None, unique_ids=True):
         if id is None:
             raise AssertionError("LocalSyncCache must take a id as argument.")
+
+        if unique_ids:
+            for existing_cache in self.CACHES:
+                if id == existing_cache.id:
+                    raise AssertionError("ID %r was already used! It must be unique!" % id)
 
         self.id = id
         self.django_cache = _get_cache()
         self.last_reset = time.time() # Save last creation/reset time
         self.CACHES.append(self)
+
+        if not self.id in self.INIT_COUNTER:
+            self.INIT_COUNTER[self.id] = 1
+        else:
+            logger.error("Error: __init__ for %s was called to often!" % self.id)
+            self.INIT_COUNTER[self.id] += 1
+
+        self.request_counter = 0 # Counts how often check_state called (Normaly called one time per request)
+        self.own_clear_counter = 0 # Counts how often clear called in this thread
+        self.ext_clear_counter = 0 # Counts how often clears from external thread
+
         logger.debug("%r __init__" % id)
 
     def check_state(self):
@@ -150,6 +168,7 @@ class LocalSyncCache(dict):
         Check if we are out-dated or not.
         Should be called at the start of a request. e.g.: by middleware
         """
+        self.request_counter += 1
         global_update_time = self.django_cache.get(self.id)
 
         if global_update_time is None:
@@ -160,6 +179,7 @@ class LocalSyncCache(dict):
                 self.django_cache.set(self.id, self._OWN_RESET_TIMES[self.id])
         elif self.last_reset < global_update_time:
             # We have out-dated data -> reset dict
+            self.ext_clear_counter += 1
             logger.info("%r out-dated data -> reset (global_update_time: %r - self.last_reset: %r)" % (self.id, global_update_time, self.last_reset))
             dict.clear(self)
             self.last_reset = time.time()
@@ -176,6 +196,7 @@ class LocalSyncCache(dict):
             * Clear the dict
             * Save clear time in django cache and in self._OWN_RESET_TIMES
         """
+        self.own_clear_counter += 1
         dict.clear(self)
         self.last_reset = time.time()
         self.django_cache.set(self.id, self.last_reset)
@@ -217,6 +238,26 @@ class LocalSyncCache(dict):
                 "cleared": cleared,
                 "global_update_time": global_update_time,
                 "global_update_datetime": global_update_datetime,
-                "last_reset_datetime": last_reset_datetime
+                "last_reset_datetime": last_reset_datetime,
+                "init_counter": LocalSyncCache.INIT_COUNTER[id],
             })
         return cache_information
+
+    @staticmethod
+    def pformat_cache_information():
+        output = []
+        attributes = ("id", "request_counter", "own_clear_counter", "ext_clear_counter")
+
+        cache_information = LocalSyncCache.get_cache_information()
+        for item in cache_information:
+            output.append(" -" * 40)
+
+            instance = item["instance"]
+
+            for attr in attributes:
+                output.append("%22s: %s" % (attr, getattr(instance, attr)))
+
+            for key, value in item.iteritems():
+                output.append("%22s: %r" % (key, value))
+
+        return "\n".join(output)
