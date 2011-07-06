@@ -61,13 +61,16 @@ def has_permission(item, **kwargs):
     """
     return True/False if use has permission stored in UsergroupsModelField.
     
+    return True, if permission are ok
+    return False, if permission are not sufficient.
+    
     e.g.:
         has_permission(poll, permit_vote=request.user)
         has_permission(item, model_field1=user, model_field2=user)
     """
     for attr_name, user in kwargs.items():
         limit_permission_value = getattr(item, attr_name)
-        assert isinstance(limit_permission_value, int)
+        limit_permission_value = int(limit_permission_value)
 
         if limit_permission_value == UsergroupsModelField.ANONYMOUS_USERS:
             continue
