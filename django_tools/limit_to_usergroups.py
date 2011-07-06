@@ -70,26 +70,30 @@ def has_permission(item, **kwargs):
         assert isinstance(limit_permission_value, int)
 
         if limit_permission_value == UsergroupsModelField.ANONYMOUS_USERS:
-            return True
+            continue
 
         if user.is_anonymous():
             return False
 
         if limit_permission_value == UsergroupsModelField.STAFF_USERS:
             if user.is_staff:
-                return True
-            return False
+                continue
+            else:
+                return False
 
         if limit_permission_value == UsergroupsModelField.SUPERUSERS:
             if user.is_superuser:
-                return True
-            return False
+                continue
+            else:
+                return False
 
         usergroup = Group.objects.get(id=limit_permission_value)
         usergroups = user.groups.all()
-        if usergroup in usergroups:
-            return True
-        return False
+        if usergroup not in usergroups:
+            return False
+
+    return True
+
 
 
 def filter_permission(queryset, **kwargs):
