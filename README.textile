@@ -5,6 +5,27 @@ miscellaneous tools for django
 
 
 
+h3. local sync cache
+
+Keep a local dict in a multi-threaded environment up-to-date.
+More info, read DocString in ./local_sync_cache/local_sync_cache.py
+
+
+h3. limit to usergroups
+
+Limit something with only one field, by selecting:
+	* anonymous users
+	* staff users
+	* superusers
+	* ..all existing user groups..
+More info, read DocString in ./limit_to_usergroups.py
+
+
+h3. ..all others...
+
+There exist many miscellaneous stuff. Look in the source, luke!
+
+
 h2. Backwards-incompatible changes
 
 
@@ -32,6 +53,7 @@ to:
 h2. history
 
 * v0.17
+** Add "limit_to_usergroups"
 ** Add "local sync cache"
 ** Add models.UpdateInfoBaseModel
 ** Update decorators.render_to
