@@ -29,6 +29,7 @@ A simple commandline script for call "pip install ---upgrade XY" for every packa
 Simply copy/symlink it into the root directory of your virtualenv and start it.
 
 To use it, without installing django-tools:
+
 pre. ~/$ cd goto/your_env
 .../your_env/$ wget https://github.com/jedie/django-tools/raw/master/django_tools/upgrade_virtualenv.py
 .../your_env/$ chmod +x upgrade_virtualenv.py
