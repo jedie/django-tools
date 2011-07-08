@@ -21,6 +21,18 @@ Limit something with only one field, by selecting:
 More info, read DocString in ./limit_to_usergroups.py
 
 
+h3. upgrade virtualenv
+
+A simple commandline script for call "pip install ---upgrade XY" for every
+package thats installed in a virtualenv.
+
+Simply copy/symlink it into the root directory of your virtualenv and
+start it.
+    
+This will be obsolete, if pip has a own upgrade command, see: 
+    https://github.com/pypa/pip/issues/59
+
+
 h3. ..all others...
 
 There exist many miscellaneous stuff. Look in the source, luke!
@@ -53,6 +65,7 @@ to:
 h2. history
 
 * v0.17
+** Add the script "upgrade_virtualenv.py"
 ** Add "limit_to_usergroups"
 ** Add "local sync cache"
 ** Add models.UpdateInfoBaseModel
