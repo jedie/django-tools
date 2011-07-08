@@ -155,20 +155,9 @@ class UsergroupsModelField(models.IntegerField):
     ]
     USER_TYPES_DICT = dict(USER_TYPES_CHOICES)
 
-    def __init__(self, *args, **kwargs):
+    def get_choices(self, *args, **kwargs):
         groups = get_user_groups()
         choices = self.USER_TYPES_CHOICES + list(groups)
-        kwargs.update({
-            "choices": choices,
-            "null": False,
-            "blank": False,
-        })
-        super(UsergroupsModelField, self).__init__(*args, **kwargs)
-
-    def get_choices(self, *args, **kwargs):
-        """
-        Overwrite get_choices, because we won't like to have a blank choice inserted.
-        """
-        return self.choices
+        return choices
 
 

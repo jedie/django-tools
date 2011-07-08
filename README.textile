@@ -70,6 +70,8 @@ to:
 
 h2. history
 
+* v0.17.1
+** Bugfix in "limit_to_usergroups": Make choices "lazy": Don't access the database in __init__
 * v0.17
 ** Add the script "upgrade_virtualenv.py"
 ** Add "limit_to_usergroups"
