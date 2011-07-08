@@ -1,8 +1,10 @@
 
-h2. description
+h1. description
 
 miscellaneous tools for django
 
+
+h2. existing tools
 
 
 h3. local sync cache
@@ -23,13 +25,16 @@ More info, read DocString in ./limit_to_usergroups.py
 
 h3. upgrade virtualenv
 
-A simple commandline script for call "pip install ---upgrade XY" for every
-package thats installed in a virtualenv.
+A simple commandline script for call "pip install ---upgrade XY" for every package thats installed in a virtualenv.
+Simply copy/symlink it into the root directory of your virtualenv and start it.
 
-Simply copy/symlink it into the root directory of your virtualenv and
-start it.
+To use it, without installing django-tools:
+pre. ~/$ cd goto/your_env
+.../your_env/$ wget https://github.com/jedie/django-tools/raw/master/django_tools/upgrade_virtualenv.py
+.../your_env/$ chmod +x upgrade_virtualenv.py
+.../your_env/$ ./upgrade_virtualenv.py
     
-This will be obsolete, if pip has a own upgrade command, see: 
+This script will be obsolete, if pip has a own upgrade command, see: 
     https://github.com/pypa/pip/issues/59
 
 
@@ -146,7 +151,7 @@ If you have git write access, use this:
 
 pre. (YourVirtualEnv)~/YourVirtualEnv/bin$ pip install --upgrade --verbose --editable=git+git@github.com:jedie/django-tools.git#egg=django-tools
 
-
+...or just use our limit_to_usergroups.py script (see above)
 
 
 h2. fast repo update
