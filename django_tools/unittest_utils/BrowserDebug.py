@@ -61,7 +61,7 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
         print "\n".join(stack_info)
         print "-" * 80
 
-    stack_info = "".join(stack_info)
+    stack_info = escape("".join(stack_info))
 
     response_info = "<dl>\n"
 
