@@ -27,6 +27,19 @@ import os
 import sys
 import subprocess
 
+if __name__ == "__main__":
+    # precheck if we in a activated virtualenv
+    # if not, the pip import can raise a ImportError, if pip not installed
+    # in the globale python environment
+    if not hasattr(sys, 'real_prefix'):
+        print("")
+        print("Error: It seems that we are not running in a activated virtualenv!")
+        print("")
+        print("Please activate your environment first, e.g:")
+        print("\t...my_env$ source bin/activate")
+        print("")
+        sys.exit(-1)
+
 import pkg_resources
 
 from pip import locations
@@ -133,44 +146,10 @@ def get_upgradeable():
     return packages, editables
 
 
-def activate_virtualenv():
-    if "VIRTUALENV_FILE" in os.environ:
-        virtualenv_file = os.environ["VIRTUALENV_FILE"]
-    else:
-        virtualenv_file = "bin/activate_this.py"
-
-    if not os.path.exists(virtualenv_file):
-        print("")
-        print(c.colorize(
-            "Error: Can't find virtualenv activate file: %r" % virtualenv_file
-        , foreground="red"))
-        print("")
-        print(
-            "Put the absolute path to activate_this.py into environment"
-            " variable VIRTUALENV_FILE"
-        )
-        print("")
-        print("or")
-        print("")
-        print(
-            "Copy this file into you virtualenv root directory"
-            " and call it from there, e.g.:"
-        )
-        print("\t~/myvirtualenv$ ./upgrade_env.py")
-        print("")
-        sys.exit(-1)
-
-    execfile(virtualenv_file, dict(__file__=virtualenv_file))
-
-
 def check_activation():
-    if not hasattr(sys, 'real_prefix'):
-        print("")
-        print(c.colorize("Error:", foreground="red"), "Seems that we are not running in a activated virtualenv!")
-        print("")
-        sys.exit(-1)
     print("")
     print("sys.real_prefix: %s" % c.colorize(sys.real_prefix, foreground="blue", opts=("bold",)))
+    print("use pip from: %s" % c.colorize(os.path.dirname(pip.__file__), foreground="blue", opts=("bold",)))
     print("")
 
 
@@ -184,7 +163,6 @@ def call_pip(*args):
 
 
 def main():
-    activate_virtualenv()
     check_activation()
     packages, editables = get_upgradeable()
 
@@ -194,7 +172,11 @@ def main():
     print("(1) both: package + editables")
     print("(2) only packages")
     print("(3) only editables")
-    choice = raw_input("\nPlease select (1/2/3):")
+    try:
+        choice = raw_input("\nPlease select (1/2/3):")
+    except KeyboardInterrupt:
+        print("")
+        sys.exit()
     if choice not in ("1", "2", "3"):
         print(c.colorize("Abort, ok.", foreground="blue"))
         sys.exit()
