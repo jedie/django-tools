@@ -111,7 +111,7 @@ def get_upgradeable():
         if dist.has_metadata('dependency_links.txt'):
             dependency_links.extend(dist.get_metadata_lines('dependency_links.txt'))
 
-    print("dependency_links: %r" % dependency_links)
+    print("dependency_links: %r\n" % dependency_links)
 
     packages = []
     editables = []
@@ -134,21 +134,27 @@ def get_upgradeable():
 
             editables.append(pip_url)
 
+    if not packages:
+        print(c.colorize("Found no local packages.", foreground="blue", opts=("underscore",)))
+    else:
+        print(c.colorize("Found theses local packages:", foreground="green"))
+        for package in packages:
+            print("\t %s" % package)
 
-    print(c.colorize("Found theses local packages:", foreground="yellow"))
-    for package in packages:
-        print("\t %s" % package)
-
-    print(c.colorize("Found theses local editables:", foreground="yellow"))
-    for editable in editables:
-        print("\t %s" % editable)
+    if not editables:
+        print(c.colorize("Found no local editables.", foreground="blue", opts=("underscore",)))
+    else:
+        print(c.colorize("Found theses local editables:", foreground="green"))
+        for editable in editables:
+            print("\t %s" % editable)
 
     return packages, editables
 
 
 def check_activation():
     print("")
-    print("sys.real_prefix: %s" % c.colorize(sys.real_prefix, foreground="blue", opts=("bold",)))
+    print("sys.real_prefix: %s" % c.colorize(sys.real_prefix, foreground="magenta"))
+    print("sys.prefix: %s" % c.colorize(sys.prefix, foreground="green", opts=("bold",)))
     print("use pip from: %s" % c.colorize(os.path.dirname(pip.__file__), foreground="blue", opts=("bold",)))
     print("")
 
@@ -167,7 +173,7 @@ def main():
     packages, editables = get_upgradeable()
 
     print("")
-    print("Witch local virtualenv packages would you like to upgrade?")
+    print(c.colorize("Witch local virtualenv packages would you like to upgrade?", opts=("underscore",)))
     print("")
     print("(1) both: package + editables")
     print("(2) only packages")
