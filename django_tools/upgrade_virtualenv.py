@@ -159,13 +159,14 @@ def check_activation():
     print("")
 
 
-def call_pip(*args):
+def call_pip(args, dryrun=True):
     pip_executeable = os.path.join(locations.bin_py, "pip")
     cmd = [pip_executeable, "install", "--upgrade"]
     cmd += args
     print("-"*get_terminal_size()[0])
     print("run '%s':" % c.colorize(" ".join(cmd), foreground="blue"))
-    subprocess.call(cmd)
+    if not dryrun:
+        subprocess.call(cmd)
 
 
 def main():
@@ -178,22 +179,28 @@ def main():
     print("(1) both: package + editables")
     print("(2) only packages")
     print("(3) only editables")
+    print("(4) dry-run: display only the pip commands and do nothing.")
     try:
-        choice = raw_input("\nPlease select (1/2/3):")
+        choice = raw_input("\nPlease select (1/2/3/4):")
     except KeyboardInterrupt:
         print("")
         sys.exit()
-    if choice not in ("1", "2", "3"):
+    if choice not in ("1", "2", "3", "4"):
         print(c.colorize("Abort, ok.", foreground="blue"))
         sys.exit()
 
-    if choice in ("1", "2"):
-        for package in packages:
-            call_pip(package)
+    if choice == "4":
+        dryrun = True
+    else:
+        dryrun = False
 
-    if choice in ("1", "3"):
+    if dryrun or choice in ("1", "2"):
+        for package in packages:
+            call_pip([package], dryrun=dryrun)
+
+    if dryrun or choice in ("1", "3"):
         for editable in editables:
-            call_pip("--editable", editable)
+            call_pip(["--editable", editable], dryrun=dryrun)
 
     print("-"*get_terminal_size()[0])
 
