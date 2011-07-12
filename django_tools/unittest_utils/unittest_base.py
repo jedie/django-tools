@@ -11,13 +11,18 @@
 import os
 import sys
 import unittest
+from HTMLParser import HTMLParseError
 
 from django.core import management
 from django.utils.encoding import smart_str
 from django.contrib.auth.models import User, Permission
 from django.contrib.contenttypes.models import ContentType
+from django.utils.unittest.util import safe_repr
+
+from django_tools.unittest_utils.html import parse_html
 
 from BrowserDebug import debug_response
+import difflib
 
 
 
@@ -155,20 +160,123 @@ class BaseTestCase(unittest.TestCase):
             if location != url:
                 self.raise_browser_traceback(response, "Wrong destination url: %r != %r" % (location, url))
 
+    def _assert_and_parse_html(self, html, user_msg, msg):
+        """
+        convert a html snippet into a DOM tree.
+        raise error if snippet is no valid html.
+        """
+        try:
+            return parse_html(html)
+        except HTMLParseError, e:
+            self.fail("html code is not valid: %s - code: %r" % (e, html))
+
+    def _assert_and_parse_html_response(self, response):
+        """
+        convert html response content into a DOM tree.
+        raise browser traceback, if content is no valid html.
+        """
+        try:
+            return parse_html(response.content)
+        except HTMLParseError, e:
+            self.raise_browser_traceback(response, "Response's content is no valid html: %s" % e)
+
+    def assertHTMLEqual(self, html1, html2, msg=None):
+        """
+        Asserts that two html snippets are semantically the same, e.g. whitespace
+        in most cases is ignored, attribute ordering is not significant. The
+        passed in arguments must be valid HTML.
+        """
+        dom1 = self._assert_and_parse_html(html1, msg,
+            u'First argument is no valid html:')
+        dom2 = self._assert_and_parse_html(html2, msg,
+            u'Second argument is no valid html:')
+
+        if dom1 != dom2:
+            standardMsg = '%s != %s' % (safe_repr(dom1, True), safe_repr(dom2, True))
+            diff = ('\n' + '\n'.join(difflib.ndiff(
+                           unicode(dom1).splitlines(),
+                           unicode(dom2).splitlines())))
+            standardMsg = self._truncateMessage(standardMsg, diff)
+            self.fail(self._formatMessage(msg, standardMsg))
+
+    def assertContains(self, response, text, count=None, status_code=200,
+                       msg_prefix='', html=False):
+        """
+        Asserts that a response indicates that some content was retrieved
+        successfully, (i.e., the HTTP status code was as expected), and that
+        ``text`` occurs ``count`` times in the content of the response.
+        If ``count`` is None, the count doesn't matter - the assertion is true
+        if the text occurs at least once in the response.
+        """
+        if msg_prefix:
+            msg_prefix += ": "
+
+        self.assertEqual(response.status_code, status_code,
+            msg_prefix + "Couldn't retrieve content: Response code was %d"
+            " (expected %d)" % (response.status_code, status_code))
+        text = smart_str(text, response._charset)
+        content = response.content
+        if html:
+            content = self._assert_and_parse_html(content, None,
+                u'Response\'s content is no valid html:')
+            text = self._assert_and_parse_html(text, None,
+                u'Second argument is no valid html:')
+        real_count = content.count(text)
+        if count is not None:
+            self.assertEqual(real_count, count,
+                msg_prefix + "Found %d instances of '%s' in response"
+                " (expected %d)" % (real_count, text, count))
+        else:
+            self.assertTrue(real_count != 0,
+                msg_prefix + "Couldn't find '%s' in response" % text)
+
+    def assertDOM(self, response, must_contain=(), must_not_contain=(), use_browser_traceback=True):
+        """
+        Asserts that html response contains 'must_contain' nodes, but no
+        nodes from must_not_contain.      
+        """
+        def count_snippet(snippet, response_dom):
+            snippet = smart_str(snippet, response._charset)
+            txt_dom = self._assert_and_parse_html(
+                snippet, None, u'Unittest snippet is no valid html:'
+            )
+            return response_dom.count(txt_dom)
+
+        response_dom = self._assert_and_parse_html_response(response)
+
+        for txt in must_contain:
+            if count_snippet(txt, response_dom) == 0:
+                msg = "HTML not in response: '%s'" % txt
+                if use_browser_traceback:
+                    self.raise_browser_traceback(response, msg)
+                else:
+                    self.fail(msg)
+
+
+        for txt in must_not_contain:
+            if count_snippet(txt, response_dom) > 0:
+                msg = "HTML should not be in response: '%s'" % txt
+                if use_browser_traceback:
+                    self.raise_browser_traceback(response, msg)
+                else:
+                    self.fail(msg)
+
     def assertResponse(self, response, must_contain=(), must_not_contain=()):
         """
         Check the content of the response
         must_contain - a list with string how must be exists in the response.
         must_not_contain - a list of string how should not exists.
         """
+        def count_snippet(snippet):
+            snippet = smart_str(snippet, response._charset)
+            return response.content.count(snippet)
+
         for txt in must_contain:
-            txt = smart_str(txt, response._charset)
-            if not txt in response.content:
+            if count_snippet(txt) == 0:
                 self.raise_browser_traceback(response, "Text not in response: '%s'" % txt)
 
         for txt in must_not_contain:
-            txt = smart_str(txt, response._charset)
-            if txt in response.content:
+            if count_snippet(txt) > 0:
                 self.raise_browser_traceback(response, "Text should not be in response: '%s'" % txt)
 
 
@@ -184,3 +292,4 @@ def direct_run(raw_filename):
     appname = os.path.splitext(os.path.basename(raw_filename))[0]
     print "direct run %r" % appname
     management.call_command('test', appname)
+
