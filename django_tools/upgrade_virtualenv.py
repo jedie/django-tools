@@ -163,6 +163,18 @@ def check_activation():
     print("")
 
 
+def check_pip_version():
+    try:
+        pkg_resources.require("pip >= 1.0.1")
+    except pkg_resources.VersionConflict, err:
+        print(c.colorize("Error: outdated pip version!", foreground="red"))
+        print("Original error: %s" % err)
+        print("")
+        print("You should upgrade pip, e.g.:")
+        print("\tpip install --upgrade pip")
+        print("")
+
+
 def print_options(options):
     output = []
     if options.dryrun:
@@ -206,6 +218,7 @@ def main():
     #print options, args
 
     check_activation()
+    check_pip_version()
 
     print_options(options)
 
