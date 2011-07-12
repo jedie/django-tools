@@ -16,6 +16,9 @@
         * only packages
         * only editables
         
+    More information, call:
+        ./upgrade_virtualenv --help
+        
     This will be obsolete, if pip has a own upgrade command, see: 
         https://github.com/pypa/pip/issues/59
     
@@ -26,6 +29,7 @@
 import os
 import sys
 import subprocess
+from optparse import OptionParser
 
 if __name__ == "__main__":
     # precheck if we in a activated virtualenv
@@ -111,7 +115,7 @@ def get_upgradeable():
         if dist.has_metadata('dependency_links.txt'):
             dependency_links.extend(dist.get_metadata_lines('dependency_links.txt'))
 
-    print("dependency_links: %r\n" % dependency_links)
+    print("\ndependency_links: %r\n" % dependency_links)
 
     packages = []
     editables = []
@@ -159,18 +163,52 @@ def check_activation():
     print("")
 
 
-def call_pip(args, dryrun=True):
+def print_options(options):
+    output = []
+    if options.dryrun:
+        output.append("dry-run is on")
+    if options.verbose:
+        output.append("pip verbose mode is on")
+    output.append("log saved in '%s'" % options.logfile)
+
+    print(c.colorize("used options:", opts=("underscore",)))
+    for line in output:
+        print(c.colorize("\t* %s" % line, foreground="magenta"))
+
+
+def call_pip(options, *args):
     pip_executeable = os.path.join(locations.bin_py, "pip")
     cmd = [pip_executeable, "install", "--upgrade"]
+    if options.verbose:
+        cmd.append("--verbose")
+    if options.logfile:
+        cmd.append("--log=%s" % options.logfile)
     cmd += args
     print("-"*get_terminal_size()[0])
-    print("run '%s':" % c.colorize(" ".join(cmd), foreground="blue"))
-    if not dryrun:
+    print("run: %s" % c.colorize(" ".join(cmd), foreground="blue"))
+    if not options.dryrun:
         subprocess.call(cmd)
 
 
 def main():
+    parser = OptionParser()
+    parser.add_option("--dry-run",
+                      action="store_true", dest="dryrun", default=False,
+                      help="display only the pip commands and do nothing.")
+    parser.add_option("--verbose",
+                      action="store_true", dest="verbose", default=False,
+                      help="Turn on pip verbose mode")
+    parser.add_option("--log",
+                      action="store", dest="logfile", default="upgrade_virtualenv.log",
+                      help="Log file where complete pip output will be kept")
+
+    options, args = parser.parse_args()
+    #print options, args
+
     check_activation()
+
+    print_options(options)
+
     packages, editables = get_upgradeable()
 
     print("")
@@ -179,28 +217,23 @@ def main():
     print("(1) both: package + editables")
     print("(2) only packages")
     print("(3) only editables")
-    print("(4) dry-run: display only the pip commands and do nothing.")
+
     try:
-        choice = raw_input("\nPlease select (1/2/3/4):")
+        choice = raw_input("\nPlease select (1/2/3):")
     except KeyboardInterrupt:
         print("")
         sys.exit()
-    if choice not in ("1", "2", "3", "4"):
+    if choice not in ("1", "2", "3"):
         print(c.colorize("Abort, ok.", foreground="blue"))
         sys.exit()
 
-    if choice == "4":
-        dryrun = True
-    else:
-        dryrun = False
-
-    if dryrun or choice in ("1", "2"):
+    if choice in ("1", "2"):
         for package in packages:
-            call_pip([package], dryrun=dryrun)
+            call_pip(options, package)
 
-    if dryrun or choice in ("1", "3"):
+    if choice in ("1", "3"):
         for editable in editables:
-            call_pip(["--editable", editable], dryrun=dryrun)
+            call_pip(options, "--editable", editable)
 
     print("-"*get_terminal_size()[0])
 
