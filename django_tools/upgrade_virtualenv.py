@@ -167,12 +167,15 @@ def check_pip_version():
     try:
         pkg_resources.require("pip >= 1.0.1")
     except pkg_resources.VersionConflict, err:
-        print(c.colorize("Error: outdated pip version!", foreground="red"))
+        print(c.colorize("Error: outdated pip version!", foreground="red", opts=("bold", "reverse")))
         print("Original error: %s" % err)
         print("")
-        print("You should upgrade pip, e.g.:")
+        print(c.colorize("You should upgrade pip, e.g.:", foreground="blue"))
         print("\tpip install --upgrade pip")
         print("")
+        if raw_input("still continue? (y/n) ").lower() not in ("y", "j"):
+            print(c.colorize("Abort, ok.", foreground="blue"))
+            sys.exit(-1)
 
 
 def print_options(options):
@@ -230,6 +233,9 @@ def main():
     print("(1) both: package + editables")
     print("(2) only packages")
     print("(3) only editables")
+
+    print(c.colorize("\nWarning:", foreground="red") + " Start update only, if editables was detected successful!")
+    print("\tMore info: https://github.com/pypa/pip/issues/319")
 
     try:
         choice = raw_input("\nPlease select (1/2/3):")
