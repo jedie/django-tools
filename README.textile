@@ -91,6 +91,8 @@ to:
 
 h2. history
 
+* v0.18.1
+** Bugfix: Add missing template in pypi package
 * v0.18.0
 ** NEW: Add DOM compare from Gregor Müllegger GSoC work into unittest utils.
 * v0.17.1
