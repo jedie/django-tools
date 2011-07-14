@@ -1,4 +1,4 @@
 include AUTHORS README.textile MANIFEST.in
-recursive-include django-tools/templates *.html *.css *.js
+recursive-include django_tools/templates *.html *.css *.js
 recursive-exclude * *.pyc 
 recursive-exclude * *.pyo
