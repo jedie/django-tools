@@ -91,10 +91,11 @@ from django.utils import log
 
 logger = log.getLogger("django_tools.local_sync_cache")
 
-if len(sys.argv) > 1 and sys.argv[1].startswith("runserver"):
-    log.logging.basicConfig(format='%(created)f pid:%(process)d %(message)s')
-    logger.setLevel(log.logging.DEBUG)
-    logger.addHandler(log.logging.StreamHandler())
+
+#if "runserver" in sys.argv:
+#    log.logging.basicConfig(format='%(created)f pid:%(process)d %(message)s')
+#    logger.setLevel(log.logging.DEBUG)
+#    logger.addHandler(log.logging.StreamHandler())
 
 
 if not logger.handlers:
