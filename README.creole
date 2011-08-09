@@ -1,0 +1,199 @@
+
+h1. description
+
+miscellaneous tools for django
+
+
+h2. existing tools
+
+
+h3. local sync cache
+
+Keep a local dict in a multi-threaded environment up-to-date.
+More info, read DocString in ./local_sync_cache/local_sync_cache.py
+
+
+h3. limit to usergroups
+
+Limit something with only one field, by selecting:
+	* anonymous users
+	* staff users
+	* superusers
+	* ..all existing user groups..
+More info, read DocString in ./limit_to_usergroups.py
+
+
+h3. DOM compare in unittests
+
+The Problem:
+You can't easy check if e.g. some form input fields are in the reponse,
+because the form rendering use a dict for storing all html attributes.
+So, the ordering of form field attributes are not sorted and varied.
+
+The Solution:
+You need to parse the response content into a DOM tree and compare nodes.
+
+We add the gread work of Gregor Müllegger at his GSoC 2011 form-rendering branch.
+You will have the following assert methods inherit from:
+	django_tools.unittest_utils.unittest_base.BaseTestCase
+	
+* self.assertHTMLEqual() - for compare two HTML DOM trees
+* self.assertDOM() - for check if nodes in response or not.
+* self.assertContains() - Check if ond node occurs 'count' times in response 
+
+More info and examples in tests/test_dom_asserts.py
+
+
+h3. upgrade virtualenv
+
+A simple commandline script for call "pip install ---upgrade XY" for every package thats installed in a virtualenv.
+Simply copy/symlink it into the root directory of your virtualenv and start it.
+
+To use it, without installing django-tools:
+
+pre. ~/$ cd goto/your_env
+.../your_env/$ wget https://github.com/jedie/django-tools/raw/master/django_tools/upgrade_virtualenv.py
+.../your_env/$ chmod +x upgrade_virtualenv.py
+.../your_env/$ ./upgrade_virtualenv.py
+    
+This script will be obsolete, if pip has a own upgrade command, see: 
+    https://github.com/pypa/pip/issues/59
+
+
+h3. ..all others...
+
+There exist many miscellaneous stuff. Look in the source, luke!
+
+
+h2. Backwards-incompatible changes
+
+
+h3. v0.9
+
+Language code field and SelectMediaPath are renamed.
+
+change:
+*from django_tools.fields import LanguageCodeFormField*
+to:
+*from django_tools.fields.language_code import LanguageCodeFormField*
+
+change and rename:
+*from django_tools.fields import LanguageCodeField*
+to:
+*from django_tools.fields.language_code import LanguageCodeModelField*
+
+change and rename:
+*from django_tools.widgets import SelectMediaPath*
+to:
+*from django_tools.fields.media_path import MediaPathWidget*
+
+
+
+h2. history
+
+* v0.18.2
+** Bugfix: Add missing template in pypi package
+* v0.18.0
+** NEW: Add DOM compare from Gregor Müllegger GSoC work into unittest utils.
+* v0.17.1
+** Bugfix in "limit_to_usergroups": Make choices "lazy": Don't access the database in __init__
+* v0.17
+** Add the script "upgrade_virtualenv.py"
+** Add "limit_to_usergroups"
+** Add "local sync cache"
+** Add models.UpdateInfoBaseModel
+** Update decorators.render_to
+** render_to pass keyword arguments to render_to_response() (e.g.: mimetype="text/plain")
+** new argument "skip_fail" in get_filtered_apps(): If True: raise excaption if app is not importable
+* v0.16.4
+** Bugfix: """get_db_prep_save() got an unexpected keyword argument 'connection'""" when save a SignSeparatedModelField()
+* v0.16.3
+** Update BrowserDebug: Use response.templates instead of response.template and make output nicer
+* v0.16.2
+** Merge stack info code and display better stack info on browser debug page
+* v0.16.1
+** Update django_tools.utils.messages.StackInfoStorage for django code changes.
+* v0.16.0
+** NEW: path model field (check if direcotry exist)
+* v0.15.0
+** NEW: Add a flexible URL field (own validator, model- and form-field)
+* v0.14.1
+** Bugfix: make path in MediaPathModelField relativ (remove slashes) 
+* v0.14
+** NEW: django-tagging addon: Display existing tags under a tag field
+* v0.13
+** Bugfix UnicodeEncodeError in Browser debug
+* v0.12
+** NEW: django_tools.utils.messages.failsafe_message
+* v0.11
+** NEW: Store data in a secure cookie, see: utils/client_storage.py
+* v0.10.1
+** New: Display used templates in unittest BrowserDebug
+** Bugfix: catch if last usermessages exist
+* v0.10.0
+** NEW: utils around django messages, see: /django_tools/utils/messages.py
+* v0.9.1
+** Bugfix: database column was not created: don't overwrite get_internal_type()
+* v0.9
+** New: stuff in /django_tools/fields/
+** see also backwards-incompatible changes, above!
+* v0.8.2
+** New: widgets.SelectMediaPath(): Select a sub directory in settings.MEDIA_ROOT
+** New: fields.SignSeparatedField()
+* v0.8.1
+** Add "no_args" keyword argument to installed_apps_utils.get_filtered_apps()
+* v0.8.0
+** Add model LanguageCode field and form LanguageCode field in Accept-Language header format (RFC 2616) 
+* v0.7.0
+** Add decorators.py
+* v0.6.0
+** Add forms_utils.LimitManyToManyFields, crosspost: http://www.djangosnippets.org/snippets/1691/
+* v0.5.0
+** Add template/filters.py from PyLucid v0.8.x
+* v0.4.0
+** Add experimental "warn_invalid_template_vars"
+* v0.3.1
+** Bugfix: Exclude the instance if it was saved in the past.
+* v0.3.0
+** Add utils.installed_apps_utils
+* v0.2.0
+** Add models_utils, see: http://www.jensdiemer.de/_command/118/blog/detail/67/ (de)
+* v0.1.0
+** first version cut out from PyLucid CMS - http://www.pylucid.org
+
+
+
+h2. pip upgrade
+
+To do a pip upgrade in a virtual environment, run this:
+   
+pre. ~$ cd /YourVirtualEnv/bin
+~/YourVirtualEnv/bin$ source activate
+(YourVirtualEnv)~/YourVirtualEnv/bin$ pip install --upgrade --verbose --editable=git+git://github.com/jedie/django-tools.git#egg=django-tools
+
+The example used git readonly clone url. If you use subversion do this:
+
+pre. (YourVirtualEnv)~/YourVirtualEnv/bin$ pip install --upgrade --verbose --editable=http://svn.github.com/jedie/django-tools.git#egg=django-tools
+
+If you have git write access, use this:
+
+pre. (YourVirtualEnv)~/YourVirtualEnv/bin$ pip install --upgrade --verbose --editable=git+git@github.com:jedie/django-tools.git#egg=django-tools
+
+...or just use our limit_to_usergroups.py script (see above)
+
+
+h2. fast repo update
+
+To made a fast repository update, you can run this simple shell script:
+
+pre. ~$ cd /path/to/django-tools
+/path/to/django-tools$ ./update.sh
+
+the update script runs "git pull origin master" or "svn update".
+
+
+
+h2. links
+
+* Homepage: http://code.google.com/p/django-tools/
+* Sourcecode: http://github.com/jedie/django-tools
