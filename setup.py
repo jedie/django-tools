@@ -31,12 +31,30 @@ def get_authors():
 
 
 def get_long_description():
+    fail_silently = sys.argv[1] not in ("--long-description", "sdist")
     try:
-        f = file(os.path.join(PACKAGE_ROOT, "README.textile"), "r")
-        long_description = f.read().strip()
+        f = file(os.path.join(PACKAGE_ROOT, "README.creole"), "r")
+        desc_creole = f.read()
         f.close()
+
+        desc_creole = unicode(desc_creole, 'utf-8').strip()
+
+        from creole import creole2html, html2rest
+
+        if fail_silently:
+            from creole.shared.unknown_tags import transparent_unknown_nodes as unknown_emit
+        else:
+            from creole.shared.unknown_tags import raise_unknown_node as unknown_emit
+
+        desc_html = creole2html(desc_creole)
+        long_description = html2rest(desc_html,
+            emitter_kwargs={"unknown_emit":unknown_emit}
+        )
     except Exception, err:
+        if not fail_silently:
+            raise
         long_description = "[Error: %s]" % err
+
     return long_description
 
 
