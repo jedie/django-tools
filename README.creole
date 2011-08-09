@@ -197,5 +197,5 @@ the update script runs “git pull origin master” or “svn update”.
 
 == links
 
-* Homepage: http://code.google.com/p/django-tools/
-* Sourcecode: http://github.com/jedie/django-tools
+| Homepage:   | http://code.google.com/p/django-tools/
+| Sourcecode: | http://github.com/jedie/django-tools
