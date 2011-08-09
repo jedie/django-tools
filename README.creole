@@ -1,18 +1,28 @@
 = description
 
-miscellaneous tools for django
+Miscellaneous tools for django.
+
+
 
 == existing tools
+
 
 === local sync cache
 
 Keep a local dict in a multi-threaded environment up-to-date.
 More info, read DocString in ./local_sync_cache/local_sync_cache.py
 
+
 === limit to usergroups
 
-Limit something with only one field, by selecting: * anonymous users * staff users * superusers * ..all existing user groups..
+Limit something with only one field, by selecting:
+* anonymous users
+* staff users
+* superusers
+* ..all existing user groups..
+
 More info, read DocString in ./limit_to_usergroups.py
+
 
 === DOM compare in unittests
 
@@ -33,6 +43,7 @@ You will have the following assert methods inherit from: django_tools.unittest_u
 
 More info and examples in tests/test_dom_asserts.py
 
+
 === upgrade virtualenv
 
 A simple commandline script for call “pip install —-upgrade XY” for every package thats installed in a virtualenv.
@@ -40,17 +51,22 @@ Simply copy/symlink it into the root directory of your virtualenv and start it.
 
 To use it, without installing django-tools:
 
-{{{~/$ cd goto/your_env
+{{{
+~/$ cd goto/your_env
 .../your_env/$ wget https://github.com/jedie/django-tools/raw/master/django_tools/upgrade_virtualenv.py
 .../your_env/$ chmod +x upgrade_virtualenv.py
 .../your_env/$ ./upgrade_virtualenv.py
 }}} This script will be obsolete, if pip has a own upgrade command, see: https://github.com/pypa/pip/issues/59
 
+
 === ..all others…
 
 There exist many miscellaneous stuff. Look in the source, luke!
 
+
+
 == Backwards-incompatible changes
+
 
 === v0.9
 
@@ -71,9 +87,8 @@ change and rename:
 to:
 **from django_tools.fields.media_path import MediaPathWidget**
 
+
 == history
-
-
 
 * v0.19.0
 ** NEW: Add utils/http.py with helpers to get a webpage via http GET in unicode
@@ -93,7 +108,7 @@ to:
 ** render_to pass keyword arguments to render_to_response() (e.g.: mimetype=“text/plain”)
 ** new argument “skip_fail” in get_filtered_apps(): If True: raise excaption if app is not importable
 * v0.16.4
-** Bugfix: “”“get_db_prep_save() got an unexpected keyword argument 'connection’”“” when save a SignSeparatedModelField()
+** Bugfix: {{{get_db_prep_save() got an unexpected keyword argument 'connection’}}} when save a SignSeparatedModelField()
 * v0.16.3
 ** Update BrowserDebug: Use response.templates instead of response.template and make output nicer
 * v0.16.2
@@ -148,32 +163,39 @@ to:
 * v0.1.0
 ** first version cut out from PyLucid CMS – http://www.pylucid.org
 
+
 == pip upgrade
 
 To do a pip upgrade in a virtual environment, run this:
-
-{{{~$ cd /YourVirtualEnv/bin
+{{{
+~$ cd /YourVirtualEnv/bin
 ~/YourVirtualEnv/bin$ source activate
 (YourVirtualEnv)~/YourVirtualEnv/bin$ pip install --upgrade --verbose --editable=git+git://github.com/jedie/django-tools.git#egg=django-tools
-}}} The example used git readonly clone url. If you use subversion do this:
+}}}
 
-{{{(YourVirtualEnv)~/YourVirtualEnv/bin$ pip install --upgrade --verbose --editable=http://svn.github.com/jedie/django-tools.git#egg=django-tools
-}}} If you have git write access, use this:
+The example used git readonly clone url. If you use subversion do this:
+{{{
+(YourVirtualEnv)~/YourVirtualEnv/bin$ pip install --upgrade --verbose --editable=http://svn.github.com/jedie/django-tools.git#egg=django-tools
+}}}
 
-{{{(YourVirtualEnv)~/YourVirtualEnv/bin$ pip install --upgrade --verbose --editable=git+git@github.com:jedie/django-tools.git#egg=django-tools
-}}} ...or just use our limit_to_usergroups.py script (see above)
+If you have git write access, use this:
+{{{
+(YourVirtualEnv)~/YourVirtualEnv/bin$ pip install --upgrade --verbose --editable=git+git@github.com:jedie/django-tools.git#egg=django-tools
+}}}
+ ...or just use our limit_to_usergroups.py script (see above)
+
 
 == fast repo update
 
 To made a fast repository update, you can run this simple shell script:
-
-{{{~$ cd /path/to/django-tools
+{{{
+~$ cd /path/to/django-tools
 /path/to/django-tools$ ./update.sh
-}}} the update script runs “git pull origin master” or “svn update”.
+}}}
+the update script runs “git pull origin master” or “svn update”.
+
 
 == links
-
-
 
 * Homepage: http://code.google.com/p/django-tools/
 * Sourcecode: http://github.com/jedie/django-tools
