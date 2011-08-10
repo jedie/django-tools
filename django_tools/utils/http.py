@@ -56,17 +56,39 @@ class HTTPConnection2(httplib.HTTPConnection):
         self.request_header = s
         httplib.HTTPConnection.send(self, s)
 
+if hasattr(httplib, 'HTTPS'):
+    class HTTPSConnection2(httplib.HTTPSConnection):
+        """
+        Like httplib.HTTPConnection but stores the request headers.
+        Used in HTTPConnection3(), see below.
+        """
+        def __init__(self, *args, **kwargs):
+            httplib.HTTPSConnection.__init__(self, *args, **kwargs)
+            self.request_headers = []
+            self.request_header = ""
 
-class HTTPConnection3(object):
+        def putheader(self, header, value):
+            self.request_headers.append((header, value))
+            httplib.HTTPSConnection.putheader(self, header, value)
+
+        def send(self, s):
+            self.request_header = s
+            httplib.HTTPSConnection.send(self, s)
+
+
+class HTTPConnectionWrapper(object):
     """
     Wrapper around HTTPConnection2
     Used in HTTPHandler2(), see below.
     """
+    def __init__(self, conn_class):
+        self._conn_class = conn_class
+
     def __call__(self, *args, **kwargs):
         """
         instance made in urllib2.HTTPHandler.do_open()
         """
-        self._conn = HTTPConnection2(*args, **kwargs)
+        self._conn = self._conn_class(*args, **kwargs)
         self.request_headers = self._conn.request_headers
         self.request_header = self._conn.request_header
         return self
@@ -75,7 +97,7 @@ class HTTPConnection3(object):
         """
         Redirect attribute access to the local HTTPConnection() instance.
         """
-        if name == "_conn":
+        if name in ("_conn", "_conn_class"):
             return object.__getattribute__(self, name)
         else:
             return getattr(self._conn, name)
@@ -94,15 +116,24 @@ class HTTPHandler2(urllib2.HTTPHandler):
     >>> response.request_headers
     [('Accept-Encoding', 'identity'), ('Host', 'www.python.org'), ('Connection', 'close'), ('User-Agent', 'Python test')]
    
-    >>> response.request_header
-    'GET / HTTP/1.1\\r\\nAccept-Encoding: identity\\r\\nHost: www.python.org\\r\\nConnection: close\\r\\nUser-Agent: Python test\\r\\n\\r\\n'
+    >>> response.request_header.split("\\r\\n")[0]
+    'GET / HTTP/1.1'
     """
     def http_open(self, req):
-        conn_instance = HTTPConnection3()
+        conn_instance = HTTPConnectionWrapper(HTTPConnection2)
         response = self.do_open(conn_instance, req)
         response.request_headers = conn_instance.request_headers
         response.request_header = conn_instance.request_header
         return response
+
+if hasattr(httplib, 'HTTPS'):
+    class HTTPSHandler2(urllib2.HTTPSHandler):
+        def https_open(self, req):
+            conn_instance = HTTPConnectionWrapper(HTTPSConnection2)
+            response = self.do_open(conn_instance, req)
+            response.request_headers = conn_instance.request_headers
+            response.request_header = conn_instance.request_header
+            return response
 
 
 class HttpRequest(object):
@@ -131,9 +162,9 @@ class HttpRequest(object):
     [('Accept-Encoding', 'identity'), ('Host', 'www.heise.de'), ('Connection', 'close'), ('User-Agent', 'Python test')]
     
     The used Request as Text:
-    >>> response.request_header.split("\\r\\n")
-    ['GET / HTTP/1.1', 'Accept-Encoding: identity', 'Host: www.heise.de', 'Connection: close', 'User-Agent: Python test', '', '']
-       
+    >>> response.request_header.split("\\r\\n")[0]
+    'GET / HTTP/1.1'
+           
     
     Get the response httplib.HTTPMessage instance:
     
@@ -152,14 +183,26 @@ class HttpRequest(object):
     >>> content = r.get_unicode()
     >>> isinstance(content, unicode)
     True
-    >>> content[:14]
-    u'<!DOCTYPE html'
+    >>> content[:14].lower()
+    u'<!doctype html'
     
     
     If some encodings wrong, these list stored the tried encodings:
     
     >>> r.tried_encodings
     []
+    
+    
+    Work's with https, too:
+    >>> r = HttpRequest("https://encrypted.google.com")
+    >>> r.request.add_header("User-agent", "Python https test")
+    >>> content = r.get_unicode()
+    >>> isinstance(content, unicode)
+    True
+    >>> content[:14].lower()
+    u'<!doctype html'
+    >>> response.request_header.split("\\r\\n")[0]
+    'GET / HTTP/1.1'
     """
     _charset_re = None
 
@@ -168,7 +211,11 @@ class HttpRequest(object):
         self.timeout = timeout
         self.threadunsafe_workaround = threadunsafe_workaround
 
-        self.opener = urllib2.build_opener(HTTPHandler2)
+        handlers = [HTTPHandler2]
+        if hasattr(httplib, 'HTTPS'):
+            handlers.append(HTTPSHandler2)
+
+        self.opener = urllib2.build_opener(*handlers)
 
         # set in get_response()
         self.response_header = None
@@ -258,5 +305,23 @@ class HttpRequest(object):
 
 
 if __name__ == "__main__":
+    print "Run doctests..."
     import doctest
     print doctest.testmod()
+    print "-"*79
+
+    r = HttpRequest("http://www.python.org/index.html", timeout=3, threadunsafe_workaround=True)
+    response = r.get_response()
+    print response.request_header
+    print response.info()
+    print repr(r.get_unicode())
+
+    print "-"*79
+
+    r = HttpRequest("https://raw.github.com/jedie/django-tools/master/README.creole", timeout=3, threadunsafe_workaround=True)
+    r.request.add_header("User-agent", "Python test")
+    r.request.add_header("Referer", "/")
+    response = r.get_response()
+    print response.request_header
+    print response.info()
+    print repr(r.get_unicode())

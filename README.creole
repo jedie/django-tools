@@ -90,6 +90,8 @@ to:
 
 == history
 
+* v0.19.3
+** Add support for https in utils/http.py
 * v0.19.2
 ** Bugfix in utils/http.py timeout work-a-round
 * v0.19.1
