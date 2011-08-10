@@ -90,6 +90,10 @@ to:
 
 == history
 
+* v0.19.1
+** utils/http.py changes:
+*** Use a better solution, see: 
+*** Use Use timeout and add a work-a-round for Python < 2.6
 * v0.19.0
 ** NEW: Add utils/http.py with helpers to get a webpage via http GET in unicode
 ** Change README from textile to creole ;)
