@@ -12,6 +12,19 @@
     sended request headers. See also:
     http://stackoverflow.com/questions/603856/get-urllib2-request-headers
     
+    examples:
+    ~~~~~~~~~
+    
+    Get a page as unicode:
+        r = HttpRequest("http://www.google.com")
+        print r.get_unicode()
+        
+    Get the request/response headers:
+        r = HttpRequest("http://www.google.com")
+        response = r.get_response()
+        print "Request headers as list:", response.request_headers
+        print "Raw Request header:", response.request_header
+    
     more info, see DocStrings below...
     
     :copyleft: 2011 by the django-tools team, see AUTHORS for more details.
@@ -27,39 +40,67 @@ import re
 class HTTPConnection2(httplib.HTTPConnection):
     """
     Like httplib.HTTPConnection but stores the request headers.
-    Used in HTTPHandler2(), see below.
+    Used in HTTPConnection3(), see below.
     """
+    def __init__(self, *args, **kwargs):
+        httplib.HTTPConnection.__init__(self, *args, **kwargs)
+        self.request_headers = []
+        self.request_header = ""
+
     def putheader(self, header, value):
-        self.request_headers["header_list"].append((header, value))
+        self.request_headers.append((header, value))
         httplib.HTTPConnection.putheader(self, header, value)
 
     def send(self, s):
-        self.request_headers["send"] = s
+        self.request_header = s
         httplib.HTTPConnection.send(self, s)
+
+
+class HTTPConnection3(object):
+    """
+    Wrapper around HTTPConnection2
+    Used in HTTPHandler2(), see below.
+    """
+    def __call__(self, *args, **kwargs):
+        """
+        instance made in urllib2.HTTPHandler.do_open()
+        """
+        self._conn = HTTPConnection2(*args, **kwargs)
+        self.request_headers = self._conn.request_headers
+        self.request_header = self._conn.request_header
+        return self
+
+    def __getattribute__(self, name):
+        """
+        Redirect attribute access to the local HTTPConnection() instance.
+        """
+        if name == "_conn":
+            return object.__getattribute__(self, name)
+        else:
+            return getattr(self._conn, name)
 
 
 class HTTPHandler2(urllib2.HTTPHandler):
     """
     A HTTPHandler which stores the request headers.
-    Used HTTPConnection2, see above.
+    Used HTTPConnection3, see above.
     
     >>> opener = urllib2.build_opener(HTTPHandler2)
     >>> opener.addheaders = [("User-agent", "Python test")]
-    >>> response = opener.open('http://www.google.com/')
-    
+    >>> response = opener.open('http://www.python.org/')
+   
     Get the request headers as a list build with HTTPConnection.putheader():
     >>> response.request_headers
-    [('Accept-Encoding', 'identity'), ('Host', 'www.google.de'), ('Connection', 'close'), ('User-Agent', 'Python test')]
-    
+    [('Accept-Encoding', 'identity'), ('Host', 'www.python.org'), ('Connection', 'close'), ('User-Agent', 'Python test')]
+   
     >>> response.request_header
-    'GET / HTTP/1.1\\r\\nAccept-Encoding: identity\\r\\nHost: www.google.de\\r\\nConnection: close\\r\\nUser-Agent: Python test\\r\\n\\r\\n'
+    'GET / HTTP/1.1\\r\\nAccept-Encoding: identity\\r\\nHost: www.python.org\\r\\nConnection: close\\r\\nUser-Agent: Python test\\r\\n\\r\\n'
     """
     def http_open(self, req):
-        conn_class = HTTPConnection2
-        conn_class.request_headers = {"header_list": [], "send": ""}
-        response = self.do_open(conn_class, req)
-        response.request_headers = conn_class.request_headers["header_list"]
-        response.request_header = conn_class.request_headers["send"]
+        conn_instance = HTTPConnection3()
+        response = self.do_open(conn_instance, req)
+        response.request_headers = conn_instance.request_headers
+        response.request_header = conn_instance.request_header
         return response
 
 
@@ -188,6 +229,3 @@ class HttpRequest(object):
 if __name__ == "__main__":
     import doctest
     print doctest.testmod()
-
-    r = HttpRequest("http://www.google.de")
-    print r.get_unicode()
