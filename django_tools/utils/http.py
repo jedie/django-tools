@@ -109,6 +109,18 @@ class HttpRequest(object):
     Helper class for easy request a web page and encode the response into unicode.
     Used HTTPHandler2, so the complete request headers are available.
     
+    timeout
+    ~~~~~~~
+    HttpRequest() can take the argument 'timeout' but this works only since Python 2.6
+    For Python < 2.6 the timeout TypeError would be silently catch.
+    Activate a work-a-round with 'threadunsafe_workaround' to use socket.setdefaulttimeout()
+    But this is not thread-safty!
+    more info: 
+        http://kurtmckee.livejournal.com/32616.html (Supporting a timeout in feedparser)
+    
+    examples
+    ~~~~~~~~
+    
     >>> r = HttpRequest("http://www.heise.de")
     >>> r.request.add_header("User-agent", "Python test")
     >>> response = r.get_response()
@@ -148,11 +160,12 @@ class HttpRequest(object):
     >>> r.tried_encodings
     []
     """
-    charset_re = None
+    _charset_re = None
 
-    def __init__(self, url, timeout=5):
+    def __init__(self, url, timeout=None, threadunsafe_workaround=False):
         self.request = urllib2.Request(url=url)
         self.timeout = timeout
+        self.threadunsafe_workaround = threadunsafe_workaround
 
         self.opener = urllib2.build_opener(HTTPHandler2)
 
@@ -164,8 +177,28 @@ class HttpRequest(object):
         self.tried_encodings = []
 
     def get_response(self):
+        """
+        Cached access to response object.
+        """
         if self.response is None:
-            self.response = self.opener.open(self.request)
+            try:
+                self.response = self.opener.open(self.request, timeout=self.timeout)
+            except TypeError, err:
+                # timeout argument is new since Python v2.6
+                if not "timeout" in str(err):
+                    raise
+
+                if self.threadunsafe_workaround:
+                    # set global socket timeout
+                    old_timeout = socket.gettimeout()
+                    socket.setdefaulttimeout(self.timeout)
+
+                self.response = self.opener.open(self.request)
+
+                if self.threadunsafe_workaround:
+                    # restore global socket timeout
+                    socket.setdefaulttimeout(old_timeout)
+
             self.response_header = self.response.info() # httplib.HTTPMessage instance
         return self.response
 
@@ -185,11 +218,11 @@ class HttpRequest(object):
             return params["charset"].strip("'\"")
 
     def get_encodings_from_content(self, content):
-        if self.charset_re is None:
-            self.charset_re = re.compile(
+        if self._charset_re is None:
+            self._charset_re = re.compile(
                 r'<meta.*?charset=["\']*(.+?)["\'>]', flags=re.I
             )
-        return self.charset_re.findall(content)
+        return self._charset_re.findall(content)
 
     def get_unicode(self):
         """
@@ -221,9 +254,6 @@ class HttpRequest(object):
 
         # Fall back:
         return unicode(content, encoding, errors="replace")
-
-
-
 
 
 if __name__ == "__main__":
