@@ -31,10 +31,11 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-import httplib
-import urllib2
 import cgi
+import httplib
 import re
+import socket
+import urllib2
 
 
 class HTTPConnection2(httplib.HTTPConnection):
@@ -190,7 +191,7 @@ class HttpRequest(object):
 
                 if self.threadunsafe_workaround:
                     # set global socket timeout
-                    old_timeout = socket.gettimeout()
+                    old_timeout = socket.getdefaulttimeout()
                     socket.setdefaulttimeout(self.timeout)
 
                 self.response = self.opener.open(self.request)
