@@ -16,10 +16,12 @@
     ~~~~~~~~~
     
     Get a page as unicode:
+        from django_tools.utils.http import HttpRequest
         r = HttpRequest("http://www.google.com")
         print r.get_unicode()
         
     Get the request/response headers:
+        from django_tools.utils.http import HttpRequest
         r = HttpRequest("http://www.google.com")
         response = r.get_response()
         print "Request headers as list:", response.request_headers
