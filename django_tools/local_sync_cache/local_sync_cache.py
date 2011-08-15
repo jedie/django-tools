@@ -218,7 +218,7 @@ class LocalSyncCache(dict):
         for instance in LocalSyncCache.CACHES:
             try:
                 instance_size = sys.getsizeof(instance) # New in version 2.6
-            except AttributeError:
+            except (AttributeError, TypeError): # PyPy raised a TypeError
                 instance_size = None
 
             id = instance.id

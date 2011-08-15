@@ -90,6 +90,8 @@ to:
 
 == history
 
+* v0.19.4pre
+** Bugfix for PyPy in local_sync_cache get_cache_information(): sys.getsizeof() not implemented on PyPy
 * v0.19.3
 ** Add support for https in utils/http.py
 * v0.19.2
