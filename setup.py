@@ -20,6 +20,18 @@ from django_tools import VERSION_STRING
 PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
+try:
+    from creole.setup_utils import GetLongDescription
+except ImportError:
+    if "register" in sys.argv or "sdist" in sys.argv or "--long-description" in sys.argv:
+        etype, evalue, etb = sys.exc_info()
+        evalue = etype("%s - Please install python-creole >= v0.8 -  e.g.: pip install python-creole" % evalue)
+        raise etype, evalue, etb
+    long_description = None
+else:
+    long_description = GetLongDescription(PACKAGE_ROOT)
+
+
 def get_authors():
     try:
         f = file(os.path.join(PACKAGE_ROOT, "AUTHORS"), "r")
@@ -30,40 +42,11 @@ def get_authors():
     return authors
 
 
-def get_long_description():
-    fail_silently = sys.argv[1] not in ("--long-description", "sdist")
-    try:
-        f = file(os.path.join(PACKAGE_ROOT, "README.creole"), "r")
-        desc_creole = f.read()
-        f.close()
-
-        desc_creole = unicode(desc_creole, 'utf-8').strip()
-
-        from creole import creole2html, html2rest
-
-        if fail_silently:
-            from creole.shared.unknown_tags import transparent_unknown_nodes as unknown_emit
-        else:
-            from creole.shared.unknown_tags import raise_unknown_node as unknown_emit
-
-        desc_html = creole2html(desc_creole)
-        long_description = html2rest(desc_html,
-            emitter_kwargs={"unknown_emit":unknown_emit}
-        )
-        long_description = long_description.encode("utf-8")
-    except Exception, err:
-        if not fail_silently:
-            raise
-        long_description = "[Error: %s]" % err
-
-    return long_description
-
-
 setup(
     name='django-tools',
     version=VERSION_STRING,
     description='miscellaneous tools for django',
-    long_description=get_long_description(),
+    long_description=long_description,
     author=get_authors(),
     maintainer="Jens Diemer",
     maintainer_email="django-tools@jensdiemer.de",
