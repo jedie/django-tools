@@ -50,6 +50,7 @@ def get_long_description():
         long_description = html2rest(desc_html,
             emitter_kwargs={"unknown_emit":unknown_emit}
         )
+        long_description = long_description.encode("utf-8")
     except Exception, err:
         if not fail_silently:
             raise
