@@ -4,13 +4,13 @@ Miscellaneous tools for django.
 
 
 
-== existing tools
+== existing stuff
 
 
 === local sync cache
 
-Keep a local dict in a multi-threaded environment up-to-date.
-More info, read DocString in ./local_sync_cache/local_sync_cache.py
+Keep a local dict in a multi-threaded environment up-to-date. Usefull for cache dicts.
+More info, read DocString in [[https://github.com/jedie/django-tools/blob/master/django_tools/local_sync_cache/local_sync_cache.py|./local_sync_cache/local_sync_cache.py]].
 
 
 === limit to usergroups
@@ -21,7 +21,7 @@ Limit something with only one field, by selecting:
 * superusers
 * ..all existing user groups..
 
-More info, read DocString in ./limit_to_usergroups.py
+More info, read DocString in [[https://github.com/jedie/django-tools/blob/master/django_tools/limit_to_usergroups.py|./limit_to_usergroups.py]]
 
 
 === DOM compare in unittests
@@ -41,13 +41,15 @@ You will have the following assert methods inherit from: django_tools.unittest_u
 * self.assertDOM() – for check if nodes in response or not.
 * self.assertContains() – Check if ond node occurs 'count’ times in response
 
-More info and examples in tests/test_dom_asserts.py
+More info and examples in [[https://github.com/jedie/django-tools/blob/master/django_tools/tests/test_dom_asserts.py|./tests/test_dom_asserts.py]].
 
 
 === upgrade virtualenv
 
-A simple commandline script for call “pip install —-upgrade XY” for every package thats installed in a virtualenv.
+A simple commandline script that calls {{{pip install —-upgrade XY}}} for every package thats installed in a virtualenv.
 Simply copy/symlink it into the root directory of your virtualenv and start it.
+
+**Note:** [[https://github.com/pypa/pip/issues/319|Seems that this solution can't observe editables right.]]
 
 To use it, without installing django-tools:
 
@@ -56,7 +58,8 @@ To use it, without installing django-tools:
 .../your_env/$ wget https://github.com/jedie/django-tools/raw/master/django_tools/upgrade_virtualenv.py
 .../your_env/$ chmod +x upgrade_virtualenv.py
 .../your_env/$ ./upgrade_virtualenv.py
-}}} This script will be obsolete, if pip has a own upgrade command, see: https://github.com/pypa/pip/issues/59
+}}}
+This script will be obsolete, if [[https://github.com/pypa/pip/issues/59|pip has a own upgrade command]].
 
 
 === ..all others…
@@ -210,3 +213,5 @@ the update script runs “git pull origin master” or “svn update”.
 | Homepage:   | http://code.google.com/p/django-tools/
 | Sourcecode: | http://github.com/jedie/django-tools
 | PyPi:       | http://pypi.python.org/pypi/django-tools/
+| IRC         | [[http://www.pylucid.org/permalink/304/irc-channel|#pylucid on freenode.net]]
+
