@@ -21,7 +21,7 @@ PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
 try:
-    from creole.setup_utils import GetLongDescription
+    from creole.setup_utils import get_long_description
 except ImportError:
     if "register" in sys.argv or "sdist" in sys.argv or "--long-description" in sys.argv:
         etype, evalue, etb = sys.exc_info()
@@ -29,7 +29,7 @@ except ImportError:
         raise etype, evalue, etb
     long_description = None
 else:
-    long_description = GetLongDescription(PACKAGE_ROOT)
+    long_description = get_long_description(PACKAGE_ROOT)
 
 
 def get_authors():
