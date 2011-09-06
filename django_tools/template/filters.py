@@ -1,18 +1,13 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
 
 """
     some additional template filters
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    Last commit info:
-    ~~~~~~~~~~~~~~~~~
-    $LastChangedDate: 2008-08-15 10:37:58 +0200 (Fr, 15 Aug 2008) $
-    $Rev: 1728 $
-    $Author: JensDiemer $
-
-    :copyleft: 2007-2009 by the PyLucid team, see AUTHORS for more details.
+    :copyleft: 2007-2009 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
+
 
 if __name__ == "__main__":
     # For doctest only
@@ -25,22 +20,22 @@ from django.utils.encoding import force_unicode
 
 
 CHMOD_TRANS_DATA = (
-    u"---", u"--x", u"-w-", u"-wx", u"r--", u"r-x", u"rw-", u"rwx",
+    u"---", u"--x", u"-w-", u"-wx", u"r--", u"r-x", u"rw-", u"rwx"
 )
-def chmod_symbol(mod):
+def chmod_symbol(octal_value):
     """
-    Transform a os.stat().st_mode octal value to a symbolic string.
+    Transform a os.stat().st_octal_value octal value to a symbolic string.
     ignores meta infromation like SUID, SGID or the Sticky-Bit.
     e.g. 40755 -> rwxr-xr-x
+    >>> chmod_symbol(644)
+    u'rw-r--r--'
+    >>> chmod_symbol(40755)
+    u'rwxr-xr-x'
+    >>> chmod_symbol("777")
+    u'rwxrwxrwx'
     """
-    try:
-        mod = int(mod) # The django template engine gives always a unicode string
-    except ValueError:
-        return u""
-    mod = mod & 0777 # strip "meta info"
-    mod_string = u"%o" % mod
-
-    return u''.join(CHMOD_TRANS_DATA[int(num)] for num in mod_string)
+    octal_value_string = str(octal_value)[-3:] # strip "meta info"
+    return u''.join(CHMOD_TRANS_DATA[int(num)] for num in octal_value_string)
 chmod_symbol.is_safe = True
 chmod_symbol = stringfilter(chmod_symbol)
 
@@ -80,7 +75,7 @@ def human_duration(t):
         return _("%.1f sec") % t
 human_duration.is_safe = True
 
+
 if __name__ == "__main__":
     import doctest
-    doctest.testmod(verbose=False)
-    print "DocTest end."
+    print doctest.testmod(verbose=False)
