@@ -96,6 +96,7 @@ to:
 * v0.19.444pre
 ** Bugfix for PyPy in local_sync_cache get_cache_information(): sys.getsizeof() not implemented on PyPy
 ** Bugfix in template.filters.chmod_symbol()
+** Nicer solution for template.filters.human_duration()
 * v0.19.3
 ** Add support for https in utils/http.py
 * v0.19.2

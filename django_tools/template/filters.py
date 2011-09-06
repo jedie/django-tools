@@ -8,6 +8,10 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+import datetime
+
+from django_tools.utils.time_utils import datetime2float
+
 
 if __name__ == "__main__":
     # For doctest only
@@ -54,25 +58,61 @@ get_oct.is_safe = False
 def human_duration(t):
     """
     Converts a time duration into a friendly text representation.
+    
+    >>> human_duration("type error")
+    Traceback (most recent call last):
+        ...
+    TypeError: human_duration() argument must be timedelta, integer or float)
+    
+    
+    >>> human_duration(datetime.timedelta(microseconds=1000))
+    u'1.0 ms'
     >>> human_duration(0.01)
     u'10.0 ms'
-    >>> human_duration(1)
+    >>> human_duration(0.9)
+    u'900.0 ms'
+    >>> human_duration(datetime.timedelta(seconds=1))
     u'1.0 sec'
     >>> human_duration(65.5)
     u'1.1 min'
-    >>> human_duration(3540)
+    >>> human_duration((60 * 60)-1)
     u'59.0 min'
-    >>> human_duration(3541)
-    u'1.0 h'
+    >>> human_duration(60*60)
+    u'1.0 hours'
+    >>> human_duration(1.05*60*60)
+    u'1.1 hours'
+    >>> human_duration(datetime.timedelta(hours=24))
+    u'1.0 days'
+    >>> human_duration(2.54 * 60 * 60 * 24 * 365)
+    u'2.5 years'
     """
+    if isinstance(t, datetime.timedelta):
+        # timedelta.total_seconds() is new in Python 2.7
+        t = datetime2float(t)
+    elif not isinstance(t, (int, float)):
+        raise TypeError("human_duration() argument must be timedelta, integer or float)")
+
+    chunks = (
+      (60 * 60 * 24 * 365, _('years')),
+      (60 * 60 * 24 * 30, _('months')),
+      (60 * 60 * 24 * 7, _('weeks')),
+      (60 * 60 * 24, _('days')),
+      (60 * 60, _('hours')),
+    )
+
     if t < 1:
         return _("%.1f ms") % round(t * 1000, 1)
-    elif t > 60 * 59:
-        return _("%.1f h") % round(t / 60.0 / 60.0, 1)
-    elif t > 59:
-        return _("%.1f min") % round(t / 60.0, 1)
-    else:
-        return _("%.1f sec") % t
+    if t < 60:
+        return _("%.1f sec") % round(t, 1)
+    if t < 60 * 60:
+        return _("%.1f min") % round(t / 60, 1)
+
+    for seconds, name in chunks:
+        count = t / seconds
+        if count >= 1:
+            count = round(count, 1)
+            break
+    return "%(number).1f %(type)s" % {'number': count, 'type': name}
 human_duration.is_safe = True
 
 
