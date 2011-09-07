@@ -62,14 +62,22 @@ class DOMassertTest(BaseTestCase):
             '<a class="bar" id="foo" href="#">other</a>',
         )
 
-    def test_html_in_JavaScript(self):
+    def test_html_in_JavaScript1(self):
         """ TODO: https://github.com/gregmuellegger/django/issues/1 """
         self.assertHTMLEqual(
-            "<script>var js_sha_link='<p>***</p></script>", ""
+            '<script foo="1" bar="2">var js_sha_link="<p>***</p>"</script>',
+            '<script bar="2" foo="1">var js_sha_link="<p>***</p>"</script>',
+        )
+
+    def test_html_in_JavaScript2(self):
+        """ TODO: https://github.com/gregmuellegger/django/issues/1 """
+        self.assertHTMLEqual(
+            '<span foo="1" bar="2" /><script> <a href="" /> <p> <span></span> </p> </script>',
+            '<span bar="2" foo="1" /><script> <a href="" /> <p> <span></span> </p> </script>',
         )
 
     def test_closed_input_field(self):
-        """ TODO: https://github.com/gregmuellegger/django/issues/1 """
+        """ TODO: https://github.com/gregmuellegger/django/issues/2 """
         self.assertHTMLEqual(
             '<input value="Foo" type="text" name="first_name"></input>', ""
         )
