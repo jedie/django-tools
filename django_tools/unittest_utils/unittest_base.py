@@ -74,7 +74,7 @@ class BaseTestCase(unittest.TestCase):
         add permissions to the given user instance.
         permissions e.g.: ("AppLabel.add_Modelname", "auth.change_user")
         """
-        assert(permissions, (list, tuple))
+        assert isinstance(permissions, (list, tuple))
         for permission in permissions:
             # permission, e.g: blog.add_blogentry
             app_label, permission_codename = permission.split(".", 1)
