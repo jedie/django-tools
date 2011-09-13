@@ -106,7 +106,15 @@ def failsafe_message(msg, level=messages.INFO):
     request = ThreadLocal.get_current_request()
     if request:
         # create a normal user message
-        messages.add_message(request, level, msg)
-    else:
-        # fallback: Create a warning
-        warnings.warn(msg)
+        try:
+            messages.add_message(request, level, msg)
+        except Exception, err:
+            # e.g.:
+            # Without the django.contrib.messages middleware,
+            # messages can only be added to authenticated users.
+            msg += " (Error create a message: %s)" % err
+        else:
+            return
+
+    # fallback: Create a warning
+    warnings.warn(msg)
