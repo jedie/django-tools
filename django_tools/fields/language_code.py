@@ -4,13 +4,7 @@
     need full model and form fields
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    Last commit info:
-    ~~~~~~~~~~~~~~~~~
-    $LastChangedDate: $
-    $Rev: $
-    $Author: $
-
-    :copyleft: 2010 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2010-2011 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -66,6 +60,13 @@ class LanguageCodeModelField(models.CharField):
     """
     default_validators = [validators.validate_language_code]
     description = _("Language Code in Accept-Language header format defined in RFC 2616")
+
+try:
+    from south.modelsinspector import add_introspection_rules
+except ImportError:
+    pass
+else:
+    add_introspection_rules([], ["^django_tools\.fields\.language_code\.LanguageCodeModelField"])
 
 #------------------------------------------------------------------------------
 

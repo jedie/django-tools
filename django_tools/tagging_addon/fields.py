@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 
 """
     Addon for django-tagging
@@ -7,7 +7,7 @@
     
     Some code parts from http://code.google.com/p/django-tagging-autocomplete/    
     
-    :copyleft: 2010 by the PyLucid team, see AUTHORS for more details.
+    :copyleft: 2010-2011 by the PyLucid team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -25,3 +25,10 @@ class jQueryTagModelField(TagField):
         # Use our own widget and give him access to the model class
         kwargs['widget'] = jQueryTagFieldWidget(self.model)
         return super(jQueryTagModelField, self).formfield(**kwargs)
+
+try:
+    from south.modelsinspector import add_introspection_rules
+except ImportError:
+    pass
+else:
+    add_introspection_rules([], ["^django_tools\.tagging_addon\.fields\.jQueryTagModelField"])

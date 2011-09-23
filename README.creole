@@ -95,6 +95,7 @@ to:
 
 * v0.19.6pre
 ** fallback if message for anonymous user can't created, because django.contrib.messages middleware not used.
+** Add some south introspection rules for LanguageCodeModelField and jQueryTagModelField
 * v0.19.5
 ** Add http://bugs.python.org/file22767/hp_fix.diff for https://github.com/gregmuellegger/django/issues/1
 * v0.19.4
