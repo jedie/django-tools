@@ -90,7 +90,7 @@ class StackInfoStorage(FallbackStorage):
             last_message.stack_limit = STACK_LIMIT
 
             stack_info = get_stack_info(filepath_filter="django_tools", stack_limit=STACK_LIMIT, max_filepath_len=MAX_FILEPATH_LEN)
-            stack_info_safe = "\\n".join([l.replace("\n", "\\n") for l in stack_info])
+            stack_info_safe = "\\n".join([l.replace("\n", "\\n").replace("'", "&#x27;") for l in stack_info])
             last_message.stack_info = stack_info_safe
 
 

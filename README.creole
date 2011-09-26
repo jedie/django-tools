@@ -13,6 +13,19 @@ Keep a local dict in a multi-threaded environment up-to-date. Usefull for cache 
 More info, read DocString in [[https://github.com/jedie/django-tools/blob/master/django_tools/local_sync_cache/local_sync_cache.py|./local_sync_cache/local_sync_cache.py]].
 
 
+=== StackInfoStorage
+
+Message storage like LegacyFallbackStorage, except, every message would have a stack info, witch is helpful, for debugging.
+Stack info would only be added, if settings DEBUG or MESSAGE_DEBUG is on.
+To use it, put this into your settings:
+
+{{{    
+MESSAGE_STORAGE = "django_tools.utils.messages.StackInfoStorage"
+}}}
+
+More info, read DocString in [[https://github.com/jedie/django-tools/blob/master/django_tools/utils/messages.py|./utils/messages.py]].
+
+
 === limit to usergroups
 
 Limit something with only one field, by selecting:
@@ -95,6 +108,7 @@ to:
 
 * v0.19.6pre
 ** fallback if message for anonymous user can't created, because django.contrib.messages middleware not used.
+** Bugfix in django_tools.utils.messages.StackInfoStorage
 * v0.19.5
 ** Add http://bugs.python.org/file22767/hp_fix.diff for https://github.com/gregmuellegger/django/issues/1
 * v0.19.4
