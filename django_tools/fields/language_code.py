@@ -67,6 +67,12 @@ class LanguageCodeModelField(models.CharField):
     default_validators = [validators.validate_language_code]
     description = _("Language Code in Accept-Language header format defined in RFC 2616")
 
+try:
+    from south.modelsinspector import add_introspection_rules
+    add_introspection_rules([], ["^django_tools\.fields\.language_code\.LanguageCodeModelField"])
+except ImportError:
+    pass
+
 #------------------------------------------------------------------------------
 
 

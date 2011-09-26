@@ -25,3 +25,9 @@ class jQueryTagModelField(TagField):
         # Use our own widget and give him access to the model class
         kwargs['widget'] = jQueryTagFieldWidget(self.model)
         return super(jQueryTagModelField, self).formfield(**kwargs)
+
+try:
+    from south.modelsinspector import add_introspection_rules
+    add_introspection_rules([], ["^django_tools\.tagging_addon\.fields\.jQueryTagModelField"])
+except ImportError:
+    pass
