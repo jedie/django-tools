@@ -107,7 +107,7 @@ to:
 == history
 
 * v0.19.6
-** Add south introspection rules
+** Add some south introspection rules for LanguageCodeModelField and jQueryTagModelField
 ** fallback if message for anonymous user can't created, because django.contrib.messages middleware not used.
 ** Bugfix in django_tools.utils.messages.StackInfoStorage
 * v0.19.5
