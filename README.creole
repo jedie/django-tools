@@ -13,6 +13,11 @@ Keep a local dict in a multi-threaded environment up-to-date. Usefull for cache 
 More info, read DocString in [[https://github.com/jedie/django-tools/blob/master/django_tools/local_sync_cache/local_sync_cache.py|./local_sync_cache/local_sync_cache.py]].
 
 
+=== threadlocals middleware
+
+For getting request object anywhere, use [[https://github.com/jedie/django-tools/blob/master/django_tools/middlewares/ThreadLocal.py|./middlewares/ThreadLocal.py]]
+
+
 === StackInfoStorage
 
 Message storage like LegacyFallbackStorage, except, every message would have a stack info, witch is helpful, for debugging.
