@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
+
 """
     threadlocals middleware
     ~~~~~~~~~~~~~~~~~~~~~~~
@@ -27,16 +28,11 @@
     # You can get the current user directy with:
     user = ThreadLocal.get_current_user()
     --------------------------------------------------------------------------
-    
 
-    Last commit info:
-    ~~~~~~~~~~~~~~~~~
-    $LastChangedDate$
-    $Rev$
-    $Author:$
+    :copyleft: 2009-2011 by the django-tools team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
+"""
 
-    :copyleft: 2009 by the django-tools team, see AUTHORS for more details.
-    :license: GNU GPL v3 or above, see LICENSE for more details."""
 
 try:
     from threading import local
