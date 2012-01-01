@@ -30,16 +30,17 @@
         )
     ---------------------------------------------------------------------------
 
-    :copyleft: 2011 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2011-2012 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 
-import logging
-from django.contrib.sites.models import RequestSite, Site, SITE_CACHE, SiteManager
-from django.contrib.sites import models as sites_models
-from django.contrib import messages
+import os
 import warnings
+
+from django.conf import settings
+from django.contrib.sites import models as sites_models
+Site = sites_models.Site
 
 try:
     from threading import local
@@ -48,31 +49,42 @@ except ImportError:
 
 from django_tools.local_sync_cache.local_sync_cache import LocalSyncCache
 
-from django.conf import settings
+# Fallback SITE_ID:
+FALLBACK_SITE_ID = getattr(os.environ, "SITE_ID", settings.SITE_ID)
 
 
 SITE_CACHE = LocalSyncCache(id="DynamicSite cache")
+
+# Use the same SITE_CACHE for getting site object by host [1] and get current site by SITE_ID [2]
+# [1] here in DynamicSiteMiddleware._get_site_id_from_host()
+# [2] in django.contrib.sites.models.SiteManager.get_current()
+sites_models.SITE_CACHE = SITE_CACHE
+
 SITE_THREAD_LOCAL = local()
-SITE_THREAD_LOCAL.SITE_ID = 1 # Fallback, ID should be exist.
+
+# Use Fallback ID if Request not started e.g. in unittests
+SITE_THREAD_LOCAL.SITE_ID = FALLBACK_SITE_ID
 
 
 class DynamicSiteId(object):
     def __getattribute__(self, name):
+#        print "DynamicSiteId __getattribute__", name
         return getattr(SITE_THREAD_LOCAL.SITE_ID, name)
-#    def __int__(self):
-#        return SITE_THREAD_LOCAL.SITE_ID
-#    def __value__(self):
-#        return SITE_THREAD_LOCAL.SITE_ID
-#    def __hash__(self):
-#        return hash(SITE_THREAD_LOCAL.SITE_ID)
-#    def __id__(self):
-#        return id(SITE_THREAD_LOCAL.SITE_ID)
-#    def __repr__(self):
-#        return str(SITE_THREAD_LOCAL.SITE_ID)
-#    def __str__(self):
-#        return str(SITE_THREAD_LOCAL.SITE_ID)
-#    def __unicode__(self):
-#        return unicode(SITE_THREAD_LOCAL.SITE_ID)
+    def __int__(self):
+#        print "DynamicSiteId __int__"
+        return SITE_THREAD_LOCAL.SITE_ID
+    def __hash__(self):
+#        print "DynamicSiteId __hash__"
+        return hash(SITE_THREAD_LOCAL.SITE_ID)
+    def __repr__(self):
+#        print "DynamicSiteId __repr__"
+        return repr(SITE_THREAD_LOCAL.SITE_ID)
+    def __str__(self):
+#        print "DynamicSiteId __str__"
+        return str(SITE_THREAD_LOCAL.SITE_ID)
+    def __unicode__(self):
+#        print "DynamicSiteId __unicode__"
+        return unicode(SITE_THREAD_LOCAL.SITE_ID)
 
 
 settings.SITE_ID = DynamicSiteId()
@@ -82,10 +94,12 @@ sites_models.SITE_CACHE = SITE_CACHE
 
 
 def _clear_cache(self):
+    """ Clear django-tools LocalSyncCache() dict """
     print "Use own clear!"
     SITE_CACHE.clear()
 
-SiteManager.clear_cache = _clear_cache
+# monkey patch for django.contrib.sites.models.SiteManager.clear_cache
+sites_models.SiteManager.clear_cache = _clear_cache
 
 
 class DynamicSiteMiddleware(object):
@@ -113,26 +127,26 @@ class DynamicSiteMiddleware(object):
         try:
             return SITE_CACHE[host]
         except KeyError:
-            matches = Site.objects.filter(domain__iexact=host)
-            # We use len rather than count to save a second query if there was only one matching Site
-            count = len(matches)
-            if count == 1:
-                # Return the single matching Site
-                site = matches[0]
+            try:
+                site = Site.objects.get(domain__iexact=host)
+            except Site.DoesNotExist:
+                # FIXME: How can we give better feedback?
+                all_sites = Site.objects.all()
+                msg = "Error: There exist no SITE entry for domain %r! (Existing domains: %s)" % (
+                    host, repr(all_sites.values_list("domain", flat=True))
+                )
+#                if settings.DEBUG:
+#                    raise RuntimeError(msg)
+#                else:
+                warnings.warn(msg)
+
+                # Fallback:
+                site = Site.objects.get(id=FALLBACK_SITE_ID)
+            else:
                 print "Set site to %r for %r" % (site, host)
                 SITE_CACHE[host] = site
-            else:
-                # FIXME: How can we give better feedback?
-                msg = "Error: There exist not SITE entry for domain %r! (Existing domains: %s)" % (
-                    host, repr(Site.objects.all().values_list("domain", flat=True))
-                )
-                if settings.DEBUG:
-                    raise RuntimeError(msg)
-                else:
-                    warnings.warn(msg)
-                # Fallback
-                site = Site.objects.all()[1]
 
             return site
+
 
 
