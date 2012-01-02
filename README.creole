@@ -18,6 +18,11 @@ More info, read DocString in [[https://github.com/jedie/django-tools/blob/master
 For getting request object anywhere, use [[https://github.com/jedie/django-tools/blob/master/django_tools/middlewares/ThreadLocal.py|./middlewares/ThreadLocal.py]]
 
 
+=== Dynamic SITE_ID middleware
+
+Set settings.SITE_ID dynamically with [[https://github.com/jedie/django-tools/blob/master/django_tools/middlewares/DynamicSite.py DynamicSiteMiddleware]] base on the current request domain name.
+
+
 === StackInfoStorage
 
 Message storage like LegacyFallbackStorage, except, every message would have a stack info, witch is helpful, for debugging.
