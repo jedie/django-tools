@@ -29,7 +29,7 @@
             ...
         )
         
-    # activate this middleware:
+    # activate django-tools DynamicSiteMiddleware:
     USE_DYNAMIC_SITE_MIDDLEWARE = True
     ---------------------------------------------------------------------------
 
@@ -39,6 +39,7 @@
 
 
 import os
+import sys
 import warnings
 
 try:
@@ -49,8 +50,21 @@ except ImportError:
 from django.conf import settings
 from django.contrib.sites import models as sites_models
 from django.core.exceptions import MiddlewareNotUsed
+from django.utils import log
 
 from django_tools.local_sync_cache.local_sync_cache import LocalSyncCache
+
+
+logger = log.getLogger("django_tools.DynamicSite")
+
+if "runserver" in sys.argv:
+    log.logging.basicConfig(format='%(created)f pid:%(process)d %(message)s')
+    logger.setLevel(log.logging.DEBUG)
+    logger.addHandler(log.logging.StreamHandler())
+
+if not logger.handlers:
+    # ensures we don't get any 'No handlers could be found...' messages
+    logger.addHandler(log.NullHandler())
 
 
 Site = sites_models.Site # Shortcut
@@ -98,8 +112,7 @@ sites_models.SITE_CACHE = SITE_CACHE
 
 
 def _clear_cache(self):
-    """ Clear django-tools LocalSyncCache() dict """
-    #print "Use own clear!"
+    logger.debug("Clear SITE_CACHE (The django-tools LocalSyncCache() dict)")
     SITE_CACHE.clear()
 
 # monkey patch for django.contrib.sites.models.SiteManager.clear_cache
@@ -113,7 +126,10 @@ class DynamicSiteMiddleware(object):
         # User must add "USE_DYNAMIC_SITE_MIDDLEWARE = True" in his local_settings.py
         # to activate this middleware
         if not getattr(settings, "USE_DYNAMIC_SITE_MIDDLEWARE", False) == True:
+            logger.info("DynamicSiteMiddleware is deactivated.")
             raise MiddlewareNotUsed()
+        else:
+            logger.info("DynamicSiteMiddleware is active.")
 
     def process_request(self, request):
         # Get django.contrib.sites.models.Site instance by the current domain name:
@@ -150,6 +166,7 @@ class DynamicSiteMiddleware(object):
                 msg = "Error: There exist no SITE entry for domain %r! (Existing domains: %s)" % (
                     host, repr(all_sites.values_list("domain", flat=True))
                 )
+                logger.critical(msg)
 #                if settings.DEBUG:
 #                    raise RuntimeError(msg)
 #                else:
@@ -158,7 +175,7 @@ class DynamicSiteMiddleware(object):
                 # Fallback:
                 site = Site.objects.get(id=FALLBACK_SITE_ID)
             else:
-                #print "Set site to %r for %r" % (site, host)
+                logger.debug("Set site to %r for %r" % (site, host))
                 SITE_CACHE[host] = site
 
             return site
