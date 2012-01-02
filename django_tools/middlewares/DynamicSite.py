@@ -28,6 +28,9 @@
             'django_tools.middlewares.DynamicSite.DynamicSiteMiddleware',
             ...
         )
+        
+    # activate this middleware:
+    USE_DYNAMIC_SITE_MIDDLEWARE = True
     ---------------------------------------------------------------------------
 
     :copyleft: 2011-2012 by the django-tools team, see AUTHORS for more details.
@@ -38,31 +41,32 @@
 import os
 import warnings
 
-from django.conf import settings
-from django.contrib.sites import models as sites_models
-Site = sites_models.Site
-
 try:
     from threading import local
 except ImportError:
     from django.utils._threading_local import local
 
+from django.conf import settings
+from django.contrib.sites import models as sites_models
+from django.core.exceptions import MiddlewareNotUsed
+
 from django_tools.local_sync_cache.local_sync_cache import LocalSyncCache
 
-# Fallback SITE_ID:
-FALLBACK_SITE_ID = getattr(os.environ, "SITE_ID", settings.SITE_ID)
 
-
-SITE_CACHE = LocalSyncCache(id="DynamicSite cache")
+Site = sites_models.Site # Shortcut
 
 # Use the same SITE_CACHE for getting site object by host [1] and get current site by SITE_ID [2]
 # [1] here in DynamicSiteMiddleware._get_site_id_from_host()
 # [2] in django.contrib.sites.models.SiteManager.get_current()
+SITE_CACHE = LocalSyncCache(id="DynamicSite cache")
 sites_models.SITE_CACHE = SITE_CACHE
 
 SITE_THREAD_LOCAL = local()
 
-# Use Fallback ID if Request not started e.g. in unittests
+# Use Fallback ID if host not exist in Site table:
+FALLBACK_SITE_ID = getattr(os.environ, "SITE_ID", settings.SITE_ID)
+
+# Use Fallback ID at startup before process_request(), e.g. in unittests
 SITE_THREAD_LOCAL.SITE_ID = FALLBACK_SITE_ID
 
 
@@ -95,7 +99,7 @@ sites_models.SITE_CACHE = SITE_CACHE
 
 def _clear_cache(self):
     """ Clear django-tools LocalSyncCache() dict """
-    print "Use own clear!"
+    #print "Use own clear!"
     SITE_CACHE.clear()
 
 # monkey patch for django.contrib.sites.models.SiteManager.clear_cache
@@ -105,9 +109,20 @@ sites_models.SiteManager.clear_cache = _clear_cache
 class DynamicSiteMiddleware(object):
     """ Set settings.SITE_ID based on request's domain. """
 
+    def __init__(self):
+        # User must add "USE_DYNAMIC_SITE_MIDDLEWARE = True" in his local_settings.py
+        # to activate this middleware
+        if not getattr(settings, "USE_DYNAMIC_SITE_MIDDLEWARE", False) == True:
+            raise MiddlewareNotUsed()
+
     def process_request(self, request):
+        # Get django.contrib.sites.models.Site instance by the current domain name:
         site = self._get_site_id_from_host(request)
+
+        # Save the current site
         SITE_THREAD_LOCAL.SITE_ID = site.pk
+
+        # Put site in cache for django.contrib.sites.models.SiteManager.get_current():
         SITE_CACHE[SITE_THREAD_LOCAL.SITE_ID] = site
 
 #        def test():
@@ -143,7 +158,7 @@ class DynamicSiteMiddleware(object):
                 # Fallback:
                 site = Site.objects.get(id=FALLBACK_SITE_ID)
             else:
-                print "Set site to %r for %r" % (site, host)
+                #print "Set site to %r for %r" % (site, host)
                 SITE_CACHE[host] = site
 
             return site
