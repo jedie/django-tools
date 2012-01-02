@@ -20,7 +20,7 @@ For getting request object anywhere, use [[https://github.com/jedie/django-tools
 
 === Dynamic SITE_ID middleware
 
-Set settings.SITE_ID dynamically with [[https://github.com/jedie/django-tools/blob/master/django_tools/middlewares/DynamicSite.py DynamicSiteMiddleware]] base on the current request domain name.
+Set settings.SITE_ID dynamically with [[https://github.com/jedie/django-tools/blob/master/django_tools/middlewares/DynamicSite.py|DynamicSiteMiddleware]] base on the current request domain name.
 
 
 === StackInfoStorage
@@ -117,7 +117,7 @@ to:
 == history
 
 * v0.20.0
-** Add experimental [[https://github.com/jedie/django-tools/blob/master/django_tools/middlewares/DynamicSite.py DynamicSiteMiddleware]], please test it and give feedback.
+** Add experimental [[https://github.com/jedie/django-tools/blob/master/django_tools/middlewares/DynamicSite.py|DynamicSiteMiddleware]], please test it and give feedback.
 * v0.19.6
 ** Add some south introspection rules for LanguageCodeModelField and jQueryTagModelField
 ** fallback if message for anonymous user can't created, because django.contrib.messages middleware not used.
