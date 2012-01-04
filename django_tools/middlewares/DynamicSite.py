@@ -32,6 +32,16 @@
     # activate django-tools DynamicSiteMiddleware:
     USE_DYNAMIC_SITE_MIDDLEWARE = True
     ---------------------------------------------------------------------------
+    
+    
+    Note: Dynamic SITE ID is problematic in unittests. To avoid this, add theses
+    lines in you test runner file:
+    ---------------------------------------------------------------------------
+    from django.conf import settings
+    settings.USE_DYNAMIC_SITE_MIDDLEWARE = False
+    settings.SITE_ID = 1    
+    ---------------------------------------------------------------------------    
+
 
     :copyleft: 2011-2012 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
@@ -57,7 +67,7 @@ from django_tools.local_sync_cache.local_sync_cache import LocalSyncCache
 
 logger = log.getLogger("django_tools.DynamicSite")
 
-if "runserver" in sys.argv:
+if "runserver" in sys.argv or "tests" in sys.argv:
     log.logging.basicConfig(format='%(created)f pid:%(process)d %(message)s')
     logger.setLevel(log.logging.DEBUG)
     logger.addHandler(log.logging.StreamHandler())
@@ -77,8 +87,10 @@ sites_models.SITE_CACHE = SITE_CACHE
 
 SITE_THREAD_LOCAL = local()
 
-# Use Fallback ID if host not exist in Site table:
-FALLBACK_SITE_ID = getattr(os.environ, "SITE_ID", settings.SITE_ID)
+# Use Fallback ID if host not exist in Site table. We use int() here, because
+# os environment variables are always strings.
+FALLBACK_SITE_ID = int(getattr(os.environ, "SITE_ID", settings.SITE_ID))
+logger.debug("Fallback SITE_ID: %r" % FALLBACK_SITE_ID)
 
 # Use Fallback ID at startup before process_request(), e.g. in unittests
 SITE_THREAD_LOCAL.SITE_ID = FALLBACK_SITE_ID
