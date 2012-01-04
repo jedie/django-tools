@@ -38,8 +38,11 @@
     lines in you test runner file:
     ---------------------------------------------------------------------------
     from django.conf import settings
-    settings.USE_DYNAMIC_SITE_MIDDLEWARE = False
-    settings.SITE_ID = 1    
+    
+    # Disable dynamic site, if used:
+    if getattr(settings, "USE_DYNAMIC_SITE_MIDDLEWARE", False):
+        settings.USE_DYNAMIC_SITE_MIDDLEWARE = False
+        settings.SITE_ID = 1 
     ---------------------------------------------------------------------------    
 
 
