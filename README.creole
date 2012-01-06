@@ -67,6 +67,12 @@ You will have the following assert methods inherit from: django_tools.unittest_u
 More info and examples in [[https://github.com/jedie/django-tools/blob/master/django_tools/tests/test_dom_asserts.py|./tests/test_dom_asserts.py]].
 
 
+=== small tools
+==== debug_csrf_failure()
+Display the normal debug page and not the minimal csrf debug page.
+More info in DocString here: [[https://github.com/jedie/django-tools/blob/master/django_tools/views/csrf.py|django_tools/views/csrf.py]].
+
+
 === upgrade virtualenv
 
 A simple commandline script that calls {{{pip install —-upgrade XY}}} for every package thats installed in a virtualenv.
@@ -116,6 +122,8 @@ to:
 
 == history
 
+* v0.20.1pre
+** New: [[https://github.com/jedie/django-tools/blob/master/django_tools/views/csrf.py|debug_csrf_failure()]] to display the normal debug page and not the minimal csrf debug page.
 * v0.20.0
 ** Add experimental [[https://github.com/jedie/django-tools/blob/master/django_tools/middlewares/DynamicSite.py|DynamicSiteMiddleware]], please test it and give feedback.
 * v0.19.6
