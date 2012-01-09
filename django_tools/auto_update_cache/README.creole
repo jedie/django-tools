@@ -1,0 +1,30 @@
+
+=== Auto update cache
+
+**Experimental** "Auto update" cache.
+    
+Using the django cache framework can save processing-overhead.
+The problem is Validation/Invalidation of the cache.
+
+==== The problem
+    
+One simple solution: Do 'cache.clear()' every time the data changed.
+This ensures that everything is always up to date.
+But an empty cache causes very high load when many requests are at the same time.
+
+==== The solution
+
+"Auto update cache" doesn't clear the cache at once. It renew out dated entries
+variable based on the system load.
+The cache would be updated more quickly if system load is low than under heavy load.
+
+=== usage
+
+In your settings use:
+{{{
+'django_tools.auto_update_cache.filebased.AutoUpdateFileBasedCache'
+}}}
+for {{{CACHES[foobar]['BACKEND']}}}
+
+The django app must call {{{cache.save_change_time()}}} if the database change
+and all old cache items are potentially out of date.
