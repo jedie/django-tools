@@ -122,7 +122,7 @@ to:
 
 == history
 
-* v0.20.1pre
+* v0.20.1
 ** New: [[https://github.com/jedie/django-tools/blob/master/django_tools/views/csrf.py|debug_csrf_failure()]] to display the normal debug page and not the minimal csrf debug page.
 * v0.20.0
 ** Add experimental [[https://github.com/jedie/django-tools/blob/master/django_tools/middlewares/DynamicSite.py|DynamicSiteMiddleware]], please test it and give feedback.

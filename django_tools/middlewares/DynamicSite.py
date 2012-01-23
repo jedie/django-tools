@@ -70,10 +70,10 @@ from django_tools.local_sync_cache.local_sync_cache import LocalSyncCache
 
 logger = log.getLogger("django_tools.DynamicSite")
 
-if "runserver" in sys.argv or "tests" in sys.argv:
-    log.logging.basicConfig(format='%(created)f pid:%(process)d %(message)s')
-    logger.setLevel(log.logging.DEBUG)
-    logger.addHandler(log.logging.StreamHandler())
+#if "runserver" in sys.argv or "tests" in sys.argv:
+#    log.logging.basicConfig(format='%(created)f pid:%(process)d %(message)s')
+#    logger.setLevel(log.logging.DEBUG)
+#    logger.addHandler(log.logging.StreamHandler())
 
 if not logger.handlers:
     # ensures we don't get any 'No handlers could be found...' messages
