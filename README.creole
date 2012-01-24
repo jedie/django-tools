@@ -20,8 +20,10 @@ For getting request object anywhere, use [[https://github.com/jedie/django-tools
 
 === Dynamic SITE_ID middleware
 
-Set settings.SITE_ID dynamically with [[https://github.com/jedie/django-tools/blob/master/django_tools/middlewares/DynamicSite.py|DynamicSiteMiddleware]] base on the current request domain name.
+Set settings.SITE_ID dynamically with a middleware base on the current request domain name.
+Domain name alias can be specify as a simple string or as a regular expression.
 
+more info, read [[https://github.com/jedie/django-tools/blob/master/django_tools/dynamic_site/README.creole|./dynamic_site/README.creole]].
 
 === StackInfoStorage
 
