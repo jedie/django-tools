@@ -1,10 +1,10 @@
 == Dynamic SITE ID ==
 
+**experimental, yet!**
+
 Set the SITE_ID dynamic by the current Domain Name.
 
 You can also specify domain name alias as a simple string or as a regular expression.
-
-**experimental, yet!**
 
 Sourcecode parts are borrowed from:
 
@@ -21,14 +21,14 @@ See also:
 
 Add DynamicSiteMiddleware as the first middleware to settings, e.g:
 {{{
-    MIDDLEWARE_CLASSES = (
-        'dynamic_site.middleware.DynamicSiteMiddleware',
-        ...
-    )
-    INSTALLED_APPS = (
-        'dynamic_site',
-        ...
-    )
+MIDDLEWARE_CLASSES = (
+    'dynamic_site.middleware.DynamicSiteMiddleware',
+    ...
+)
+INSTALLED_APPS = (
+    'dynamic_site',
+    ...
+)
     
 # activate django-tools DynamicSiteMiddleware:
 USE_DYNAMIC_SITE_MIDDLEWARE = True
