@@ -32,10 +32,10 @@ from django_tools.dynamic_site.models import SiteAlias
 
 logger = log.getLogger("django_tools.DynamicSite")
 
-#if "runserver" in sys.argv or "tests" in sys.argv:
-#    log.logging.basicConfig(format='%(created)f pid:%(process)d %(message)s')
-#    logger.setLevel(log.logging.DEBUG)
-#    logger.addHandler(log.logging.StreamHandler())
+if "runserver" in sys.argv or "tests" in sys.argv:
+    log.logging.basicConfig(format='%(created)f pid:%(process)d %(message)s')
+    logger.setLevel(log.logging.DEBUG)
+    logger.addHandler(log.logging.StreamHandler())
 
 if not logger.handlers:
     # ensures we don't get any 'No handlers could be found...' messages
@@ -47,7 +47,7 @@ Site = sites_models.Site # Shortcut
 # Use the same SITE_CACHE for getting site object by host [1] and get current site by SITE_ID [2]
 # [1] here in DynamicSiteMiddleware._get_site_id_from_host()
 # [2] in django.contrib.sites.models.SiteManager.get_current()
-SITE_CACHE = LocalSyncCache(id="DynamicSite cache")
+SITE_CACHE = LocalSyncCache(id="DynamicSiteMiddlewareCache")
 sites_models.SITE_CACHE = SITE_CACHE
 
 SITE_THREAD_LOCAL = local()

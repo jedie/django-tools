@@ -124,6 +124,8 @@ to:
 
 == history
 
+* v0.21.1
+** Bugfixes in [[https://github.com/jedie/django-tools/blob/master/django_tools/dynamic_site/README.creole|Dynamic Site]].
 * v0.21.0beta
 ** New: site alias function
 ** refractory 'DynamicSiteMiddleware' to a own app (**Backwards-incompatible change:** change your settings if you use the old DynamicSiteMiddleware.)

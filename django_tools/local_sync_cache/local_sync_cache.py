@@ -76,7 +76,7 @@
         logger.addHandler(log.logging.FileHandler("local_sync_cache.log"))
     
     
-    :copyleft: 2011 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2011-2012 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -92,7 +92,7 @@ from django.utils import log
 logger = log.getLogger("django_tools.local_sync_cache")
 
 
-#if "runserver" in sys.argv:
+#if "runserver" in sys.argv or "tests" in sys.argv:
 #    log.logging.basicConfig(format='%(created)f pid:%(process)d %(message)s')
 #    logger.setLevel(log.logging.DEBUG)
 #    logger.addHandler(log.logging.StreamHandler())
@@ -145,7 +145,11 @@ class LocalSyncCache(dict):
         if unique_ids:
             for existing_cache in self.CACHES:
                 if id == existing_cache.id:
-                    raise AssertionError("ID %r was already used! It must be unique!" % id)
+                    raise AssertionError(
+                        "ID %r was already used! It must be unique! (Existing ids are: %s)" % (
+                            id, repr([i.id for i in self.CACHES])
+                        )
+                    )
 
         self.id = id
         self.django_cache = _get_cache()
