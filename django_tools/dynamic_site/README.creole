@@ -1,0 +1,47 @@
+== Dynamic SITE ID ==
+
+Set the SITE_ID dynamic by the current Domain Name.
+
+You can also specify domain name alias as a simple string or as a regular expression.
+
+**experimental, yet!**
+
+Sourcecode parts are borrowed from:
+
+* http://bitbucket.org/uysrc/django-dynamicsites/
+* Patches in http://code.djangoproject.com/ticket/4438
+* http://djangosnippets.org/snippets/1099/
+
+See also:
+
+* http://groups.google.com/group/django-developers/browse_thread/thread/4125cb192c72ed59/
+* http://groups.google.com/group/django-developers/browse_thread/thread/d9f1088de7944de3/
+
+=== usage ===
+
+Add DynamicSiteMiddleware as the first middleware to settings, e.g:
+{{{
+    MIDDLEWARE_CLASSES = (
+        'dynamic_site.middleware.DynamicSiteMiddleware',
+        ...
+    )
+    INSTALLED_APPS = (
+        'dynamic_site',
+        ...
+    )
+    
+# activate django-tools DynamicSiteMiddleware:
+USE_DYNAMIC_SITE_MIDDLEWARE = True
+}}}
+
+
+Note: Dynamic SITE ID is problematic in unittests. To avoid this, add theses
+lines in you test runner file:
+{{{
+from django.conf import settings
+
+# Disable dynamic site, if used:
+if getattr(settings, "USE_DYNAMIC_SITE_MIDDLEWARE", False):
+    settings.USE_DYNAMIC_SITE_MIDDLEWARE = False
+    settings.SITE_ID = 1 
+}}}  

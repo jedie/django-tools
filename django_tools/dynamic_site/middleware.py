@@ -6,46 +6,8 @@
     
     Set the SITE_ID dynamic by the current Domain Name.
     
-    +++ experimental, yet! +++
+    More info: read .../django_tools/dynamic_site/README.creole
     
-    Sourcecode parts are borrowed from:
-    
-    * http://bitbucket.org/uysrc/django-dynamicsites/
-    * Patches in http://code.djangoproject.com/ticket/4438
-    * http://djangosnippets.org/snippets/1099/
-    
-    See also:
-    
-    * http://groups.google.com/group/django-developers/browse_thread/thread/4125cb192c72ed59/
-    * http://groups.google.com/group/django-developers/browse_thread/thread/d9f1088de7944de3/
-
-    usage
-    ~~~~~
-    
-    Add DynamicSiteMiddleware as the first middleware to settings, e.g:
-    ---------------------------------------------------------------------------
-        MIDDLEWARE_CLASSES = (
-            'django_tools.middlewares.DynamicSite.DynamicSiteMiddleware',
-            ...
-        )
-        
-    # activate django-tools DynamicSiteMiddleware:
-    USE_DYNAMIC_SITE_MIDDLEWARE = True
-    ---------------------------------------------------------------------------
-    
-    
-    Note: Dynamic SITE ID is problematic in unittests. To avoid this, add theses
-    lines in you test runner file:
-    ---------------------------------------------------------------------------
-    from django.conf import settings
-    
-    # Disable dynamic site, if used:
-    if getattr(settings, "USE_DYNAMIC_SITE_MIDDLEWARE", False):
-        settings.USE_DYNAMIC_SITE_MIDDLEWARE = False
-        settings.SITE_ID = 1 
-    ---------------------------------------------------------------------------    
-
-
     :copyleft: 2011-2012 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
@@ -66,7 +28,7 @@ from django.core.exceptions import MiddlewareNotUsed
 from django.utils import log
 
 from django_tools.local_sync_cache.local_sync_cache import LocalSyncCache
-
+from django_tools.dynamic_site.models import SiteAlias
 
 logger = log.getLogger("django_tools.DynamicSite")
 
@@ -173,27 +135,33 @@ class DynamicSiteMiddleware(object):
         try:
             return SITE_CACHE[host]
         except KeyError:
+            site = self._get_site_from_host(host)
+            if site is None:
+                # Fallback:
+                site = Site.objects.get(id=FALLBACK_SITE_ID)
+            else:
+                logger.debug("Set site to %r for %r" % (site, host))
+                SITE_CACHE[host] = site
+            return site
+
+    def _get_site_from_host(self, host):
+        site = None
+        try:
+            site = Site.objects.get(domain__iexact=host)
+        except Site.DoesNotExist:
+            # Look if there is a alias
             try:
-                site = Site.objects.get(domain__iexact=host)
-            except Site.DoesNotExist:
+                site = SiteAlias.objects.get_from_host(host)
+            except SiteAlias.DoesNotExist:
                 # FIXME: How can we give better feedback?
                 all_sites = Site.objects.all()
                 msg = "Error: There exist no SITE entry for domain %r! (Existing domains: %s)" % (
-                    host, repr(all_sites.values_list("domain", flat=True))
+                    host, repr(all_sites.values_list("id", "domain").order_by('id'))
                 )
                 logger.critical(msg)
 #                if settings.DEBUG:
 #                    raise RuntimeError(msg)
 #                else:
                 warnings.warn(msg)
-
-                # Fallback:
-                site = Site.objects.get(id=FALLBACK_SITE_ID)
-            else:
-                logger.debug("Set site to %r for %r" % (site, host))
-                SITE_CACHE[host] = site
-
-            return site
-
-
+        return site
 
