@@ -3,13 +3,7 @@
     models utils
     ~~~~~~~~~~~~
 
-    Last commit info:
-    ~~~~~~~~~~~~~~~~~
-    $LastChangedDate$
-    $Rev$
-    $Author:$
-
-    :copyleft: 2009 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2009-2012 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -61,5 +55,11 @@ def auto_add_check_unique_together(model_class):
     """
     Add only the signal handler check_unique_together, if a database without UNIQUE support is used.
     """
-    if settings.DATABASE_ENGINE in ('sqlite3',): # 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
+    try:
+        engine = settings.DATABASE_ENGINE # old django 
+    except AttributeError:
+        # XXX: should we use only 'default' here?
+        engine = settings.DATABASES["default"]["ENGINE"] # django >1.3
+
+    if "sqlite3" in engine: # 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
         signals.pre_save.connect(check_unique_together, sender=model_class)
