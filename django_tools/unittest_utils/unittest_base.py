@@ -4,22 +4,20 @@
     unittest base
     ~~~~~~~~~~~~~
     
-    :copyleft: 2009 by the django-dbpreferences team, see AUTHORS for more details.
+    :copyleft: 2009-2012 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 import os
 import sys
 import unittest
-from HTMLParser import HTMLParseError
 
-from django.core import management
-from django.utils.encoding import smart_str
 from django.contrib.auth.models import User, Permission
 from django.contrib.contenttypes.models import ContentType
+from django.core import management
+from django.test.html import HTMLParseError, parse_html
+from django.utils.encoding import smart_str
 from django.utils.unittest.util import safe_repr
-
-from django_tools.unittest_utils.html import parse_html
 
 from BrowserDebug import debug_response
 import difflib
@@ -179,56 +177,6 @@ class BaseTestCase(unittest.TestCase):
             return parse_html(response.content)
         except HTMLParseError, e:
             self.raise_browser_traceback(response, "Response's content is no valid html: %s" % e)
-
-    def assertHTMLEqual(self, html1, html2, msg=None):
-        """
-        Asserts that two html snippets are semantically the same, e.g. whitespace
-        in most cases is ignored, attribute ordering is not significant. The
-        passed in arguments must be valid HTML.
-        """
-        dom1 = self._assert_and_parse_html(html1, msg,
-            u'First argument is no valid html:')
-        dom2 = self._assert_and_parse_html(html2, msg,
-            u'Second argument is no valid html:')
-
-        if dom1 != dom2:
-            standardMsg = '%s != %s' % (safe_repr(dom1, True), safe_repr(dom2, True))
-            diff = ('\n' + '\n'.join(difflib.ndiff(
-                           unicode(dom1).splitlines(),
-                           unicode(dom2).splitlines())))
-            standardMsg = self._truncateMessage(standardMsg, diff)
-            self.fail(self._formatMessage(msg, standardMsg))
-
-    def assertContains(self, response, text, count=None, status_code=200,
-                       msg_prefix='', html=False):
-        """
-        Asserts that a response indicates that some content was retrieved
-        successfully, (i.e., the HTTP status code was as expected), and that
-        ``text`` occurs ``count`` times in the content of the response.
-        If ``count`` is None, the count doesn't matter - the assertion is true
-        if the text occurs at least once in the response.
-        """
-        if msg_prefix:
-            msg_prefix += ": "
-
-        self.assertEqual(response.status_code, status_code,
-            msg_prefix + "Couldn't retrieve content: Response code was %d"
-            " (expected %d)" % (response.status_code, status_code))
-        text = smart_str(text, response._charset)
-        content = response.content
-        if html:
-            content = self._assert_and_parse_html(content, None,
-                u'Response\'s content is no valid html:')
-            text = self._assert_and_parse_html(text, None,
-                u'Second argument is no valid html:')
-        real_count = content.count(text)
-        if count is not None:
-            self.assertEqual(real_count, count,
-                msg_prefix + "Found %d instances of '%s' in response"
-                " (expected %d)" % (real_count, text, count))
-        else:
-            self.assertTrue(real_count != 0,
-                msg_prefix + "Couldn't find '%s' in response" % text)
 
     def assertDOM(self, response, must_contain=(), must_not_contain=(), use_browser_traceback=True):
         """
