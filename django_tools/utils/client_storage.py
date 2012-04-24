@@ -55,6 +55,8 @@ class InvalidCookieData(Exception):
 
 class ClientCookieStorage(object):
     """
+    TODO: Use https://docs.djangoproject.com/en/1.4/topics/signing/ !
+    
     >>> sha_constructor("foo").hexdigest()
     '0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33'
     >>> len(sha_constructor("foo").hexdigest()) == HASH_LEN
