@@ -1,25 +1,21 @@
 # coding: utf-8
 
 """
-    media path selection
+    static path selection
     ~~~~~~~~~~~~~~~~~~~~
     
-    TODO: Made this generic and don't use settings.MEDIA_ROOT direct, let it
+    TODO: Made this generic and don't use settings.STATIC_ROOT direct, let it
     be set as a argument to widget/fields etc.
     
      * model field
      * form field
      * widget
-     
-     INFO: This exist only for backward-compatibility and will be removed
-     in the future. Please use static_path!
 
-    :copyleft: 2010-2012 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2012 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 import os
-import warnings
 
 if __name__ == "__main__":
     # For doctest only
@@ -58,46 +54,40 @@ def directory_walk(path):
 
 
 
-class MediaPathWidget(forms.Select):
+class StaticPathWidget(forms.Select):
     """
-    Select a sub directory in settings.MEDIA_ROOT
+    Select a sub directory in settings.STATIC_ROOT
     
     >>> import os, django_tools
-    >>> settings.MEDIA_ROOT = os.path.dirname(os.path.abspath(django_tools.__file__))
-    >>> MediaPathWidget().choices # doctest: +ELLIPSIS
+    >>> settings.STATIC_ROOT = os.path.dirname(os.path.abspath(django_tools.__file__))
+    >>> StaticPathWidget().choices # doctest: +ELLIPSIS
     [('auto_update_cache', 'auto_update_cache'), ..., ('views', 'views')]
     """
     def __init__(self, attrs=None):
-        super(MediaPathWidget, self).__init__(attrs)
+        super(StaticPathWidget, self).__init__(attrs)
 
-        self._base_path = os.path.abspath(os.path.normpath(settings.MEDIA_ROOT))
+        self._base_path = os.path.abspath(os.path.normpath(settings.STATIC_ROOT))
 
         try:
             self.choices = self._get_path_choices()
         except OSError, err:
             self.choices = []
             if settings.DEBUG:
-                failsafe_message("Can't read MEDIA_ROOT: %s" % err)
-
-        warnings.warn(
-            "MediaPathWidget is deprecated and will removed in the future!"
-            " Please use StaticPathWidget.",
-            PendingDeprecationWarning
-        )
+                failsafe_message("Can't read STATIC_ROOT: %s" % err)
 
     def _get_path_choices(self):
-        media_dirs_choices = []
+        Static_dirs_choices = []
         cut_pos = len(self._base_path)
         for root in directory_walk(self._base_path):
             rel_dir = root[cut_pos:].strip(os.sep)
             if rel_dir:
-                media_dirs_choices.append((rel_dir, rel_dir))
-        return media_dirs_choices
+                Static_dirs_choices.append((rel_dir, rel_dir))
+        return Static_dirs_choices
 
 
-class MediaPathModelField(models.TextField):
+class StaticPathModelField(models.TextField):
     """
-    
+    Model field for select a sub directory in settings.STATIC_ROOT
     """
     __metaclass__ = models.SubfieldBase
 
@@ -105,20 +95,13 @@ class MediaPathModelField(models.TextField):
 #        self.separator = separator
 #        self.strip_items = strip_items
 #        self.skip_empty = skip_empty
-#        super(MediaPathModelField, self).__init__(*args, **kwargs)
+#        super(StaticPathModelField, self).__init__(*args, **kwargs)
 
     def formfield(self, **kwargs):
         """ Use always own widget and form field. """
-
-        warnings.warn(
-            "MediaPathModelField is deprecated and will removed in the future!"
-            " Please use StaticPathModelField.",
-            PendingDeprecationWarning
-        )
-
-        kwargs["widget"] = MediaPathWidget
+        kwargs["widget"] = StaticPathWidget
 #        kwargs["form_class"] = SignSeparatedFormField
-        return super(MediaPathModelField, self).formfield(**kwargs)
+        return super(StaticPathModelField, self).formfield(**kwargs)
 
 
 if __name__ == "__main__":
