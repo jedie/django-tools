@@ -124,6 +124,8 @@ to:
 
 == history
 
+* v0.23.0
+** Use cryptographic signing tools from django 1.4 in django_tools.utils.client_storage
 * v0.22.0
 ** Add [[https://github.com/jedie/django-tools/blob/master/django_tools/fields/static_path.py|static_path.py]] thats used settings.STATIC_ROOT.
 ** The old [[https://github.com/jedie/django-tools/blob/master/django_tools/fields/media_path.py|media_path.py]] which used settings.MEDIA_ROOT is deprecated and will be removed in the future.
