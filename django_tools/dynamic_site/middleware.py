@@ -24,11 +24,13 @@ except ImportError:
 
 from django.conf import settings
 from django.contrib.sites import models as sites_models
-from django.core.exceptions import MiddlewareNotUsed
+from django.core.exceptions import MiddlewareNotUsed, ImproperlyConfigured
 from django.utils import log
 
 from django_tools.local_sync_cache.local_sync_cache import LocalSyncCache
 from django_tools.dynamic_site.models import SiteAlias
+
+USE_DYNAMIC_SITE_MIDDLEWARE = getattr(settings, "USE_DYNAMIC_SITE_MIDDLEWARE", False)
 
 logger = log.getLogger("django_tools.DynamicSite")
 
@@ -43,22 +45,6 @@ if not logger.handlers:
 
 
 Site = sites_models.Site # Shortcut
-
-# Use the same SITE_CACHE for getting site object by host [1] and get current site by SITE_ID [2]
-# [1] here in DynamicSiteMiddleware._get_site_id_from_host()
-# [2] in django.contrib.sites.models.SiteManager.get_current()
-SITE_CACHE = LocalSyncCache(id="DynamicSiteMiddlewareCache")
-sites_models.SITE_CACHE = SITE_CACHE
-
-SITE_THREAD_LOCAL = local()
-
-# Use Fallback ID if host not exist in Site table. We use int() here, because
-# os environment variables are always strings.
-FALLBACK_SITE_ID = int(getattr(os.environ, "SITE_ID", settings.SITE_ID))
-logger.debug("Fallback SITE_ID: %r" % FALLBACK_SITE_ID)
-
-# Use Fallback ID at startup before process_request(), e.g. in unittests
-SITE_THREAD_LOCAL.SITE_ID = FALLBACK_SITE_ID
 
 
 class DynamicSiteId(object):
@@ -82,18 +68,47 @@ class DynamicSiteId(object):
         return unicode(SITE_THREAD_LOCAL.SITE_ID)
 
 
-settings.SITE_ID = DynamicSiteId()
-
-# Use the same cache for Site.objects.get_current():
-sites_models.SITE_CACHE = SITE_CACHE
-
-
 def _clear_cache(self):
     logger.debug("Clear SITE_CACHE (The django-tools LocalSyncCache() dict)")
     SITE_CACHE.clear()
 
-# monkey patch for django.contrib.sites.models.SiteManager.clear_cache
-sites_models.SiteManager.clear_cache = _clear_cache
+
+if USE_DYNAMIC_SITE_MIDDLEWARE == True:
+    # Use the same SITE_CACHE for getting site object by host [1] and get current site by SITE_ID [2]
+    # [1] here in DynamicSiteMiddleware._get_site_id_from_host()
+    # [2] in django.contrib.sites.models.SiteManager.get_current()
+    SITE_CACHE = LocalSyncCache(id="DynamicSiteMiddlewareCache")
+    sites_models.SITE_CACHE = SITE_CACHE
+    
+    SITE_THREAD_LOCAL = local()
+    
+    # Use Fallback ID if host not exist in Site table. We use int() here, because
+    # os environment variables are always strings.
+    FALLBACK_SITE_ID = int(getattr(os.environ, "SITE_ID", settings.SITE_ID))
+    logger.debug("Fallback SITE_ID: %r" % FALLBACK_SITE_ID)
+    
+    # Use Fallback ID at startup before process_request(), e.g. in unittests
+    SITE_THREAD_LOCAL.SITE_ID = FALLBACK_SITE_ID
+    
+    try:
+        FALLBACK_SITE = Site.objects.get(id=FALLBACK_SITE_ID)
+    except Site.DoesNotExist, e:
+        all_sites = Site.objects.all()
+        msg = "Fallback SITE_ID %i doesn't exist: %s (Existing sites: %s)" % (
+            FALLBACK_SITE_ID, e, repr(all_sites.values_list("id", "domain").order_by('id'))
+        )
+        logger.critical(msg)
+        raise ImproperlyConfigured(msg)
+#        site = Site(id=FALLBACK_SITE_ID, domain="example.tld", name="Auto Created!")
+#        site.save()
+    
+    settings.SITE_ID = DynamicSiteId()
+
+    # Use the same cache for Site.objects.get_current():
+    sites_models.SITE_CACHE = SITE_CACHE
+
+    # monkey patch for django.contrib.sites.models.SiteManager.clear_cache
+    sites_models.SiteManager.clear_cache = _clear_cache
 
 
 class DynamicSiteMiddleware(object):
@@ -102,7 +117,7 @@ class DynamicSiteMiddleware(object):
     def __init__(self):
         # User must add "USE_DYNAMIC_SITE_MIDDLEWARE = True" in his local_settings.py
         # to activate this middleware
-        if not getattr(settings, "USE_DYNAMIC_SITE_MIDDLEWARE", False) == True:
+        if USE_DYNAMIC_SITE_MIDDLEWARE != True:
             logger.info("DynamicSiteMiddleware is deactivated.")
             raise MiddlewareNotUsed()
         else:
@@ -128,7 +143,7 @@ class DynamicSiteMiddleware(object):
 #            print "-"*79
 #            print id(settings.SITE_ID), settings.SITE_ID
 #            print "TEST:", Site.objects.get_current()
-#        test()
+#        test()      
 
     def _get_site_id_from_host(self, request):
         host = request.get_host().lower()
@@ -138,7 +153,8 @@ class DynamicSiteMiddleware(object):
             site = self._get_site_from_host(host)
             if site is None:
                 # Fallback:
-                site = Site.objects.get(id=FALLBACK_SITE_ID)
+                logger.critical("Use FALLBACK_SITE !")
+                site = FALLBACK_SITE
             else:
                 logger.debug("Set site to %r for %r" % (site, host))
                 SITE_CACHE[host] = site
