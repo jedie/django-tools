@@ -133,7 +133,7 @@ to:
 ** The old [[https://github.com/jedie/django-tools/blob/master/django_tools/fields/media_path.py|media_path.py]] which used settings.MEDIA_ROOT is deprecated and will be removed in the future.
 ** auto_add_check_unique_together() can use settings.DATABASES["default"]["ENGINE"], too.
 * v0.21.1
-** Bugfixes in [[https://github.com/jedie/django-tools/blob/master/django_tools/dynamic_site/README.creole|Dynamic Site]].
+** Bugfixes in [[https://github.com/jedie/django-tools/tree/master/django_tools/dynamic_site#dynamic-site-id|Dynamic Site]].
 * v0.21.0beta
 ** New: site alias function
 ** refractory 'DynamicSiteMiddleware' to a own app (**Backwards-incompatible change:** change your settings if you use the old DynamicSiteMiddleware.)
