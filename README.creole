@@ -124,6 +124,8 @@ to:
 
 == history
 
+* v0.23.1
+** [[https://github.com/jedie/django-tools/tree/master/django_tools/dynamic_site#dynamic-site-id|Dynamic Site]] would be only initialised if settings.USE_DYNAMIC_SITE_MIDDLEWARE = True
 * v0.23.0
 ** Use cryptographic signing tools from django 1.4 in django_tools.utils.client_storage
 * v0.22.0
