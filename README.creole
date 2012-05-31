@@ -124,6 +124,8 @@ to:
 
 == history
 
+* v0.24.0.pre
+** [[https://github.com/jedie/django-tools/commit/a3cf1f7b2e9dbe4964306f4793c74f1782f8b2ea|Don't use auto_now_add and auto_now in UpdateInfoBaseModel]]
 * v0.23.1
 ** [[https://github.com/jedie/django-tools/tree/master/django_tools/dynamic_site#dynamic-site-id|Dynamic Site]] would be only initialised if settings.USE_DYNAMIC_SITE_MIDDLEWARE = True
 * v0.23.0
