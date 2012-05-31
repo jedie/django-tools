@@ -1,4 +1,5 @@
 # coding: utf-8
+
 """
     models utils
     ~~~~~~~~~~~~
@@ -7,6 +8,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+
 from django.conf import settings
 from django.db.models import signals
 from django.utils.text import get_text_list
@@ -14,16 +16,25 @@ from django.db import connection, IntegrityError
 from django.utils.translation import ugettext as _
 from django.db.models.fields import FieldDoesNotExist
 
+
 def check_unique_together(sender, **kwargs):
     """
-    Check models unique_together manually. Django enforced unique together only the database level, but
+    Check models unique_together manually. Because Django will only
+    enforced unique together at database level with UNIQUE, but
     some databases (e.g. SQLite) doesn't support this.
+    
+    NOTE: SQLite supports UNIQUE since 2.0 (from 2001) !
     
     usage:
         from django.db.models import signals
+        from django_tools.model_utils import check_unique_together
         signals.pre_save.connect(check_unique_together, sender=MyModelClass)
         
-    or use auto_add_check_unique_together(), see below.
+    or use:
+        from django_tools.model_utils import auto_add_check_unique_together
+        auto_add_check_unique_together(MyModelClass)
+        
+    This will add the signal only if a Database doesn't support UNIQUE, see below.
     """
     instance = kwargs["instance"]
     for field_names in sender._meta.unique_together:
@@ -51,15 +62,19 @@ def check_unique_together(sender, **kwargs):
             }
             raise IntegrityError(msg)
 
+
 def auto_add_check_unique_together(model_class):
     """
     Add only the signal handler check_unique_together, if a database without UNIQUE support is used.
+    
+    NOTE: SQLite supports UNIQUE since 2.0 (from 2001) !
     """
     try:
-        engine = settings.DATABASE_ENGINE # old django 
+        # new setting scheme
+        engine = settings.DATABASES["default"]["ENGINE"]
     except AttributeError:
-        # XXX: should we use only 'default' here?
-        engine = settings.DATABASES["default"]["ENGINE"] # django >1.3
+        # fall back to old scheme
+        engine = settings.DATABASE_ENGINE
 
     if "sqlite3" in engine: # 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
         signals.pre_save.connect(check_unique_together, sender=model_class)
