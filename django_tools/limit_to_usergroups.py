@@ -155,6 +155,10 @@ class UsergroupsModelField(models.IntegerField):
     ]
     USER_TYPES_DICT = dict(USER_TYPES_CHOICES)
 
+    def __init__(self, *args, **kwargs):
+        kwargs["choices"] = self.get_choices()
+        super(UsergroupsModelField, self).__init__(*args, **kwargs)
+
     def get_choices(self, *args, **kwargs):
         groups = get_user_groups()
         choices = self.USER_TYPES_CHOICES + list(groups)
