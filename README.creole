@@ -124,7 +124,7 @@ to:
 
 == history
 
-* v0.24.0.pre
+* v0.24.0
 ** [[https://github.com/jedie/django-tools/commit/a3cf1f7b2e9dbe4964306f4793c74f1782f8b2ea|Don't use auto_now_add and auto_now in UpdateInfoBaseModel]]
 ** Bugfix in [[https://github.com/jedie/django-tools/blob/master/django_tools/limit_to_usergroups.py|UsergroupsModelField]]
 * v0.23.1
