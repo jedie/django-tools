@@ -49,7 +49,7 @@ class UpdateInfoBaseModel(models.Model):
         Automatic update createby and lastupdateby attributes with the request object witch must be
         the first argument.
         """
-        self.last_changed = now()
+        self.lastupdatetime = now()
         current_user = ThreadLocal.get_current_user()
 
         if current_user and isinstance(current_user, User):
