@@ -1,16 +1,14 @@
 # coding: utf-8
 
 import os
-import sys
-
-sys.path.insert(0, os.path.dirname(__file__))
 
 DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': ":memory:"
+        'NAME': os.path.join(os.path.abspath(os.path.dirname(__file__)), "test.db3"),
     }
 }
 
@@ -31,6 +29,6 @@ INSTALLED_APPS = (
 
     'django_tools',
     'django_tools.local_sync_cache',
-    'django_tools.tests',
+    'django_tools_test_project.django_tools_test_app',
 )
 SITE_ID = 1
