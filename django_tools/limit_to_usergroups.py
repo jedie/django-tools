@@ -48,13 +48,13 @@
     ---------------------------------------------------------------------------
 
     
-    :copyleft: 2011 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2011-2012 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
 
 
 def has_permission(item, **kwargs):
@@ -77,6 +77,12 @@ def has_permission(item, **kwargs):
 
         if user.is_anonymous():
             return False
+
+        if limit_permission_value == UsergroupsModelField.NORMAL_USERS:
+            if user.is_authenticated():
+                continue
+            else:
+                return False
 
         if limit_permission_value == UsergroupsModelField.STAFF_USERS:
             if user.is_staff:
@@ -147,9 +153,11 @@ class UsergroupsModelField(models.IntegerField):
     ANONYMOUS_USERS = 0
     STAFF_USERS = -1
     SUPERUSERS = -2
+    NORMAL_USERS = -3
 
     USER_TYPES_CHOICES = [
         (ANONYMOUS_USERS, _("anonymous users")),
+        (NORMAL_USERS, _("normal users")),
         (STAFF_USERS, _("staff users")),
         (SUPERUSERS, _("superusers")),
     ]
