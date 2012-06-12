@@ -55,6 +55,31 @@ class BaseTestCase(unittest.TestCase):
     def _pre_setup(self):
         super(BaseTestCase, self)._pre_setup()
 
+    def create_user(self, verbosity, username, password, email, is_staff, is_superuser):
+        """
+        Create a user and return the instance.
+        """
+        defaults = {'password':password, 'email':email}
+        user, created = User.objects.get_or_create(
+            username=username, defaults=defaults
+        )
+        if not created:
+            user.email = email
+        user.set_password(password)
+        user.is_staff = is_staff
+        user.is_superuser = is_superuser
+        user.save()
+        if verbosity >= 2:
+            print "Test user %r created." % user
+        return user
+    
+    def create_testusers(self, verbosity=2):
+        """
+        Create all available testusers and UserProfiles
+        """
+        for userdata in self.TEST_USERS.values():
+            self.create_user(verbosity, **userdata)
+
     def login(self, usertype):
         """
         Login the user defined in self.TEST_USERS
