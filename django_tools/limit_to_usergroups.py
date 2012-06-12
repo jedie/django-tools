@@ -156,10 +156,22 @@ class UsergroupsModelField(models.IntegerField):
     USER_TYPES_DICT = dict(USER_TYPES_CHOICES)
 
     def __init__(self, *args, **kwargs):
-        kwargs["choices"] = self.get_choices()
+        """
+        We added only the static choices here, because we should not access
+        the database here (can break unittests)
+        In this cases the choices feature of this field is activated, but
+        in any case self.get_choices() would be called: There we append
+        the user groups
+        """
+        kwargs["choices"] = self.USER_TYPES_CHOICES
+        
         super(UsergroupsModelField, self).__init__(*args, **kwargs)
 
     def get_choices(self, *args, **kwargs):
+        """
+        Built the choices list with the static part and all existing
+        user groups from database.
+        """
         groups = get_user_groups()
         choices = self.USER_TYPES_CHOICES + list(groups)
         return choices
