@@ -1,7 +1,5 @@
 == Dynamic SITE ID ==
 
-**experimental, yet!**
-
 Set the SITE_ID dynamic by the current Domain Name.
 You can also specify domain name alias as a simple string or as a regular expression.
 
@@ -35,6 +33,14 @@ INSTALLED_APPS = (
 USE_DYNAMIC_SITE_MIDDLEWARE = True
 }}}
 
+=== limitations ===
+
+==== defaults ====
+
+You can't set the default ID in model fields with {{{default=settings.SITE_ID}}} becuase this will be evalutated at startup.
+So it won't change dynamically. Work-a-round: Set it in {{{__init__()}}} 
+
+==== unittests ====
 
 Note: Dynamic SITE ID is problematic in unittests. To avoid this, add theses
 lines in you test runner file:
