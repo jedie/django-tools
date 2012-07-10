@@ -124,6 +124,8 @@ to:
 
 == history
 
+* v0.24.2
+** Split [[https://github.com/jedie/django-tools/blob/master/django_tools/models.py|UpdateInfoBaseModel()]]: So you can only set "createtime", "lastupdatetime" or "createby", "lastupdateby" or both types (This is backward compatible) 
 * v0.24.1
 ** Bugfix: UsergroupsModelField() and add unittests for it
 ** Add "normal users" in UsergroupsModelField()
