@@ -124,8 +124,10 @@ to:
 
 == history
 
+* v0.24.3
+** "Hardcode" the version string date attachment via [[https://github.com/jedie/python-code-snippets/tree/master/CodeSnippets/git|gitattribute filter script]] to fix [[https://github.com/jedie/django-tools/issues/1|a reported issues]] with [[https://github.com/pypa/pip/issues/145|pip requirements file bug]]. 
 * v0.24.2
-** Split [[https://github.com/jedie/django-tools/blob/master/django_tools/models.py|UpdateInfoBaseModel()]]: So you can only set "createtime", "lastupdatetime" or "createby", "lastupdateby" or both types (This is backward compatible) 
+** Split [[https://github.com/jedie/django-tools/blob/master/django_tools/models.py|UpdateInfoBaseModel()]]: So you can only set "createtime", "lastupdatetime" or "createby", "lastupdateby" or both types (This is backwards compatible)
 * v0.24.1
 ** Bugfix: UsergroupsModelField() and add unittests for it
 ** Add "normal users" in UsergroupsModelField()
