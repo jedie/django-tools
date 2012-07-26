@@ -17,7 +17,11 @@ __version__ = (0, 24, 3)
 COMMITTER_DATE = "$date$" # set by .gitattributes filter
 DATE_REGEX = re.compile(r"\$date:(.*?)\$")
 
-__version__ += (DATE_REGEX.findall(COMMITTER_DATE)[0],)
+try:
+    __version__ += (DATE_REGEX.findall(COMMITTER_DATE)[0],)
+except IndexError:
+    pass
+
 VERSION_STRING = '.'.join(str(part) for part in __version__)
 
 
