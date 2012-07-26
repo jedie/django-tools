@@ -124,6 +124,8 @@ to:
 
 == history
 
+* v0.24.4
+** remove date from version string, cause of side-effects e.g.: user clone the repo and has the filter not installed
 * v0.24.3
 ** "Hardcode" the version string date attachment via [[https://github.com/jedie/python-code-snippets/tree/master/CodeSnippets/git|gitattribute filter script]] to fix [[https://github.com/jedie/django-tools/issues/1|a reported issues]] with [[https://github.com/pypa/pip/issues/145|pip requirements file bug]]. 
 * v0.24.2
