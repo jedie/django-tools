@@ -93,6 +93,35 @@ To use it, without installing django-tools:
 This script will be obsolete, if [[https://github.com/pypa/pip/issues/59|pip has a own upgrade command]].
 
 
+=== Print SQL Queries
+
+Print the used SQL queries via context manager.
+
+usage e.g.:
+{{{    
+from django_tools.unittest_utils.print_sql import PrintQueries
+
+# e.g. use in unittests:
+class MyTests(TestCase):
+    def test_foobar(self):
+        with PrintQueries("Create object"):
+            FooBar.objects.create("name"=foo)
+            
+# e.g. use in views:
+def my_view(request):
+    with PrintQueries("Create object"):
+        FooBar.objects.create("name"=foo)
+}}}
+
+the output is like:
+{{{
+_______________________________________________________________________________
+ *** Create object ***
+1 - INSERT INTO "foobar" ("name")
+    VALUES (foo)
+-------------------------------------------------------------------------------
+}}}
+
 === ..all others…
 
 There exist many miscellaneous stuff. Look in the source, luke!
@@ -124,6 +153,8 @@ to:
 
 == history
 
+* v0.24.5 - 06.08.2012
+** Add **Print SQL Queries** context manager. (see above)
 * v0.24.4 - 26.07.2012
 ** remove date from version string, cause of side-effects e.g.: user clone the repo and has the filter not installed
 * v0.24.3 - 25.07.2012
