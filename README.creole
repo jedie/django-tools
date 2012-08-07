@@ -31,7 +31,7 @@ Message storage like LegacyFallbackStorage, except, every message would have a s
 Stack info would only be added, if settings DEBUG or MESSAGE_DEBUG is on.
 To use it, put this into your settings:
 
-{{{    
+{{{
 MESSAGE_STORAGE = "django_tools.utils.messages.StackInfoStorage"
 }}}
 
@@ -98,7 +98,7 @@ This script will be obsolete, if [[https://github.com/pypa/pip/issues/59|pip has
 Print the used SQL queries via context manager.
 
 usage e.g.:
-{{{    
+{{{
 from django_tools.unittest_utils.print_sql import PrintQueries
 
 # e.g. use in unittests:
