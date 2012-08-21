@@ -11,8 +11,12 @@ Miscellaneous tools for django.
 
 Library for building django application like filemanager, gallery etc.
 
-more info, read [[https://github.com/jedie/django-tools/blob/master/django_tools/filemanager/README.creole|./filemanager/README.creole]].
+more info, read [[https://github.com/jedie/django-tools/blob/master/django_tools/filemanager/README.creole|./filemanager/README.creole]]
 
+=== per-site cache middleware
+
+Similar to [[https://docs.djangoproject.com/en/1.4/topics/cache/#the-per-site-cache|django UpdateCacheMiddleware and FetchFromCacheMiddleware]],
+but has some enhancements: [[https://github.com/jedie/django-tools/blob/master/django_tools/cache/README.creole|./cache/README.creole]]
 
 === local sync cache
 
@@ -81,6 +85,9 @@ More info and examples in [[https://github.com/jedie/django-tools/blob/master/dj
 Display the normal debug page and not the minimal csrf debug page.
 More info in DocString here: [[https://github.com/jedie/django-tools/blob/master/django_tools/views/csrf.py|django_tools/views/csrf.py]].
 
+==== import lib helper
+additional helper to the existing {{{django.utils.importlib}}}
+more info in the sourcecode: [[https://github.com/jedie/django-tools/blob/master/django_tools/utils/importlib.py|./utils/importlib.py]]
 
 === upgrade virtualenv
 
@@ -162,6 +169,8 @@ to:
 
 * v0.24.6 - 21.08.2012
 ** Add the **filemanager library** (see above)
+** Add the **per-site cache middleware** (see above)
+** Add **import lib helper**: [[https://github.com/jedie/django-tools/blob/master/django_tools/utils/importlib.py|./utils/importlib.py]]
 * v0.24.5 - 06.08.2012
 ** Add **Print SQL Queries** context manager. (see above)
 * v0.24.4 - 26.07.2012

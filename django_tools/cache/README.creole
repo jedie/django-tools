@@ -1,0 +1,59 @@
+== per-site cache middleware
+
+Similar to [[https://docs.djangoproject.com/en/1.4/topics/cache/#the-per-site-cache|django UpdateCacheMiddleware and FetchFromCacheMiddleware]],
+but has some enhancements:        
+ * Skip cookies and attributes like response.csrf_processing_done
+ * ignores {{{response['Vary']}}}
+ * Check if 'csrfmiddlewaretoken' is in content
+
+The cache key would be generated with:
+ * request.get_full_path()
+ * request.LANGUAGE_CODE
+ * settings.SITE_ID
+
+=== usage
+
+add this to your settings:
+{{{
+MIDDLEWARE_CLASSES = (
+    ...
+    'django_tools.cache.site_cache_middleware.UpdateCacheMiddleware',
+    ...
+    'django_tools.cache.site_cache_middleware.FetchFromCacheMiddleware',
+    ...
+)
+}}}
+**Notes:**
+ * "update" must be the first in the list and "fetch" at the last. (see also [[https://docs.djangoproject.com/en/1.4/topics/cache/#order-of-middleware-classes|Order of MIDDLEWARE_CLASSES]])
+ * django.middleware.locale.LocaleMiddleware must be insert before cache middleware
+ 
+=== settings
+
+**CACHE_MIDDLEWARE_ANONYMOUS_ONLY** True/False (default: False)
+If ==True: Don't cache for authenticated users.
+
+**CACHE_CALLBACK** e.g.: "my_project.cache.cache_callback" (default: None)
+Path to a call back function for checking if request/response should be caches.
+e.g.:
+{{{
+from django_tools.cache.site_cache_middleware import logger # Maybe use a own logger
+
+def cache_callback(request, response=None):
+    if request.GET:
+        logger.debug("Don't cache request with GET query: %s" % repr(request.GET))
+        return False
+
+    if response and getattr(response, 'disable_cache', False):
+        logger.debug("Don't cache because response.disable_cache==True")
+        return False
+
+    return True
+}}}
+
+**RUN_WITH_DEV_SERVER** True/False (default: {{{"runserver" in sys.argv}}})
+Are we run with the django developer server? If yes, we do some more checks:
+ * Don't cache STATIC files. ({{{request.path}}} starts with {{{settings.STATIC_URL}}})
+ * raise error if a {{{ {% csrf_token %} }}} would be stored into the cache (e.g. view dosn't use {{{@csrf_protect}}} decorator)
+
+**CACHE_EXTRA_DEBUG** True/False (default: False)
+ * creates more {{{logger.debug()}}} output
