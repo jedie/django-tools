@@ -1,0 +1,28 @@
+== Filemanager library
+
+Library for building django application like filemanager, gallery etc.
+Provides some base classes to build your own views.
+
+There exists two base classes:
+
+**[[https://github.com/jedie/django-tools/blob/master/django_tools/filemanager/filesystem_browser.py|filesystem_browser.BaseFilesystemBrowser]]**
+* Base class for browse a specified sub directory
+* with a protection against [[https://en.wikipedia.org/wiki/Directory_traversal_attack|directory traversal attacks]].
+
+**[[https://github.com/jedie/django-tools/blob/master/django_tools/filemanager/filemanager.py|filemanager.BaseFilemanager]]**
+* Base class for a app like a file manager
+* provides directory/file objects with many informations (e.g. to display in a django template):
+** file path (absolute & relative)
+** size
+** file’s permission bits in different formats:
+*** native stat.ST_MODE
+*** octal notation
+*** symbol notation as string, e.g.: {{{u'rw-rw-r--'}}}
+** modify datetime
+** name & id of user and user group
+* base function to handle file uploads
+
+== examples
+
+* [[https://github.com/jedie/PyLucid/blob/master/pylucid_project/pylucid_plugins/filemanager/admin_views.py|static file manager in PyLucid]]
+* [[https://github.com/jedie/PyLucid/blob/master/pylucid_project/pylucid_plugins/gallery/views.py|picture gallery in PyLucid]]

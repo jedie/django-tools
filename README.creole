@@ -7,6 +7,13 @@ Miscellaneous tools for django.
 == existing stuff
 
 
+=== Filemanager library
+
+Library for building django application like filemanager, gallery etc.
+
+more info, read [[https://github.com/jedie/django-tools/blob/master/django_tools/filemanager/README.creole|./filemanager/README.creole]].
+
+
 === local sync cache
 
 Keep a local dict in a multi-threaded environment up-to-date. Usefull for cache dicts.
@@ -153,6 +160,8 @@ to:
 
 == history
 
+* v0.24.6 - 21.08.2012
+** Add the **filemanager library** (see above)
 * v0.24.5 - 06.08.2012
 ** Add **Print SQL Queries** context manager. (see above)
 * v0.24.4 - 26.07.2012
