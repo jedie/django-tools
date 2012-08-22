@@ -1,0 +1,25 @@
+== debug tools
+
+=== middlewares
+
+==== SetRequestDebugMiddleware
+
+Add 'debug' bool attribute to request object.
+
+request.debug is True if:
+    settings.DEBUG == True
+*OR*
+    remote IP is in settings.INTERNAL_IPS
+    
+===== usage
+
+Add this to your settings:
+
+{{{
+MIDDLEWARE_CLASSES = (
+    ...
+    # Set request.debug bool value:
+    'django_tools.debug.middlewares.SetRequestDebugMiddleware',
+    ...
+)
+}}}

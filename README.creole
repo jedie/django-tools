@@ -136,6 +136,11 @@ _______________________________________________________________________________
 -------------------------------------------------------------------------------
 }}}
 
+=== SetRequestDebugMiddleware
+
+middleware to add debug bool attribute to request object.
+More info: [[https://github.com/jedie/django-tools/blob/master/django_tools/debug/README.creole|./debug/README.creole]]
+
 === ..all others…
 
 There exist many miscellaneous stuff. Look in the source, luke!
@@ -167,6 +172,9 @@ to:
 
 == history
 
+* v0.24.8 - 22.08.2012 *pre*
+** Enhanced **per-site cache middleware**: [[https://github.com/jedie/django-tools/blob/master/django_tools/cache/README.creole|./cache/README.creole]]
+** Add **SetRequestDebugMiddleware**: [[https://github.com/jedie/django-tools/blob/master/django_tools/debug/README.creole|./debug/README.creole]]
 * v0.24.7 - 21.08.2012
 ** Add the **per-site cache middleware** (see above)
 ** Add **import lib helper**: [[https://github.com/jedie/django-tools/blob/master/django_tools/utils/importlib.py|./utils/importlib.py]]
