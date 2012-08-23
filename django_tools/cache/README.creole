@@ -5,6 +5,7 @@ but has some enhancements:
  * Skip cookies and attributes like response.csrf_processing_done
  * ignores {{{response['Vary']}}}
  * Check if 'csrfmiddlewaretoken' is in content
+ * stores information about request/response count and cache hits (see //cache information// below)
 
 The cache key would be generated with:
  * request.get_full_path()
@@ -26,13 +27,16 @@ MIDDLEWARE_CLASSES = (
 **Notes:**
  * "update" must be the first in the list and "fetch" at the last. (see also [[https://docs.djangoproject.com/en/1.4/topics/cache/#order-of-middleware-classes|Order of MIDDLEWARE_CLASSES]])
  * django.middleware.locale.LocaleMiddleware must be insert before cache middleware
+
  
 === settings
 
-**CACHE_MIDDLEWARE_ANONYMOUS_ONLY** True/False (default: False)
+==== CACHE_MIDDLEWARE_ANONYMOUS_ONLY
+(//Boolean//, default: {{{False}}})
 If ==True: Don't cache for authenticated users.
 
-**CACHE_CALLBACK** e.g.: "my_project.cache.cache_callback" (default: None)
+==== CACHE_CALLBACK
+(//String//, e.g.: "my_project.cache.cache_callback", default: {{{None}}})
 Path to a call back function for checking if request/response should be caches.
 e.g.:
 {{{
@@ -50,10 +54,58 @@ def cache_callback(request, response=None):
     return True
 }}}
 
-**RUN_WITH_DEV_SERVER** True/False (default: {{{"runserver" in sys.argv}}})
+==== RUN_WITH_DEV_SERVER
+(//Boolean//, default: {{{"runserver" in sys.argv}}})
 Are we run with the django developer server? If yes, we do some more checks:
  * Don't cache STATIC files. ({{{request.path}}} starts with {{{settings.STATIC_URL}}})
  * raise error if a {{{ {% csrf_token %} }}} would be stored into the cache (e.g. view dosn't use {{{@csrf_protect}}} decorator)
 
-**CACHE_EXTRA_DEBUG** True/False (default: False)
- * creates more {{{logger.debug()}}} output
+==== CACHE_EXTRA_DEBUG
+(//Boolean//, default: {{{False}}})
+creates more {{{logger.debug()}}} output
+
+==== COUNT_UPDATE_CACHE, COUNT_FETCH_FROM_CACHE, COUNT_IN_CACHE
+(Add these values are //Boolean// and the defaults are {{{False}}})
+
+The middlewares can store some informations:
+* total number of requests
+* total number cache hits
+
+* **COUNT_UPDATE_CACHE** activate counting in //UpdateCacheMiddleware//.
+* **COUNT_FETCH_FROM_CACHE** activate counting in //FetchFromCacheMiddleware//.
+
+Theses counter are stored in two ways:
+* into a local dict (not valid in multi-process environments)
+* into the cache
+
+//into a local dict// is the default ({{{settings.COUNT_IN_CACHE==False}}}), because it's very fast and costs almost no performance. The disadvantage is, that the values are only valid for the current process.
+
+In the //into the cache// solution the valued would be stored into the cache. This costs more or less performances, depend on the used cache backend.
+
+To get the information e.g.:
+{{{
+from django.core.cache import cache
+
+from django_tools.cache.site_cache_middleware import LOCAL_CACHE_INFO,\
+    CACHE_REQUESTS, CACHE_REQUEST_HITS, CACHE_RESPONSES, CACHE_RESPONSE_HITS
+
+def my_view(request):
+    ...
+    context = {
+        # from FetchFromCacheMiddleware (if settings.COUNT_FETCH_FROM_CACHE != True: all values are None):
+        "local_cache_requests": LOCAL_CACHE_INFO["requests"],
+        "local_cache_request_hits": LOCAL_CACHE_INFO["request hits"],
+        "global_cache_requests": cache.get(CACHE_REQUESTS),
+        "global_cache_request_hits":  cache.get(CACHE_REQUEST_HITS),
+
+        # from UpdateCacheMiddleware (if settings.COUNT_UPDATE_CACHE != True: all values are None):
+        "local_cache_responses": LOCAL_CACHE_INFO["responses"],
+        "local_cache_response_hits": LOCAL_CACHE_INFO["response hits"],
+        "global_cache_responses": cache.get(CACHE_RESPONSES),
+        "global_cache_response_hits":  cache.get(CACHE_RESPONSE_HITS),
+    }
+    ...
+}}}
+Notes:
+* All values are {{{None}}} if counting is deactivated.
+* {{{LOCAL_CACHE_INFO}}} is a normal {{{dict}}}, so you can put it directly into the context etc.
