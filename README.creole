@@ -172,7 +172,7 @@ to:
 
 == history
 
-* v0.24.8 - 22.08.2012 *pre*
+* v0.24.8 - *pre*
 ** Enhanced **per-site cache middleware**: [[https://github.com/jedie/django-tools/blob/master/django_tools/cache/README.creole|./cache/README.creole]]
 ** Add **SetRequestDebugMiddleware**: [[https://github.com/jedie/django-tools/blob/master/django_tools/debug/README.creole|./debug/README.creole]]
 * v0.24.7 - 21.08.2012
