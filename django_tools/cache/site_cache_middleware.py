@@ -177,7 +177,11 @@ class FetchFromCacheMiddleware(CacheMiddlewareBase):
 
         LOCAL_CACHE_INFO["requests"] += 1
         if COUNT_IN_CACHE:
-            cache.incr(CACHE_REQUESTS)
+            try:
+                cache.incr(CACHE_REQUESTS)
+            except ValueError: # Doesn't exist, yet.
+                cache.set(CACHE_REQUESTS, 1)
+                cache.set(CACHE_REQUEST_HITS, 0)
 
     def _count_hit(self):
         LOCAL_CACHE_INFO["request hits"] += 1
@@ -215,7 +219,11 @@ class UpdateCacheMiddleware(CacheMiddlewareBase):
 
         LOCAL_CACHE_INFO["responses"] += 1
         if COUNT_IN_CACHE:
-            cache.incr(CACHE_RESPONSES)
+            try:
+                cache.incr(CACHE_RESPONSES)
+            except ValueError: # Doesn't exist, yet.
+                cache.set(CACHE_RESPONSES, 1)
+                cache.set(CACHE_RESPONSE_HITS, 0)
 
     def _count_hit(self):
         LOCAL_CACHE_INFO["response hits"] += 1
