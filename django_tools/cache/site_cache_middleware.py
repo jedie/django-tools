@@ -23,9 +23,8 @@ from django.utils.log import getLogger
 from django_tools.utils.importlib import get_attr_from_settings
 
 
-
 logger = getLogger("django-tools.CacheMiddleware")
-logger.setLevel(logging.DEBUG)
+#logger.setLevel(logging.DEBUG)
 #logger.addHandler(logging.StreamHandler())
 
 CACHE_MIDDLEWARE_ANONYMOUS_ONLY = getattr(settings, 'CACHE_MIDDLEWARE_ANONYMOUS_ONLY', False)
