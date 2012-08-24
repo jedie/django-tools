@@ -91,16 +91,14 @@ from django.utils import log
 
 logger = log.getLogger("django_tools.local_sync_cache")
 
-
 #if "runserver" in sys.argv or "tests" in sys.argv:
 #    log.logging.basicConfig(format='%(created)f pid:%(process)d %(message)s')
 #    logger.setLevel(log.logging.DEBUG)
 #    logger.addHandler(log.logging.StreamHandler())
 
-
-if not logger.handlers:
-    # ensures we don't get any 'No handlers could be found...' messages
-    logger.addHandler(log.NullHandler())
+#if not logger.handlers:
+#    # ensures we don't get any 'No handlers could be found...' messages
+#    logger.addHandler(log.NullHandler())
 
 
 LOCAL_SYNC_CACHE_BACKEND = getattr(settings, "LOCAL_SYNC_CACHE_BACKEND", "local_sync_cache")

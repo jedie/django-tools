@@ -34,14 +34,14 @@ USE_DYNAMIC_SITE_MIDDLEWARE = getattr(settings, "USE_DYNAMIC_SITE_MIDDLEWARE", F
 
 logger = log.getLogger("django_tools.DynamicSite")
 
-if "runserver" in sys.argv or "tests" in sys.argv:
-    log.logging.basicConfig(format='%(created)f pid:%(process)d %(message)s')
-    logger.setLevel(log.logging.DEBUG)
-    logger.addHandler(log.logging.StreamHandler())
-
-if not logger.handlers:
-    # ensures we don't get any 'No handlers could be found...' messages
-    logger.addHandler(log.NullHandler())
+#if "runserver" in sys.argv or "tests" in sys.argv:
+#    log.logging.basicConfig(format='%(created)f pid:%(process)d %(message)s')
+#    logger.setLevel(log.logging.DEBUG)
+#    logger.addHandler(log.logging.StreamHandler())
+#
+#if not logger.handlers:
+#    # ensures we don't get any 'No handlers could be found...' messages
+#    logger.addHandler(log.NullHandler())
 
 
 Site = sites_models.Site # Shortcut
@@ -79,17 +79,17 @@ if USE_DYNAMIC_SITE_MIDDLEWARE == True:
     # [2] in django.contrib.sites.models.SiteManager.get_current()
     SITE_CACHE = LocalSyncCache(id="DynamicSiteMiddlewareCache")
     sites_models.SITE_CACHE = SITE_CACHE
-    
+
     SITE_THREAD_LOCAL = local()
-    
+
     # Use Fallback ID if host not exist in Site table. We use int() here, because
     # os environment variables are always strings.
     FALLBACK_SITE_ID = int(getattr(os.environ, "SITE_ID", settings.SITE_ID))
     logger.debug("Fallback SITE_ID: %r" % FALLBACK_SITE_ID)
-    
+
     # Use Fallback ID at startup before process_request(), e.g. in unittests
     SITE_THREAD_LOCAL.SITE_ID = FALLBACK_SITE_ID
-    
+
     try:
         FALLBACK_SITE = Site.objects.get(id=FALLBACK_SITE_ID)
     except Site.DoesNotExist, e:
@@ -101,7 +101,7 @@ if USE_DYNAMIC_SITE_MIDDLEWARE == True:
         raise ImproperlyConfigured(msg)
 #        site = Site(id=FALLBACK_SITE_ID, domain="example.tld", name="Auto Created!")
 #        site.save()
-    
+
     settings.SITE_ID = DynamicSiteId()
 
     # Use the same cache for Site.objects.get_current():
