@@ -1,3 +1,103 @@
+**django-tools.cache** contains two cache related things:
+
+* smooth cache backends
+* per-site cache middleware
+
+
+== smooth cache backends
+
+Same as django cache backends, except that {{{cache.clear()}}} clears the cache smoothly depend on the current system load.
+
+Using the django cache framework can save processing-overhead.
+The problem is Validation/Invalidation of cache items.
+  
+One simple solution: Do 'cache.clear()' every time the data changed. This ensures that everything is always up to date.
+But an empty cache causes very high load when many requests are at the same time.
+
+The "smooth cache backends" doesn't clear the cache at once. It renew out dated entries variable based on the system load.
+The cache would be updated more quickly if system load is low than under heavy load.
+
+The idea is simple:
+* save the timestamp when item added to the cache
+* save the timestamp when {{{cache.clear()}}} was called
+* check in {{{cache.get()}}} if and how long this item is out-dated
+* use or delete a out-dated item depend on {{{os.getloadavg()[0]}}}
+
+The smooth cache backends works like the origin Django backends, except:
+* {{{cache.clear()}}} doesn't clear the cache, it saved only the "last change timestamp"
+
+=== usage
+
+If something changed (e.g. a cms page) call {{{cache.clear()}}}, e.g:
+{{{
+def edit_foobar(request):
+    if request.method == 'POST':
+        form = MyForm(request.POST)
+        if form.is_valid():
+            form.save()
+            cache.clear() # <-- set cache "last change timestamp"
+            # redirect somewhere
+    ...
+}}}
+
+=== settings
+
+==== setup backends
+{{{
+CACHES = {
+    'default': {
+        'BACKEND': 'django_tools.cache.smooth_cache_backends.SmoothFileBasedCache',
+        'LOCATION': '/var/tmp/django_cache',
+        'TIMEOUT': 3600 # current value is only a example, it should be a very long time ;)
+    }
+}
+CACHE_MIDDLEWARE_SECONDS = 3600 # current value is only a example, it should be a very long time ;)
+}}}
+
+Existing backends:
+
+| FileBasedCache | django_tools.cache.smooth_cache_backends.SmoothFileBasedCache
+| DatabaseCache  | django_tools.cache.smooth_cache_backends.SmoothDatabaseCache
+| LocMemCache    | django_tools.cache.smooth_cache_backends.SmoothLocMemCache
+| MemcachedCache | django_tools.cache.smooth_cache_backends.SmoothMemcachedCache
+| PyLibMCCache   | django_tools.cache.smooth_cache_backends.SmoothPyLibMCCache
+
+
+==== SMOOTH_CACHE_TIMES
+(//tuple//)
+This is the information between out-date time and system load.
+The defaults are:
+{{{
+SMOOTH_CACHE_TIMES = (
+    # load value, max age in sec.
+    (0, 5), #          < 0.1 ->  5sec
+    (0.1, 10), #   0.1 - 0.5 -> 10sec
+    (0.5, 30), #   0.5 - 1.0 -> 30sec
+    (1.0, 60), #   1.0 - 1.5 ->  1Min
+    (1.5, 120), #  1.5 - 2.0 ->  2Min
+    (2.0, 300), #  2.0 - 3.0 ->  5Min
+    (3.0, 900), #  3.0 - 4.0 -> 15Min
+    (4.0, 3600), #     > 4.0 ->  1h
+)
+}}}
+These defaults are just probably devised ;)
+
+==== SMOOTH_CACHE_CHANGE_TIME
+(//String//, default: {{{DJANGO_TOOLS_SMOOTH_CACHE_CHANGE_TIME}}})
+Cache key value to store the "last change timestamp"
+
+==== SMOOTH_CACHE_UPDATE_TIMESTAMP
+(//Integer//, default: {{{10}}})
+Time in seconds to update the "last change timestamp" from cache.
+**Note:**
+The timestamp would be stored in the class, too. But this value would not be synced in multi-process environments.
+So we put/get the timestamp into the cache for sync over all processes.
+But to safe processing-overhead, we don't fetch the current value from the cache every time.
+
+
+
+
+
 == per-site cache middleware
 
 Similar to [[https://docs.djangoproject.com/en/1.4/topics/cache/#the-per-site-cache|django UpdateCacheMiddleware and FetchFromCacheMiddleware]],

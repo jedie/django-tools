@@ -64,6 +64,14 @@ class AutoUpdateFileBasedCache(FileBasedCache):
     CHANGE_TIME = None # Timestamp of the "last update"
     NEXT_SYNC = None # Point in the future to update the CHANGE_TIME
 
+    def __init__(self, *args, **kwargs):
+        super(AutoUpdateFileBasedCache, self).__init__(*args, **kwargs)
+        import warnings
+        warnings.warn(
+            "django-tools AutoUpdateFileBasedCache is deprecated, use new SmoothCacheBackends!",
+            category=DeprecationWarning
+        )
+
     def save_change_time(self):
         """
         save the "last change" timestamp to renew the cache entries in

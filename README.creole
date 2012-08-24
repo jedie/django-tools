@@ -16,7 +16,12 @@ more info, read [[https://github.com/jedie/django-tools/blob/master/django_tools
 === per-site cache middleware
 
 Similar to [[https://docs.djangoproject.com/en/1.4/topics/cache/#the-per-site-cache|django UpdateCacheMiddleware and FetchFromCacheMiddleware]],
-but has some enhancements: [[https://github.com/jedie/django-tools/blob/master/django_tools/cache/README.creole|./cache/README.creole]]
+but has some enhancements: [[https://github.com/jedie/django-tools/blob/master/django_tools/cache/README.creole#per-site-cache-middleware|'per site cache' in ./cache/README.creole]]
+
+=== smooth cache backends
+
+Same as django cache backends, except that {{{cache.clear()}}} clears the cache smoothly depend on the current system load.
+more info in: [[https://github.com/jedie/django-tools/blob/master/django_tools/cache/README.creole#smooth-cache-backends|'smooth cache backends' in ./cache/README.creole]] 
 
 === local sync cache
 
@@ -149,6 +154,9 @@ There exist many miscellaneous stuff. Look in the source, luke!
 
 == Backwards-incompatible changes
 
+=== v0.24.10
+
+AutoUpdateFileBasedCache is deprecated, use new SmoothCacheBackends.
 
 === v0.9
 
@@ -172,6 +180,8 @@ to:
 
 == history
 
+* v0.24.10 - 24.08.2012
+** Add **SmoothCacheBackends**: [[https://github.com/jedie/django-tools/blob/master/django_tools/cache/README.creole|./cache/README.creole]]
 * v0.24.9 - 24.08.2012
 ** Bugfix in per-site cache middleware: set inital count values to None, if counting is disabled.
 * v0.24.8 - 24.08.2012
