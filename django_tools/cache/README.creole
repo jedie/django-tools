@@ -73,9 +73,10 @@ The middlewares can store some informations:
 
 * **COUNT_UPDATE_CACHE** activate counting in //UpdateCacheMiddleware//.
 * **COUNT_FETCH_FROM_CACHE** activate counting in //FetchFromCacheMiddleware//.
+* **COUNT_IN_CACHE** count global via cache, too. (see below)
 
 Theses counter are stored in two ways:
-* into a local dict (not valid in multi-process environments)
+* into a local dict (not valid values in multi-process environments)
 * into the cache
 
 //into a local dict// is the default ({{{settings.COUNT_IN_CACHE==False}}}), because it's very fast and costs almost no performance. The disadvantage is, that the values are only valid for the current process.
@@ -107,5 +108,5 @@ def my_view(request):
     ...
 }}}
 Notes:
-* All values are {{{None}}} if counting is deactivated.
+* relevant count values are {{{None}}} if counting is deactivated.
 * {{{LOCAL_CACHE_INFO}}} is a normal {{{dict}}}, so you can put it directly into the context etc.

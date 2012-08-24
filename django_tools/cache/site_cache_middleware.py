@@ -32,26 +32,12 @@ CACHE_MIDDLEWARE_ANONYMOUS_ONLY = getattr(settings, 'CACHE_MIDDLEWARE_ANONYMOUS_
 RUN_WITH_DEV_SERVER = getattr(settings, "RUN_WITH_DEV_SERVER", "runserver" in sys.argv)
 EXTRA_DEBUG = getattr(settings, "CACHE_EXTRA_DEBUG", False)
 
-COUNT_UPDATE_CACHE = getattr(settings, "COUNT_UPDATE_CACHE", False)
 COUNT_FETCH_FROM_CACHE = getattr(settings, "COUNT_FETCH_FROM_CACHE", False)
+COUNT_UPDATE_CACHE = getattr(settings, "COUNT_UPDATE_CACHE", False)
 COUNT_IN_CACHE = getattr(settings, "COUNT_IN_CACHE", False)
 
 cache_callback = get_attr_from_settings("CACHE_CALLBACK", "DjangoTools cache callback")
 logger.debug("Use cache callback: %s" % repr(cache_callback))
-
-
-# Some information from the cache usage.
-# Note: These values are only for current process/thread valid and they not thread safe!
-# Set settings.COUNT_IN_CACHE=True for process/thread safe counting.
-LOCAL_CACHE_INFO = {
-    # from FetchFromCacheMiddleware:
-    "requests": 0, # total numbers of requests
-    "request hits": 0, # number of cache hits
-
-    # from UpdateCacheMiddleware:
-    "responses": 0, # total numbers of responses
-    "response hits": 0, # number of responses from cache
-}
 
 
 CACHE_REQUESTS = "DJANGOTOOLS_CACHE_REQUESTS_COUNT"
@@ -61,9 +47,49 @@ CACHE_RESPONSE_HITS = "DJANGOTOOLS_CACHE_RESPONSE_HITS_COUNT"
 
 _CACHE_KEYS = (CACHE_REQUESTS, CACHE_REQUEST_HITS, CACHE_RESPONSES, CACHE_RESPONSE_HITS)
 
-if not COUNT_IN_CACHE:
+
+# Some information from the cache usage.
+# Note: These values are only for current process/thread valid and they not thread safe!
+# Set settings.COUNT_IN_CACHE=True for process/thread safe counting.
+LOCAL_CACHE_INFO = {
+    # from FetchFromCacheMiddleware:
+    "requests": None, # total numbers of requests
+    "request hits": None, # number of cache hits
+
+    # from UpdateCacheMiddleware:
+    "responses": None, # total numbers of responses
+    "response hits": None, # number of responses from cache
+}
+
+
+def init_cache_counting():
+    """
+    prepare LOCAL_CACHE_INFO and the counter in cache:
+    All initial count value should be None, if count is disabled
+    and should be 0, if enabled.
+    """
     for key in _CACHE_KEYS:
-        cache.delete(key)
+        cache.delete(key) # delete old entrie, if exist
+
+    if COUNT_FETCH_FROM_CACHE:
+        # Count in FetchFromCacheMiddleware is enabled 
+        LOCAL_CACHE_INFO["requests"] = 0
+        LOCAL_CACHE_INFO["request hits"] = 0
+        if COUNT_IN_CACHE:
+            # Count in cache is enabled
+            cache.set(CACHE_REQUESTS, 0)
+            cache.set(CACHE_REQUEST_HITS, 0)
+
+    if COUNT_UPDATE_CACHE:
+        # Count in UpdateCacheMiddleware is enabled 
+        LOCAL_CACHE_INFO["responses"] = 0
+        LOCAL_CACHE_INFO["response hits"] = 0
+        if COUNT_IN_CACHE:
+            # Count in cache is enabled
+            cache.set(CACHE_RESPONSES, 0)
+            cache.set(CACHE_RESPONSE_HITS, 0)
+
+init_cache_counting()
 
 
 def build_cache_key(url, language_code, site_id):
@@ -151,11 +177,7 @@ class FetchFromCacheMiddleware(CacheMiddlewareBase):
 
         LOCAL_CACHE_INFO["requests"] += 1
         if COUNT_IN_CACHE:
-            try:
-                cache.incr(CACHE_REQUESTS)
-            except ValueError: # Doesn't exist, yet.
-                cache.set(CACHE_REQUESTS, 1)
-                cache.set(CACHE_REQUEST_HITS, 0)
+            cache.incr(CACHE_REQUESTS)
 
     def _count_hit(self):
         LOCAL_CACHE_INFO["request hits"] += 1
@@ -193,11 +215,7 @@ class UpdateCacheMiddleware(CacheMiddlewareBase):
 
         LOCAL_CACHE_INFO["responses"] += 1
         if COUNT_IN_CACHE:
-            try:
-                cache.incr(CACHE_RESPONSES)
-            except ValueError: # Doesn't exist, yet.
-                cache.set(CACHE_RESPONSES, 1)
-                cache.set(CACHE_RESPONSE_HITS, 0)
+            cache.incr(CACHE_RESPONSES)
 
     def _count_hit(self):
         LOCAL_CACHE_INFO["response hits"] += 1

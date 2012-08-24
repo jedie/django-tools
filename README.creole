@@ -172,6 +172,8 @@ to:
 
 == history
 
+* v0.24.9 - 24.08.2012
+** Bugfix in per-site cache middleware: set inital count values to None, if counting is disabled.
 * v0.24.8 - 24.08.2012
 ** Enhanced **per-site cache middleware**: [[https://github.com/jedie/django-tools/blob/master/django_tools/cache/README.creole|./cache/README.creole]]
 ** Add **SetRequestDebugMiddleware**: [[https://github.com/jedie/django-tools/blob/master/django_tools/debug/README.creole|./debug/README.creole]]
