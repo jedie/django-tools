@@ -169,6 +169,13 @@ class CacheMiddlewareBase(object):
         return True
 
 
+def save_incr(key, default=1):
+    try:
+        cache.incr(key)
+    except ValueError: # Doesn't exist, yet.
+        cache.set(key, default)
+
+
 class FetchFromCacheMiddleware(CacheMiddlewareBase):
     def _count_requests(self, request):
         if RUN_WITH_DEV_SERVER and request.path.startswith(settings.STATIC_URL):
@@ -176,16 +183,12 @@ class FetchFromCacheMiddleware(CacheMiddlewareBase):
 
         LOCAL_CACHE_INFO["requests"] += 1
         if COUNT_IN_CACHE:
-            try:
-                cache.incr(CACHE_REQUESTS)
-            except ValueError: # Doesn't exist, yet.
-                cache.set(CACHE_REQUESTS, 1)
-                cache.set(CACHE_REQUEST_HITS, 0)
+            save_incr(CACHE_REQUESTS)
 
     def _count_hit(self):
         LOCAL_CACHE_INFO["request hits"] += 1
         if COUNT_IN_CACHE:
-            cache.incr(CACHE_REQUEST_HITS)
+            save_incr(CACHE_REQUEST_HITS)
 
     def process_request(self, request):
         """
@@ -218,15 +221,11 @@ class UpdateCacheMiddleware(CacheMiddlewareBase):
 
         LOCAL_CACHE_INFO["responses"] += 1
         if COUNT_IN_CACHE:
-            try:
-                cache.incr(CACHE_RESPONSES)
-            except ValueError: # Doesn't exist, yet.
-                cache.set(CACHE_RESPONSES, 1)
-                cache.set(CACHE_RESPONSE_HITS, 0)
+            save_incr(CACHE_RESPONSES)
 
     def _count_hit(self):
         LOCAL_CACHE_INFO["response hits"] += 1
-        cache.incr(CACHE_RESPONSE_HITS)
+        save_incr(CACHE_RESPONSE_HITS)
 
     def process_response(self, request, response):
         if COUNT_UPDATE_CACHE:
