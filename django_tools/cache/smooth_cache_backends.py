@@ -108,7 +108,7 @@ class _SmoothCache(object):
             change_time = self.get(SMOOTH_CACHE_CHANGE_TIME, raw=True)
             if change_time is None:
                 logger.debug("CHANGE_TIME is None")
-                self.__save_change_time() # save change time into cache           
+                self.smooth_update() # save change time into cache           
             elif change_time > self.__CHANGE_TIME:
                 self.__CHANGE_TIME = change_time
                 logger.debug("update change time to: %r" % change_time)
@@ -145,7 +145,7 @@ class _SmoothCache(object):
             ))
             return False
 
-    def __save_change_time(self):
+    def smooth_update(self):
         """
         save the "last change" timestamp to renew the cache entries in
         self.__CHANGE_TIME and in cache.
@@ -189,8 +189,9 @@ class _SmoothCache(object):
         super(_SmoothCache, self).set(key, value, timeout, version)
 
     def clear(self):
-        logger.debug("SmoothCache clear called.")
-        self.__save_change_time()
+        logger.debug("SmoothCache clear called!")
+        super(_SmoothCache, self).clear()
+        self.smooth_update()
 
 
 class SmoothFileBasedCache(_SmoothCache, FileBasedCache):

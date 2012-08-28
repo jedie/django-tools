@@ -154,6 +154,12 @@ There exist many miscellaneous stuff. Look in the source, luke!
 
 == Backwards-incompatible changes
 
+== v0.25.0
+
+SmoothCacheBackends API changed:
+The **cache.clear()** method will really clear the cache, as the origin backend API.
+You must call {{{cache.smooth_update()}}} to set the "last change" timestamp. 
+
 === v0.24.10
 
 AutoUpdateFileBasedCache is deprecated, use new SmoothCacheBackends.
@@ -180,6 +186,8 @@ to:
 
 == history
 
+* v0.25.0 - 28.08.2012
+** Rename **cache.clear()** in SmoothCacheBackends to **cache.smooth_update()**, so that reset timestamp is independ from clear the cache. 
 * v0.24.10 - 24.08.2012
 ** Add **SmoothCacheBackends**: [[https://github.com/jedie/django-tools/blob/master/django_tools/cache/README.creole|./cache/README.creole]]
 * v0.24.9 - 24.08.2012

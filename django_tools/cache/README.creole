@@ -6,36 +6,36 @@
 
 == smooth cache backends
 
-Same as django cache backends, except that {{{cache.clear()}}} clears the cache smoothly depend on the current system load.
+Same as django cache backends, but you can sooth renew the content by call {{{cache.smooth_update()}}} depend on the current system load.
 
 Using the django cache framework can save processing-overhead.
 The problem is Validation/Invalidation of cache items.
-  
+
 One simple solution: Do 'cache.clear()' every time the data changed. This ensures that everything is always up to date.
 But an empty cache causes very high load when many requests are at the same time.
 
-The "smooth cache backends" doesn't clear the cache at once. It renew out dated entries variable based on the system load.
+With the "smooth cache backends" it's not needed to clear the complete cache. It renew out dated entries variable based on the system load.
 The cache would be updated more quickly if system load is low than under heavy load.
 
 The idea is simple:
 * save the timestamp when item added to the cache
-* save the timestamp when {{{cache.clear()}}} was called
+* save the "last change" timestamp with {{{cache.smooth_update()}}}
 * check in {{{cache.get()}}} if and how long this item is out-dated
-* use or delete a out-dated item depend on {{{os.getloadavg()[0]}}}
+* re-use or delete a out-dated item depend on {{{os.getloadavg()[0]}}}
 
-The smooth cache backends works like the origin Django backends, except:
-* {{{cache.clear()}}} doesn't clear the cache, it saved only the "last change timestamp"
+The smooth cache backends works like the origin Django backends. The API is the same.
+There is only the public method **smooth_update()** added to the origin cache backends.
 
 === usage
 
-If something changed (e.g. a cms page) call {{{cache.clear()}}}, e.g:
+If something changed (e.g. a cms page) call {{{cache.smooth_update()}}}, e.g:
 {{{
 def edit_foobar(request):
     if request.method == 'POST':
         form = MyForm(request.POST)
         if form.is_valid():
             form.save()
-            cache.clear() # <-- set cache "last change timestamp"
+            cache.smooth_update() # <-- set cache "last change timestamp"
             # redirect somewhere
     ...
 }}}
