@@ -108,7 +108,7 @@ def get_setting(setting_name):
 
 def get_attr_from_settings(setting_name, obj_name=""):
     """
-    returns a class instance from the given settings path string.
+    returns a attribute from the given settings path string.
     
     >>> get_attr_from_settings("EMAIL_BACKEND", "email backend") # doctest: +ELLIPSIS
     <class 'django.core.mail.backends.smtp.EmailBackend'>
