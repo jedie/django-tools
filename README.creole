@@ -366,6 +366,6 @@ the update script runs “git pull origin master” or “svn update”.
 
 Come into the conversation, besides the github communication features:
 
-| Forum   | [[http://www.pylucid.org/en/forum/13/|official 'django-tools' Forum]]
+| Forum   | [[http://www.pylucid.org/en/forum/12/|official 'django-tools' Forum]]
 | IRC     | #pylucid on freenode.net (Yes, the PyLucid channel...)
 | webchat | http://webchat.freenode.net/?channels=pylucid
