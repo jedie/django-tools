@@ -34,8 +34,13 @@ def edit_foobar(request):
     if request.method == 'POST':
         form = MyForm(request.POST)
         if form.is_valid():
-            form.save()
-            cache.smooth_update() # <-- set cache "last change timestamp"
+            form.save()          
+            try:
+                cache.smooth_update() # Save "last change" timestamp in django-tools SmoothCacheBackend
+            except AttributeError:
+                # Fallback if no SmoothCacheBackend used -> clean the complete cache
+                cache.clear()
+            
             # redirect somewhere
     ...
 }}}
