@@ -20,7 +20,7 @@ but has some enhancements: [[https://github.com/jedie/django-tools/blob/master/d
 
 === smooth cache backends
 
-Same as django cache backends, except that {{{cache.clear()}}} clears the cache smoothly depend on the current system load.
+Same as django cache backends, but adds {{{cache.smooth_update()}}} to clears the cache smoothly depend on the current system load.
 more info in: [[https://github.com/jedie/django-tools/blob/master/django_tools/cache/README.creole#smooth-cache-backends|'smooth cache backends' in ./cache/README.creole]] 
 
 === local sync cache
