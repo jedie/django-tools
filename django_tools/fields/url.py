@@ -7,7 +7,7 @@
     
     flexible URL form and model field used own URLValidator2.
 
-    :copyleft: 2011 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2011-2013 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -16,7 +16,8 @@ if __name__ == "__main__":
     # For doctest only
     import os
     os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
-
+    from django.conf import global_settings
+    global_settings.SECRET_KEY = "unittest"
 
 from django_tools.validators import URLValidator2
 
@@ -46,15 +47,6 @@ class URLFormField2(OriginFormsCahrField):
     u'domain.tld/path/?query#fragment'
     
     
-    >>> f = URLFormField2(verify_exists=True)
-    >>> f.clean("http://www.pylucid.org/") # Failed if pylucid.org is down ;)
-    u'http://www.pylucid.org/'
-    >>> f.clean("http://www.domain.tld/valid/url/does/not/exist/")
-    Traceback (most recent call last):
-        ...
-    ValidationError: [u'This URL appears to be a broken link.']
-    
-    
     >>> URLFormField2(allow_schemes=("svn",)).clean("svn://domain.tld")
     u'svn://domain.tld'
     >>> URLFormField2(allow_schemes=("http","ftp")).clean("svn://domain.tld")
@@ -69,16 +61,14 @@ class URLFormField2(OriginFormsCahrField):
 
     def __init__(self, max_length=None, min_length=None, verify_exists=False,
             allow_schemes=("http", "https"), allow_all_schemes=False, allow_netloc=True,
-            allow_query=True, allow_fragment=True,
-            validator_user_agent=validators.URL_VALIDATOR_USER_AGENT, *args, **kwargs):
+            allow_query=True, allow_fragment=True, *args, **kwargs):
 
         super(URLFormField2, self).__init__(max_length, min_length, *args, **kwargs)
 
         self.validators.append(
-            URLValidator2(verify_exists=verify_exists,
+            URLValidator2(
                 allow_schemes=allow_schemes, allow_all_schemes=allow_all_schemes, allow_netloc=allow_netloc,
-                allow_query=allow_query, allow_fragment=allow_fragment,
-                validator_user_agent=validator_user_agent
+                allow_query=allow_query, allow_fragment=allow_fragment
             )
         )
 
@@ -103,17 +93,8 @@ class URLModelField2(OriginModelCharField):
         ...
     ValidationError: [u"The URL doesn't start with a allowed scheme."]
     
-    >>> f = URLModelField2(verify_exists=True).formfield()
-    >>> f.clean("http://www.pylucid.org/") # Failed if pylucid.org is down ;)
-    u'http://www.pylucid.org/'
-    >>> f.validators[1].verify_exists
-    True
-    >>> f.clean("http://www.domain.tld/valid/url/does/not/exist/")
-    Traceback (most recent call last):
-        ...
-    ValidationError: [u'This URL appears to be a broken link.']
     
-    >>> f = URLModelField2(verify_exists=False, allow_query=False).formfield()
+    >>> f = URLModelField2(allow_query=False).formfield()
     >>> f.clean("http://www.domain.tld/without/query/")
     u'http://www.domain.tld/without/query/'
     >>> f.clean("http://www.domain.tld/with/?query")
@@ -126,14 +107,10 @@ class URLModelField2(OriginModelCharField):
 
     def __init__(self, verbose_name=None, name=None, verify_exists=True,
             allow_schemes=("http", "https"), allow_all_schemes=False, allow_netloc=True,
-            allow_query=True, allow_fragment=True,
-            validator_user_agent=validators.URL_VALIDATOR_USER_AGENT, **kwargs):
+            allow_query=True, allow_fragment=True, **kwargs):
 
         kwargs['max_length'] = kwargs.get('max_length', 200)
         OriginModelCharField.__init__(self, verbose_name, name, **kwargs)
-
-        self.verify_exists = verify_exists
-        self.validator_user_agent = validator_user_agent
 
         self.allow_schemes = allow_schemes or ()
         self.allow_all_schemes = allow_all_schemes
@@ -142,10 +119,9 @@ class URLModelField2(OriginModelCharField):
         self.allow_fragment = allow_fragment
 
         self.validators.append(
-            URLValidator2(verify_exists=verify_exists,
+            URLValidator2(
                 allow_schemes=allow_schemes, allow_all_schemes=allow_all_schemes, allow_netloc=allow_netloc,
-                allow_query=allow_query, allow_fragment=allow_fragment,
-                validator_user_agent=validator_user_agent
+                allow_query=allow_query, allow_fragment=allow_fragment
             )
         )
 
@@ -153,9 +129,6 @@ class URLModelField2(OriginModelCharField):
         # As with CharField, this will cause URL validation to be performed twice
         defaults = {
             'form_class': URLFormField2,
-
-            "verify_exists":self.verify_exists,
-            "validator_user_agent": self.validator_user_agent,
 
             "allow_schemes":self.allow_schemes,
             "allow_all_schemes":self.allow_all_schemes,
@@ -170,8 +143,7 @@ class URLModelField2(OriginModelCharField):
 
 if __name__ == "__main__":
     import doctest
-    doctest.testmod(
+    print doctest.testmod(
 #        verbose=True
         verbose=False
     )
-    print "DocTest end."
