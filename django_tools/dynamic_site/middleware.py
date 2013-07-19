@@ -8,7 +8,7 @@
     
     More info: read .../django_tools/dynamic_site/README.creole
     
-    :copyleft: 2011-2012 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2011-2013 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -34,17 +34,8 @@ USE_DYNAMIC_SITE_MIDDLEWARE = getattr(settings, "USE_DYNAMIC_SITE_MIDDLEWARE", F
 
 logger = log.getLogger("django_tools.DynamicSite")
 
-#if "runserver" in sys.argv or "tests" in sys.argv:
-#    log.logging.basicConfig(format='%(created)f pid:%(process)d %(message)s')
-#    logger.setLevel(log.logging.DEBUG)
-#    logger.addHandler(log.logging.StreamHandler())
-#
-#if not logger.handlers:
-#    # ensures we don't get any 'No handlers could be found...' messages
-#    logger.addHandler(log.NullHandler())
 
-
-Site = sites_models.Site # Shortcut
+Site = sites_models.Site  # Shortcut
 
 
 class DynamicSiteId(object):
@@ -143,7 +134,7 @@ class DynamicSiteMiddleware(object):
 #            print "-"*79
 #            print id(settings.SITE_ID), settings.SITE_ID
 #            print "TEST:", Site.objects.get_current()
-#        test()      
+#        test()
 
     def _get_site_id_from_host(self, request):
         host = request.get_host().lower()

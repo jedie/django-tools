@@ -33,6 +33,25 @@ INSTALLED_APPS = (
 USE_DYNAMIC_SITE_MIDDLEWARE = True
 }}}
 
+
+==== logging ====
+
+For logging into a file, add this to you settings, e.g.:
+{{{
+import logging
+logger = logging.getLogger("django_tools.DynamicSite")
+logger.setLevel(logging.DEBUG)
+logger.handlers = [logging.FileHandler('DynamicSite.log')] # setting would be import more than one time
+}}}
+
+For developing e.g:
+{{{
+if "runserver" in sys.argv or "tests" in sys.argv:
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(logging.StreamHandler())
+}}}
+
+
 === limitations ===
 
 ==== defaults ====
@@ -51,4 +70,4 @@ from django.conf import settings
 if getattr(settings, "USE_DYNAMIC_SITE_MIDDLEWARE", False):
     settings.USE_DYNAMIC_SITE_MIDDLEWARE = False
     settings.SITE_ID = 1 
-}}}  
+}}}
