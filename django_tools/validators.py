@@ -4,7 +4,7 @@
     need full validators
     ~~~~~~~~~~~~~~~~~~~~
 
-    :copyleft: 2010-2011 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2010-2013 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -16,6 +16,9 @@ import urlparse
 if __name__ == "__main__":
     # For doctest only
     os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
+    from django.conf import global_settings
+    global_settings.SECRET_KEY = "unittest"
+
 
 from django.conf import settings
 from django.utils.encoding import smart_unicode
@@ -122,13 +125,6 @@ class URLValidator2(URLValidator):
     Traceback (most recent call last):
         ...
     ValidationError: [u'Enter a valid URL without a fragment.']
-    
-    
-    >>> URLValidator2(verify_exists=True)("http://www.pylucid.org/") # Failed if pylucid.org is down ;)
-    >>> URLValidator2(verify_exists=True)("http://www.domain.tld/valid/url/does/not/exist/")
-    Traceback (most recent call last):
-        ...
-    ValidationError: [u'This URL appears to be a broken link.']
       
     
     To allow only local path, without protocol/domain do this:
@@ -153,8 +149,7 @@ class URLValidator2(URLValidator):
     """
     regex = re.compile(r'^.+$', re.IGNORECASE)
 
-    def __init__(self, allow_schemes=("http", "https"), allow_all_schemes=False, allow_netloc=True, allow_query=True, allow_fragment=True,
-            verify_exists=False, validator_user_agent=settings.URL_VALIDATOR_USER_AGENT):
+    def __init__(self, allow_schemes=("http", "https"), allow_all_schemes=False, allow_netloc=True, allow_query=True, allow_fragment=True):
         super(URLValidator2, self).__init__()
 
         if __debug__ and (allow_schemes or allow_all_schemes) and not allow_netloc:
@@ -162,9 +157,6 @@ class URLValidator2(URLValidator):
 
         if __debug__ and allow_schemes and allow_all_schemes:
             raise Warning("allow_schemes would be ignored, while allow_all_schemes==True!")
-
-        self.verify_exists = verify_exists
-        self.user_agent = validator_user_agent
 
         self.allow_schemes = allow_schemes or ()
         self.allow_all_schemes = allow_all_schemes
@@ -192,15 +184,11 @@ class URLValidator2(URLValidator):
         if fragment and not self.allow_fragment:
             raise ValidationError(_(u'Enter a valid URL without a fragment.'), code='fragment')
 
-        if self.verify_exists:
-            super(URLValidator2, self).__call__(value)
-
 
 
 if __name__ == "__main__":
     import doctest
-    doctest.testmod(
+    print doctest.testmod(
 #        verbose=True
         verbose=False
     )
-    print "DocTest end."
