@@ -183,6 +183,9 @@ change and rename:
 to:
 **from django_tools.fields.media_path import MediaPathWidget**
 
+== Django compatibility
+
+We work on Django v1.5 compatibility in [[https://github.com/jedie/django-tools/tree/django1.5|django1.5 branch]].
 
 == history
 
