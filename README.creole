@@ -82,17 +82,21 @@ You will have the following assert methods inherit from: django_tools.unittest_u
 * self.assertDOM() – for check if nodes in response or not.
 * self.assertContains() – Check if ond node occurs 'count’ times in response
 
-More info and examples in [[https://github.com/jedie/django-tools/blob/master/django_tools/tests/test_dom_asserts.py|./tests/test_dom_asserts.py]].
+More info and examples in [[https://github.com/jedie/django-tools/blob/master/django_tools/tests/test_dom_asserts.py|./tests/test_dom_asserts.py]]
 
 
 === small tools
 ==== debug_csrf_failure()
 Display the normal debug page and not the minimal csrf debug page.
-More info in DocString here: [[https://github.com/jedie/django-tools/blob/master/django_tools/views/csrf.py|django_tools/views/csrf.py]].
+More info in DocString here: [[https://github.com/jedie/django-tools/blob/master/django_tools/views/csrf.py|django_tools/views/csrf.py]]
 
 ==== import lib helper
 additional helper to the existing {{{django.utils.importlib}}}
 more info in the sourcecode: [[https://github.com/jedie/django-tools/blob/master/django_tools/utils/importlib.py|./utils/importlib.py]]
+
+==== http utils
+Pimped HttpRequest to get some more information about a request.
+More info in DocString here: [[https://github.com/jedie/django-tools/blob/master/django_tools/utils/http.py|django_tools/utils/http.py]]
 
 === upgrade virtualenv
 
@@ -189,6 +193,8 @@ We work on Django v1.5 compatibility in [[https://github.com/jedie/django-tools/
 
 == history
 
+* v0.25.1 - 18.11.2013
+** Bugfix: Fall back to "UTF-8" if server send no encoding info
 * v0.25.0 - 28.08.2012
 ** Rename **cache.clear()** in SmoothCacheBackends to **cache.smooth_update()**, so that reset timestamp is independ from clear the cache. 
 * v0.24.10 - 24.08.2012
