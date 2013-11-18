@@ -303,6 +303,8 @@ class HttpRequest(object):
                 self.tried_encodings.append(encoding)
 
         # Fall back:
+        if encoding is None: # server send no 'charset' back
+            encoding = "utf-8"
         return unicode(content, encoding, errors="replace")
 
 
