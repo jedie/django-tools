@@ -10,7 +10,7 @@
 
 
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib import auth
 try:
     from django.utils.timezone import now
 except ImportError:
@@ -18,6 +18,9 @@ except ImportError:
     now = datetime.now
 
 from django_tools.middlewares import ThreadLocal
+
+
+User = auth.get_user_model()
 
 
 class UpdateTimeBaseModel(models.Model):
