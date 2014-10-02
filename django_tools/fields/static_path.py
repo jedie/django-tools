@@ -73,7 +73,7 @@ class StaticPathWidget(forms.Select):
 
         try:
             self.choices = self._get_path_choices()
-        except OSError, err:
+        except OSError as err:
             self.choices = []
             if settings.DEBUG:
                 failsafe_message("Can't read STATIC_ROOT: %s" % err)
@@ -88,11 +88,10 @@ class StaticPathWidget(forms.Select):
         return Static_dirs_choices
 
 
-class StaticPathModelField(models.TextField):
+class StaticPathModelField(models.TextField, metaclass=models.SubfieldBase):
     """
     Model field for select a sub directory in settings.STATIC_ROOT
     """
-    __metaclass__ = models.SubfieldBase
 
 #    def __init__(self, separator=",", strip_items=True, skip_empty=True, *args, **kwargs):
 #        self.separator = separator
@@ -109,8 +108,8 @@ class StaticPathModelField(models.TextField):
 
 if __name__ == "__main__":
     import doctest
-    print doctest.testmod(
+    print(doctest.testmod(
 #        verbose=True
         verbose=False
-    )
-    print "DocTest end."
+    ))
+    print("DocTest end.")

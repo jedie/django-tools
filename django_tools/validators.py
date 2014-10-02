@@ -14,7 +14,7 @@ from __future__ import absolute_import, division, print_function
 
 import os
 import re
-import urlparse
+import urllib.parse
 
 if __name__ == "__main__":
     # For doctest only
@@ -34,7 +34,7 @@ from django.utils.translation import ugettext_lazy as _
 language_code_re = re.compile(r'^([A-Za-z]{1,8}(?:-[A-Za-z]{1,8})*)$')
 validate_language_code = RegexValidator(
     language_code_re,
-    _(u'Enter a valid language code (Accept-Language header format, see RFC2616)'),
+    _('Enter a valid language code (Accept-Language header format, see RFC2616)'),
     'invalid'
 )
 
@@ -75,16 +75,16 @@ class ExistingDirValidator(object):
 
         if not abs_path.startswith(self.base_path):
             if settings.DEBUG:
-                msg = _(u"Directory %r is not in base path ('%s')" % (abs_path, self.base_path))
+                msg = _("Directory %r is not in base path ('%s')" % (abs_path, self.base_path))
             else:
-                msg = _(u"Directory is not in base path!")
+                msg = _("Directory is not in base path!")
             raise ValidationError(msg)
 
         if not os.path.isdir(abs_path):
             if settings.DEBUG:
-                msg = _(u"Directory %r doesn't exist!") % abs_path
+                msg = _("Directory %r doesn't exist!") % abs_path
             else:
-                msg = _(u"Directory doesn't exist!")
+                msg = _("Directory doesn't exist!")
 
             raise ValidationError(msg)
 
@@ -169,29 +169,29 @@ class URLValidator2(URLValidator):
 
     def __call__(self, value):
         value = smart_unicode(value)
-        scheme, netloc, path, query, fragment = urlparse.urlsplit(value)
+        scheme, netloc, path, query, fragment = urllib.parse.urlsplit(value)
 
         if (scheme or netloc) and not self.allow_schemes and not self.allow_all_schemes and not self.allow_netloc:
-            raise ValidationError(_(u"Please enter a local URL (without protocol/domain)."), code="local")
+            raise ValidationError(_("Please enter a local URL (without protocol/domain)."), code="local")
 
         if scheme:
             if not self.allow_all_schemes and scheme not in self.allow_schemes:
-                raise ValidationError(_(u"The URL doesn't start with a allowed scheme."), "scheme")
+                raise ValidationError(_("The URL doesn't start with a allowed scheme."), "scheme")
 
         if netloc and not self.allow_netloc:
-            raise ValidationError(_(u'Enter a valid URL without domain.'), code='netloc')
+            raise ValidationError(_('Enter a valid URL without domain.'), code='netloc')
 
         if query and not self.allow_query:
-            raise ValidationError(_(u'Enter a valid URL without a query.'), code='query')
+            raise ValidationError(_('Enter a valid URL without a query.'), code='query')
 
         if fragment and not self.allow_fragment:
-            raise ValidationError(_(u'Enter a valid URL without a fragment.'), code='fragment')
+            raise ValidationError(_('Enter a valid URL without a fragment.'), code='fragment')
 
 
 
 if __name__ == "__main__":
     import doctest
-    print doctest.testmod(
+    print(doctest.testmod(
 #        verbose=True
         verbose=False
-    )
+    ))

@@ -22,7 +22,7 @@ from django.test.html import HTMLParseError, parse_html
 from django.utils.encoding import smart_str
 from django.utils.unittest.util import safe_repr
 
-from BrowserDebug import debug_response
+from .BrowserDebug import debug_response
 import difflib
 
 
@@ -73,14 +73,14 @@ class BaseTestCase(unittest.TestCase):
         user.is_superuser = is_superuser
         user.save()
         if verbosity >= 2:
-            print "Test user %r created." % user
+            print("Test user %r created." % user)
         return user
     
     def create_testusers(self, verbosity=2):
         """
         Create all available testusers and UserProfiles
         """
-        for userdata in self.TEST_USERS.values():
+        for userdata in list(self.TEST_USERS.values()):
             self.create_user(verbosity, **userdata)
 
     def login(self, usertype):
@@ -113,7 +113,7 @@ class BaseTestCase(unittest.TestCase):
                 evalue = etype("Can't get ContentType for app %r and model %r: %s" % (
                     app_label, model_name, evalue
                 ))
-                raise etype, evalue, etb
+                raise etype(evalue).with_traceback(etb)
 
 
             perm = Permission.objects.get(content_type=content_type, codename=permission_codename)
@@ -126,12 +126,12 @@ class BaseTestCase(unittest.TestCase):
         """ return userdata from self.TEST_USERS for the given usertype """
         try:
             return self.TEST_USERS[usertype]
-        except KeyError, err:
+        except KeyError as err:
             etype, evalue, etb = sys.exc_info()
             evalue = etype(
-                "Wrong usetype %s! Existing usertypes are: %s" % (err, ", ".join(self.TEST_USERS.keys()))
+                "Wrong usetype %s! Existing usertypes are: %s" % (err, ", ".join(list(self.TEST_USERS.keys())))
             )
-            raise etype, evalue, etb
+            raise etype(evalue).with_traceback(etb)
 
     def _get_user(self, usertype):
         """ return User model instance for the goven usertype"""
@@ -154,7 +154,7 @@ class BaseTestCase(unittest.TestCase):
             user.is_staff = is_staff
             user.is_superuser = is_superuser
             user.save()
-        for usertype, userdata in self.TEST_USERS.iteritems():
+        for usertype, userdata in self.TEST_USERS.items():
             create_user(**userdata)
 
     def raise_browser_traceback(self, response, msg):
@@ -162,7 +162,7 @@ class BaseTestCase(unittest.TestCase):
             response, self.browser_traceback, msg, display_tb=False
         )
         msg += " (url: %r)" % response.request.get("PATH_INFO", "???")
-        raise self.failureException, msg
+        raise self.failureException(msg)
 
     def assertStatusCode(self, response, excepted_code=200):
         """
@@ -180,7 +180,7 @@ class BaseTestCase(unittest.TestCase):
         self.assertStatusCode(response, excepted_code=status_code)
         try:
             location = response['Location']
-        except KeyError, err:
+        except KeyError as err:
             self.raise_browser_traceback(response, "No 'Location' in response: %s" % err)
         else:
             if location != url:
@@ -193,7 +193,7 @@ class BaseTestCase(unittest.TestCase):
         """
         try:
             return parse_html(html)
-        except HTMLParseError, e:
+        except HTMLParseError as e:
             self.fail("html code is not valid: %s - code: %r" % (e, html))
 
     def _assert_and_parse_html_response(self, response):
@@ -203,7 +203,7 @@ class BaseTestCase(unittest.TestCase):
         """
         try:
             return parse_html(response.content)
-        except HTMLParseError, e:
+        except HTMLParseError as e:
             self.raise_browser_traceback(response, "Response's content is no valid html: %s" % e)
 
     def assertDOM(self, response, must_contain=(), must_not_contain=(), use_browser_traceback=True):
@@ -214,7 +214,7 @@ class BaseTestCase(unittest.TestCase):
         def count_snippet(snippet, response_dom):
             snippet = smart_str(snippet, response._charset)
             txt_dom = self._assert_and_parse_html(
-                snippet, None, u'Unittest snippet is no valid html:'
+                snippet, None, 'Unittest snippet is no valid html:'
             )
             return response_dom.count(txt_dom)
 
@@ -266,6 +266,6 @@ def direct_run(raw_filename):
         direct_run(__file__)
     """
     appname = os.path.splitext(os.path.basename(raw_filename))[0]
-    print "direct run %r" % appname
+    print("direct run %r" % appname)
     management.call_command('test', appname)
 

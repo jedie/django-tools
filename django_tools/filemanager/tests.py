@@ -116,7 +116,7 @@ class FilemanagerDirectoryTraversal(FilemanagerBaseTestCase):
         self.assertEqual(fm.abs_url, base_url)
         self.assertEqual(fm.abs_path, self.BASE_PATH)
         self.assertEqual(fm.breadcrumbs,
-            [{'url': base_url, 'name': u'index', 'title': u"goto 'index'"}]
+            [{'url': base_url, 'name': 'index', 'title': "goto 'index'"}]
         )
 
     def test_subdir1(self):
@@ -127,8 +127,8 @@ class FilemanagerDirectoryTraversal(FilemanagerBaseTestCase):
         self.assertEqual(fm.abs_url, '/base/url/subdir1/')
         self.assertEqual(fm.abs_path, "%s%s" % (self.BASE_PATH, rest_url))
         self.assertEqual(fm.breadcrumbs, [
-            {'url': base_url, 'name': u'index', 'title': u"goto 'index'"},
-            {'url': '/base/url/%s/' % subdir, 'name': subdir, 'title': u"goto '%s'" % subdir}
+            {'url': base_url, 'name': 'index', 'title': "goto 'index'"},
+            {'url': '/base/url/%s/' % subdir, 'name': subdir, 'title': "goto '%s'" % subdir}
         ])
 
     def test_not_existing_path1(self):

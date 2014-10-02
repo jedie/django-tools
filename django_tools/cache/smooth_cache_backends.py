@@ -173,7 +173,7 @@ class _SmoothCache(object):
             assert isinstance(create_time, SmoothCacheTime), (
                 "create_time is not SmoothCacheTime instance, it's: %s" % type(create_time)
             )
-        except Exception, err:
+        except Exception as err:
             # e.g: entry is saved before smooth cache used.
             logger.error("Can't get 'create_time' from: %s (Maybe %r is a old cache entry?)" % (err, key))
             self.delete(key, version)
@@ -215,4 +215,4 @@ class SmoothPyLibMCCache(_SmoothCache, PyLibMCCache):
 
 if __name__ == "__main__":
     import doctest
-    print doctest.testmod()
+    print(doctest.testmod())

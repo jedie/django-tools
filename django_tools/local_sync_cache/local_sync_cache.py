@@ -263,7 +263,7 @@ class LocalSyncCache(dict):
             for attr in attributes:
                 output.append("%22s: %s" % (attr, getattr(instance, attr)))
 
-            for key, value in item.iteritems():
+            for key, value in item.items():
                 output.append("%22s: %r" % (key, value))
 
         return "\n".join(output)

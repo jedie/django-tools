@@ -35,4 +35,4 @@ def render_string_template(template, context):
 if __name__ == "__main__":
     import doctest
     doctest.testmod(verbose=False)
-    print "DocTest end."
+    print("DocTest end.")

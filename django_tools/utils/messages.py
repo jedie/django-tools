@@ -111,7 +111,7 @@ def failsafe_message(msg, level=messages.INFO):
         # create a normal user message
         try:
             messages.add_message(request, level, msg)
-        except Exception, err:
+        except Exception as err:
             # e.g.:
             # Without the django.contrib.messages middleware,
             # messages can only be added to authenticated users.

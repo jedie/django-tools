@@ -102,7 +102,7 @@ class ClientCookieStorage(object):
 
         try:
             data = signing.loads(raw_data, max_age=self.max_age)
-        except Exception, err:
+        except Exception as err:
             raise ClientCookieStorageError("Can't load data: %s" % err)
 
         return data
@@ -112,4 +112,4 @@ class ClientCookieStorage(object):
 if __name__ == "__main__":
     import doctest
     doctest.testmod(verbose=False)
-    print "DocTest end."
+    print("DocTest end.")

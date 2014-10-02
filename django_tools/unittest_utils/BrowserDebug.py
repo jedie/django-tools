@@ -58,11 +58,11 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
     stack_info = get_stack_info(filepath_filter="django_tools")
     stack_info.append(msg)
     if display_tb:
-        print
-        print "debug_response:"
-        print "-" * 80
-        print "\n".join(stack_info)
-        print "-" * 80
+        print()
+        print("debug_response:")
+        print("-" * 80)
+        print("\n".join(stack_info))
+        print("-" * 80)
 
     stack_info = escape("".join(stack_info))
 
@@ -129,7 +129,7 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
     os.write(fd, content.encode("utf-8"))
     os.close(fd)
     url = "file://%s" % file_path
-    print "\nDEBUG html page in Browser! (url: %s)" % url
+    print("\nDEBUG html page in Browser! (url: %s)" % url)
     try:
         webbrowser.open(url)
     except:

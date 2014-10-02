@@ -119,7 +119,7 @@ def render_to(template_name=None, debug=False, **response_kwargs):
                     msg = (
                         "renter_to info: %s (template: %r)"
                         " has not return a dict, has return: %r (%r)"
-                    ) % (function.__name__, template_name, type(context), function.func_code)
+                    ) % (function.__name__, template_name, type(context), function.__code__)
                     messages.info(request, msg)
                 return context
 

@@ -37,48 +37,48 @@ from __future__ import absolute_import, division, print_function
 
 
 import cgi
-import httplib
+import http.client
 import re
 import socket
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 
-class HTTPConnection2(httplib.HTTPConnection):
+class HTTPConnection2(http.client.HTTPConnection):
     """
     Like httplib.HTTPConnection but stores the request headers.
     Used in HTTPConnection3(), see below.
     """
     def __init__(self, *args, **kwargs):
-        httplib.HTTPConnection.__init__(self, *args, **kwargs)
+        http.client.HTTPConnection.__init__(self, *args, **kwargs)
         self.request_headers = []
         self.request_header = ""
 
     def putheader(self, header, value):
         self.request_headers.append((header, value))
-        httplib.HTTPConnection.putheader(self, header, value)
+        http.client.HTTPConnection.putheader(self, header, value)
 
     def send(self, s):
         self.request_header = s
-        httplib.HTTPConnection.send(self, s)
+        http.client.HTTPConnection.send(self, s)
 
 if hasattr(httplib, 'HTTPS'):
-    class HTTPSConnection2(httplib.HTTPSConnection):
+    class HTTPSConnection2(http.client.HTTPSConnection):
         """
         Like httplib.HTTPConnection but stores the request headers.
         Used in HTTPConnection3(), see below.
         """
         def __init__(self, *args, **kwargs):
-            httplib.HTTPSConnection.__init__(self, *args, **kwargs)
+            http.client.HTTPSConnection.__init__(self, *args, **kwargs)
             self.request_headers = []
             self.request_header = ""
 
         def putheader(self, header, value):
             self.request_headers.append((header, value))
-            httplib.HTTPSConnection.putheader(self, header, value)
+            http.client.HTTPSConnection.putheader(self, header, value)
 
         def send(self, s):
             self.request_header = s
-            httplib.HTTPSConnection.send(self, s)
+            http.client.HTTPSConnection.send(self, s)
 
 
 class HTTPConnectionWrapper(object):
@@ -108,7 +108,7 @@ class HTTPConnectionWrapper(object):
             return getattr(self._conn, name)
 
 
-class HTTPHandler2(urllib2.HTTPHandler):
+class HTTPHandler2(urllib.request.HTTPHandler):
     """
     A HTTPHandler which stores the request headers.
     Used HTTPConnection3, see above.
@@ -132,7 +132,7 @@ class HTTPHandler2(urllib2.HTTPHandler):
         return response
 
 if hasattr(httplib, 'HTTPS'):
-    class HTTPSHandler2(urllib2.HTTPSHandler):
+    class HTTPSHandler2(urllib.request.HTTPSHandler):
         def https_open(self, req):
             conn_instance = HTTPConnectionWrapper(HTTPSConnection2)
             response = self.do_open(conn_instance, req)
@@ -212,7 +212,7 @@ class HttpRequest(object):
     _charset_re = None
 
     def __init__(self, url, timeout=None, threadunsafe_workaround=False):
-        self.request = urllib2.Request(url=url)
+        self.request = urllib.request.Request(url=url)
         self.timeout = timeout
         self.threadunsafe_workaround = threadunsafe_workaround
 
@@ -220,7 +220,7 @@ class HttpRequest(object):
         if hasattr(httplib, 'HTTPS'):
             handlers.append(HTTPSHandler2)
 
-        self.opener = urllib2.build_opener(*handlers)
+        self.opener = urllib.request.build_opener(*handlers)
 
         # set in get_response()
         self.response_header = None
@@ -236,7 +236,7 @@ class HttpRequest(object):
         if self.response is None:
             try:
                 self.response = self.opener.open(self.request, timeout=self.timeout)
-            except TypeError, err:
+            except TypeError as err:
                 # timeout argument is new since Python v2.6
                 if not "timeout" in str(err):
                     raise
@@ -291,7 +291,7 @@ class HttpRequest(object):
         encoding = self.get_encoding_from_content_type()
         if encoding:
             try:
-                return unicode(content, encoding)
+                return str(content, encoding)
             except UnicodeError:
                 self.tried_encodings.append(encoding)
 
@@ -301,32 +301,32 @@ class HttpRequest(object):
             if encoding in self.tried_encodings:
                 continue
             try:
-                return unicode(content, encoding)
+                return str(content, encoding)
             except UnicodeError:
                 self.tried_encodings.append(encoding)
 
         # Fall back:
-        return unicode(content, encoding, errors="replace")
+        return str(content, encoding, errors="replace")
 
 
 if __name__ == "__main__":
-    print "Run doctests..."
+    print("Run doctests...")
     import doctest
-    print doctest.testmod()
-    print "-"*79
+    print(doctest.testmod())
+    print("-"*79)
 
     r = HttpRequest("http://www.python.org/index.html", timeout=3, threadunsafe_workaround=True)
     response = r.get_response()
-    print response.request_header
-    print response.info()
-    print repr(r.get_unicode())
+    print(response.request_header)
+    print(response.info())
+    print(repr(r.get_unicode()))
 
-    print "-"*79
+    print("-"*79)
 
     r = HttpRequest("https://raw.github.com/jedie/django-tools/master/README.creole", timeout=3, threadunsafe_workaround=True)
     r.request.add_header("User-agent", "Python test")
     r.request.add_header("Referer", "/")
     response = r.get_response()
-    print response.request_header
-    print response.info()
-    print repr(r.get_unicode())
+    print(response.request_header)
+    print(response.info())
+    print(repr(r.get_unicode()))

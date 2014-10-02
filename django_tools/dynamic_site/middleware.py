@@ -59,7 +59,7 @@ class DynamicSiteId(object):
         return str(SITE_THREAD_LOCAL.SITE_ID)
     def __unicode__(self):
 #        print "DynamicSiteId __unicode__"
-        return unicode(SITE_THREAD_LOCAL.SITE_ID)
+        return str(SITE_THREAD_LOCAL.SITE_ID)
 
 
 def _clear_cache(self):
@@ -86,7 +86,7 @@ if USE_DYNAMIC_SITE_MIDDLEWARE == True:
 
     try:
         FALLBACK_SITE = Site.objects.get(id=FALLBACK_SITE_ID)
-    except Site.DoesNotExist, e:
+    except Site.DoesNotExist as e:
         all_sites = Site.objects.all()
         msg = "Fallback SITE_ID %i doesn't exist: %s (Existing sites: %s)" % (
             FALLBACK_SITE_ID, e, repr(all_sites.values_list("id", "domain").order_by('id'))

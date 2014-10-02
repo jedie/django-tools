@@ -117,7 +117,7 @@ def get_cache_key(request):
     except AttributeError:
         etype, evalue, etb = sys.exc_info()
         evalue = etype("%s (django.middleware.locale.LocaleMiddleware must be insert before cache middleware!)" % evalue)
-        raise etype, evalue, etb
+        raise etype(evalue).with_traceback(etb)
 
     site_id = settings.SITE_ID
     cache_key = build_cache_key(url, language_code, site_id)

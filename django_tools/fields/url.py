@@ -58,8 +58,8 @@ class URLFormField2(OriginFormsCahrField):
     ValidationError: [u"The URL doesn't start with a allowed scheme."]
     """
     default_error_messages = {
-        'invalid': _(u'Enter a valid URL.'),
-        'invalid_link': _(u'This URL appears to be a broken link.'),
+        'invalid': _('Enter a valid URL.'),
+        'invalid_link': _('This URL appears to be a broken link.'),
     }
 
     def __init__(self, max_length=None, min_length=None, verify_exists=False,
@@ -146,7 +146,7 @@ class URLModelField2(OriginModelCharField):
 
 if __name__ == "__main__":
     import doctest
-    print doctest.testmod(
+    print(doctest.testmod(
 #        verbose=True
         verbose=False
-    )
+    ))

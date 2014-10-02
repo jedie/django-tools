@@ -118,7 +118,7 @@ def get_upgradeable():
         if dist.has_metadata('dependency_links.txt'):
             dependency_links.extend(dist.get_metadata_lines('dependency_links.txt'))
 
-    print("\ndependency_links: %r\n" % dependency_links)
+    print(("\ndependency_links: %r\n" % dependency_links))
 
     packages = []
     editables = []
@@ -142,42 +142,42 @@ def get_upgradeable():
             editables.append(pip_url)
 
     if not packages:
-        print(c.colorize("Found no local packages.", foreground="blue", opts=("underscore",)))
+        print((c.colorize("Found no local packages.", foreground="blue", opts=("underscore",))))
     else:
-        print(c.colorize("Found theses local packages:", foreground="green"))
+        print((c.colorize("Found theses local packages:", foreground="green")))
         for package in packages:
-            print("\t %s" % package)
+            print(("\t %s" % package))
 
     if not editables:
-        print(c.colorize("Found no local editables.", foreground="blue", opts=("underscore",)))
+        print((c.colorize("Found no local editables.", foreground="blue", opts=("underscore",))))
     else:
-        print(c.colorize("Found theses local editables:", foreground="green"))
+        print((c.colorize("Found theses local editables:", foreground="green")))
         for editable in editables:
-            print("\t %s" % editable)
+            print(("\t %s" % editable))
 
     return packages, editables
 
 
 def check_activation():
     print("")
-    print("sys.real_prefix: %s" % c.colorize(sys.real_prefix, foreground="magenta"))
-    print("sys.prefix: %s" % c.colorize(sys.prefix, foreground="green", opts=("bold",)))
-    print("use pip from: %s" % c.colorize(os.path.dirname(pip.__file__), foreground="blue", opts=("bold",)))
+    print(("sys.real_prefix: %s" % c.colorize(sys.real_prefix, foreground="magenta")))
+    print(("sys.prefix: %s" % c.colorize(sys.prefix, foreground="green", opts=("bold",))))
+    print(("use pip from: %s" % c.colorize(os.path.dirname(pip.__file__), foreground="blue", opts=("bold",))))
     print("")
 
 
 def check_pip_version():
     try:
         pkg_resources.require("pip >= 1.0.1")
-    except pkg_resources.VersionConflict, err:
-        print(c.colorize("Error: outdated pip version!", foreground="red", opts=("bold", "reverse")))
-        print("Original error: %s" % err)
+    except pkg_resources.VersionConflict as err:
+        print((c.colorize("Error: outdated pip version!", foreground="red", opts=("bold", "reverse"))))
+        print(("Original error: %s" % err))
         print("")
-        print(c.colorize("You should upgrade pip, e.g.:", foreground="blue"))
+        print((c.colorize("You should upgrade pip, e.g.:", foreground="blue")))
         print("\tpip install --upgrade pip")
         print("")
-        if raw_input("still continue? (y/n) ").lower() not in ("y", "j"):
-            print(c.colorize("Abort, ok.", foreground="blue"))
+        if input("still continue? (y/n) ").lower() not in ("y", "j"):
+            print((c.colorize("Abort, ok.", foreground="blue")))
             sys.exit(-1)
 
 
@@ -189,9 +189,9 @@ def print_options(options):
         output.append("pip verbose mode is on")
     output.append("log saved in '%s'" % options.logfile)
 
-    print(c.colorize("used options:", opts=("underscore",)))
+    print((c.colorize("used options:", opts=("underscore",))))
     for line in output:
-        print(c.colorize("\t* %s" % line, foreground="magenta"))
+        print((c.colorize("\t* %s" % line, foreground="magenta")))
 
 
 def call_pip(options, *args):
@@ -202,8 +202,8 @@ def call_pip(options, *args):
     if options.logfile:
         cmd.append("--log=%s" % options.logfile)
     cmd += args
-    print("-"*get_terminal_size()[0])
-    print("run: %s" % c.colorize(" ".join(cmd), foreground="blue"))
+    print(("-"*get_terminal_size()[0]))
+    print(("run: %s" % c.colorize(" ".join(cmd), foreground="blue")))
     if not options.dryrun:
         subprocess.call(cmd)
 
@@ -231,22 +231,22 @@ def main():
     packages, editables = get_upgradeable()
 
     print("")
-    print(c.colorize("Witch local virtualenv packages would you like to upgrade?", opts=("underscore",)))
+    print((c.colorize("Witch local virtualenv packages would you like to upgrade?", opts=("underscore",))))
     print("")
     print("(1) both: package + editables")
     print("(2) only packages")
     print("(3) only editables")
 
-    print(c.colorize("\nWarning:", foreground="red") + " Start update only, if editables was detected successful!")
+    print((c.colorize("\nWarning:", foreground="red") + " Start update only, if editables was detected successful!"))
     print("\tMore info: https://github.com/pypa/pip/issues/319")
 
     try:
-        choice = raw_input("\nPlease select (1/2/3):")
+        choice = input("\nPlease select (1/2/3):")
     except KeyboardInterrupt:
         print("")
         sys.exit()
     if choice not in ("1", "2", "3"):
-        print(c.colorize("Abort, ok.", foreground="blue"))
+        print((c.colorize("Abort, ok.", foreground="blue")))
         sys.exit()
 
     if choice in ("1", "2"):
@@ -257,15 +257,15 @@ def main():
         for editable in editables:
             call_pip(options, "--editable", editable)
 
-    print("-"*get_terminal_size()[0])
+    print(("-"*get_terminal_size()[0]))
 
     print("")
     if choice == "1":
-        print(c.colorize("Done, all packages + editables are updated.", foreground="blue"))
+        print((c.colorize("Done, all packages + editables are updated.", foreground="blue")))
     elif choice == "2":
-        print(c.colorize("Done, Packages, but not the editables are updated.", foreground="blue"))
+        print((c.colorize("Done, Packages, but not the editables are updated.", foreground="blue")))
     elif choice == "3":
-        print(c.colorize("Done, editables, but not normal packages are updated.", foreground="blue"))
+        print((c.colorize("Done, editables, but not normal packages are updated.", foreground="blue")))
     print("")
 
 

@@ -15,7 +15,7 @@ from django.test.testcases import SimpleTestCase
 
 
 if __name__ != "__main__": # do it only if we imported
-    print "import all django-tools tests:"
+    print("import all django-tools tests:")
     _BASE_PATH = os.path.abspath(os.path.dirname(__file__))
 #    print "_BASE_PATH:", _BASE_PATH
     for filename in glob.glob("*.py"):
@@ -39,7 +39,7 @@ if __name__ != "__main__": # do it only if we imported
             if key.startswith("_"):
                 continue
             if "Test" in key:
-                print "Add test class: %s.%s" % (_module, key)
+                print("Add test class: %s.%s" % (_module, key))
                 obj = getattr(_test_module, key)
                 locals()[key] = obj
 

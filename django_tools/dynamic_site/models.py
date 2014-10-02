@@ -111,7 +111,7 @@ class SiteAlias(UpdateInfoBaseModel):
                 alias = self.alias
                 try:
                     compile_alias(alias)
-                except Exception, err:
+                except Exception as err:
                     message_dict["alias"] = [mark_safe(_("Regex %r is not a valid: <strong>%s</strong>") % (alias, err))]
 
         if message_dict:

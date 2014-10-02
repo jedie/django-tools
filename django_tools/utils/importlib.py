@@ -56,7 +56,7 @@ def get_attr_from_string(path, obj_name=""):
         raise ImproperlyConfigured("%s isn't a %s module" % (path, obj_name))
     try:
         mod = import_module(module_name)
-    except ImportError, e:
+    except ImportError as e:
         raise ImproperlyConfigured('Error importing %s module %s: "%s"' % (obj_name, module_name, e))
     try:
         attr = getattr(mod, class_name)
@@ -149,4 +149,4 @@ def get_class_instance_from_settings(setting_name, obj_name=""):
 
 if __name__ == "__main__":
     import doctest
-    print doctest.testmod()
+    print(doctest.testmod())
