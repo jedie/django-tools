@@ -8,6 +8,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 
 from django.db import connections, DEFAULT_DB_ALIAS, reset_queries
 from django.core.signals import request_started

@@ -12,6 +12,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 import re
 
 from django.contrib.sites import models as sites_models

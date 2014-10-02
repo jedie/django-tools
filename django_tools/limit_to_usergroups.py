@@ -52,6 +52,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import Group
