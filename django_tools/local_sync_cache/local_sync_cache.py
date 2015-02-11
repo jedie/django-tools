@@ -76,7 +76,7 @@
         logger.addHandler(log.logging.FileHandler("local_sync_cache.log"))
     
     
-    :copyleft: 2011-2012 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2011-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -143,7 +143,7 @@ class LocalSyncCache(dict):
         if unique_ids:
             for existing_cache in self.CACHES:
                 if id == existing_cache.id:
-                    raise AssertionError(
+                    logger.error(
                         "ID %r was already used! It must be unique! (Existing ids are: %s)" % (
                             id, repr([i.id for i in self.CACHES])
                         )
