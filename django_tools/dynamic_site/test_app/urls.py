@@ -10,7 +10,7 @@
 
 
 from django_tools.dynamic_site.test_app.views import display_site
-from django.conf.urls.defaults import patterns
+from django.conf.urls import patterns
 
 
 urlpatterns = patterns('', (r'^display_site/$', display_site))
