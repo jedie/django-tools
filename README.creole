@@ -187,12 +187,18 @@ change and rename:
 to:
 **from django_tools.fields.media_path import MediaPathWidget**
 
+
 == Django compatibility
 
-We work on Django v1.5 compatibility in [[https://github.com/jedie/django-tools/tree/django1.5|django1.5 branch]].
+|= django-tools |= django version
+| v0.26         | <=1.6
+| v0.25         | <=1.4
+
 
 == history
 
+* v0.26.0 - 11.02.2015
+** Updates for Django 1.6 and Python 3
 * v0.25.1 - 18.11.2013
 ** Bugfix: Fall back to "UTF-8" if server send no encoding info
 * v0.25.0 - 28.08.2012
