@@ -11,6 +11,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 
 from operator import attrgetter
 import datetime
@@ -150,7 +153,7 @@ class BaseFilemanager(BaseFilesystemBrowser):
 
 if __name__ == "__main__":
     import doctest
-    print doctest.testmod(
+    print(doctest.testmod(
 #        verbose=True
         verbose=False
-    )
+    ))

@@ -11,6 +11,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 import unittest
 
 if __name__ == "__main__":
@@ -126,13 +129,13 @@ class LimitToUsergroupsTest2(BaseTestCase, TestCase):
     def test_verbose_limit_name1(self):
         self.assertEqual(
             get_verbose_limit_name(limit_to_usergroups.UsergroupsModelField.STAFF_USERS),
-            u'staff users'
+            'staff users'
         )
 
     def test_verbose_limit_name2(self):
         self.assertEqual(
             get_verbose_limit_name(self.user_group.pk),
-            u'user group 1'
+            'user group 1'
         )
 
 

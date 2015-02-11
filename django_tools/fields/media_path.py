@@ -18,6 +18,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 import os
 import warnings
 
@@ -74,7 +77,7 @@ class MediaPathWidget(forms.Select):
 
         try:
             self.choices = self._get_path_choices()
-        except OSError, err:
+        except OSError as err:
             self.choices = []
             if settings.DEBUG:
                 failsafe_message("Can't read MEDIA_ROOT: %s" % err)
@@ -95,11 +98,10 @@ class MediaPathWidget(forms.Select):
         return media_dirs_choices
 
 
-class MediaPathModelField(models.TextField):
+class MediaPathModelField(models.TextField, metaclass=models.SubfieldBase):
     """
     
     """
-    __metaclass__ = models.SubfieldBase
 
 #    def __init__(self, separator=",", strip_items=True, skip_empty=True, *args, **kwargs):
 #        self.separator = separator
@@ -123,8 +125,8 @@ class MediaPathModelField(models.TextField):
 
 if __name__ == "__main__":
     import doctest
-    print doctest.testmod(
+    print(doctest.testmod(
 #        verbose=True
         verbose=False
-    )
-    print "DocTest end."
+    ))
+    print("DocTest end.")

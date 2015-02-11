@@ -14,6 +14,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 from django import forms
 
 
@@ -62,12 +65,12 @@ class LimitManyToManyFields(object):
 
         super(LimitManyToManyFields, self).__init__(*args, **kwargs)
 
-        for field_name, limits in m2m_limit.iteritems():
+        for field_name, limits in m2m_limit.items():
             if len(limits) == 1:
                 value = int(limits[0][0])
                 # Only one item can be selected. Hide the ManyToMany field. To hide the field and
                 # for validation, we changed the MultipleChoiceField to a IntegerField.
-                print "XXX %r" % value
+                print("XXX %r" % value)
                 self.fields[field_name] = forms.IntegerField(
                     max_value=value, min_value=value, initial=value
                 )

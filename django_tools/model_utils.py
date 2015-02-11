@@ -8,6 +8,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 
 from django.conf import settings
 from django.db.models import signals
@@ -56,9 +59,9 @@ def check_unique_together(sender, **kwargs):
         count = query_set.count()
         if count > 0:
             field_names = get_text_list(field_names, _('and'))
-            msg = _(u"%(model_name)s with this %(field_names)s already exists.") % {
-                'model_name': unicode(instance.__class__.__name__),
-                'field_names': unicode(field_names)
+            msg = _("%(model_name)s with this %(field_names)s already exists.") % {
+                'model_name': str(instance.__class__.__name__),
+                'field_names': str(field_names)
             }
             raise IntegrityError(msg)
 

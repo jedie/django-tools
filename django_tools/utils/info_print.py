@@ -25,6 +25,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 import os
 import sys
 import inspect
@@ -69,7 +72,7 @@ class InfoStdout(object):
             if len(filename) >= MAX_FILEPATH_LEN:
                 filename = "...%s" % filename[-MAX_FILEPATH_LEN:]
             fileinfo = "%s line %s" % (filename, lineno)
-        except Exception, e:
+        except Exception as e:
             fileinfo = "(inspect Error: %s)" % e
 
         return fileinfo
@@ -89,5 +92,5 @@ def redirect_stdout():
             sys.stdout = InfoStdout(orig_stdout)
             orig_stderr = sys.stderr
             sys.stderr = InfoStdout(orig_stdout)
-        except Exception, err:
-            print "Error:", err
+        except Exception as err:
+            print("Error:", err)

@@ -27,6 +27,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 import time
 import warnings
 
@@ -38,6 +41,6 @@ class SlowerDevServerMiddleware(object):
         
     def process_response(self, request, response):
         if response.status_code == 200: 
-            print "SlowerDevServerMiddleware: Wait for %sSec..." % settings.SLOWER_DEV_SERVER_SLEEP
+            print("SlowerDevServerMiddleware: Wait for %sSec..." % settings.SLOWER_DEV_SERVER_SLEEP)
             time.sleep(settings.SLOWER_DEV_SERVER_SLEEP)
         return response

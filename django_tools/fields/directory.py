@@ -9,6 +9,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 
 import os
 
@@ -45,7 +48,7 @@ class DirectoryFormField(forms.CharField):
         return value
 
 
-class DirectoryModelField(models.CharField):
+class DirectoryModelField(models.CharField, metaclass=models.SubfieldBase):
     """
     >>> dir = DirectoryModelField()
     >>> dir.run_validators(settings.MEDIA_ROOT)
@@ -67,7 +70,6 @@ class DirectoryModelField(models.CharField):
         ...
     ValidationError: [u"Directory doesn't exist!"]
     """
-    __metaclass__ = models.SubfieldBase
     default_validators = []
     description = _("A existing/accessible directory")
 
@@ -90,4 +92,4 @@ if __name__ == "__main__":
 #        verbose=True
         verbose=False
     )
-    print "DocTest end."
+    print("DocTest end.")

@@ -8,6 +8,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 
 import posixpath
 import os
@@ -121,16 +124,16 @@ def symbolic_notation(mode):
     >>> symbolic_notation(33204) # -> 0100664 -> 664
     u'rw-rw-r--'
     """
-    mode = mode & 0777 # strip "meta info"
-    chmod_symbol = u''.join(
-        mode & 0400 >> i and x or u'-' for i, x in enumerate(u'rwxrwxrwx')
+    mode = mode & 0o777 # strip "meta info"
+    chmod_symbol = ''.join(
+        mode & 0o400 >> i and x or '-' for i, x in enumerate('rwxrwxrwx')
     )
     return chmod_symbol
 
 
 if __name__ == "__main__":
     import doctest
-    print doctest.testmod(
+    print(doctest.testmod(
 #        verbose=True
         verbose=False
-    )
+    ))

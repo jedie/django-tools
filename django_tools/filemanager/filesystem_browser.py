@@ -8,10 +8,13 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 
 import os
 import posixpath
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 if __name__ == "__main__":
     # For doctest only
@@ -64,7 +67,7 @@ class BaseFilesystemBrowser(object):
         self.absolute_path = add_slash(absolute_path)
         self.base_url = clean_posixpath(base_url)
 
-        rest_url = urllib.unquote(rest_url)
+        rest_url = urllib.parse.unquote(rest_url)
         rest_url = add_slash(rest_url)
 
         # To protect from directory traversal attack
@@ -137,7 +140,7 @@ class BaseFilesystemBrowser(object):
 
 if __name__ == "__main__":
     import doctest
-    print doctest.testmod(
+    print(doctest.testmod(
 #        verbose=True
         verbose=False
-    )
+    ))

@@ -8,11 +8,14 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 import time
 import sys
 import os
 try:
-    import cPickle as pickle
+    import pickle as pickle
 except ImportError:
     import pickle
 

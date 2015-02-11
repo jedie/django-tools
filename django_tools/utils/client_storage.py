@@ -33,6 +33,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 import os
 
 if __name__ == "__main__":
@@ -99,7 +102,7 @@ class ClientCookieStorage(object):
 
         try:
             data = signing.loads(raw_data, max_age=self.max_age)
-        except Exception, err:
+        except Exception as err:
             raise ClientCookieStorageError("Can't load data: %s" % err)
 
         return data
@@ -109,4 +112,4 @@ class ClientCookieStorage(object):
 if __name__ == "__main__":
     import doctest
     doctest.testmod(verbose=False)
-    print "DocTest end."
+    print("DocTest end.")

@@ -12,6 +12,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 if __name__ == "__main__":
     # For doctest only
     import os
@@ -100,7 +103,7 @@ class SignSeparatedFormField(forms.CharField):
         return values
 
 
-class SignSeparatedModelField(models.TextField):
+class SignSeparatedModelField(models.TextField, metaclass=models.SubfieldBase):
     """
     A dict field.
     Stores a python dict into a text field.
@@ -151,7 +154,6 @@ class SignSeparatedModelField(models.TextField):
     >>> f.save()
     <TestModel: TestModel object>
     """
-    __metaclass__ = models.SubfieldBase
 
     def __init__(self, separator=",", strip_items=True, skip_empty=True, *args, **kwargs):
         self.separator = separator
@@ -188,8 +190,8 @@ class SignSeparatedModelField(models.TextField):
 if __name__ == "__main__":
     # Run all unittest directly
     import doctest
-    print doctest.testmod(
+    print(doctest.testmod(
 #        verbose=True
         verbose=False,
-    )
-    print "DocTest end."
+    ))
+    print("DocTest end.")

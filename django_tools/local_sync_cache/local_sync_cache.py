@@ -80,6 +80,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 import sys
 import time
 import datetime
@@ -260,7 +263,7 @@ class LocalSyncCache(dict):
             for attr in attributes:
                 output.append("%22s: %s" % (attr, getattr(instance, attr)))
 
-            for key, value in item.iteritems():
+            for key, value in item.items():
                 output.append("%22s: %r" % (key, value))
 
         return "\n".join(output)

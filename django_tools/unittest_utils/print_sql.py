@@ -8,6 +8,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 
 from django.db import connections, DEFAULT_DB_ALIAS, reset_queries
 from django.core.signals import request_started
@@ -69,11 +72,11 @@ class PrintQueries(object):
         final_queries = len(self.connection.queries)
         executed = final_queries - self.starting_queries
 
-        print
-        print "_"*79
+        print()
+        print("_"*79)
         if self.msg:
-            print " *** %s ***" % self.msg
+            print(" *** %s ***" % self.msg)
         for no, q in enumerate(self.connection.queries[-executed:], 1):
-            print "%i - %s" % (no, pformat_sql(q["sql"]))
-            print
-        print "-"*79
+            print("%i - %s" % (no, pformat_sql(q["sql"])))
+            print()
+        print("-"*79)

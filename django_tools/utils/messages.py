@@ -10,6 +10,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 import inspect
 import warnings
 
@@ -108,7 +111,7 @@ def failsafe_message(msg, level=messages.INFO):
         # create a normal user message
         try:
             messages.add_message(request, level, msg)
-        except Exception, err:
+        except Exception as err:
             # e.g.:
             # Without the django.contrib.messages middleware,
             # messages can only be added to authenticated users.

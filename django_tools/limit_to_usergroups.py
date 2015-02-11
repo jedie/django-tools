@@ -52,6 +52,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import Group
@@ -68,7 +71,7 @@ def has_permission(item, **kwargs):
         has_permission(poll, permit_vote=request.user)
         has_permission(item, model_field1=user, model_field2=user)
     """
-    for attr_name, user in kwargs.items():
+    for attr_name, user in list(kwargs.items()):
         limit_permission_value = getattr(item, attr_name)
         limit_permission_value = int(limit_permission_value)
 
@@ -137,7 +140,7 @@ def get_user_groups():
 
 def get_limit_dict():
     # use unicode() to evaluate ugettext_lazy:
-    limit_dict = dict([(k, unicode(v)) for k, v in UsergroupsModelField.USER_TYPES_DICT.items()])
+    limit_dict = dict([(k, str(v)) for k, v in list(UsergroupsModelField.USER_TYPES_DICT.items())])
 
     groups = get_user_groups()
     limit_dict.update(dict(groups))

@@ -9,6 +9,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 import os
 import sys
 
@@ -20,13 +23,13 @@ from django_tools import VERSION_STRING
 PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
+# convert creole to ReSt on-the-fly, see also:
+# https://code.google.com/p/python-creole/wiki/UseInSetup
 try:
     from creole.setup_utils import get_long_description
-except ImportError:
-    if "register" in sys.argv or "sdist" in sys.argv or "--long-description" in sys.argv:
-        etype, evalue, etb = sys.exc_info()
-        evalue = etype("%s - Please install python-creole >= v0.8 -  e.g.: pip install python-creole" % evalue)
-        raise etype, evalue, etb
+except ImportError as err:
+    if "check" in sys.argv or "register" in sys.argv or "sdist" in sys.argv or "--long-description" in sys.argv:
+        raise ImportError("%s - Please install python-creole >= v0.8 - e.g.: pip install python-creole" % err)
     long_description = None
 else:
     long_description = get_long_description(PACKAGE_ROOT)
@@ -34,10 +37,9 @@ else:
 
 def get_authors():
     try:
-        f = file(os.path.join(PACKAGE_ROOT, "AUTHORS"), "r")
-        authors = [l.strip(" *\r\n") for l in f if l.strip().startswith("*")]
-        f.close()
-    except Exception, err:
+        with open(os.path.join(PACKAGE_ROOT, "AUTHORS"), "r") as f:
+            authors = [l.strip(" *\r\n") for l in f if l.strip().startswith("*")]
+    except Exception as err:
         authors = "[Error: %s]" % err
     return authors
 
@@ -54,7 +56,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,  # include package data under svn source control
     install_requires=[
-        "Django>=1.5,<1.6",
+        "Django>=1.5,<1.8",
     ],
     zip_safe=False,
     classifiers=[

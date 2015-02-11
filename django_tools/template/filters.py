@@ -8,6 +8,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 import datetime
 
 from django_tools.utils.time_utils import datetime2float
@@ -24,7 +27,7 @@ from django.utils.encoding import force_unicode
 
 
 CHMOD_TRANS_DATA = (
-    u"---", u"--x", u"-w-", u"-wx", u"r--", u"r-x", u"rw-", u"rwx"
+    "---", "--x", "-w-", "-wx", "r--", "r-x", "rw-", "rwx"
 )
 def chmod_symbol(octal_value):
     """
@@ -39,7 +42,7 @@ def chmod_symbol(octal_value):
     u'rwxrwxrwx'
     """
     octal_value_string = str(octal_value)[-3:] # strip "meta info"
-    return u''.join(CHMOD_TRANS_DATA[int(num)] for num in octal_value_string)
+    return ''.join(CHMOD_TRANS_DATA[int(num)] for num in octal_value_string)
 chmod_symbol.is_safe = True
 chmod_symbol = stringfilter(chmod_symbol)
 
@@ -118,4 +121,4 @@ human_duration.is_safe = True
 
 if __name__ == "__main__":
     import doctest
-    print doctest.testmod(verbose=False)
+    print(doctest.testmod(verbose=False))
