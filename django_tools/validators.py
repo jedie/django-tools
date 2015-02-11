@@ -4,7 +4,7 @@
     need full validators
     ~~~~~~~~~~~~~~~~~~~~
 
-    :copyleft: 2010-2013 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2010-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -14,7 +14,6 @@ from __future__ import absolute_import, division, print_function
 
 import os
 import re
-import urllib.parse
 
 if __name__ == "__main__":
     # For doctest only
@@ -22,7 +21,7 @@ if __name__ == "__main__":
     from django.conf import global_settings
     global_settings.SECRET_KEY = "unittest"
 
-
+from django.utils.six.moves.urllib import parse
 from django.conf import settings
 from django.utils.encoding import smart_unicode
 from django.core.exceptions import ValidationError
@@ -169,7 +168,7 @@ class URLValidator2(URLValidator):
 
     def __call__(self, value):
         value = smart_unicode(value)
-        scheme, netloc, path, query, fragment = urllib.parse.urlsplit(value)
+        scheme, netloc, path, query, fragment = parse.urlsplit(value)
 
         if (scheme or netloc) and not self.allow_schemes and not self.allow_all_schemes and not self.allow_netloc:
             raise ValidationError(_("Please enter a local URL (without protocol/domain)."), code="local")

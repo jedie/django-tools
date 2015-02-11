@@ -11,7 +11,7 @@
      * form field
      * widget
 
-    :copyleft: 2012 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2012-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -24,6 +24,7 @@ if __name__ == "__main__":
     # For doctest only
     os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
 
+from django.utils import six
 from django import forms
 from django.db import models
 from django.conf import settings
@@ -88,7 +89,8 @@ class StaticPathWidget(forms.Select):
         return Static_dirs_choices
 
 
-class StaticPathModelField(models.TextField, metaclass=models.SubfieldBase):
+@six.add_metaclass(models.SubfieldBase)
+class StaticPathModelField(models.TextField):
     """
     Model field for select a sub directory in settings.STATIC_ROOT
     """

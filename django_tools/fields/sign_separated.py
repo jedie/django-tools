@@ -8,7 +8,7 @@
      * form field
      * widget
 
-    :copyleft: 2010-2011 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2010-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -20,6 +20,7 @@ if __name__ == "__main__":
     import os
     os.environ["DJANGO_SETTINGS_MODULE"] = "django_tools.tests.test_settings"
 
+from django.utils import six
 from django import forms
 from django.db import models
 
@@ -103,7 +104,8 @@ class SignSeparatedFormField(forms.CharField):
         return values
 
 
-class SignSeparatedModelField(models.TextField, metaclass=models.SubfieldBase):
+@six.add_metaclass(models.SubfieldBase)
+class SignSeparatedModelField(models.TextField):
     """
     A dict field.
     Stores a python dict into a text field.

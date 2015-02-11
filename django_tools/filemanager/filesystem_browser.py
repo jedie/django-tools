@@ -4,7 +4,7 @@
     filemanager
     ~~~~~~~~~~~
 
-    :copyleft: 2012 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2012-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -14,7 +14,6 @@ from __future__ import absolute_import, division, print_function
 
 import os
 import posixpath
-import urllib.request, urllib.parse, urllib.error
 
 if __name__ == "__main__":
     # For doctest only
@@ -22,6 +21,7 @@ if __name__ == "__main__":
     from django.conf import global_settings
     global_settings.SITE_ID = 1
 
+from django.utils.six.moves import urllib
 from django.http import Http404
 from django.utils.translation import ugettext as _
 
