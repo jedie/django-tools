@@ -197,8 +197,9 @@ to:
 
 == history
 
-* v0.26.1 - 12.02.2015
+* v0.28.0 - 12.02.2015
 ** Work-a-round for import loops
+** (new Version number, because of PyPi stress)
 * v0.26.0 - 11.02.2015
 ** Updates for Django 1.6 and Python 3
 * v0.25.1 - 18.11.2013
