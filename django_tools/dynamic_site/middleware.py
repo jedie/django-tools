@@ -8,7 +8,7 @@
     
     More info: read .../django_tools/dynamic_site/README.creole
     
-    :copyleft: 2011-2013 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2011-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -31,7 +31,7 @@ from django.core.exceptions import MiddlewareNotUsed, ImproperlyConfigured
 from django.utils import log
 
 from django_tools.local_sync_cache.local_sync_cache import LocalSyncCache
-from django_tools.dynamic_site.models import SiteAlias
+
 
 USE_DYNAMIC_SITE_MIDDLEWARE = getattr(settings, "USE_DYNAMIC_SITE_MIDDLEWARE", False)
 
@@ -160,6 +160,7 @@ class DynamicSiteMiddleware(object):
             site = Site.objects.get(domain__iexact=host)
         except Site.DoesNotExist:
             # Look if there is a alias
+            from django_tools.dynamic_site.models import SiteAlias # against import loops ;(
             try:
                 site = SiteAlias.objects.get_from_host(host)
             except SiteAlias.DoesNotExist:
