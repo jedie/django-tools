@@ -197,6 +197,8 @@ to:
 
 == history
 
+* v0.29.0 - dev
+** Bugfix for "django.core.exceptions.AppRegistryNotReady: Models aren't loaded yet." if using **UpdateInfoBaseModel**
 * v0.28.0 - 12.02.2015
 ** Work-a-round for import loops
 ** (new Version number, because of PyPi stress)

@@ -4,7 +4,7 @@
     models stuff
     ~~~~~~~~~~~~
 
-    :copyleft: 2011 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2011-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -13,7 +13,8 @@ from __future__ import absolute_import, division, print_function
 
 
 from django.db import models
-from django.contrib import auth
+from django.conf import settings
+from django.apps import apps
 try:
     from django.utils.timezone import now
 except ImportError:
@@ -23,7 +24,15 @@ except ImportError:
 from django_tools.middlewares import ThreadLocal
 
 
-User = auth.get_user_model()
+try:
+    # django 1.6
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+except:
+    # django 1.7
+    from django.apps import apps
+    user_app, user_model = settings.AUTH_USER_MODEL.split('.')
+    User = apps.get_app_config(user_app).get_model(user_model)
 
 
 class UpdateTimeBaseModel(models.Model):
