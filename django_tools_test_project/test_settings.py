@@ -5,6 +5,8 @@ import os
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+SECRET_KEY="Not empty..."
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
