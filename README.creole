@@ -186,6 +186,8 @@ to:
 
 == history
 
+* v0.26.0 - **not released, yet**
+** Bugfixes in **dynamic_site** for django 1.7
 * v0.25.0 - 28.08.2012
 ** Rename **cache.clear()** in SmoothCacheBackends to **cache.smooth_update()**, so that reset timestamp is independ from clear the cache. 
 * v0.24.10 - 24.08.2012

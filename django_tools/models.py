@@ -4,7 +4,7 @@
     models stuff
     ~~~~~~~~~~~~
 
-    :copyleft: 2011 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2011-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -13,7 +13,8 @@ from __future__ import absolute_import, division, print_function
 
 
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
+from django.contrib.auth import get_user_model
 try:
     from django.utils.timezone import now
 except ImportError:
@@ -52,20 +53,22 @@ class UpdateUserBaseModel(models.Model):
      
     Important: "threadlocals middleware" must be used!
     """
-    createby = models.ForeignKey(User, editable=False, related_name="%(class)s_createby",
+    createby = models.ForeignKey(settings.AUTH_USER_MODEL, editable=False, related_name="%(class)s_createby",
         null=True, blank=True, # <- If the model used outsite a real request (e.g. unittest, db shell)
         help_text="User how create this entry.")
-    lastupdateby = models.ForeignKey(User, editable=False, related_name="%(class)s_lastupdateby",
+    lastupdateby = models.ForeignKey(settings.AUTH_USER_MODEL, editable=False, related_name="%(class)s_lastupdateby",
         null=True, blank=True, # <- If the model used outsite a real request (e.g. unittest, db shell)
         help_text="User as last edit this entry.")
 
     def save(self, *args, **kwargs):
         current_user = ThreadLocal.get_current_user()
 
-        if current_user and isinstance(current_user, User):
-            if self.pk == None or kwargs.get("force_insert", False): # New model entry
-                self.createby = current_user
-            self.lastupdateby = current_user
+        if current_user:
+            User = get_user_model()
+            if isinstance(current_user, User):
+                if self.pk == None or kwargs.get("force_insert", False): # New model entry
+                    self.createby = current_user
+                self.lastupdateby = current_user
 
         return super(UpdateUserBaseModel, self).save(*args, **kwargs)
 

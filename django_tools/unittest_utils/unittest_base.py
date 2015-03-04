@@ -20,7 +20,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.core import management
 from django.test.html import HTMLParseError, parse_html
 from django.utils.encoding import smart_str
-from django.utils.unittest.util import safe_repr
 
 from .BrowserDebug import debug_response
 import difflib
