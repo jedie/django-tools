@@ -141,10 +141,21 @@ _______________________________________________________________________________
 -------------------------------------------------------------------------------
 }}}
 
+
 === SetRequestDebugMiddleware
 
 middleware to add debug bool attribute to request object.
 More info: [[https://github.com/jedie/django-tools/blob/master/django_tools/debug/README.creole|./debug/README.creole]]
+
+
+=== InternalIps() - Unix shell-style wildcards in INTERNAL_IPS
+settings.py e.g.:
+{{{
+from django_tools.settings_utils import InternalIps
+
+INTERNAL_IPS = InternalIps(["127.0.0.1", "::1", "192.168.*.*", "10.0.*.*"])
+}}}
+
 
 === ..all others…
 
@@ -188,6 +199,7 @@ to:
 
 * v0.26.0 - **not released, yet**
 ** Bugfixes in **dynamic_site** for django 1.7
+** add: [[https://github.com/jedie/django-tools/blob/master/django_tools/settings_utils.py|django_tools.settings_utils.InternalIps]]
 * v0.25.0 - 28.08.2012
 ** Rename **cache.clear()** in SmoothCacheBackends to **cache.smooth_update()**, so that reset timestamp is independ from clear the cache. 
 * v0.24.10 - 24.08.2012
