@@ -48,7 +48,7 @@
     ---------------------------------------------------------------------------
 
     
-    :copyleft: 2011-2012 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2011-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -56,6 +56,7 @@ from __future__ import absolute_import, division, print_function
 
 
 from django.db import models
+from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import Group
 
@@ -126,8 +127,9 @@ def get_verbose_limit_name(value):
     """
     Simply convert the integer value of a UsergroupsModelField to his select choice text
     
-    >>> get_verbose_limit_name(-1)
-    u"staff users"
+    >>> x = get_verbose_limit_name(-1)
+    >>> x == "staff users"
+    True
     """
     limit_dict = get_limit_dict()
     return limit_dict[value]
@@ -140,7 +142,7 @@ def get_user_groups():
 
 def get_limit_dict():
     # use unicode() to evaluate ugettext_lazy:
-    limit_dict = dict([(k, str(v)) for k, v in list(UsergroupsModelField.USER_TYPES_DICT.items())])
+    limit_dict = dict([(k, six.text_type(v)) for k, v in list(UsergroupsModelField.USER_TYPES_DICT.items())])
 
     groups = get_user_groups()
     limit_dict.update(dict(groups))
