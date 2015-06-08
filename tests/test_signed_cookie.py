@@ -1,10 +1,12 @@
 import warnings
-from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
-from django_tools.utils.client_storage import SignedCookieStorage, SignedCookieStorageError, ClientCookieStorage
 
 from django.test import SimpleTestCase
 from django.test.client import RequestFactory
 from django.http import HttpResponse
+
+
+from django_tools.utils.client_storage import SignedCookieStorage, SignedCookieStorageError, ClientCookieStorage
+
 
 
 class TestSignedCookieStorage(SimpleTestCase):
@@ -22,6 +24,9 @@ class TestSignedCookieStorage(SimpleTestCase):
         self.assertNotIn("bar", cookie_value)
         self.assertNotIn("foo", cookie_value)
         self.assertEqual(cookie["max-age"], 123)
+
+        # print(response.cookies) # e.g.: Set-Cookie: foo=ImJhciI:1Z1y0f:wA2m4wjbUEwkS6TxK7gqZV9yk7M; expires=...
+        self.assertIn("foo", response.cookies)
 
         request = RequestFactory().get('/', HTTP_COOKIE="foo=%s" % cookie_value)
         c = SignedCookieStorage("foo", max_age=123)
