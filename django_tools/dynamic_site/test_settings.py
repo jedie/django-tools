@@ -5,6 +5,9 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 
+SECRET_KEY = "Unittests"
+ALLOWED_HOSTS = ["*"] # Allow any domain/subdomain
+
 DEBUG = True
 
 DATABASES = {
@@ -22,7 +25,7 @@ CACHES = {
 }
 
 MIDDLEWARE_CLASSES = (
-    'dynamic_site.middleware.DynamicSiteMiddleware',
+    'django_tools.dynamic_site.middleware.DynamicSiteMiddleware',
 )
 
 INSTALLED_APPS = (
@@ -32,11 +35,13 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
 
-    'dynamic_site',
-    'dynamic_site.test_app',
+    'django_tools.dynamic_site',
+    'django_tools.dynamic_site.test_app',
 )
 SITE_ID = 1
 
-ROOT_URLCONF = 'dynamic_site.test_app.urls'
+ROOT_URLCONF = 'django_tools.dynamic_site.test_app.urls'
+
+DEFAULT_CHARSET="utf-8"
 
 USE_DYNAMIC_SITE_MIDDLEWARE = True

@@ -97,7 +97,6 @@ more info in the sourcecode: [[https://github.com/jedie/django-tools/blob/master
 ==== http utils
 Pimped HttpRequest to get some more information about a request.
 More info in DocString here: [[https://github.com/jedie/django-tools/blob/master/django_tools/utils/http.py|django_tools/utils/http.py]]
-
 === upgrade virtualenv
 
 A simple commandline script that calls {{{pip install —-upgrade XY}}} for every package thats installed in a virtualenv.
@@ -150,6 +149,13 @@ _______________________________________________________________________________
 middleware to add debug bool attribute to request object.
 More info: [[https://github.com/jedie/django-tools/blob/master/django_tools/debug/README.creole|./debug/README.creole]]
 
+=== InternalIps() - Unix shell-style wildcards in INTERNAL_IPS
+settings.py e.g.:
+{{{
+from django_tools.settings_utils import InternalIps
+
+INTERNAL_IPS = InternalIps(["127.0.0.1", "::1", "192.168.*.*", "10.0.*.*"])
+}}}
 === ..all others…
 
 There exist many miscellaneous stuff. Look in the source, luke!
@@ -186,8 +192,6 @@ change and rename:
 **from django_tools.widgets import SelectMediaPath**
 to:
 **from django_tools.fields.media_path import MediaPathWidget**
-
-
 == Django compatibility
 
 |= django-tools |= django version
@@ -197,8 +201,10 @@ to:
 
 == history
 
-* v0.29.0 - dev
+* v0.29.0 - dev - **not released, yet**
 ** Bugfix for "django.core.exceptions.AppRegistryNotReady: Models aren't loaded yet." if using **UpdateInfoBaseModel**
+** Bugfixes in **dynamic_site** for django 1.7
+** add: [[https://github.com/jedie/django-tools/blob/master/django_tools/settings_utils.py|django_tools.settings_utils.InternalIps]]
 * v0.28.0 - 12.02.2015
 ** Work-a-round for import loops
 ** (new Version number, because of PyPi stress)
