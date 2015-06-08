@@ -1,0 +1,30 @@
+# Config file for automatic testing at travis-ci.org
+
+language: python
+
+python:
+    - "2.7"
+    - "3.4"
+
+env:
+    - DJANGO=1.7
+    - DJANGO=1.8
+
+# selenium:
+#before_install:
+#    - "export DISPLAY=:99.0"
+#    - "sh -e /etc/init.d/xvfb start"
+
+install:
+    - pip install .
+    - pip install -q Django==$DJANGO --use-mirrors
+    - pip install coveralls
+
+script:
+    - coverage run ./setup.py test
+
+after_success:
+    coveralls
+
+notifications:
+    irc: "irc.freenode.org#pylucid"
