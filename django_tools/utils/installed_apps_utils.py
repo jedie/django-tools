@@ -1,20 +1,10 @@
 # coding:utf-8
 
-if __name__ == "__main__":
-    print("run doctest:")
-    import os
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
-    from django.conf import global_settings
-    global_settings.INSTALLED_APPS += (
-        'django.contrib.admindocs',
-        'django.contrib.auth',
-        'django.contrib.flatpages',
-    )
-
-
+from django.utils.six import PY2
 from django.conf import settings
 from django.core import urlresolvers
 from django.utils.importlib import import_module
+
 
 
 def get_filtered_apps(resolve_url="/", no_args=True, debug=False, skip_fail=False):
@@ -24,15 +14,15 @@ def get_filtered_apps(resolve_url="/", no_args=True, debug=False, skip_fail=Fals
 
     @param resolve_url: url used for RegexURLResolver
     @param no_args: Only views without args/kwargs ?
-    @parm skip_fail: If True: raise excaption if app is not importable
+    @parm skip_fail: If True: raise exception if app is not importable
+
+    Please look at:
+
+        django_tools.tests.test_installed_apps_utils
     
-    >>> get_filtered_apps()
-    ['django.contrib.admindocs']
-    
-    >>> get_filtered_apps(no_args=False)
-    ['django.contrib.admindocs', 'django.contrib.flatpages']
-    
-    >>> get_filtered_apps(debug=True)
+    with debug, some print messages would be created:
+
+    e.g.: get_filtered_apps(debug=True)
     found 'django.contrib.admindocs' with urls.py
     found 'django.contrib.auth' with urls.py
     Skip 'django.contrib.auth': Can't handle root url.
@@ -47,7 +37,11 @@ def get_filtered_apps(resolve_url="/", no_args=True, debug=False, skip_fail=Fals
         except ImportError as err:
             if debug:
                 print("Skip %r: has no urls.py" % app_label)
-            if str(err) == "No module named urls":
+            if PY2:
+                msg_should = "No module named urls"
+            else:
+                msg_should = "No module named '%s'" % urls_pkg
+            if str(err) == msg_should:
                 continue
             if not skip_fail:
                 raise
@@ -59,7 +53,6 @@ def get_filtered_apps(resolve_url="/", no_args=True, debug=False, skip_fail=Fals
             else:
                 continue
 
-
         if debug:
             print("found %r with urls.py" % app_label)
 
@@ -70,7 +63,7 @@ def get_filtered_apps(resolve_url="/", no_args=True, debug=False, skip_fail=Fals
                 print("Skip %r: urls.py has no 'urlpatterns'" % app_label)
             continue
 
-        resolver = urlresolvers.RegexURLResolver(r'^/', urlpatterns)
+        resolver = urlresolvers.RegexURLResolver(r'^', urlpatterns)
         try:
             func, func_args, func_kwargs = resolver.resolve(resolve_url)
         except urlresolvers.Resolver404 as err:
