@@ -18,6 +18,7 @@ import unittest
 from django.contrib.auth.models import User, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core import management
+from django.test import SimpleTestCase
 from django.test.html import HTMLParseError, parse_html
 from django.utils.encoding import smart_str
 
@@ -26,7 +27,7 @@ import difflib
 
 
 
-class BaseTestCase(unittest.TestCase):
+class BaseTestCase(SimpleTestCase):
     # Should we open a bwoser traceback?
     browser_traceback = True
 
@@ -172,69 +173,46 @@ class BaseTestCase(unittest.TestCase):
         msg = "assertStatusCode error: %r != %r" % (response.status_code, excepted_code)
         self.raise_browser_traceback(response, msg)
 
-    def assertRedirect(self, response, url, status_code=302):
-        """
-        assert than response is a redirect to the right destination, if wrong, do a browser traceback.
-        """
-        self.assertStatusCode(response, excepted_code=status_code)
-        try:
-            location = response['Location']
-        except KeyError as err:
-            self.raise_browser_traceback(response, "No 'Location' in response: %s" % err)
-        else:
-            if location != url:
-                self.raise_browser_traceback(response, "Wrong destination url: %r != %r" % (location, url))
-
-    def _assert_and_parse_html(self, html, user_msg, msg):
-        """
-        convert a html snippet into a DOM tree.
-        raise error if snippet is no valid html.
-        """
-        try:
-            return parse_html(html)
-        except HTMLParseError as e:
-            self.fail("html code is not valid: %s - code: %r" % (e, html))
-
-    def _assert_and_parse_html_response(self, response):
-        """
-        convert html response content into a DOM tree.
-        raise browser traceback, if content is no valid html.
-        """
-        try:
-            return parse_html(response.content)
-        except HTMLParseError as e:
-            self.raise_browser_traceback(response, "Response's content is no valid html: %s" % e)
+    # def _assert_and_parse_html(self, html, user_msg, msg):
+    #     """
+    #     convert a html snippet into a DOM tree.
+    #     raise error if snippet is no valid html.
+    #     """
+    #     try:
+    #         return parse_html(html)
+    #     except HTMLParseError as e:
+    #         self.fail("html code is not valid: %s - code: %r" % (e, html))
+    #
+    # def _assert_and_parse_html_response(self, response):
+    #     """
+    #     convert html response content into a DOM tree.
+    #     raise browser traceback, if content is no valid html.
+    #     """
+    #     try:
+    #         return parse_html(response.content)
+    #     except HTMLParseError as e:
+    #         self.raise_browser_traceback(response, "Response's content is no valid html: %s" % e)
 
     def assertDOM(self, response, must_contain=(), must_not_contain=(), use_browser_traceback=True):
         """
         Asserts that html response contains 'must_contain' nodes, but no
         nodes from must_not_contain.      
         """
-        def count_snippet(snippet, response_dom):
-            snippet = smart_str(snippet, response._charset)
-            txt_dom = self._assert_and_parse_html(
-                snippet, None, 'Unittest snippet is no valid html:'
-            )
-            return response_dom.count(txt_dom)
-
-        response_dom = self._assert_and_parse_html_response(response)
-
         for txt in must_contain:
-            if count_snippet(txt, response_dom) == 0:
-                msg = "HTML not in response: '%s'" % txt
+            try:
+                self.assertContains(response, txt, html=True)
+            except AssertionError as err:
                 if use_browser_traceback:
-                    self.raise_browser_traceback(response, msg)
-                else:
-                    self.fail(msg)
-
+                    self.raise_browser_traceback(response, err)
+                raise
 
         for txt in must_not_contain:
-            if count_snippet(txt, response_dom) > 0:
-                msg = "HTML should not be in response: '%s'" % txt
+            try:
+                self.assertNotContains(response, txt, html=True)
+            except AssertionError as err:
                 if use_browser_traceback:
-                    self.raise_browser_traceback(response, msg)
-                else:
-                    self.fail(msg)
+                    self.raise_browser_traceback(response, err)
+                raise
 
     def assertResponse(self, response, must_contain=(), must_not_contain=()):
         """

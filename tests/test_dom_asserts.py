@@ -27,16 +27,9 @@ if __name__ == "__main__":
 
 
 from django_tools.unittest_utils.unittest_base import BaseTestCase
+from django_tools.unittest_utils.selenium_utils import FakedHttpResponse
 
-
-class FakeResponse(object):
-    _charset = "utf-8"
-    def __init__(self, content, status_code=200):
-        self.content = content
-        self.status_code = status_code
-
-
-FAKE_RESPONSE1 = FakeResponse("""\
+FAKE_RESPONSE1 = FakedHttpResponse("""\
 <!DOCTYPE HTML>
 <html>
 <head><title>A html5 page</title></head>
@@ -77,12 +70,6 @@ class DOMassertTest(BaseTestCase):
         self.assertHTMLEqual(
             '<span foo="1" bar="2" /><script> <a href="" /> <p> <span></span> </p> </script>',
             '<span bar="2" foo="1" /><script> <a href="" /> <p> <span></span> </p> </script>',
-        )
-
-    def test_closed_input_field(self):
-        """ TODO: https://github.com/gregmuellegger/django/issues/2 """
-        self.assertHTMLEqual(
-            '<input value="Foo" type="text" name="first_name"></input>', ""
         )
 
     def test_assertDOM1(self):

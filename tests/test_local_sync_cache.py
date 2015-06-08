@@ -16,6 +16,7 @@ from __future__ import absolute_import, division, print_function
 import unittest
 import time
 import pprint
+from django_tools.unittest_utils.logging_utils import LoggingBuffer
 
 if __name__ == "__main__":
     # run unittest directly
@@ -30,6 +31,8 @@ from django_tools.local_sync_cache.LocalSyncCacheMiddleware import LocalSyncCach
 
 
 class LocalSyncCacheTest(unittest.TestCase):
+    maxDiff=4000
+
     def setUp(self):
         LocalSyncCache.CACHES = []
         LocalSyncCache.INIT_COUNTER = {}
@@ -50,8 +53,14 @@ class LocalSyncCacheTest(unittest.TestCase):
         self.assertEqual(len(cache_information), 1)
 
     def testUniqueID(self):
-        c1 = LocalSyncCache(id="test1")
-        self.assertRaises(AssertionError, LocalSyncCache, id="test1")
+        with LoggingBuffer("django_tools.local_sync_cache") as log:
+            c1 = LocalSyncCache(id="test1")
+            log.clear()
+            c2 = LocalSyncCache(id="test1")
+            self.assertIn(
+                "ID 'test1' was already used! It must be unique! (Existing ids are: ['test1'])",
+                log.get_messages()
+            )
 
     def testEmptyPformatCacheInfo(self):
         txt = LocalSyncCache.pformat_cache_information()

@@ -12,7 +12,7 @@ from __future__ import absolute_import, division, print_function
 
 
 
-from django_tools.dynamic_site.test_app.views import display_site
+from django_tools_test_project.django_tools_test_app.views import display_site
 from django.conf.urls import patterns, url
 
 
