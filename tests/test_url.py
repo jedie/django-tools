@@ -123,7 +123,7 @@ class TestUrlValidator(SimpleTestCase):
         """
         **Note:** Validating the network location (netloc):
         Following the syntax specifications in RFC 1808, urlparse recognizes a
-        netloc only if it is properly introduced by ‘//’. Otherwise the input is
+        netloc only if it is properly introduced by '//'. Otherwise the input is
         presumed to be a relative URL and thus to start with a path component.
         See: http://docs.python.org/library/urlparse.html#urlparse.urlparse
         """
