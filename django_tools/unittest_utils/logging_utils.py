@@ -21,7 +21,7 @@ class LoggingBuffer():
         self.buffer.append(record)
 
     def clear(self):
-        self.buffer.clear()
+        self.buffer = []
 
     def __enter__(self):
         return self
