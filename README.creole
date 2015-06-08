@@ -1,4 +1,4 @@
-= description
+= django-tools
 
 Miscellaneous tools for django.
 
@@ -66,6 +66,30 @@ Limit something with only one field, by selecting:
 * ..all existing user groups..
 
 More info, read DocString in [[https://github.com/jedie/django-tools/blob/master/django_tools/limit_to_usergroups.py|./limit_to_usergroups.py]]
+
+
+== unittests helpers
+
+=== BaseUnittestCase
+
+**django_tools.unittest_utils.unittest_base.BaseUnittestCase** contains some low-level assert methods:
+
+* assertEqual_dedent()
+* assert_is_dir(), assert_not_is_dir()
+* assert_is_file(), assert_not_is_File()
+
+//django_tools.unittest_utils.tempdir// contains **TempDir**, a Context Manager Class:
+{{{
+with TempDir(prefix="foo_") as tempfolder:
+    # create a file:
+    open(os.path.join(tempfolder, "bar"), "w").close()
+
+# the created temp folder was deleted with shutil.rmtree()
+}}}
+
+usage/tests:
+
+* [[https://github.com/jedie/django-tools/blob/master/tests/test_unittest_utils.py|/tests/test_unittest_utils.py]]
 
 
 === DOM compare in unittests

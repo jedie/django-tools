@@ -13,8 +13,9 @@ from __future__ import absolute_import, division, print_function
 
 import os
 import sys
-import unittest
+import textwrap
 
+from django.test import TestCase
 from django.contrib.auth.models import User, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core import management
@@ -25,9 +26,54 @@ from django.utils.encoding import smart_str
 from .BrowserDebug import debug_response
 import difflib
 
+class BaseUnittestCase(TestCase):
+    """
+    Extensions to plain Unittest TestCase
+    """
+    def _dedent(self, txt):
+        # Remove any common leading whitespace from every line
+        txt = textwrap.dedent(txt)
+
+        # strip whitespace at the end of every line
+        txt = "\n".join([line.rstrip() for line in txt.splitlines()])
+        txt = txt.strip()
+        return txt
+
+    def assertEqual_dedent(self, first, second, msg=None):
+        first = self._dedent(first)
+        second = self._dedent(second)
+        try:
+            self.assertEqual(first, second, msg)
+        except AssertionError as err:
+            # Py2 has a bad error message
+            msg = (
+                "%s\n"
+                " ------------- [first] -------------\n"
+                "%s\n"
+                " ------------- [second] ------------\n"
+                "%s\n"
+                " -----------------------------------\n"
+            ) % (err, first, second)
+            raise AssertionError(msg)
+
+    def assert_is_dir(self, path):
+        if not os.path.isdir(path):
+            self.fail("Directory %r doesn't exists!" % path)
+
+    def assert_not_is_dir(self, path):
+        if os.path.isdir(path):
+            self.fail("Directory %r exists, but should not exists!" % path)
+
+    def assert_is_file(self, path):
+        if not os.path.isfile(path):
+            self.fail("File %r doesn't exists!" % path)
+
+    def assert_not_is_File(self, path):
+        if os.path.isfile(path):
+            self.fail("File %r exists, but should not exists!" % path)
 
 
-class BaseTestCase(SimpleTestCase):
+class BaseTestCase(BaseUnittestCase, SimpleTestCase):
     # Should we open a bwoser traceback?
     browser_traceback = True
 
