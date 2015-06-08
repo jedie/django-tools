@@ -27,8 +27,8 @@ class TestFilesystemBrowser(SimpleTestCase):
             BaseFilesystemBrowser(request=None, absolute_path=self.BASE_PATH, base_url="bar", rest_url="../")
         except Http404 as err:
             self.assertEqual(
-                six.text_type(err),
-                '''["Directory '%s' is not in base path ('%s')"]''' % (sub_path, self.BASE_PATH)
+                err.args[0].message,
+                "Directory '%s' is not in base path ('%s')" % (sub_path, self.BASE_PATH)
             )
 
     def test_directory_traversal_attack_encodings(self):
