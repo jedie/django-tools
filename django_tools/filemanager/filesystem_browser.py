@@ -14,11 +14,14 @@ import os
 import posixpath
 
 from django.utils.six.moves import urllib
+from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.http import Http404
 from django.utils.translation import ugettext as _
 
 from django_tools.filemanager.utils import add_slash, clean_posixpath
 from django_tools.filemanager.exceptions import DirectoryTraversalAttack
+from django_tools.validators import ExistingDirValidator
 
 STOP_PARTS = (
     # https://en.wikipedia.org/wiki/Directory_traversal_attack#Unicode_.2F_UTF-8_encoded_directory_traversal
@@ -40,40 +43,61 @@ class BaseFilesystemBrowser(object):
 
         it is assumed that 'absolute_path' and 'base_url' are internal values
         and 'rest_url' are a external given value from the requested user.
+
+        TODO: Use django_tools.validators.ExistingDirValidator and merge code!
         """
         self.request = request
         self.absolute_path = add_slash(absolute_path)
         self.base_url = clean_posixpath(base_url)
 
-        # print("rest_url 1: %r" % rest_url)
-        for part in STOP_PARTS:
-            if part in rest_url:
-                raise DirectoryTraversalAttack("Stop chars %r found!" % part)
-
-        rest_url = urllib.parse.unquote(rest_url)
-        # print("rest_url 2: %r" % rest_url)
+        self.dir_validator = ExistingDirValidator(self.absolute_path)
 
         rest_url = add_slash(rest_url)
+        try:
+            rest_path = self.dir_validator(rest_url)
+        except ValidationError as err:
+            if settings.DEBUG:
+                raise Http404(err)
+            else:
+                raise Http404(_("Directory doesn't exist!"))
 
-        # To protect from directory traversal attack
-        # https://en.wikipedia.org/wiki/Directory_traversal_attack
-        clean_rest_url = clean_posixpath(rest_url)
-        if clean_rest_url != rest_url:
-            # path changed cause of "illegal" characters
-            raise DirectoryTraversalAttack(
-                "path %s is not equal to cleaned path: %s" % (repr(rest_url), repr(clean_rest_url))
-            )
-
-        self.rel_url = rest_url.lstrip("/")
-        self.rel_path = add_slash(os.path.normpath(self.rel_url))
-
-        self.abs_path = clean_posixpath(os.path.join(self.absolute_path, self.rel_path))
-        self.check_path(self.absolute_path, self.abs_path)
-
-        self.abs_url = posixpath.join(self.base_url, self.rel_url)
-
+        self.rel_url = posixpath.normpath(rest_url).lstrip("/")
+        self.abs_url = posixpath.join(self.base_url, rest_path)
         if not os.path.isdir(self.abs_path):
-            raise Http404("Formed path %r doesn't exist." % self.abs_path)
+            if settings.DEBUG:
+                raise Http404("Formed path %r doesn't exist." % self.abs_path)
+            else:
+                raise Http404(_("Directory doesn't exist!"))
+
+        # # print("rest_url 1: %r" % rest_url)
+        # for part in STOP_PARTS:
+        #     if part in rest_url:
+        #         raise DirectoryTraversalAttack("Stop chars %r found!" % part)
+        #
+        # rest_url = urllib.parse.unquote(rest_url)
+        # # print("rest_url 2: %r" % rest_url)
+        #
+        #
+        #
+        # # To protect from directory traversal attack
+        # # https://en.wikipedia.org/wiki/Directory_traversal_attack
+        # clean_rest_url = clean_posixpath(rest_url)
+        # if clean_rest_url != rest_url:
+        #     # path changed cause of "illegal" characters
+        #     raise DirectoryTraversalAttack(
+        #         "path %s is not equal to cleaned path: %s" % (repr(rest_url), repr(clean_rest_url))
+        #     )
+        #
+        # self.rel_url = rest_url.lstrip("/")
+        # self.rel_path = add_slash(os.path.normpath(self.rel_url))
+        #
+        # self.abs_path = clean_posixpath(os.path.join(self.absolute_path, self.rel_path))
+        # self.check_path(self.absolute_path, self.abs_path)
+        #
+        # self.abs_url = posixpath.join(self.base_url, self.rel_url)
+        #
+        # if not os.path.isdir(self.abs_path):
+        #     raise Http404("Formed path %r doesn't exist." % self.abs_path)
 
         self.breadcrumbs = self.build_breadcrumbs()
 

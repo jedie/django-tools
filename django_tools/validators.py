@@ -87,6 +87,8 @@ class ExistingDirValidator(object):
 
             raise ValidationError(msg)
 
+        return abs_path
+
 
 
 class URLValidator2(URLValidator):
