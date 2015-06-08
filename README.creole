@@ -205,6 +205,8 @@ to:
 == history
 
 * v0.29.0 - dev - **not released, yet**
+** Refactor unittests
+** catch more directory traversal attacks in BaseFilesystemBrowser
 ** Bugfix for "django.core.exceptions.AppRegistryNotReady: Models aren't loaded yet." if using **UpdateInfoBaseModel**
 ** Bugfixes in **dynamic_site** for django 1.7
 ** add: [[https://github.com/jedie/django-tools/blob/master/django_tools/settings_utils.py|django_tools.settings_utils.InternalIps]]

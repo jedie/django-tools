@@ -10,16 +10,8 @@
 
 from __future__ import absolute_import, division, print_function
 
-
-
 import os
 import posixpath
-
-if __name__ == "__main__":
-    # For doctest only
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
-    from django.conf import global_settings
-    global_settings.SITE_ID = 1
 
 from django.utils.six.moves import urllib
 from django.http import Http404
@@ -28,31 +20,17 @@ from django.utils.translation import ugettext as _
 from django_tools.filemanager.utils import add_slash, clean_posixpath
 from django_tools.filemanager.exceptions import DirectoryTraversalAttack
 
+STOP_PARTS = (
+    # https://en.wikipedia.org/wiki/Directory_traversal_attack#Unicode_.2F_UTF-8_encoded_directory_traversal
+    "%c1%1c", # %c1%1c can be translated to /
+    "%c0%af", # %c0%af can be translated to \
+    "%c0%ae", # %c0%af can be translated to .
+)
 
 class BaseFilesystemBrowser(object):
     """
     Base class for a django app like a filemanager, which contains only
     the base functionality to browse to a base path of the filesystem.
-    
-    >> fm = BaseFilesystemBrowser(None, BASE_PATH, "bar", "../etc/passwd")
-    Traceback (most recent call last):
-    ...
-    DirectoryTraversalAttack: '..' found in '../etc/passwd'
-        
-    >> fm = BaseFilesystemBrowser(None, BASE_PATH, "bar", "///etc/passwd")
-    Traceback (most recent call last):
-    ...
-    DirectoryTraversalAttack: '//' found in '///etc/passwd'
-    
-    >>> fm = BaseFilesystemBrowser(None, "/tmp/", "bar", "%c1%1c%c1%1c/etc/passwd")
-    Traceback (most recent call last):
-    ...
-    Http404: Formed path '/tmp/\\xc1\\x1c\\xc1\\x1c/etc/passwd/' doesn't exist.
-    
-    >>> fm = BaseFilesystemBrowser(None, "/tmp/", "bar", "%c0%ae%c0%ae/etc/passwd")
-    Traceback (most recent call last):
-    ...
-    Http404: Formed path '/tmp/\\xc0\\xae\\xc0\\xae/etc/passwd/' doesn't exist.
     """
     def __init__(self, request, absolute_path, base_url, rest_url):
         """
@@ -67,7 +45,14 @@ class BaseFilesystemBrowser(object):
         self.absolute_path = add_slash(absolute_path)
         self.base_url = clean_posixpath(base_url)
 
+        # print("rest_url 1: %r" % rest_url)
+        for part in STOP_PARTS:
+            if part in rest_url:
+                raise DirectoryTraversalAttack("Stop chars %r found!" % part)
+
         rest_url = urllib.parse.unquote(rest_url)
+        # print("rest_url 2: %r" % rest_url)
+
         rest_url = add_slash(rest_url)
 
         # To protect from directory traversal attack
@@ -138,9 +123,4 @@ class BaseFilesystemBrowser(object):
         if not path.startswith(base_path):
             raise DirectoryTraversalAttack("%r doesn't start with %r" % (path, base_path))
 
-if __name__ == "__main__":
-    import doctest
-    print(doctest.testmod(
-#        verbose=True
-        verbose=False
-    ))
+
