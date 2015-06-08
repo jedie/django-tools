@@ -167,6 +167,14 @@ There exist many miscellaneous stuff. Look in the source, luke!
 
 == Backwards-incompatible changes
 
+== v0.29
+
+**ClientCookieStorage** was renamed to **SignedCookieStorage**
+import e.g.:
+{{{
+from django_tools.utils.client_storage import SignedCookieStorage
+}}}
+
 == v0.25.0
 
 SmoothCacheBackends API changed:

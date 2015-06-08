@@ -11,76 +11,44 @@
     
     Usage e.g.:
     --------------------------------------------------------------------------
-    from django_tools.utils.client_storage import ClientCookieStorageError, ClientCookieStorage
+    from django_tools.utils.client_storage import SignedCookieStorageError, SignedCookieStorage
     
     def view1(request):
         response = HttpResponse("Hello World!")
-        c = ClientCookieStorage(cookie_key="my_key", max_age=60)
+        c = SignedCookieStorage(cookie_key="my_key", max_age=60)
         response = c.save_data(my_data, response)
         return response
     
     def view2(request):
-        c = ClientCookieStorage(cookie_key="my_key", max_age=60)
+        c = SignedCookieStorage(cookie_key="my_key", max_age=60)
         try:
             data = c.get_data(request)
-        except ClientCookieStorageError, err:
+        except SignedCookieStorageError, err:
             ...cookie missing or outdated or wrong data...
         else:
            ...do something with the data...
     --------------------------------------------------------------------------
     
-    :copyleft: 2010-2012 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2010-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 from __future__ import absolute_import, division, print_function
 
-
 import os
-
-if __name__ == "__main__":
-    # run all unittest directly
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
+import warnings
 
 from django.core import signing
 
 
-class ClientCookieStorageError(signing.BadSignature):
+class SignedCookieStorageError(signing.BadSignature):
     pass
 
 
-class ClientCookieStorage(object):
+class SignedCookieStorage(object):
     """  
-    >>> from django.http import HttpResponse, SimpleCookie, HttpRequest
-    >>> response = HttpResponse("example")
-    >>> c = ClientCookieStorage("foo", max_age=123)
-    >>> response = c.save_data("bar", response)
-    >>> cookie = response.cookies["foo"]
-    >>> cookie_value = cookie.value
-    >>> "bar" not in cookie_value
-    True
-    >>> "foo" not in cookie_value
-    True
-    >>> cookie["max-age"]
-    123
-    >>> from django.test.client import RequestFactory
-    >>> request = RequestFactory().get('/', HTTP_COOKIE="foo=%s" % cookie_value)
-    >>> c = ClientCookieStorage("foo", max_age=123)
-    >>> c.get_data(request)
-    u'bar'
-
-    >>> c = ClientCookieStorage("wrong name")
-    >>> c.get_data(request)
-    Traceback (most recent call last):
-    ...
-    ClientCookieStorageError: Cookie 'wrong name' doesn't exists
-
-    >>> request = RequestFactory().get('/', HTTP_COOKIE="foo=value:timestamp:wrong_dataABCDEFGHIJKLMNOPQ")
-    >>> c = ClientCookieStorage("foo")
-    >>> c.get_data(request)
-    Traceback (most recent call last):
-    ...
-    ClientCookieStorageError: Can't load data: Signature "wrong_dataABCDEFGHIJKLMNOPQ" does not match
+    see:
+        tests.test_signed_cookie.TestSignedCookieStorage
     """
     def __init__(self, cookie_key, max_age=60 * 60 * 24 * 7 * 52, compress=False):
         self.cookie_key = cookie_key
@@ -98,18 +66,28 @@ class ClientCookieStorage(object):
         try:
             raw_data = request.COOKIES[self.cookie_key]
         except KeyError:
-            raise ClientCookieStorageError("Cookie %r doesn't exists" % self.cookie_key)
+            raise SignedCookieStorageError("Cookie %r doesn't exists" % self.cookie_key)
 
         try:
             data = signing.loads(raw_data, max_age=self.max_age)
         except Exception as err:
-            raise ClientCookieStorageError("Can't load data: %s" % err)
+            raise SignedCookieStorageError("Can't load data: %s" % err)
 
         return data
 
 
 
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod(verbose=False)
-    print("DocTest end.")
+class ClientCookieStorage(object):
+    """
+    Support the old API
+
+    TODO: remove in future
+    """
+    def __new__(self, *args, **kwargs):
+        warnings.warn(
+            "ClientCookieStorage is old API! Please change to SignedCookieStorage! This will be removed in the future!",
+            FutureWarning,
+            stacklevel=2
+        )
+        return SignedCookieStorage(*args, **kwargs)
+
