@@ -100,8 +100,8 @@ more info in the sourcecode: [[https://github.com/jedie/django-tools/blob/master
 ==== http utils
 Pimped HttpRequest to get some more information about a request.
 More info in DocString here: [[https://github.com/jedie/django-tools/blob/master/django_tools/utils/http.py|django_tools/utils/http.py]]
-=== upgrade virtualenv
 
+=== upgrade virtualenv
 A simple commandline script that calls {{{pip install —-upgrade XY}}} for every package thats installed in a virtualenv.
 Simply copy/symlink it into the root directory of your virtualenv and start it.
 
@@ -116,6 +116,15 @@ To use it, without installing django-tools:
 .../your_env/$ ./upgrade_virtualenv.py
 }}}
 This script will be obsolete, if [[https://github.com/pypa/pip/issues/59|pip has a own upgrade command]].
+
+
+==== SignedCookieStorage
+
+Store information in signed Cookies, use **django.core.signing**.
+So the cookie data can't be manipulated from the client.
+Sources/examples:
+* [[https://github.com/jedie/django-tools/blob/master/django_tools/utils/client_storage.py|/django_tools/utils/client_storage.py]]
+* [[https://github.com/jedie/django-tools/blob/master/tests/test_signed_cookie.py|/tests/test_signed_cookie.py]]
 
 
 === Print SQL Queries
