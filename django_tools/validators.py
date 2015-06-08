@@ -15,15 +15,8 @@ from __future__ import absolute_import, division, print_function
 import os
 import re
 
-if __name__ == "__main__":
-    # For doctest only
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
-    from django.conf import global_settings
-    global_settings.SECRET_KEY = "unittest"
-
 from django.utils.six.moves.urllib import parse
 from django.conf import settings
-from django.utils.encoding import smart_unicode
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator, URLValidator
 from django.utils.translation import ugettext_lazy as _
@@ -39,37 +32,10 @@ validate_language_code = RegexValidator(
 
 
 class ExistingDirValidator(object):
-    """
-    >>> settings.DEBUG = False
-    
-    >>> v = ExistingDirValidator()
-    >>> v(settings.MEDIA_ROOT)
-    >>> v("does/not/exist")
-    Traceback (most recent call last):
-        ...
-    ValidationError: [u"Directory doesn't exist!"]
-    
-    >>> v("../")
-    Traceback (most recent call last):
-        ...
-    ValidationError: [u'Directory is not in base path!']
-    
-    >>> v("//")
-    Traceback (most recent call last):
-        ...
-    ValidationError: [u'Directory is not in base path!']
-    
-    
-    >>> v = ExistingDirValidator("/")
-    >>> v("/etc/default/")
-    >>> v("var/log")
-    """
     def __init__(self, base_path=settings.MEDIA_ROOT):
         self.base_path = os.path.normpath(os.path.abspath(base_path))
 
     def __call__(self, value):
-        value = smart_unicode(value)
-
         abs_path = os.path.normpath(os.path.abspath(os.path.join(self.base_path, value)))
 
         if not abs_path.startswith(self.base_path):
@@ -96,60 +62,6 @@ class URLValidator2(URLValidator):
     A flexible version of the original django URLValidator ;)
     
     scheme://netloc/path?query#fragment
-    
-       
-    >>> URLValidator2(allow_all_schemes=True, allow_netloc=False)
-    Traceback (most recent call last):
-        ...
-    AssertionError: Can't allow schemes without netloc!
-    
-    
-    >>> URLValidator2(allow_schemes=("http","ftp"), allow_all_schemes=True)
-    Traceback (most recent call last):
-        ...
-    Warning: allow_schemes would be ignored, while allow_all_schemes==True!
-  
-    
-    >>> URLValidator2(allow_schemes=("svn",))("svn://domain.tld")
-    >>> URLValidator2(allow_schemes=("http","ftp"))("svn://domain.tld")
-    Traceback (most recent call last):
-        ...
-    ValidationError: [u"The URL doesn't start with a allowed scheme."]
-    
-    
-    >>> URLValidator2(allow_query=False)("http://www.domain.tld/without/query/")
-    >>> URLValidator2(allow_query=False)("http://www.domain.tld/with/?query")
-    Traceback (most recent call last):
-        ...
-    ValidationError: [u'Enter a valid URL without a query.']
-    
-    
-    >>> URLValidator2(allow_fragment=False)("http://www.domain.tld/without/fragment/")
-    >>> URLValidator2(allow_fragment=False)("http://www.domain.tld/with/a/#fragment")
-    Traceback (most recent call last):
-        ...
-    ValidationError: [u'Enter a valid URL without a fragment.']
-      
-    
-    To allow only local path, without protocol/domain do this:
-    >>> URLValidator2(allow_schemes=None, allow_netloc=False)("/path/?query#fragment")
-    >>> URLValidator2(allow_schemes=None, allow_netloc=False)("www.pylucid.org/path/?query#fragment") # see note below!
-    >>> URLValidator2(allow_schemes=None, allow_netloc=False)("http://domain.tld/path/?query#fragment")
-    Traceback (most recent call last):
-        ...
-    ValidationError: [u'Please enter a local URL (without protocol/domain).']
-    
-    **Note:** Validating the network location (netloc):
-    Following the syntax specifications in RFC 1808, urlparse recognizes a
-    netloc only if it is properly introduced by ‘//’. Otherwise the input is
-    presumed to be a relative URL and thus to start with a path component.
-    See: http://docs.python.org/library/urlparse.html#urlparse.urlparse
-    
-    >>> URLValidator2(allow_schemes=None, allow_netloc=False)("www.pylucid.org/path?query#fragment")
-    >>> URLValidator2(allow_schemes=None, allow_netloc=False)("//www.pylucid.org/path?query#fragment")
-    Traceback (most recent call last):
-        ...
-    ValidationError: [u'Please enter a local URL (without protocol/domain).']
     """
     regex = re.compile(r'^.+$', re.IGNORECASE)
 
@@ -169,7 +81,6 @@ class URLValidator2(URLValidator):
         self.allow_fragment = allow_fragment
 
     def __call__(self, value):
-        value = smart_unicode(value)
         scheme, netloc, path, query, fragment = parse.urlsplit(value)
 
         if (scheme or netloc) and not self.allow_schemes and not self.allow_all_schemes and not self.allow_netloc:
