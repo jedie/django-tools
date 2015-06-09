@@ -236,18 +236,22 @@ change and rename:
 **from django_tools.widgets import SelectMediaPath**
 to:
 **from django_tools.fields.media_path import MediaPathWidget**
+
 == Django compatibility
 
-|= django-tools |= django version
-| v0.26         | <=1.6
-| v0.25         | <=1.4
+|= django-tools |= django version |= python
+| v0.29         | 1.7, 1.8        | 2.7, 3,4
+| v0.26         | <=1.6           |
+| v0.25         | <=1.4           |
+
+(since v0.29 the given version combination will be tested via travis-ci)
 
 
 == history
 
-* v0.29.0 - dev - **not released, yet**
-** Refactor unittests
-** catch more directory traversal attacks in BaseFilesystemBrowser
+* v0.29.0 - 09.06.2015
+** WIP: Refactor unittests (DocTests must be updated for Py3 and more unittests must be written to cover all)
+** catch more directory traversal attacks in BaseFilesystemBrowser (and merge code parts)
 ** Bugfix for "django.core.exceptions.AppRegistryNotReady: Models aren't loaded yet." if using **UpdateInfoBaseModel**
 ** Bugfixes in **dynamic_site** for django 1.7
 ** add: [[https://github.com/jedie/django-tools/blob/master/django_tools/settings_utils.py|django_tools.settings_utils.InternalIps]]
