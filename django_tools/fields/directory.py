@@ -15,9 +15,6 @@ from __future__ import absolute_import, division, print_function
 
 import os
 
-if __name__ == "__main__":
-    # For doctest only
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
 
 from django import forms
 from django.db import models
