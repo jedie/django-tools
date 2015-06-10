@@ -36,6 +36,16 @@ else:
 
 
 if "publish" in sys.argv:
+    """
+    Build and upload to PyPi:
+     * Check if wheel and 'twine' is installed
+     * Check if __version__ contains "dev" -> abort
+     * Check if we are on git 'master' branch
+     * Check if git repository is 'clean' (no changed files)
+     * Create a git tag of the current version (will abort, if tag already exists!)
+     * Upload with 'twine'
+     * execute 'git push' and 'git push --tag'
+    """
     try:
         # Test if wheel is installed, otherwise the user will only see:
         #   error: invalid command 'bdist_wheel'
@@ -55,7 +65,8 @@ if "publish" in sys.argv:
     import subprocess
 
     def verbose_check_output(*args):
-        print("\nCall: %r\n" %  " ".join(args))
+        """ 'verbose' version of subprocess.check_output() """
+        print("\nCall: %r\n" % " ".join(args))
         try:
             return subprocess.check_output(args, universal_newlines=True)
         except subprocess.CalledProcessError as err:
@@ -64,6 +75,7 @@ if "publish" in sys.argv:
             raise
 
     def verbose_check_call(*args):
+        """ 'verbose' version of subprocess.check_call() """
         print("\nCall: %r\n" %  " ".join(args))
         subprocess.check_call(args, universal_newlines=True)
 
@@ -90,8 +102,22 @@ if "publish" in sys.argv:
     # tag first (will raise a error of tag already exists)
     verbose_check_call("git", "tag", "v%s" % __version__)
 
-    # build and upload to PyPi:
-    verbose_check_call(sys.executable or "python", "setup.py", "sdist", "bdist_wheel", "upload")
+    # build but don't upload:
+    verbose_check_call(sys.executable or "python", "setup.py", "sdist", "bdist_wheel", "bdist_egg")
+
+    # Upload with https://pypi.python.org/pypi/twine
+    try:
+        import twine
+        from twine.commands.upload import main as twine_upload
+    except ImportError as err:
+        print("\nError: %s" % err)
+        print("\nMaybe https://pypi.python.org/pypi/twine is not installed or virtualenv not activated?!?")
+        print("e.g.:")
+        print("    ~/your/env/$ source bin/activate")
+        print("    ~/your/env/$ pip install twine")
+        sys.exit(-1)
+    else:
+        twine_upload(["dist/*"])
 
     # push
     verbose_check_call("git", "push")
