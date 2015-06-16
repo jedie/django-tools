@@ -10,6 +10,13 @@ class StdoutStderrBuffer():
 
     contextlib.redirect_stdout is new in Python 3.4!
     and we redirect stderr, too.
+
+    e.g:
+
+        with StdoutStderrBuffer() as buffer:
+            print("foo")
+
+        output = buffer.get_output()
     """
     def __init__(self):
         sys.stdout.flush()
