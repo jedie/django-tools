@@ -106,5 +106,5 @@ class TestPrintSQL(BaseTestCase):
         output = buffer.get_output()
         self.assertIn("*** Create object ***", output)
         # FIXME: Will fail if not SQLite/MySQL is used?!?
-        self.assertIn("1 - QUERY = 'SELECT COUNT(*)", output)
+        self.assertIn("1 - QUERY = 'SELECT COUNT(", output)
         self.assertIn('FROM "auth_user"', output)
