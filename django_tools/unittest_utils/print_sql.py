@@ -10,16 +10,21 @@
 
 from __future__ import absolute_import, division, print_function
 from django.db import connections, DEFAULT_DB_ALIAS
-
+from django.utils import six
 from django.test.utils import CaptureQueriesContext
+from django.utils.encoding import smart_text
 
 PFORMAT_SQL_KEYWORDS = ("FROM", "WHERE", "ORDER BY", "VALUES")
 
 def pformat_sql(sql):
+    # remove unicode u''
+    sql = sql.replace("u'", "'").replace('u"', '"')
+
     sql = sql.replace('`', '')
     for keyword in PFORMAT_SQL_KEYWORDS:
         sql = sql.replace(' %s ' % keyword, '\n\t%s ' % keyword)
-    return sql
+
+    return smart_text(sql)
 
 
 class PrintQueries(CaptureQueriesContext):
@@ -67,8 +72,9 @@ class PrintQueries(CaptureQueriesContext):
         if self.headline:
             print(" *** %s ***" % self.headline)
         for no, q in enumerate(self.captured_queries, 1):
-            print("%i - %s" % (no, pformat_sql(q["sql"])))
-            print()
+            sql = pformat_sql(q["sql"])
+            msg = smart_text("%i - %s\n" % (no, sql))
+            print(msg)
         print("-"*79)
 
 
