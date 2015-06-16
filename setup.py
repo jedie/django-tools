@@ -163,6 +163,13 @@ def get_authors():
     return authors
 
 
+if "test" in sys.argv:
+    # for e.g.:
+    #   ./setup.py test tests.test_unittest_utils.TestPrintSQL
+    from tests.runtests import cli_run
+    cli_run()
+
+
 setup(
     name='django-tools',
     version=__version__,
