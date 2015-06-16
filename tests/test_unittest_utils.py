@@ -1,8 +1,11 @@
 import os
 import unittest
+from django.contrib.auth.models import User
 from django.utils import six
+from django_tools.unittest_utils.print_sql import PrintQueries
+from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 from django_tools.unittest_utils.tempdir import TempDir
-from django_tools.unittest_utils.unittest_base import BaseUnittestCase
+from django_tools.unittest_utils.unittest_base import BaseUnittestCase, BaseTestCase
 
 
 class TestBaseUnittestCase(BaseUnittestCase):
@@ -75,7 +78,6 @@ class TestBaseUnittestCase(BaseUnittestCase):
             self.assert_not_is_File(__file__)
         except AssertionError as err:
             self.assertEqual(six.text_type(err), "File '%s' exists, but should not exists!" % __file__)
-        
 
 
 class TestTempDir(BaseUnittestCase):
@@ -93,3 +95,16 @@ class TestTempDir(BaseUnittestCase):
         # cleaned?
         self.assert_not_is_dir(tempfolder)
         self.assert_not_is_File(test_filepath)
+
+
+class TestPrintSQL(BaseTestCase):
+    def test(self):
+        with StdoutStderrBuffer() as buffer:
+            with PrintQueries("Create object"):
+                User.objects.all().count()
+
+        output = buffer.get_output()
+        self.assertIn("*** Create object ***", output)
+        # FIXME: Will fail if not SQLite/MySQL is used?!?
+        self.assertIn("1 - QUERY = 'SELECT COUNT(*)", output)
+        self.assertIn('FROM "auth_user"', output)
