@@ -253,10 +253,10 @@ to:
 
 == Django compatibility
 
-|= django-tools |= django version |= python
-| v0.29         | 1.7, 1.8        | 2.7, 3,4
-| v0.26         | <=1.6           |
-| v0.25         | <=1.4           |
+|= django-tools |= django version |= python  |
+| v0.29         | 1.7, 1.8        | 2.7, 3,4 |
+| v0.26         | <=1.6           |          |
+| v0.25         | <=1.4           |          |
 
 (since v0.29 the given version combination will be tested via travis-ci)
 
