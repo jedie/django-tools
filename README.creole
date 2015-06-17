@@ -250,15 +250,16 @@ to:
 == history
 
 * v0.29.0 - 09.06.2015
+* v0.29.0 - 09.06.2015 - [[https://github.com/jedie/django-tools/compare/v0.26.0...v0.29.0|compare v0.26.0...v0.29.0]]
 ** WIP: Refactor unittests (DocTests must be updated for Py3 and more unittests must be written to cover all)
 ** catch more directory traversal attacks in BaseFilesystemBrowser (and merge code parts)
 ** Bugfix for "django.core.exceptions.AppRegistryNotReady: Models aren't loaded yet." if using **UpdateInfoBaseModel**
 ** Bugfixes in **dynamic_site** for django 1.7
 ** add: [[https://github.com/jedie/django-tools/blob/master/django_tools/settings_utils.py|django_tools.settings_utils.InternalIps]]
-* v0.28.0 - 12.02.2015
+* v0.28.0 - 12.02.2015 - [[https://github.com/jedie/django-tools/compare/v0.26.0...v0.28.0|compare v0.26.0...v0.28.0]]
 ** Work-a-round for import loops
 ** (new Version number, because of PyPi stress)
-* v0.26.0 - 11.02.2015
+* v0.26.0 - 11.02.2015 - [[https://github.com/jedie/django-tools/compare/v0.25.1...v0.26.0|compare v0.25.1...v0.26.0]]
 ** Updates for Django 1.6 and Python 3
 * v0.25.1 - 18.11.2013
 ** Bugfix: Fall back to "UTF-8" if server send no encoding info
