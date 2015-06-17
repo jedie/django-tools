@@ -74,7 +74,7 @@ class BaseUnittestCase(TestCase):
 
 
 class BaseTestCase(BaseUnittestCase, SimpleTestCase):
-    # Should we open a bwoser traceback?
+    # Should we open a browser traceback?
     browser_traceback = True
 
     TEST_USERS = {
