@@ -264,23 +264,46 @@ class BaseTestCase(BaseUnittestCase, SimpleTestCase):
                     self.raise_browser_traceback(response, err)
                 raise
 
-    def assertResponse(self, response, must_contain=(), must_not_contain=()):
+    def assertResponse(self, response,
+            must_contain=None, must_not_contain=None,
+            status_code=200, html=False,
+            browser_traceback=True):
         """
         Check the content of the response
         must_contain - a list with string how must be exists in the response.
         must_not_contain - a list of string how should not exists.
         """
-        def count_snippet(snippet):
-            snippet = smart_str(snippet, response._charset)
-            return response.content.count(snippet)
+        if must_contain is not None:
+            for must_contain_snippet in must_contain:
+                try:
+                    self.assertContains(response, must_contain_snippet,
+                        status_code=status_code, html=html
+                    )
+                except AssertionError as err:
+                    if browser_traceback:
+                        msg = "Text not in response: '%s': %s" % (
+                            must_contain_snippet, err
+                        )
+                        debug_response(
+                            response, self.browser_traceback, msg, display_tb=True
+                        )
+                    raise
 
-        for txt in must_contain:
-            if count_snippet(txt) == 0:
-                self.raise_browser_traceback(response, "Text not in response: '%s'" % txt)
-
-        for txt in must_not_contain:
-            if count_snippet(txt) > 0:
-                self.raise_browser_traceback(response, "Text should not be in response: '%s'" % txt)
+        if must_not_contain is not None:
+            for must_not_contain_snippet in must_not_contain:
+                try:
+                    self.assertNotContains(response, must_not_contain_snippet,
+                        status_code=status_code, html=html
+                    )
+                except AssertionError as err:
+                    if browser_traceback:
+                        msg = "Text should not be in response: '%s': %s" % (
+                            must_not_contain_snippet, err
+                        )
+                        debug_response(
+                            response, self.browser_traceback, msg, display_tb=True
+                        )
+                    raise
 
 
 def direct_run(raw_filename):
