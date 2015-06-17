@@ -136,6 +136,10 @@ class BaseTestCase(BaseUnittestCase, SimpleTestCase):
         """
         test_user = self._get_userdata(usertype)
 
+        count = User.objects.filter(username=test_user["username"]).count()
+        self.failIfEqual(count, 0, "You have to call self.create_testusers() first!")
+        self.failUnlessEqual(count, 1)
+
         ok = self.client.login(username=test_user["username"],
                                password=test_user["password"])
         self.failUnless(ok, "Can't login test user '%s'!" % usertype)
