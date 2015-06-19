@@ -263,6 +263,10 @@ to:
 
 == history
 
+* v0.29.2 - 19.06.2015 - [[https://github.com/jedie/django-tools/compare/v0.29.1...v0.29.2|compare v0.29.1...v0.29.2]]
+** Bugfix in unittest_utils.selenium_utils.selenium2fakes_response
+** assertResponse used assertContains from django
+** Add QueryLogMiddleware (TODO: add tests)
 * v0.29.1 - 17.06.2015 - [[https://github.com/jedie/django-tools/compare/v0.29.0...v0.29.1|compare v0.29.0...v0.29.1]]
 ** Bugfixes for Py2 and Py3
 ** add StdoutStderrBuffer()

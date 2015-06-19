@@ -1,4 +1,11 @@
+import time
+from importlib import import_module
+from io import BytesIO
+
+from django.apps import apps
+from django.conf import settings
 from django.http import HttpResponse
+from django.http import SimpleCookie
 
 
 class FakedHttpResponse(HttpResponse):
@@ -48,23 +55,22 @@ def selenium2fakes_response(driver, client, client_class):
     # Add 'response.client.cookies':
     # driver.get_cookies() is a simple list of dict items, e.g.:
     # [{'name': 'csrftoken', 'value': 'yXoN3...', ...},...]
+    cookies = SimpleCookie()
     for cookie in driver.get_cookies():
-        response.set_cookie(
-            key=cookie["name"],
-            value=cookie["value"],
-
-            max_age=cookie["expiry"],
-
-            path=cookie["path"],
-            domain=cookie["domain"],
-            secure=cookie["secure"],
-        )
+        key = cookie.pop("name")
+        cookies[key] = cookie.pop("value")
+        for k, v in cookie.items():
+            if k == "expiry":
+                cookies[key]["expires"] = time.time() - v
+            else:
+                cookies[key][k] = v
 
     # response.cookies and response.client.cookies
-    # are django.http.cookies.SimpleCookie instances
-    response.client.cookies.update(response.cookies)
+    response.cookies = response.client.cookies = cookies
+    # print("\nresponse.cookies:", response.cookies)
 
     # Add 'response.session':
-    response.session = client.session
+    response.session = response.client.session
+    # print("\nresponse.session:", dict(response.session))
 
     return response
