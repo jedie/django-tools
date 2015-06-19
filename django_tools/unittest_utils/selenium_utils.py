@@ -1,9 +1,5 @@
 import time
-from importlib import import_module
-from io import BytesIO
 
-from django.apps import apps
-from django.conf import settings
 from django.http import HttpResponse
 from django.http import SimpleCookie
 
