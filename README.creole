@@ -453,16 +453,23 @@ To made a fast repository update, you can run this simple shell script:
 the update script runs “git pull origin master” or “svn update”.
 
 
-== links
+== links ==
 
 | Homepage   | http://code.google.com/p/django-tools/
 | Sourcecode | http://github.com/jedie/django-tools
 | PyPi       | http://pypi.python.org/pypi/django-tools/
 
-=== contact ===
+
+== contact ==
 
 Come into the conversation, besides the github communication features:
 
 | Forum   | [[http://www.pylucid.org/en/forum/12/|official 'django-tools' Forum]]
 | IRC     | #pylucid on freenode.net (Yes, the PyLucid channel...)
 | webchat | http://webchat.freenode.net/?channels=pylucid
+
+
+== donation ==
+
+* [[https://flattr.com/submit/auto?uid=jedie&url=https%3A%2F%2Fgithub.com%2Fjedie%2Fdjango-tools%2F|Flattr This!]]
+* Send [[http://www.bitcoin.org/|Bitcoins]] to [[https://blockexplorer.com/address/1823RZ5Md1Q2X5aSXRC5LRPcYdveCiVX6F|1823RZ5Md1Q2X5aSXRC5LRPcYdveCiVX6F]]
