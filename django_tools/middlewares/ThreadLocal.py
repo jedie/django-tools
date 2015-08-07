@@ -25,7 +25,7 @@
     # Get the current request object:
     request = ThreadLocal.get_current_request()
     
-    # You can get the current user directy with:
+    # You can get the current user directly with:
     user = ThreadLocal.get_current_user()
     --------------------------------------------------------------------------
 
@@ -47,7 +47,7 @@ _thread_locals = local()
 
 
 def get_current_request():
-    """ returns the request object for this thead """
+    """ returns the request object for this thread """
     return getattr(_thread_locals, "request", None)
 
 
