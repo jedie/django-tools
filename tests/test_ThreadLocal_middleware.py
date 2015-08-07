@@ -17,3 +17,8 @@ class TestGetCurrentRequest(TestCase):
     def test_current_request_is_cleared_after_request_is_finished(self):
         response = self.client.get('/get_current_get_parameters/')
         self.assertEqual(get_current_request(), None)
+
+    def test_current_Request_is_cleared_when_exception_is_raised(self):
+        with self.assertRaises(Exception):
+            response = self.client.get('/raise_exception/')
+        self.assertEqual(get_current_request(), None)

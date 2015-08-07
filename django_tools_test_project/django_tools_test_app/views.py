@@ -33,6 +33,12 @@ def display_site(request):
 
 
 
+def raise_exception(request):
+    """
+    This view just raises an exception as a way to test middleware exception
+    handling.
+    """
+    raise Exception()
 
 
 def get_current_get_parameters(request):
