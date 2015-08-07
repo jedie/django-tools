@@ -26,6 +26,7 @@ CACHES = {
 
 MIDDLEWARE_CLASSES = (
     'django_tools.dynamic_site.middleware.DynamicSiteMiddleware',
+    'django_tools.middlewares.ThreadLocal.ThreadLocalMiddleware',
 )
 
 INSTALLED_APPS = (

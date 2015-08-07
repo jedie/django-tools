@@ -10,10 +10,13 @@
 
 from __future__ import absolute_import, division, print_function
 
+import json
 
 from django.http import HttpResponse
 from django.conf import settings
 from django.contrib.sites.models import Site
+
+from django_tools.middlewares.ThreadLocal import get_current_request
 
 
 
@@ -30,3 +33,10 @@ def display_site(request):
 
 
 
+
+
+def get_current_get_parameters(request):
+    """
+    Returns a JSON version of request.GET from the current request
+    """
+    return HttpResponse(json.dumps(get_current_request().GET))
