@@ -8,10 +8,10 @@ from django_tools.middlewares.ThreadLocal import get_current_request
 class TestGetCurrentRequest(TestCase):
     def test_current_request_receives_current_request(self):
         response = self.client.get('/get_current_get_parameters/?')
-        current_get_parameters = json.loads(response.content)
+        current_get_parameters = json.loads(response.content.decode('utf-8'))
         self.assertEqual(current_get_parameters, {})
         response = self.client.get('/get_current_get_parameters/?foo=bar')
-        current_get_parameters = json.loads(response.content)
+        current_get_parameters = json.loads(response.content.decode('utf-8'))
         self.assertEqual(current_get_parameters, {'foo': 'bar'})
 
     def test_current_request_is_cleared_after_request_is_finished(self):
