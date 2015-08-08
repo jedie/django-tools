@@ -43,7 +43,7 @@ RESPONSE_INFO_ATTR = (
 
 def debug_response(response, browser_traceback=True, msg="", display_tb=True):
     """
-    Display the response content with a error reaceback in a webbrowser.
+    Display the response content with a error traceback in a webbrowser.
     TODO: We should delete the temp files after viewing!
     """
     global BROWSER_TRACEBACK_OPENED

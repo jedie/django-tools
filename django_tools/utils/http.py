@@ -9,7 +9,7 @@
     You can easy get a web page encoding in unicode with HttpRequest().
     
     HttpRequest() and HTTPHandler2() make it possible to get the complete
-    sended request headers. See also:
+    sent request headers. See also:
     http://stackoverflow.com/questions/603856/get-urllib2-request-headers
     
     examples:
@@ -151,7 +151,7 @@ class HttpRequest(object):
     HttpRequest() can take the argument 'timeout' but this works only since Python 2.6
     For Python < 2.6 the timeout TypeError would be silently catch.
     Activate a work-a-round with 'threadunsafe_workaround' to use socket.setdefaulttimeout()
-    But this is not thread-safty!
+    But this is not thread-safe!
     more info: 
         http://kurtmckee.livejournal.com/32616.html (Supporting a timeout in feedparser)
     

@@ -4,7 +4,7 @@
     Local sync cache Middleware
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-    Calles check_state() in every existing LocalSyncCache instance.
+    Calls check_state() in every existing LocalSyncCache instance.
     
     For more information look into DocString in local_sync_cache.py !
     

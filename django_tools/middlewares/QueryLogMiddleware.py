@@ -3,7 +3,7 @@ Print the query log to standard out.
 
 Useful for optimizing database calls.
 
-Insipired by the method at: <http://www.djangosnippets.org/snippets/344/>
+Inspired by the method at: <http://www.djangosnippets.org/snippets/344/>
 """
 
 class QueryLogMiddleware:

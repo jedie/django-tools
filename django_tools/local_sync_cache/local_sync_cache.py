@@ -131,7 +131,7 @@ def _get_cache():
 
 
 class LocalSyncCache(dict):
-    INIT_COUNTER = {} # Counts how often __init__ used, should allways be 1!
+    INIT_COUNTER = {} # Counts how often __init__ used, should always be 1!
 
     # Stores all existing instance, used in middleware to call check_state()
     CACHES = []
@@ -163,7 +163,7 @@ class LocalSyncCache(dict):
             logger.error("Error: __init__ for %s was called to often!" % self.id)
             self.INIT_COUNTER[self.id] += 1
 
-        self.request_counter = 0 # Counts how often check_state called (Normaly called one time per request)
+        self.request_counter = 0 # Counts how often check_state called (Normally called one time per request)
         self.own_clear_counter = 0 # Counts how often clear called in this thread
         self.ext_clear_counter = 0 # Counts how often clears from external thread
 

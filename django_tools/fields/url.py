@@ -26,11 +26,11 @@ from django_tools.validators import URLValidator2
 
 from django.core import validators
 from django.db.models.fields import CharField as OriginModelCharField
-from django.forms.fields import CharField as OriginFormsCahrField
+from django.forms.fields import CharField as OriginFormsCharField
 from django.utils.translation import ugettext_lazy as _
 
 
-class URLFormField2(OriginFormsCahrField):
+class URLFormField2(OriginFormsCharField):
     """
     A flexible version of the original django form URLField ;)
     

@@ -37,7 +37,7 @@ from optparse import OptionParser
 if __name__ == "__main__":
     # precheck if we in a activated virtualenv
     # if not, the pip import can raise a ImportError, if pip not installed
-    # in the globale python environment
+    # in the global python environment
     if not hasattr(sys, 'real_prefix'):
         print("")
         print("Error: It seems that we are not running in a activated virtualenv!")
@@ -128,7 +128,7 @@ def get_upgradeable():
         if not req.editable:
             packages.append(req.name)
         else:
-            # FIXME: How can we get this needes information easier?
+            # FIXME: How can we get this needed information easier?
             raw_cmd = str(req)
             full_url = raw_cmd.split()[1]
             url, full_version = full_url.rsplit("@", 1)
@@ -195,8 +195,8 @@ def print_options(options):
 
 
 def call_pip(options, *args):
-    pip_executeable = os.path.join(locations.bin_py, "pip")
-    cmd = [pip_executeable, "install", "--upgrade"]
+    pip_executable = os.path.join(locations.bin_py, "pip")
+    cmd = [pip_executable, "install", "--upgrade"]
     if options.verbose:
         cmd.append("--verbose")
     if options.logfile:
