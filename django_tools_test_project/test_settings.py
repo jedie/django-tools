@@ -59,6 +59,7 @@ LOGGING = {
         },
     },
     'handlers': {
+        'null': {'class': 'logging.NullHandler',},
         'console': {
             'class': 'logging.StreamHandler',
             # 'formatter': 'simple'
@@ -67,11 +68,17 @@ LOGGING = {
     },
     'loggers': {
         "django_tools": {
-            'handlers': ['console'],
+            'handlers': [
+                'null',
+                # 'console'
+            ],
             'level': 'DEBUG',
         },
         "django_tools.DynamicSite": {
-            'handlers': ['console'],
+            'handlers': [
+                'null',
+                # 'console'
+            ],
             'level': 'DEBUG',
         },
     },
