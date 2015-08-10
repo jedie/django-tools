@@ -182,7 +182,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,  # include package data under svn source control
     install_requires=[
-        "Django>=1.7,<1.9",
+        "Django>=1.6,<1.9",
     ],
     zip_safe=False,
     classifiers=[

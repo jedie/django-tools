@@ -25,13 +25,25 @@ from __future__ import absolute_import, print_function
 import os
 import sys
 
+
+VERBOSE = "-v" in sys.argv or "--verbosity" in sys.argv
+os.environ['DJANGO_SETTINGS_MODULE'] = os.environ.get('DJANGO_SETTINGS_MODULE', "django_tools_test_project.test_settings")
+
+if VERBOSE:
+    print("DJANGO_SETTINGS_MODULE=%r" % os.environ['DJANGO_SETTINGS_MODULE'])
+
+
 import django
 from django.conf import settings
 from django.test.utils import get_runner
 
 
 def run_unittests(test_labels=None):
-    django.setup()
+    if django.VERSION[:2] >= (1, 7):
+        django.setup()
+    else:
+        from django.test.utils import setup_test_environment
+        setup_test_environment()
 
     TestRunner = get_runner(settings)
     test_runner = TestRunner(
@@ -42,18 +54,16 @@ def run_unittests(test_labels=None):
     if test_labels is None or test_labels == ["test"]:
         test_labels = ['tests']
 
+    if VERBOSE:
+        print("Run test labels: %r" % test_labels)
+
     failures = test_runner.run_tests(test_labels)
 
     sys.exit(bool(failures))
 
 
 def cli_run():
-    os.environ['DJANGO_SETTINGS_MODULE'] = os.environ.get('DJANGO_SETTINGS_MODULE', "django_tools_test_project.test_settings")
-
-    if "-v" in sys.argv or "--verbosity" in sys.argv:
-        print("DJANGO_SETTINGS_MODULE=%r" % os.environ['DJANGO_SETTINGS_MODULE'])
-
-    run_unittests(test_labels=sys.argv[1:])
+    run_unittests(test_labels=[l for l in sys.argv[1:] if not l.startswith("-")])
 
 
 if __name__ == "__main__":
