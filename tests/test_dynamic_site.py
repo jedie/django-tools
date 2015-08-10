@@ -15,7 +15,8 @@ import unittest
 
 from django.conf import settings
 from django.contrib.sites.models import Site
-from django.test import TestCase, override_settings
+from django.test import TestCase
+from django.test.utils import override_settings
 from django.utils import log
 from django.utils.encoding import force_bytes, force_str
 

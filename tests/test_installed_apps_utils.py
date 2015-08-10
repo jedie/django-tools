@@ -1,4 +1,7 @@
-from django.test import SimpleTestCase, modify_settings
+
+from django.test import SimpleTestCase
+from django.test.utils import modify_settings
+
 from django_tools.utils.installed_apps_utils import get_filtered_apps
 
 

@@ -1,10 +1,15 @@
+
 import os
+
 from django.http import Http404
-from django.test import SimpleTestCase, override_settings
+from django.test import SimpleTestCase
+from django.test.utils import override_settings
 from django.utils import six
+
 import django_tools
 from django_tools.filemanager.exceptions import DirectoryTraversalAttack
 from django_tools.filemanager.filesystem_browser import BaseFilesystemBrowser
+
 
 @override_settings(DEBUG=False)
 class TestFilesystemBrowser(SimpleTestCase):
