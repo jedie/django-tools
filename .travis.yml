@@ -17,8 +17,9 @@ env:
 #    - "sh -e /etc/init.d/xvfb start"
 
 install:
+    - pip install --upgrade pip
     - pip install .
-    - pip install -q Django==$DJANGO --use-mirrors
+    - pip install Django==$DJANGO
     - pip install coveralls
 
 script:
