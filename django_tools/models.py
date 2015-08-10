@@ -4,7 +4,7 @@
     models stuff
     ~~~~~~~~~~~~
 
-    :copyleft: 2011 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2011-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -14,7 +14,6 @@ from __future__ import absolute_import, division, print_function
 
 from django.db import models
 from django.conf import settings
-from django.apps import apps
 try:
     from django.utils.timezone import now
 except ImportError:
