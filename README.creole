@@ -211,6 +211,22 @@ output = buffer.get_output() # contains "foo\n"
 There exist many miscellaneous stuff. Look in the source, luke!
 
 
+== running django-tools unittests
+
+There exist different ways to run unittests, e.g.:
+{{{
+.../django-tools $ ./setup.py test
+.../django-tools $ ./manage.py test
+.../django-tools $ ./runtests.sh
+}}}
+Run specific tests, e.g.:
+{{{
+.../django-tools $ ./setup.py test tests.test_local_sync_cache
+.../django-tools $ ./manage.py test tests.test_local_sync_cache
+.../django-tools $ ./runtests.sh tests.test_local_sync_cache
+}}}
+
+
 
 == Backwards-incompatible changes
 

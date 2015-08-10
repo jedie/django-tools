@@ -2,4 +2,4 @@
 
 set -x
 
-python tests/runtests.py $*
+python manage.py test --verbosity=2 $*

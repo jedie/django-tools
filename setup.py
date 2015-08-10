@@ -166,8 +166,8 @@ def get_authors():
 if "test" in sys.argv:
     # for e.g.:
     #   ./setup.py test tests.test_unittest_utils.TestPrintSQL
-    from tests.runtests import cli_run
-    cli_run()
+    from manage import run_tests
+    run_tests()
 
 
 setup(
@@ -202,5 +202,5 @@ setup(
         "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
         "Operating System :: OS Independent",
     ],
-    test_suite="tests.runtests.cli_run",
+    test_suite="manage.setup_run",
 )
