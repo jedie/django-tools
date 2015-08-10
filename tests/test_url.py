@@ -1,15 +1,12 @@
 import os
-import unittest
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
-
-from django.test import SimpleTestCase, override_settings
-from django.test.client import RequestFactory
-from django.http import HttpResponse
+from django.test import SimpleTestCase
 from django.utils import six
-import django_tools
+from django.test.utils import override_settings
 
-from django_tools.utils.client_storage import SignedCookieStorage, SignedCookieStorageError, ClientCookieStorage
+import django_tools
 from django_tools.validators import URLValidator2, ExistingDirValidator
 
 
