@@ -23,9 +23,9 @@ class HttpTests(unittest.TestCase):
         # print("-"*79)
 
         if PY2:
-            self.assertIn("Host: www.google.de", response.request_header)
+            self.assertIn("Host: www.google.", response.request_header)
         else:
-            self.assertIn(b"Host: www.google.de", response.request_header)
+            self.assertIn(b"Host: www.google.", response.request_header)
 
         response_info = response.info()
         self.assertEqual(response_info.get("Server"), "gws")
@@ -42,4 +42,4 @@ class HttpTests(unittest.TestCase):
         r = http.HttpRequest("https://www.google.com", timeout=3, threadunsafe_workaround=True)
         response = r.get_response()
         url = response.geturl()
-        self.assertIn("https://www.google", url)
+        self.assertIn("https://www.google.", url)
