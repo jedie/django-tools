@@ -178,7 +178,7 @@ setup(
     author=get_authors(),
     maintainer="Jens Diemer",
     maintainer_email="django-tools@jensdiemer.de",
-    url='http://code.google.com/p/django-tools/',
+    url='http://github.com/jedie/django-tools/',
     packages=find_packages(),
     include_package_data=True,  # include package data under svn source control
     install_requires=[
