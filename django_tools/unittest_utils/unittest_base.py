@@ -184,7 +184,7 @@ class BaseTestCase(BaseUnittestCase, SimpleTestCase):
             raise etype(evalue).with_traceback(etb)
 
     def _get_user(self, usertype):
-        """ return User model instance for the goven usertype"""
+        """ return User model instance for the given usertype"""
         test_user = self._get_userdata(usertype)
         return User.objects.get(username=test_user["username"])
 
@@ -312,7 +312,7 @@ def direct_run(raw_filename):
     A unittest file should add something like this:
     
     if __name__ == "__main__":
-        # Run this unitest directly
+        # Run this unittest directly
         direct_run(__file__)
     """
     appname = os.path.splitext(os.path.basename(raw_filename))[0]

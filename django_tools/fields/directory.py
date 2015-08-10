@@ -2,7 +2,7 @@
 
 
 """
-    direcotory selection
+    directory selection
     ~~~~~~~~~~~~~~~~~~~~
 
     :copyleft: 2011 by the django-tools team, see AUTHORS for more details.

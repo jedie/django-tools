@@ -140,7 +140,7 @@ class LimitToUsergroupsTest2(BaseTestCase, TestCase):
 
 
 if __name__ == "__main__":
-    # Run this unitest directly
+    # Run this unittest directly
     management.call_command('test',
         "django_tools.LimitToUsergroupsTest1",
         "django_tools.LimitToUsergroupsTest2",

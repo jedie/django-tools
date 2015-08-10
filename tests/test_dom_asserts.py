@@ -4,7 +4,7 @@
     Test DOM asserts
     ~~~~~~~~~~~~~~~~
     
-    Test the DOM unitest stuff from
+    Test the DOM unittest stuff from
         Gregor Müllegger GSoC work in the Django soc2011/form-rendering branch
 
     https://github.com/gregmuellegger/django/blob/soc2011%2Fform-rendering/django/test/testcases.py
@@ -118,6 +118,6 @@ class DOMassertTest(BaseTestCase):
 
 
 if __name__ == "__main__":
-    # Run this unitest directly
+    # Run this unittest directly
     unittest.main()
 

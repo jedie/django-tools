@@ -117,7 +117,7 @@ class BaseFilemanager(BaseFilesystemBrowser):
             elif os.path.isfile(item_abs_path):
                 item_class = self.FILE_ITEM
             else:
-                messages.info(self.request, "unhandled direcory item: %r" % self.abs_path)
+                messages.info(self.request, "unhandled directory item: %r" % self.abs_path)
                 continue
 
             instance = self.get_filesystem_item_instance(item_class, item, item_abs_path, link_path)

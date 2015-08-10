@@ -63,10 +63,10 @@ class UpdateUserBaseModel(models.Model):
     Important: "threadlocals middleware" must be used!
     """
     createby = models.ForeignKey(settings.AUTH_USER_MODEL, editable=False, related_name="%(class)s_createby",
-        null=True, blank=True, # <- If the model used outsite a real request (e.g. unittest, db shell)
+        null=True, blank=True, # <- If the model used outside a real request (e.g. unittest, db shell)
         help_text="User how create this entry.")
     lastupdateby = models.ForeignKey(settings.AUTH_USER_MODEL, editable=False, related_name="%(class)s_lastupdateby",
-        null=True, blank=True, # <- If the model used outsite a real request (e.g. unittest, db shell)
+        null=True, blank=True, # <- If the model used outside a real request (e.g. unittest, db shell)
         help_text="User as last edit this entry.")
 
     def save(self, *args, **kwargs):

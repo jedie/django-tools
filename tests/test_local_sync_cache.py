@@ -166,7 +166,7 @@ class LocalSyncCacheTest(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    # Run this unitest directly
+    # Run this unittest directly
 #    management.call_command('test', "django_tools.tests.test_local_sync_cache.LocalSyncCacheTest",
 #        verbosity=2,
 #        failfast=True

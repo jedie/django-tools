@@ -32,7 +32,7 @@ CHMOD_TRANS_DATA = (
 def chmod_symbol(octal_value):
     """
     Transform a os.stat().st_octal_value octal value to a symbolic string.
-    ignores meta infromation like SUID, SGID or the Sticky-Bit.
+    ignores meta information like SUID, SGID or the Sticky-Bit.
     e.g. 40755 -> rwxr-xr-x
     >>> chmod_symbol(644)
     u'rw-r--r--'

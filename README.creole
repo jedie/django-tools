@@ -95,14 +95,14 @@ usage/tests:
 === DOM compare in unittests
 
 The Problem:
-You can’t easy check if e.g. some form input fields are in the reponse,
+You can’t easy check if e.g. some form input fields are in the response,
 because the form rendering use a dict for storing all html attributes.
 So, the ordering of form field attributes are not sorted and varied.
 
 The Solution:
 You need to parse the response content into a DOM tree and compare nodes.
 
-We add the gread work of Gregor Müllegger at his GSoC 2011 form-rendering branch.
+We add the great work of Gregor Müllegger at his GSoC 2011 form-rendering branch.
 You will have the following assert methods inherit from: django_tools.unittest_utils.unittest_base.BaseTestCase
 
 * self.assertHTMLEqual() – for compare two HTML DOM trees
