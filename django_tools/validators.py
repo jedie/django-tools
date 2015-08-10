@@ -15,7 +15,7 @@ from __future__ import absolute_import, division, print_function
 import os
 import re
 
-from django.utils.six.moves.urllib import parse
+from django.utils.six.moves import urllib
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator, URLValidator
@@ -81,7 +81,7 @@ class URLValidator2(URLValidator):
         self.allow_fragment = allow_fragment
 
     def __call__(self, value):
-        scheme, netloc, path, query, fragment = parse.urlsplit(value)
+        scheme, netloc, path, query, fragment = urllib.parse.urlsplit(value)
 
         if (scheme or netloc) and not self.allow_schemes and not self.allow_all_schemes and not self.allow_netloc:
             raise ValidationError(_("Please enter a local URL (without protocol/domain)."), code="local")
