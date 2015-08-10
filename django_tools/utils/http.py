@@ -29,7 +29,7 @@
     
     more info, see DocStrings below...
     
-    :copyleft: 2011 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2011-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -37,48 +37,53 @@ from __future__ import absolute_import, division, print_function
 
 
 import cgi
-import http.client
 import re
 import socket
-import urllib.request, urllib.error, urllib.parse
+from django.utils.six import text_type
+from django.utils.six.moves import http_client
+from django.utils.six.moves import urllib
 
 
-class HTTPConnection2(http.client.HTTPConnection):
+HTTPS_SUPPORT = hasattr(http_client, 'HTTPS')
+
+
+
+class HTTPConnection2(http_client.HTTPConnection):
     """
     Like httplib.HTTPConnection but stores the request headers.
     Used in HTTPConnection3(), see below.
     """
     def __init__(self, *args, **kwargs):
-        http.client.HTTPConnection.__init__(self, *args, **kwargs)
+        http_client.HTTPConnection.__init__(self, *args, **kwargs)
         self.request_headers = []
         self.request_header = ""
 
     def putheader(self, header, value):
         self.request_headers.append((header, value))
-        http.client.HTTPConnection.putheader(self, header, value)
+        http_client.HTTPConnection.putheader(self, header, value)
 
     def send(self, s):
         self.request_header = s
-        http.client.HTTPConnection.send(self, s)
+        http_client.HTTPConnection.send(self, s)
 
-if hasattr(httplib, 'HTTPS'):
-    class HTTPSConnection2(http.client.HTTPSConnection):
+if HTTPS_SUPPORT:
+    class HTTPSConnection2(http_client.HTTPSConnection):
         """
         Like httplib.HTTPConnection but stores the request headers.
         Used in HTTPConnection3(), see below.
         """
         def __init__(self, *args, **kwargs):
-            http.client.HTTPSConnection.__init__(self, *args, **kwargs)
+            http_client.HTTPSConnection.__init__(self, *args, **kwargs)
             self.request_headers = []
             self.request_header = ""
 
         def putheader(self, header, value):
             self.request_headers.append((header, value))
-            http.client.HTTPSConnection.putheader(self, header, value)
+            http_client.HTTPSConnection.putheader(self, header, value)
 
         def send(self, s):
             self.request_header = s
-            http.client.HTTPSConnection.send(self, s)
+            http_client.HTTPSConnection.send(self, s)
 
 
 class HTTPConnectionWrapper(object):
@@ -113,7 +118,7 @@ class HTTPHandler2(urllib.request.HTTPHandler):
     A HTTPHandler which stores the request headers.
     Used HTTPConnection3, see above.
     
-    >>> opener = urllib2.build_opener(HTTPHandler2)
+    >>> opener = http_client.build_opener(HTTPHandler2)
     >>> opener.addheaders = [("User-agent", "Python test")]
     >>> response = opener.open('http://www.python.org/')
    
@@ -131,7 +136,7 @@ class HTTPHandler2(urllib.request.HTTPHandler):
         response.request_header = conn_instance.request_header
         return response
 
-if hasattr(httplib, 'HTTPS'):
+if HTTPS_SUPPORT:
     class HTTPSHandler2(urllib.request.HTTPSHandler):
         def https_open(self, req):
             conn_instance = HTTPConnectionWrapper(HTTPSConnection2)
@@ -217,7 +222,7 @@ class HttpRequest(object):
         self.threadunsafe_workaround = threadunsafe_workaround
 
         handlers = [HTTPHandler2]
-        if hasattr(httplib, 'HTTPS'):
+        if HTTPS_SUPPORT:
             handlers.append(HTTPSHandler2)
 
         self.opener = urllib.request.build_opener(*handlers)
@@ -291,7 +296,7 @@ class HttpRequest(object):
         encoding = self.get_encoding_from_content_type()
         if encoding:
             try:
-                return str(content, encoding)
+                return text_type(content, encoding)
             except UnicodeError:
                 self.tried_encodings.append(encoding)
 
@@ -301,11 +306,11 @@ class HttpRequest(object):
             if encoding in self.tried_encodings:
                 continue
             try:
-                return str(content, encoding)
+                return text_type(content, encoding)
             except UnicodeError:
                 self.tried_encodings.append(encoding)
 
-        return str(content, encoding, errors="replace")
+        return text_type(content, encoding, errors="replace")
 
 
 if __name__ == "__main__":
