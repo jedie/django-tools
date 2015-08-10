@@ -18,8 +18,8 @@ env:
 
 install:
     - pip install --upgrade pip
-    - pip install .
-    - pip install Django==$DJANGO
+    - pip install . --no-deps
+    - pip install Django==$DJANGO.\*
     - pip install coveralls
 
 script:
