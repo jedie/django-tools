@@ -47,6 +47,10 @@ USE_DYNAMIC_SITE_MIDDLEWARE = True
 
 ROOT_URLCONF = 'django_tools_test_project.django_tools_test_app.urls'
 
+PASSWORD_HASHERS = ( # Speedup tests
+    'django.contrib.auth.hashers.MD5PasswordHasher',
+)
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
