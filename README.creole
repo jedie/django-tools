@@ -263,6 +263,8 @@ to:
 
 == history
 
+* v0.29.3 - 10.08.2015 - [[https://github.com/jedie/django-tools/compare/v0.29.2...v0.29.3|compare v0.29.2...v0.29.3]]
+** Clear ThreadLocal request atttribute after response is processed (contributed by Lucas Wiman)
 * v0.29.2 - 19.06.2015 - [[https://github.com/jedie/django-tools/compare/v0.29.1...v0.29.2|compare v0.29.1...v0.29.2]]
 ** Bugfix in unittest_utils.selenium_utils.selenium2fakes_response
 ** assertResponse used assertContains from django
