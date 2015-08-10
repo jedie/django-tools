@@ -3,6 +3,12 @@
 """
     Dynamic SITE ID unittests
     ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    run only these tests:
+        .../django-tools $ ./runtests.sh tests.test_dynamic_site
+
+    To see debug output: enable LOGGING in:
+        .../django-tools/django_tools_test_project/test_settings.py
     
     :copyleft: 2012-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
@@ -15,7 +21,6 @@ import unittest
 
 from django.conf import settings
 from django.contrib.sites.models import Site
-from django.test import TestCase
 from django.test.utils import override_settings
 from django.utils import log
 from django.utils.encoding import force_bytes, force_str
@@ -33,7 +38,7 @@ class FakeResponse(object):
 
 
 @override_settings(DEBUG = True)
-class DynamicSiteTest(BaseTestCase, TestCase):
+class DynamicSiteTest(BaseTestCase):
     def setUp(self):
         self.assertTrue(settings.DEBUG, "Must be true to skip hostname validation!")
 
@@ -50,52 +55,49 @@ class DynamicSiteTest(BaseTestCase, TestCase):
 
     def test_fallback(self):
         response = self.client.get("/display_site/") # request with 'testserver'
-        self.assertEqual(force_str(response.content), # FIXME: Why we get bytes here?!?
+        self.assertEqual(response.content.decode("utf-8"),
             'ID from settings: 1 - id from get_current(): 1'
         )
 
     def test_no_alias1(self):
         response = self.client.get("/display_site/", HTTP_HOST="domain_one.tld")
-        self.assertEqual(force_str(response.content),
+        self.assertEqual(response.content.decode("utf-8"),
             'ID from settings: 1 - id from get_current(): 1'
         )
 
-    @unittest.expectedFailure # FIXME!
     def test_no_alias2(self):
         response = self.client.get("/display_site/", HTTP_HOST="domain_two.tld")
-        self.assertEqual(force_str(response.content),
+        self.assertEqual(response.content.decode("utf-8"),
             'ID from settings: 2 - id from get_current(): 2'
         )
 
     def test_string_alias1(self):
         response = self.client.get("/display_site/", HTTP_HOST="domain_one_alias_one.tld")
-        self.assertEqual(force_str(response.content),
+        self.assertEqual(response.content.decode("utf-8"),
             'ID from settings: 1 - id from get_current(): 1'
         )
 
     def test_string_alias2(self):
         response = self.client.get("/display_site/", HTTP_HOST="domain_one_alias_two.tld")
-        self.assertEqual(force_str(response.content),
+        self.assertEqual(response.content.decode("utf-8"),
             'ID from settings: 1 - id from get_current(): 1'
         )
 
-    @unittest.expectedFailure # FIXME!
     def test_regex_alias1(self):
         response = self.client.get("/display_site/", HTTP_HOST="foo.domain_two.tld")
-        self.assertEqual(force_str(response.content),
+        self.assertEqual(response.content.decode("utf-8"),
             'ID from settings: 2 - id from get_current(): 2'
         )
 
-    @unittest.expectedFailure
     def test_regex_alias2(self):
         response = self.client.get("/display_site/", HTTP_HOST="foo.bar.domain_two.tld")
-        self.assertEqual(force_str(response.content),
+        self.assertEqual(response.content.decode("utf-8"),
             'ID from settings: 2 - id from get_current(): 2'
         )
 
     def test_change(self):
         response = self.client.get("/display_site/", HTTP_HOST="www.domain_one.tld")
-        self.assertEqual(force_str(response.content),
+        self.assertEqual(response.content.decode("utf-8"),
             'ID from settings: 2 - id from get_current(): 2'
         )
 
@@ -103,17 +105,16 @@ class DynamicSiteTest(BaseTestCase, TestCase):
         self.alias3.save() # Should clean all site caches
 
         response = self.client.get("/display_site/", HTTP_HOST="www.domain_one.tld")
-        self.assertEqual(force_str(response.content),
+        self.assertEqual(response.content.decode("utf-8"),
             'ID from settings: 1 - id from get_current(): 1'
         )
 
-    @unittest.expectedFailure # FIXME!
     def test_create(self):
         host = "not_exist_yet.tld"
 
         # Fallback to default:
         response = self.client.get("/display_site/", HTTP_HOST=host)
-        self.assertEqual(force_str(response.content),
+        self.assertEqual(response.content.decode("utf-8"),
             'ID from settings: 1 - id from get_current(): 1'
         )
 
@@ -121,26 +122,7 @@ class DynamicSiteTest(BaseTestCase, TestCase):
         SiteAlias.objects.create(site=self.site2, alias=host, regex=False)
 
         response = self.client.get("/display_site/", HTTP_HOST=host)
-        self.assertEqual(force_str(response.content),
+        self.assertEqual(response.content.decode("utf-8"),
             'ID from settings: 2 - id from get_current(): 2'
         )
 
-
-
-
-
-
-if __name__ == "__main__":
-    # Run this unittest directly
-
-    print(settings.SETTINGS_MODULE)
-
-    # Enable logging to console
-    logger1 = log.getLogger("django_tools.DynamicSite")
-    log.logging.basicConfig(format='%(created)f %(message)s')
-    logger1.setLevel(log.logging.DEBUG)
-    logger2 = log.getLogger("django_tools.local_sync_cache")
-    logger2.setLevel(log.logging.DEBUG)
-
-    from django.core import management
-    management.call_command('test', 'django_tools.dynamic_site')
