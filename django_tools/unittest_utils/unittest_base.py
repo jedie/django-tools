@@ -4,7 +4,7 @@
     unittest base
     ~~~~~~~~~~~~~
     
-    :copyleft: 2009-2012 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2009-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -73,7 +73,7 @@ class BaseUnittestCase(TestCase):
             self.fail("File %r exists, but should not exists!" % path)
 
 
-class BaseTestCase(BaseUnittestCase, SimpleTestCase):
+class BaseTestCase(BaseUnittestCase):
     # Should we open a browser traceback?
     browser_traceback = True
 
