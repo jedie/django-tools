@@ -20,11 +20,10 @@ env:
 install:
     - pip install --upgrade pip
     - pip install . --no-deps
-    - pip install Django==$DJANGO.\*
-    - pip install coveralls
+    - pip install Django==$DJANGO.\* coveralls
 
 script:
-    - coverage run ./setup.py test --verbosity=2
+    - coverage run --source=django_tools ./setup.py test --verbosity=2
 
 after_success:
     coveralls
