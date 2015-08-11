@@ -70,7 +70,6 @@ class LimitManyToManyFields(object):
                 value = int(limits[0][0])
                 # Only one item can be selected. Hide the ManyToMany field. To hide the field and
                 # for validation, we changed the MultipleChoiceField to a IntegerField.
-                print("XXX %r" % value)
                 self.fields[field_name] = forms.IntegerField(
                     max_value=value, min_value=value, initial=value
                 )
