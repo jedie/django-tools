@@ -5,7 +5,7 @@
     distutils setup
     ~~~~~~~~~~~~~~~
 
-    :copyleft: 2009-2010 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2009-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -13,7 +13,9 @@ from __future__ import absolute_import, division, print_function
 
 
 import os
+import subprocess
 import sys
+import shutil
 
 from setuptools import setup, find_packages
 
@@ -35,8 +37,11 @@ else:
     long_description = get_long_description(PACKAGE_ROOT)
 
 
+
 if "publish" in sys.argv:
     """
+    'publish' helper for setup.py
+
     Build and upload to PyPi, if...
         ... __version__ doesn't contains "dev"
         ... we are on git 'master' branch
@@ -47,10 +52,14 @@ if "publish" in sys.argv:
     The cli arguments will be pass to 'twine'. So this is possible:
      * Display 'twine' help page...: ./setup.py publish --help
      * use testpypi................: ./setup.py publish --repository=test
+
+    TODO: Look at: https://github.com/zestsoftware/zest.releaser
+
+    Source: https://github.com/jedie/python-code-snippets/blob/master/CodeSnippets/setup_publish.py
+    copyleft 2015 Jens Diemer - GNU GPL v2+
     """
-    # Imports here, so it's easier to copy&paste this complete code block ;)
-    import subprocess
-    import shutil
+    if sys.version_info[0] == 2:
+        input = raw_input
 
     try:
         # Test if wheel is installed, otherwise the user will only see:
@@ -116,14 +125,24 @@ if "publish" in sys.argv:
         print(output)
         sys.exit(-1)
 
-    print("\ngit tag version (will raise a error of tag already exists)")
-    verbose_check_call("git", "tag", "v%s" % __version__)
+    print("\ncheck if pull is needed")
+    verbose_check_call("git", "fetch", "--all")
+    call_info, output = verbose_check_output("git", "log", "HEAD..origin/master", "--oneline")
+    print("\t%s" % call_info)
+    if output == "":
+        print("OK")
+    else:
+        print("\n *** ERROR: git repro is not up-to-date:")
+        print(output)
+        sys.exit(-1)
+    verbose_check_call("git", "push")
 
     print("\nCleanup old builds:")
     def rmtree(path):
         path = os.path.abspath(path)
-        print("\tremove tree:", path)
-        shutil.rmtree(path)
+        if os.path.isdir(path):
+            print("\tremove tree:", path)
+            shutil.rmtree(path)
     rmtree("./dist")
     rmtree("./build")
 
@@ -139,6 +158,9 @@ if "publish" in sys.argv:
         log.write(output)
     print("Build output is in log file: %r" % log_filename)
 
+    print("\ngit tag version (will raise a error of tag already exists)")
+    verbose_check_call("git", "tag", "v%s" % __version__)
+
     print("\nUpload with twine:")
     twine_args = sys.argv[1:]
     twine_args.remove("publish")
@@ -147,8 +169,7 @@ if "publish" in sys.argv:
     from twine.commands.upload import main as twine_upload
     twine_upload(twine_args)
 
-    print("\ngit push to server")
-    verbose_check_call("git", "push")
+    print("\ngit push tag to server")
     verbose_check_call("git", "push", "--tags")
 
     sys.exit(0)
