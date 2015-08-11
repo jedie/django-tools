@@ -279,7 +279,7 @@ to:
 
 == history
 
-* v0.29.4 - 10.08.2015 - [[https://github.com/jedie/django-tools/compare/v0.29.3...v0.29.4|compare v0.29.3...v0.29.4]]
+* v0.29.4 and v0.29.5 - 10.08.2015 - [[https://github.com/jedie/django-tools/compare/v0.29.3...v0.29.5|compare v0.29.3...v0.29.5]]
 ** Some bugfixes for django 1.6 support
 * v0.29.3 - 10.08.2015 - [[https://github.com/jedie/django-tools/compare/v0.29.2...v0.29.3|compare v0.29.2...v0.29.3]]
 ** Clear ThreadLocal request atttribute after response is processed (contributed by Lucas Wiman)
