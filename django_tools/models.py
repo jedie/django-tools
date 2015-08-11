@@ -14,6 +14,8 @@ from __future__ import absolute_import, division, print_function
 
 from django.db import models
 from django.conf import settings
+from django.utils.encoding import python_2_unicode_compatible
+
 try:
     from django.utils.timezone import now
 except ImportError:
@@ -32,6 +34,7 @@ except:
     User = apps.get_app_config(user_app).get_model(user_model)
 
 
+@python_2_unicode_compatible
 class UpdateTimeBaseModel(models.Model):
     """
     Base model to automatically set:
@@ -45,6 +48,9 @@ class UpdateTimeBaseModel(models.Model):
     createtime = models.DateTimeField(default=now, editable=False, help_text="Create time")
     lastupdatetime = models.DateTimeField(default=now, editable=False, help_text="Time of the last change.")
 
+    def __str__(self): # to be overwritten
+        return "model instance ID:%s" % self.pk
+
     def save(self, *args, **kwargs):
         self.lastupdatetime = now()
         return super(UpdateTimeBaseModel, self).save(*args, **kwargs)
@@ -53,6 +59,7 @@ class UpdateTimeBaseModel(models.Model):
         abstract = True
 
 
+@python_2_unicode_compatible
 class UpdateUserBaseModel(models.Model):
     """
     Base model to automatically set:
@@ -67,6 +74,9 @@ class UpdateUserBaseModel(models.Model):
     lastupdateby = models.ForeignKey(settings.AUTH_USER_MODEL, editable=False, related_name="%(class)s_lastupdateby",
         null=True, blank=True, # <- If the model used outside a real request (e.g. unittest, db shell)
         help_text="User as last edit this entry.")
+
+    def __str__(self): # to be overwritten
+        return "model instance ID:%s" % self.pk
 
     def save(self, *args, **kwargs):
         current_user = ThreadLocal.get_current_user()
