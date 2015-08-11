@@ -270,7 +270,7 @@ to:
 == Django compatibility
 
 |= django-tools |= django version |= python  |
-| v0.29         | 1.7, 1.8        | 2.7, 3,4 |
+| v0.29         | 1.6 - 1.8       | 2.7, 3,4 |
 | v0.26         | <=1.6           |          |
 | v0.25         | <=1.4           |          |
 
@@ -279,6 +279,8 @@ to:
 
 == history
 
+* v0.29.4 - 10.08.2015 - [[https://github.com/jedie/django-tools/compare/v0.29.3...v0.29.4|compare v0.29.3...v0.29.4]]
+** Some bugfixes for django 1.6 support
 * v0.29.3 - 10.08.2015 - [[https://github.com/jedie/django-tools/compare/v0.29.2...v0.29.3|compare v0.29.2...v0.29.3]]
 ** Clear ThreadLocal request atttribute after response is processed (contributed by Lucas Wiman)
 * v0.29.2 - 19.06.2015 - [[https://github.com/jedie/django-tools/compare/v0.29.1...v0.29.2|compare v0.29.1...v0.29.2]]
