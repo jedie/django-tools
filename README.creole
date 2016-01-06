@@ -67,6 +67,14 @@ Limit something with only one field, by selecting:
 
 More info, read DocString in [[https://github.com/jedie/django-tools/blob/master/django_tools/limit_to_usergroups.py|./limit_to_usergroups.py]]
 
+=== form/model fields
+
+* [[https://github.com/jedie/django-tools/blob/master/django_tools/fields/directory.py|Directory field]] - check if exist and if in a defined base path
+* [[https://github.com/jedie/django-tools/blob/master/django_tools/fields/language_code.py|language code field with validator]]
+* [[https://github.com/jedie/django-tools/blob/master/django_tools/fields/media_path.py|Media Path field]] browse existign path to select and validate input
+* [[https://github.com/jedie/django-tools/blob/master/django_tools/fields/sign_separated.py|sign seperated form/model field]] e.g. comma seperated field
+* [[https://github.com/jedie/django-tools/blob/master/django_tools/fields/static_path.py|static path field]]
+* [[https://github.com/jedie/django-tools/blob/master/django_tools/fields/url.py|url field]] A flexible version of the original django form URLField
 
 == unittests helpers
 
