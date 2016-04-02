@@ -24,7 +24,7 @@ but has some enhancements: [[https://github.com/jedie/django-tools/blob/master/d
 === smooth cache backends
 
 Same as django cache backends, but adds {{{cache.smooth_update()}}} to clears the cache smoothly depend on the current system load.
-more info in: [[https://github.com/jedie/django-tools/blob/master/django_tools/cache/README.creole#smooth-cache-backends|'smooth cache backends' in ./cache/README.creole]] 
+more info in: [[https://github.com/jedie/django-tools/blob/master/django_tools/cache/README.creole#smooth-cache-backends|'smooth cache backends' in ./cache/README.creole]]
 
 === local sync cache
 
@@ -126,7 +126,7 @@ Display the normal debug page and not the minimal csrf debug page.
 More info in DocString here: [[https://github.com/jedie/django-tools/blob/master/django_tools/views/csrf.py|django_tools/views/csrf.py]]
 
 ==== import lib helper
-additional helper to the existing {{{django.utils.importlib}}}
+additional helper to the existing {{{importlib}}}
 more info in the sourcecode: [[https://github.com/jedie/django-tools/blob/master/django_tools/utils/importlib.py|./utils/importlib.py]]
 
 ==== http utils
@@ -172,7 +172,7 @@ class MyTests(TestCase):
     def test_foobar(self):
         with PrintQueries("Create object"):
             FooBar.objects.create("name"=foo)
-            
+
 # e.g. use in views:
 def my_view(request):
     with PrintQueries("Create object"):
@@ -250,7 +250,7 @@ from django_tools.utils.client_storage import SignedCookieStorage
 
 SmoothCacheBackends API changed:
 The **cache.clear()** method will really clear the cache, as the origin backend API.
-You must call {{{cache.smooth_update()}}} to set the "last change" timestamp. 
+You must call {{{cache.smooth_update()}}} to set the "last change" timestamp.
 
 === v0.24.10
 
@@ -312,7 +312,7 @@ to:
 * v0.25.1 - 18.11.2013
 ** Bugfix: Fall back to "UTF-8" if server send no encoding info
 * v0.25.0 - 28.08.2012
-** Rename **cache.clear()** in SmoothCacheBackends to **cache.smooth_update()**, so that reset timestamp is independ from clear the cache. 
+** Rename **cache.clear()** in SmoothCacheBackends to **cache.smooth_update()**, so that reset timestamp is independ from clear the cache.
 * v0.24.10 - 24.08.2012
 ** Add **SmoothCacheBackends**: [[https://github.com/jedie/django-tools/blob/master/django_tools/cache/README.creole|./cache/README.creole]]
 * v0.24.9 - 24.08.2012
@@ -330,7 +330,7 @@ to:
 * v0.24.4 - 26.07.2012
 ** remove date from version string, cause of side-effects e.g.: user clone the repo and has the filter not installed
 * v0.24.3 - 25.07.2012
-** "Hardcode" the version string date attachment via [[https://github.com/jedie/python-code-snippets/tree/master/CodeSnippets/git|gitattribute filter script]] to fix [[https://github.com/jedie/django-tools/issues/1|a reported issues]] with [[https://github.com/pypa/pip/issues/145|pip requirements file bug]]. 
+** "Hardcode" the version string date attachment via [[https://github.com/jedie/python-code-snippets/tree/master/CodeSnippets/git|gitattribute filter script]] to fix [[https://github.com/jedie/django-tools/issues/1|a reported issues]] with [[https://github.com/pypa/pip/issues/145|pip requirements file bug]].
 * v0.24.2 - 10.07.2012
 ** Split [[https://github.com/jedie/django-tools/blob/master/django_tools/models.py|UpdateInfoBaseModel()]]: So you can only set "createtime", "lastupdatetime" or "createby", "lastupdateby" or both types (This is backwards compatible)
 * v0.24.1 - 12.06.2012
@@ -374,7 +374,7 @@ to:
 ** Bugfix in utils/http.py timeout work-a-round
 * v0.19.1
 ** utils/http.py changes:
-*** Use a better solution, see: 
+*** Use a better solution, see:
 *** Add timeout and add a work-a-round for Python < 2.6
 * v0.19.0
 ** NEW: Add utils/http.py with helpers to get a webpage via http GET in unicode

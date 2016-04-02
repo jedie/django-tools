@@ -1,9 +1,10 @@
 # coding:utf-8
 
+from importlib import import_module
+
 from django.utils.six import PY2
 from django.conf import settings
 from django.core import urlresolvers
-from django.utils.importlib import import_module
 
 
 def get_filtered_apps(resolve_url="/", no_args=True, debug=False, skip_fail=False):

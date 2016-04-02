@@ -14,10 +14,10 @@ from __future__ import absolute_import, division, print_function
 
 import logging
 import os
+from importlib import import_module
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.importlib import import_module
 
 if __name__ == "__main__":
     # For doctest only
