@@ -12,7 +12,7 @@
 
 from __future__ import absolute_import, division, print_function
 
-
+import logging
 import os
 import time
 
@@ -21,16 +21,15 @@ from django.core.cache.backends.db import DatabaseCache
 from django.core.cache.backends.filebased import FileBasedCache
 from django.core.cache.backends.locmem import LocMemCache
 from django.core.cache.backends.memcached import MemcachedCache, PyLibMCCache
-from django.utils import log
 
 if __name__ == "__main__":
     # For doctest only
     os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
 
-logger = log.getLogger("django-tools.SmoothCache")
+logger = logging.getLogger("django-tools.SmoothCache")
 if not logger.handlers:
     # ensures we don't get any 'No handlers could be found...' messages
-    logger.addHandler(log.NullHandler())
+    logger.addHandler(logging.NullHandler())
 
 SMOOTH_CACHE_CHANGE_TIME = getattr(settings, "SMOOTH_CACHE_CHANGE_TIME", "DJANGO_TOOLS_SMOOTH_CACHE_CHANGE_TIME")
 SMOOTH_CACHE_UPDATE_TIMESTAMP = getattr(settings, "SMOOTH_CACHE_UPDATE_TIMESTAMP", 10)

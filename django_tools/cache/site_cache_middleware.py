@@ -12,7 +12,7 @@
 
 from __future__ import absolute_import, division, print_function
 
-
+import logging
 import sys
 
 from django.conf import settings
@@ -20,12 +20,11 @@ from django.contrib import messages
 from django.core.cache import cache
 from django.http import HttpResponse
 from django.utils.cache import get_max_age, patch_response_headers
-from django.utils.log import getLogger
 
 from django_tools.utils.importlib import get_attr_from_settings
 
 
-logger = getLogger("django-tools.CacheMiddleware")
+logger = logging.getLogger("django-tools.CacheMiddleware")
 
 CACHE_MIDDLEWARE_ANONYMOUS_ONLY = getattr(settings, 'CACHE_MIDDLEWARE_ANONYMOUS_ONLY', False)
 RUN_WITH_DEV_SERVER = getattr(settings, "RUN_WITH_DEV_SERVER", "runserver" in sys.argv)

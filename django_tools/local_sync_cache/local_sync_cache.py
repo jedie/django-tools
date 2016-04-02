@@ -70,8 +70,8 @@
 
     To enable logging, add this to your settings, e.g.:
 
-        from django.utils import log
-        logger = log.getLogger("django_tools.local_sync_cache")
+        import logging
+        logger = logging.getLogger("django_tools.local_sync_cache")
         logger.setLevel(log.logging.DEBUG)
         logger.addHandler(log.logging.FileHandler("local_sync_cache.log"))
 
@@ -82,17 +82,16 @@
 
 from __future__ import absolute_import, division, print_function
 
-
+import logging
 import sys
 import time
 import datetime
 
 from django.conf import settings
 from django.core import cache
-from django.utils import log
 
 
-logger = log.getLogger("django_tools.local_sync_cache")
+logger = logging.getLogger("django_tools.local_sync_cache")
 
 LOCAL_SYNC_CACHE_BACKEND = getattr(settings, "LOCAL_SYNC_CACHE_BACKEND", "local_sync_cache")
 

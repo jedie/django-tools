@@ -10,7 +10,7 @@
 
 from __future__ import absolute_import, division, print_function
 
-
+import logging
 import time
 import os
 try:
@@ -18,7 +18,6 @@ try:
 except ImportError:
     import pickle
 
-from django.utils import log
 from django.core.cache.backends.filebased import FileBasedCache
 from django.conf import settings
 
@@ -51,7 +50,7 @@ def get_max_age(load_average):
     return max_age
 
 
-logger = log.getLogger("SmoothyFileBasedCache")
+logger = logging.getLogger("SmoothyFileBasedCache")
 
 
 class AutoUpdateFileBasedCache(FileBasedCache):

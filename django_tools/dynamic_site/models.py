@@ -14,14 +14,13 @@
 
 from __future__ import absolute_import, division, print_function
 
-
+import logging
 import re
 
 from django.contrib.sites import models as sites_models
 from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.utils import log
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
@@ -29,10 +28,10 @@ from django_tools.local_sync_cache.local_sync_cache import LocalSyncCache
 from django_tools.models import UpdateInfoBaseModel
 
 
-logger = log.getLogger("django_tools.DynamicSite")
+logger = logging.getLogger("django_tools.DynamicSite")
 if not logger.handlers:
     # ensures we don't get any 'No handlers could be found...' messages
-    logger.addHandler(log.NullHandler())
+    logger.addHandler(logging.NullHandler())
 
 
 def compile_alias(alias):

@@ -14,7 +14,7 @@
 
 from __future__ import absolute_import, division, print_function
 
-
+import logging
 import os
 import warnings
 
@@ -26,14 +26,13 @@ except ImportError:
 from django.conf import settings
 from django.contrib.sites import models as sites_models
 from django.core.exceptions import MiddlewareNotUsed, ImproperlyConfigured
-from django.utils import log
 
 from django_tools.local_sync_cache.local_sync_cache import LocalSyncCache
 
 
 USE_DYNAMIC_SITE_MIDDLEWARE = getattr(settings, "USE_DYNAMIC_SITE_MIDDLEWARE", False)
 
-logger = log.getLogger("django_tools.DynamicSite")
+logger = logging.getLogger("django_tools.DynamicSite")
 
 
 Site = sites_models.Site  # Shortcut
