@@ -114,7 +114,7 @@ class FilemanagerDirectoryTraversal(FilemanagerBaseTestCase):
         rest_url = "%s/" % subdir
         fm = BaseFilemanager(None, self.BASE_PATH, base_url, rest_url)
         self.assertEqual(fm.abs_url, '/base/url/subdir1/')
-        self.assertEqual(fm.abs_path, "%s%s" % (self.BASE_PATH, rest_url))
+        self.assertEqual(fm.absolute_path, self.BASE_PATH)
         self.assertEqual(fm.breadcrumbs, [
             {'url': base_url, 'name': 'index', 'title': "goto 'index'"},
             {'url': '/base/url/%s/' % subdir, 'name': subdir, 'title': "goto '%s'" % subdir}
