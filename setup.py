@@ -58,7 +58,7 @@ if "publish" in sys.argv:
     Source: https://github.com/jedie/python-code-snippets/blob/master/CodeSnippets/setup_publish.py
     copyleft 2015 Jens Diemer - GNU GPL v2+
     """
-    if sys.version_info[0] == 2:
+    if sys.version_info[0] == 2 and sys.version_info < (3, 0):
         input = raw_input
 
     try:
