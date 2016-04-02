@@ -54,7 +54,7 @@ class BaseFilesystemBrowser(object):
 
         rest_url = add_slash(rest_url)
         try:
-            rest_path = self.dir_validator(rest_url)
+            self.dir_validator(rest_url)
         except ValidationError as err:
             if settings.DEBUG:
                 raise Http404(err)
