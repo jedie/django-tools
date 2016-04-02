@@ -11,7 +11,6 @@
 from __future__ import absolute_import, division, print_function
 
 
-
 import os
 import unittest
 import tempfile
@@ -25,13 +24,13 @@ if __name__ == "__main__":
 from django.http import Http404
 
 from django_tools.filemanager.filemanager import BaseFilemanager
-from django_tools.filemanager.exceptions import DirectoryTraversalAttack, FilemanagerError
+from django_tools.filemanager.exceptions import DirectoryTraversalAttack
 
 
 class FilemanagerBaseTestCase(unittest.TestCase):
     """
     Create this test filesystem tree:
-    
+
     self.BASE_PATH/file1.txt
     self.BASE_PATH/file2.txt
     self.BASE_PATH/subdir1/subfile1.txt
@@ -109,16 +108,6 @@ class FilemanagerBaseTestCase(unittest.TestCase):
 
 class FilemanagerDirectoryTraversal(FilemanagerBaseTestCase):
 
-    def test_root_dir(self):
-        base_url = "/base/url/"
-        rest_url = "/"
-        fm = BaseFilemanager(None, self.BASE_PATH, base_url, rest_url)
-        self.assertEqual(fm.abs_url, base_url)
-        self.assertEqual(fm.abs_path, self.BASE_PATH)
-        self.assertEqual(fm.breadcrumbs,
-            [{'url': base_url, 'name': 'index', 'title': "goto 'index'"}]
-        )
-
     def test_subdir1(self):
         subdir = "subdir1"
         base_url = "/base/url/"
@@ -153,12 +142,12 @@ class FilemanagerDirectoryTraversal(FilemanagerBaseTestCase):
             )
 
     def test_dir_traversal_attack3(self):
-        self.assertRaises(DirectoryTraversalAttack,
+        self.assertRaises(Http404,
             BaseFilemanager, None, self.BASE_PATH, "/base/url/", "subdir1/../../etc/passwd"
         )
 
     def test_dir_traversal_attack4(self):
-        self.assertRaises(DirectoryTraversalAttack,
+        self.assertRaises(Http404,
             BaseFilemanager, None, self.BASE_PATH, "/base/url/", "subdir1/c:\\boot.ini"
         )
 
