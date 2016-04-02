@@ -142,7 +142,7 @@ class BaseFilemanager(BaseFilesystemBrowser):
             raise FilemanagerError("Upload not allowed here!")
 
         path = os.path.join(self.absolute_path, f.name)
-        destination = file(path, 'wb+')
+        destination = open(path, 'wb+')
         for chunk in f.chunks():
             destination.write(chunk)
         destination.close()
