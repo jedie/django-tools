@@ -17,6 +17,7 @@ from __future__ import absolute_import, division, print_function
 
 from operator import attrgetter
 import datetime
+import grp
 import os
 import pwd
 import stat
@@ -52,7 +53,7 @@ class BaseFilesystemObject(object):
         self.uid = self.stat[stat.ST_UID]
         self.username = pwd.getpwuid(self.uid).pw_name
         self.gid = self.stat[stat.ST_GID]
-        self.groupname = pwd.getpwuid(self.gid).pw_name
+        self.groupname = grp.getgrgid(self.gid).gr_name
 
     def __repr__(self):
         return "%s '%s' in %s" % (self.item_type, self.name, self.base_path)
