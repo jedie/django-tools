@@ -88,7 +88,7 @@ import time
 import datetime
 
 from django.conf import settings
-from django.core import cache
+from django.core.cache import caches
 
 
 logger = logging.getLogger("django_tools.local_sync_cache")
@@ -114,7 +114,7 @@ def _get_cache():
         msg = "You should use Memcache, FileBasedCache or DatabaseCache and not: %s" % backend
         logger.critical(msg)
 
-    django_cache = cache.get_cache(cache_name)
+    django_cache = caches[cache_name]
     logger.debug("Use django '%s' cache: %r" % (cache_name, django_cache))
     return django_cache
 
