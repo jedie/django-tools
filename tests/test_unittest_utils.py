@@ -1,5 +1,7 @@
 import os
 import sys
+
+import django
 from django.contrib.auth.models import User
 from django.utils import six
 from django_tools.unittest_utils.print_sql import PrintQueries
@@ -144,5 +146,8 @@ class TestPrintSQL(BaseTestCase):
 
         self.assertIn("*** Create object ***", output)
         # FIXME: Will fail if not SQLite/MySQL is used?!?
-        self.assertIn("1 - QUERY = 'SELECT COUNT(", output)
+        if django.VERSION < (1, 9):
+            self.assertIn("1 - QUERY = 'SELECT COUNT(", output)
+        else:
+            self.assertIn("1 - SELECT COUNT(", output)
         self.assertIn('FROM "auth_user"', output)
