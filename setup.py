@@ -59,7 +59,7 @@ if "publish" in sys.argv:
     copyleft 2015 Jens Diemer - GNU GPL v2+
     """
     if sys.version_info[0] == 2 and sys.version_info < (3, 0):
-        input = raw_input
+        input = raw_input   # noqa
 
     try:
         # Test if wheel is installed, otherwise the user will only see:
