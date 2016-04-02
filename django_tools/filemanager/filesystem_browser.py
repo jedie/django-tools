@@ -63,9 +63,10 @@ class BaseFilesystemBrowser(object):
 
         self.rel_url = posixpath.normpath(rest_url).lstrip("/")
         self.abs_url = posixpath.join(self.base_url, rest_path)
-        if not os.path.isdir(self.abs_path):
+        if not os.path.isdir(self.absolute_path):
             if settings.DEBUG:
-                raise Http404("Formed path %r doesn't exist." % self.abs_path)
+                raise Http404(
+                    "Formed path %r doesn't exist." % self.absolute_path)
             else:
                 raise Http404(_("Directory doesn't exist!"))
 

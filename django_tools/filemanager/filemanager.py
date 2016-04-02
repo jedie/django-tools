@@ -3,9 +3,9 @@
 """
     filemanager
     ~~~~~~~~~~~
-    
+
     Stuff to build a app like a file manager.
-    
+
 
     :copyleft: 2012 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
@@ -97,12 +97,12 @@ class BaseFilemanager(BaseFilesystemBrowser):
         super(BaseFilemanager, self).__init__(request, absolute_path, base_url, rest_url)
 
         self.allow_upload = allow_upload
-        self.dir_items = self.read_dir(self.abs_path)
+        self.dir_items = self.read_dir(self.absolute_path)
 
     def read_dir(self, path):
         dir_items = []
         for item in os.listdir(path):
-            item_abs_path = os.path.join(self.abs_path, item)
+            item_abs_path = os.path.join(self.absolute_path, item)
             link_path = None
             if os.path.islink(item_abs_path):
                 link_path = os.readlink(item_abs_path)
@@ -117,7 +117,7 @@ class BaseFilemanager(BaseFilesystemBrowser):
             elif os.path.isfile(item_abs_path):
                 item_class = self.FILE_ITEM
             else:
-                messages.info(self.request, "unhandled directory item: %r" % self.abs_path)
+                messages.info(self.request, "unhandled directory item: %r" % self.absolute_path)
                 continue
 
             instance = self.get_filesystem_item_instance(item_class, item, item_abs_path, link_path)
@@ -133,21 +133,21 @@ class BaseFilemanager(BaseFilesystemBrowser):
         """
         Good point for overwrite, to add attributes to the filesystem items.
         """
-        instance = item_class(self.abs_path, item, item_abs_path, link_path)
+        instance = item_class(self.absolute_path, item, item_abs_path, link_path)
         return instance
 
     def handle_uploaded_file(self, f):
         if not self.allow_upload:
             raise FilemanagerError("Upload not allowed here!")
 
-        path = os.path.join(self.abs_path, f.name)
+        path = os.path.join(self.absolute_path, f.name)
         destination = file(path, 'wb+')
         for chunk in f.chunks():
             destination.write(chunk)
         destination.close()
 
         messages.success(self.request,
-            "File '%s' (%i Bytes) uploaded to %s" % (f.name, f.size, self.abs_path)
+            "File '%s' (%i Bytes) uploaded to %s" % (f.name, f.size, self.absolute_path)
         )
 
 
