@@ -14,6 +14,7 @@ from django_tools.validators import URLValidator2, ExistingDirValidator
 class TestExistingDirValidator(SimpleTestCase):
     @classmethod
     def setUpClass(cls):
+        super(TestExistingDirValidator, cls).setUpClass()
         cls.media_root_validator = ExistingDirValidator()
 
     def test_default_media_root(self):

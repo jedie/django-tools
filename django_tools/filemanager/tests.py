@@ -41,12 +41,13 @@ class FilemanagerBaseTestCase(unittest.TestCase):
     self.BASE_PATH/emptysubdir/
     """
     @classmethod
-    def setUpClass(self):
-        self.BASE_PATH = "%s/" % tempfile.mkdtemp(prefix="filemanager-unittests_")
+    def setUpClass(cls):
+        super(FilemanagerBaseTestCase, cls).setUpClass()
+        cls.BASE_PATH = "%s/" % tempfile.mkdtemp(prefix="filemanager-unittests_")
 
         # For dir traversal attack tests
-        self.SUB_BASE_PATH = os.path.join(self.BASE_PATH, "subdir1")
-        self.ATTACK_PARTS = ("..", "..\\", "../",
+        cls.SUB_BASE_PATH = os.path.join(cls.BASE_PATH, "subdir1")
+        cls.ATTACK_PARTS = ("..", "..\\", "../",
             # from https://en.wikipedia.org/wiki/Directory_traversal_attack#URI_encoded_directory_traversal
             "%2e%2e%2f", "%2e%2e/", "..%2f", "%2e%2e%5c"
             # from https://en.wikipedia.org/wiki/Directory_traversal_attack#Unicode_.2F_UTF-8_encoded_directory_traversal
@@ -54,27 +55,27 @@ class FilemanagerBaseTestCase(unittest.TestCase):
             "..\xc1\x1c", "..\xc0\xaf",
         )
 
-        self.DIRS = (
-            (self.BASE_PATH, "subdir1", "subsubdir1"),
-            (self.BASE_PATH, "subdir1", "emptysubsubdir"),
-            (self.BASE_PATH, "emptysubdir"),
+        cls.DIRS = (
+            (cls.BASE_PATH, "subdir1", "subsubdir1"),
+            (cls.BASE_PATH, "subdir1", "emptysubsubdir"),
+            (cls.BASE_PATH, "emptysubdir"),
         )
-        self.FILES = (
-            (self.BASE_PATH, "file1.txt"),
-            (self.BASE_PATH, "file2.txt"),
-            (self.BASE_PATH, "subdir1", "subfile1.txt"),
-            (self.BASE_PATH, "subdir1", "subsubdir1", "subsubfile1.txt"),
-            (self.BASE_PATH, "subdir1", "subsubdir1", "subsubfile2.txt"),
+        cls.FILES = (
+            (cls.BASE_PATH, "file1.txt"),
+            (cls.BASE_PATH, "file2.txt"),
+            (cls.BASE_PATH, "subdir1", "subfile1.txt"),
+            (cls.BASE_PATH, "subdir1", "subsubdir1", "subsubfile1.txt"),
+            (cls.BASE_PATH, "subdir1", "subsubdir1", "subsubfile2.txt"),
         )
 
         # Create dirs:
-        for dirs in self.DIRS:
+        for dirs in cls.DIRS:
             path = os.path.join(*dirs)
 #            print "Create dir: %s" % repr(path)
             os.makedirs(path)
 
         # Create files:
-        for file_info in self.FILES:
+        for file_info in cls.FILES:
             path = os.path.join(*file_info)
             content = "File content for: %s" % repr(file_info[-1])
 #            print "Create file %s with %s" % (repr(path), repr(content))
@@ -82,22 +83,20 @@ class FilemanagerBaseTestCase(unittest.TestCase):
                 f.write(content)
 
     @classmethod
-    def tearDownClass(self):
+    def tearDownClass(cls):
+        super(FilemanagerBaseTestCase, cls).tearDownClass()
         tempdir = tempfile.gettempdir()
-        if self.BASE_PATH.startswith(tempdir):
-            for root, dirs, files in os.walk(self.BASE_PATH, topdown=False):
+        if cls.BASE_PATH.startswith(tempdir):
+            for root, dirs, files in os.walk(cls.BASE_PATH, topdown=False):
                 for name in files:
                     path = os.path.join(root, name)
-#                    print "remove file %r" % path
                     os.remove(path)
                 for name in dirs:
                     path = os.path.join(root, name)
-#                    print "remove dir %r" % path
                     os.rmdir(path)
-#            print "remove dir %r" % self.BASE_PATH
-            os.rmdir(self.BASE_PATH)
+            os.rmdir(cls.BASE_PATH)
         else:
-            self.fail("Cleanup error: %s not in %s" % (self.BASE_PATH, tempdir))
+            cls.fail("Cleanup error: %s not in %s" % (cls.BASE_PATH, tempdir))
 
     def test_setup(self):
         """ if this tests fails, all other may fail, too. """
