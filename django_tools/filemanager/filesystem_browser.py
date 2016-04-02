@@ -62,7 +62,7 @@ class BaseFilesystemBrowser(object):
                 raise Http404(_("Directory doesn't exist!"))
 
         self.rel_url = posixpath.normpath(rest_url).lstrip("/")
-        self.abs_url = posixpath.join(self.base_url, rest_path)
+        self.abs_url = posixpath.join(self.base_url, rest_url)
         if not os.path.isdir(self.absolute_path):
             if settings.DEBUG:
                 raise Http404(
