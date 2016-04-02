@@ -3,9 +3,9 @@
 """
     Test Local sync cache
     ~~~~~~~~~~~~~~~~~~~~~
-    
+
     For more information look into DocString in local_sync_cache.py !
-    
+
     :copyleft: 2011 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
@@ -15,7 +15,11 @@ from __future__ import absolute_import, division, print_function
 
 import unittest
 import time
-import pprint
+
+from django.core.cache import cache
+
+from django_tools.local_sync_cache.local_sync_cache import LocalSyncCache
+from django_tools.local_sync_cache.LocalSyncCacheMiddleware import LocalSyncCacheMiddleware
 from django_tools.unittest_utils.logging_utils import LoggingBuffer
 
 if __name__ == "__main__":
@@ -23,15 +27,9 @@ if __name__ == "__main__":
     import os
     os.environ["DJANGO_SETTINGS_MODULE"] = "django_tools.tests.test_settings"
 
-from django.core import management
-from django.core.cache import cache
-
-from django_tools.local_sync_cache.local_sync_cache import LocalSyncCache
-from django_tools.local_sync_cache.LocalSyncCacheMiddleware import LocalSyncCacheMiddleware
-
 
 class LocalSyncCacheTest(unittest.TestCase):
-    maxDiff=4000
+    maxDiff = 4000
 
     def setUp(self):
         LocalSyncCache.CACHES = []
@@ -54,9 +52,9 @@ class LocalSyncCacheTest(unittest.TestCase):
 
     def testUniqueID(self):
         with LoggingBuffer("django_tools.local_sync_cache") as log:
-            c1 = LocalSyncCache(id="test1")
+            LocalSyncCache(id="test1")
             log.clear()
-            c2 = LocalSyncCache(id="test1")
+            LocalSyncCache(id="test1")
             self.assertIn(
                 "ID 'test1' was already used! It must be unique! (Existing ids are: ['test1'])",
                 log.get_messages()
@@ -99,8 +97,6 @@ class LocalSyncCacheTest(unittest.TestCase):
 
         cache_information = LocalSyncCache.get_cache_information()
         self.assertEqual(len(cache_information), 2)
-#        for item in cache_information:
-#            print item["instance"].id, item
 
     def testLocalSyncCacheMiddleware(self):
         middleware = LocalSyncCacheMiddleware()
@@ -148,7 +144,6 @@ class LocalSyncCacheTest(unittest.TestCase):
         middleware.process_request(None)
         self.assertEqual(c1, {})
 
-#        print LocalSyncCache.pformat_cache_information()
         cache_information = LocalSyncCache.get_cache_information()
         self.assertEqual(len(cache_information), 3)
         for item in cache_information:
@@ -166,10 +161,4 @@ class LocalSyncCacheTest(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    # Run this unittest directly
-#    management.call_command('test', "django_tools.tests.test_local_sync_cache.LocalSyncCacheTest",
-#        verbosity=2,
-#        failfast=True
-#    )
     unittest.main()
-

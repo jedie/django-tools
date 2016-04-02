@@ -6,7 +6,7 @@ import sys
 sys.path.insert(0, os.path.dirname(__file__))
 
 SECRET_KEY = "Unittests"
-ALLOWED_HOSTS = ["*"] # Allow any domain/subdomain
+ALLOWED_HOSTS = ["*"]  # Allow any domain/subdomain
 
 DEBUG = True
 
@@ -42,6 +42,6 @@ SITE_ID = 1
 
 ROOT_URLCONF = 'django_tools.dynamic_site.test_app.urls'
 
-DEFAULT_CHARSET="utf-8"
+DEFAULT_CHARSET = "utf-8"
 
 USE_DYNAMIC_SITE_MIDDLEWARE = True

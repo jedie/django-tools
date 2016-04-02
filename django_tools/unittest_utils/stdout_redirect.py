@@ -3,7 +3,6 @@ import sys
 
 from django.utils.encoding import smart_text
 
-# origin_stderr = sys.stderr
 
 class StringBuffer(io.StringIO):
     def write(self, data):
@@ -53,6 +52,3 @@ class StdoutStderrBuffer():
         self.old_stderr.flush()
         output = self.buffer.getvalue()
         return output
-
-
-

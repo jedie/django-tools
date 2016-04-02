@@ -3,7 +3,7 @@
 """
     Dynamic SITE ID unittests
     ~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     :copyleft: 2012-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """

@@ -23,26 +23,26 @@ from django import forms
 class LimitManyToManyFields(object):
     """
     Limit ManyToMany fields in forms. Hide the field, if only one item can be selected.
-    
+
     e.g. limit sites choices only to accessible sites:
     --------------------------------------------------------------------------
     class MyModel(models.Model):
         sites = models.ManyToManyField(Site)
         ...
-        
+
     class UserProfile(models.Model):
         sites = models.ManyToManyField(Site)
         ...
-        
+
     class MyForm(LimitManyToManyFields, forms.ModelForm): # <- Order is important !
         class Meta:
             model = MyModel
-            
+
     def my_view(request):
         user_profile = request.user.get_profile()
 
         m2m_limit = {"sites": user_profile.sites.values_list("id", "name")}
-        
+
         if request.method == "POST":
             form = MyForm(m2m_limit, request.POST)
             if form.is_valid():
@@ -52,7 +52,7 @@ class LimitManyToManyFields(object):
             form = MyForm(m2m_limit)
         ...
     --------------------------------------------------------------------------
-    
+
     crosspost: http://www.djangosnippets.org/snippets/1692/
     """
     def __init__(self, m2m_limit, *args, **kwargs):
@@ -73,10 +73,6 @@ class LimitManyToManyFields(object):
                 self.fields[field_name] = forms.IntegerField(
                     max_value=value, min_value=value, initial=value
                 )
-#                self.fields[field_name].widget.input_type = 'hidden'
-#                self.fields[field_name].widget.is_hidden = True
             else:
                 # Limit the ManyToMany field choices
                 self.fields[field_name].choices = limits
-
-

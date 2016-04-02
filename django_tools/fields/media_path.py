@@ -3,14 +3,14 @@
 """
     media path selection
     ~~~~~~~~~~~~~~~~~~~~
-    
+
     TODO: Made this generic and don't use settings.MEDIA_ROOT direct, let it
     be set as a argument to widget/fields etc.
-    
+
      * model field
      * form field
      * widget
-     
+
      INFO: This exist only for backward-compatibility and will be removed
      in the future. Please use static_path!
 
@@ -24,15 +24,16 @@ from __future__ import absolute_import, division, print_function
 import os
 import warnings
 
-if __name__ == "__main__":
-    # For doctest only
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
-
 from django import forms
 from django.db import models
 from django.conf import settings
 
 from django_tools.utils.messages import failsafe_message
+
+
+if __name__ == "__main__":
+    # For doctest only
+    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
 
 
 def directory_walk(path):
@@ -59,12 +60,10 @@ def directory_walk(path):
             yield x
 
 
-
-
 class MediaPathWidget(forms.Select):
     """
     Select a sub directory in settings.MEDIA_ROOT
-    
+
     >>> import os, django_tools
     >>> settings.MEDIA_ROOT = os.path.dirname(os.path.abspath(django_tools.__file__))
     >>> MediaPathWidget().choices # doctest: +ELLIPSIS
@@ -98,16 +97,8 @@ class MediaPathWidget(forms.Select):
         return media_dirs_choices
 
 
-class MediaPathModelField(models.TextField, metaclass=models.SubfieldBase):
-    """
-    
-    """
-
-#    def __init__(self, separator=",", strip_items=True, skip_empty=True, *args, **kwargs):
-#        self.separator = separator
-#        self.strip_items = strip_items
-#        self.skip_empty = skip_empty
-#        super(MediaPathModelField, self).__init__(*args, **kwargs)
+class MediaPathModelField(models.TextField):
+    __metaclass__ = models.SubfieldBase
 
     def formfield(self, **kwargs):
         """ Use always own widget and form field. """
@@ -119,14 +110,12 @@ class MediaPathModelField(models.TextField, metaclass=models.SubfieldBase):
         )
 
         kwargs["widget"] = MediaPathWidget
-#        kwargs["form_class"] = SignSeparatedFormField
         return super(MediaPathModelField, self).formfield(**kwargs)
 
 
 if __name__ == "__main__":
     import doctest
     print(doctest.testmod(
-#        verbose=True
         verbose=False
     ))
     print("DocTest end.")

@@ -14,19 +14,12 @@
 from __future__ import absolute_import, division, print_function
 
 
-
-from operator import attrgetter
 import datetime
 import grp
 import os
 import pwd
 import stat
-
-if __name__ == "__main__":
-    # For doctest only
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
-    from django.conf import global_settings
-    global_settings.SITE_ID = 1
+from operator import attrgetter
 
 from django.contrib import messages
 
@@ -34,13 +27,19 @@ from django_tools.filemanager.exceptions import FilemanagerError
 from django_tools.filemanager.filesystem_browser import BaseFilesystemBrowser
 from django_tools.filemanager.utils import symbolic_notation
 
+if __name__ == "__main__":
+    # For doctest only
+    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
+    from django.conf import global_settings
+    global_settings.SITE_ID = 1
+
 
 class BaseFilesystemObject(object):
     def __init__(self, base_path, name, abs_path, link_path=None):
-        self.base_path = base_path # path in which this item exists
-        self.name = name # The name of the directory item
-        self.abs_path = abs_path # absolute path to this dir item
-        self.link_path = link_path # Only for links: the real path of the dir item
+        self.base_path = base_path  # path in which this item exists
+        self.name = name  # The name of the directory item
+        self.abs_path = abs_path  # absolute path to this dir item
+        self.link_path = link_path  # Only for links: the real path of the dir item
 
         self.stat = os.stat(self.abs_path)
         self.size = self.stat[stat.ST_SIZE]
@@ -75,6 +74,7 @@ class BaseFileLinkItem(BaseFileItem):
     def __init__(self, *args, **kwargs):
         super(BaseFileLinkItem, self).__init__(*args, **kwargs)
         self.item_type = "file link to %s" % self.link_path
+
 
 class BaseDirLinkItem(BaseDirItem):
     def __init__(self, *args, **kwargs):
@@ -155,6 +155,5 @@ class BaseFilemanager(BaseFilesystemBrowser):
 if __name__ == "__main__":
     import doctest
     print(doctest.testmod(
-#        verbose=True
         verbose=False
     ))

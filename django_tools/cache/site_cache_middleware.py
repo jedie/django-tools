@@ -3,9 +3,9 @@
 """
     per-site cache middleware
     ~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     more information in the README.
-    
+
     :copyleft: 2012 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
@@ -14,7 +14,6 @@ from __future__ import absolute_import, division, print_function
 
 
 import sys
-import logging
 
 from django.conf import settings
 from django.contrib import messages
@@ -27,8 +26,6 @@ from django_tools.utils.importlib import get_attr_from_settings
 
 
 logger = getLogger("django-tools.CacheMiddleware")
-#logger.setLevel(logging.DEBUG)
-#logger.addHandler(logging.StreamHandler())
 
 CACHE_MIDDLEWARE_ANONYMOUS_ONLY = getattr(settings, 'CACHE_MIDDLEWARE_ANONYMOUS_ONLY', False)
 RUN_WITH_DEV_SERVER = getattr(settings, "RUN_WITH_DEV_SERVER", "runserver" in sys.argv)
@@ -55,12 +52,12 @@ _CACHE_KEYS = (CACHE_REQUESTS, CACHE_REQUEST_HITS, CACHE_RESPONSES, CACHE_RESPON
 # Set settings.COUNT_IN_CACHE=True for process/thread safe counting.
 LOCAL_CACHE_INFO = {
     # from FetchFromCacheMiddleware:
-    "requests": None, # total numbers of requests
-    "request hits": None, # number of cache hits
+    "requests": None,  # total numbers of requests
+    "request hits": None,  # number of cache hits
 
     # from UpdateCacheMiddleware:
-    "responses": None, # total numbers of responses
-    "response hits": None, # number of responses from cache
+    "responses": None,  # total numbers of responses
+    "response hits": None,  # number of responses from cache
 }
 
 
@@ -71,10 +68,10 @@ def init_cache_counting():
     and should be 0, if enabled.
     """
     for key in _CACHE_KEYS:
-        cache.delete(key) # delete old entrie, if exist
+        cache.delete(key)  # delete old entrie, if exist
 
     if COUNT_FETCH_FROM_CACHE:
-        # Count in FetchFromCacheMiddleware is enabled 
+        # Count in FetchFromCacheMiddleware is enabled
         LOCAL_CACHE_INFO["requests"] = 0
         LOCAL_CACHE_INFO["request hits"] = 0
         if COUNT_IN_CACHE:
@@ -83,7 +80,7 @@ def init_cache_counting():
             cache.set(CACHE_REQUEST_HITS, 0)
 
     if COUNT_UPDATE_CACHE:
-        # Count in UpdateCacheMiddleware is enabled 
+        # Count in UpdateCacheMiddleware is enabled
         LOCAL_CACHE_INFO["responses"] = 0
         LOCAL_CACHE_INFO["response hits"] = 0
         if COUNT_IN_CACHE:
@@ -104,7 +101,7 @@ def build_cache_key(url, language_code, site_id):
 def get_cache_key(request):
     """
     Build the cache key based on the url and:
-    
+
     * LANGUAGE_CODE: The language code in the url can be different than the
         used language for gettext translation.
     * SITE_ID: request.path is the url without the domain name. So the same
@@ -113,7 +110,7 @@ def get_cache_key(request):
     url = request.get_full_path()
 
     try:
-        language_code = request.LANGUAGE_CODE # set in django.middleware.locale.LocaleMiddleware
+        language_code = request.LANGUAGE_CODE  # set in django.middleware.locale.LocaleMiddleware
     except AttributeError:
         etype, evalue, etb = sys.exc_info()
         evalue = etype("%s (django.middleware.locale.LocaleMiddleware must be insert before cache middleware!)" % evalue)
@@ -135,7 +132,7 @@ def delete_cache_item(url, language_code, site_id=None):
 
 class CacheMiddlewareBase(object):
     def use_cache(self, request, response=None):
-        if not request.method in ('GET', 'HEAD'):
+        if not (request.method in ('GET', 'HEAD')):
             logger.debug("Don't cache %r (%s)" % (request.method, request.get_full_path()))
             return False
 
@@ -175,7 +172,7 @@ class CacheMiddlewareBase(object):
 def save_incr(key, default=1):
     try:
         cache.incr(key)
-    except ValueError: # Doesn't exist, yet.
+    except ValueError:  # Doesn't exist, yet.
         cache.set(key, default)
 
 
@@ -234,7 +231,7 @@ class UpdateCacheMiddleware(CacheMiddlewareBase):
         if COUNT_UPDATE_CACHE:
             self._count_response(request)
 
-        if getattr(response, "_from_cache", False) == True:
+        if getattr(response, "_from_cache", False) is True:
             if COUNT_UPDATE_CACHE:
                 self._count_hit()
             logger.debug("response comes from the cache, no need to update the cache")
@@ -250,7 +247,7 @@ class UpdateCacheMiddleware(CacheMiddlewareBase):
 
         # get the timeout from the "max-age" section of the "Cache-Control" header
         timeout = get_max_age(response)
-        if timeout == None:
+        if timeout is None:
             # use default cache_timeout
             timeout = settings.CACHE_MIDDLEWARE_SECONDS
         elif timeout == 0:

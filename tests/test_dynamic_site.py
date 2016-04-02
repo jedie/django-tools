@@ -9,7 +9,7 @@
 
     To see debug output: enable LOGGING in:
         .../django-tools/django_tools_test_project/test_settings.py
-    
+
     :copyleft: 2012-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
@@ -17,15 +17,10 @@
 from __future__ import absolute_import, division, print_function
 
 
-import unittest
-
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.test.utils import override_settings
-from django.utils import log
-from django.utils.encoding import force_bytes, force_str
 
-from django_tools.unittest_utils.BrowserDebug import debug_response
 from django_tools.dynamic_site.models import SiteAlias
 from django_tools.unittest_utils.unittest_base import BaseTestCase
 
@@ -37,7 +32,7 @@ class FakeResponse(object):
         self.status_code = status_code
 
 
-@override_settings(DEBUG = True)
+@override_settings(DEBUG=True)
 class DynamicSiteTest(BaseTestCase):
     def setUp(self):
         self.assertTrue(settings.DEBUG, "Must be true to skip hostname validation!")
@@ -54,7 +49,7 @@ class DynamicSiteTest(BaseTestCase):
         self.alias4 = SiteAlias.objects.create(site=self.site2, alias=r"^(.*?\.domain_two\.tld)$", regex=True)
 
     def test_fallback(self):
-        response = self.client.get("/display_site/") # request with 'testserver'
+        response = self.client.get("/display_site/")
         self.assertEqual(response.content.decode("utf-8"),
             'ID from settings: 1 - id from get_current(): 1'
         )
@@ -102,7 +97,7 @@ class DynamicSiteTest(BaseTestCase):
         )
 
         self.alias3.site = self.site1
-        self.alias3.save() # Should clean all site caches
+        self.alias3.save()
 
         response = self.client.get("/display_site/", HTTP_HOST="www.domain_one.tld")
         self.assertEqual(response.content.decode("utf-8"),
@@ -125,4 +120,3 @@ class DynamicSiteTest(BaseTestCase):
         self.assertEqual(response.content.decode("utf-8"),
             'ID from settings: 2 - id from get_current(): 2'
         )
-

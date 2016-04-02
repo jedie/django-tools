@@ -46,7 +46,7 @@ def selenium2fakes_response(driver, client, client_class):
                 self.assertNotContains(response, "<h1>foobar</h1>", html=True)
     """
     response = FakedHttpResponse(content=driver.page_source)
-    response.client = client_class() # Fresh Client() instance
+    response.client = client_class()  # Fresh Client() instance
 
     # Add 'response.client.cookies':
     # driver.get_cookies() is a simple list of dict items, e.g.:

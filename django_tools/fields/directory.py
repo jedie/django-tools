@@ -12,7 +12,6 @@
 from __future__ import absolute_import, division, print_function
 
 
-
 import os
 
 
@@ -21,7 +20,6 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
-from django_tools.utils.messages import failsafe_message
 from django_tools import validators
 
 
@@ -45,7 +43,9 @@ class DirectoryFormField(forms.CharField):
         return value
 
 
-class DirectoryModelField(models.CharField, metaclass=models.SubfieldBase):
+class DirectoryModelField(models.CharField):
+    __metaclass__ = models.SubfieldBase
+
     """
     >>> dir = DirectoryModelField()
     >>> dir.run_validators(settings.MEDIA_ROOT)
@@ -53,12 +53,12 @@ class DirectoryModelField(models.CharField, metaclass=models.SubfieldBase):
     Traceback (most recent call last):
         ...
     ValidationError: [u"Directory doesn't exist!"]
-    
+
     >>> dir.run_validators("../")
     Traceback (most recent call last):
         ...
     ValidationError: [u'Directory is not in base path!']
-    
+
     >>> dir = DirectoryModelField(base_path="/")
     >>> dir.run_validators("/etc/default/")
     >>> dir.run_validators("var/log")
@@ -86,7 +86,6 @@ class DirectoryModelField(models.CharField, metaclass=models.SubfieldBase):
 if __name__ == "__main__":
     import doctest
     doctest.testmod(
-#        verbose=True
         verbose=False
     )
     print("DocTest end.")

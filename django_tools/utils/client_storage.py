@@ -3,22 +3,22 @@
 """
     Client storage
     ~~~~~~~~~~~~~~
-    
+
     Use dumps() and loads() from django.core.signing to store data into a Cookie.
-    
+
     See:
     https://docs.djangoproject.com/en/1.4/topics/signing/#verifying-timestamped-values
-    
+
     Usage e.g.:
     --------------------------------------------------------------------------
     from django_tools.utils.client_storage import SignedCookieStorageError, SignedCookieStorage
-    
+
     def view1(request):
         response = HttpResponse("Hello World!")
         c = SignedCookieStorage(cookie_key="my_key", max_age=60)
         response = c.save_data(my_data, response)
         return response
-    
+
     def view2(request):
         c = SignedCookieStorage(cookie_key="my_key", max_age=60)
         try:
@@ -28,14 +28,13 @@
         else:
            ...do something with the data...
     --------------------------------------------------------------------------
-    
+
     :copyleft: 2010-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 from __future__ import absolute_import, division, print_function
 
-import os
 import warnings
 
 from django.core import signing
@@ -46,7 +45,7 @@ class SignedCookieStorageError(signing.BadSignature):
 
 
 class SignedCookieStorage(object):
-    """  
+    """
     see:
         tests.test_signed_cookie.TestSignedCookieStorage
     """
@@ -76,7 +75,6 @@ class SignedCookieStorage(object):
         return data
 
 
-
 class ClientCookieStorage(object):
     """
     Support the old API
@@ -90,4 +88,3 @@ class ClientCookieStorage(object):
             stacklevel=2
         )
         return SignedCookieStorage(*args, **kwargs)
-

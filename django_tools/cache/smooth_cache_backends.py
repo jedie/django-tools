@@ -3,9 +3,9 @@
 """
     smooth cache backends
     ~~~~~~~~~~~~~~~~~~~~~
-    
+
     more information in the README.
-    
+
     :copyleft: 2012 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
@@ -13,13 +13,8 @@
 from __future__ import absolute_import, division, print_function
 
 
-import logging
 import os
 import time
-
-if __name__ == "__main__":
-    # For doctest only
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
 
 from django.conf import settings
 from django.core.cache.backends.db import DatabaseCache
@@ -28,31 +23,27 @@ from django.core.cache.backends.locmem import LocMemCache
 from django.core.cache.backends.memcached import MemcachedCache, PyLibMCCache
 from django.utils import log
 
-
+if __name__ == "__main__":
+    # For doctest only
+    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
 
 logger = log.getLogger("django-tools.SmoothCache")
 if not logger.handlers:
     # ensures we don't get any 'No handlers could be found...' messages
     logger.addHandler(log.NullHandler())
 
-#if "runserver" in sys.argv or "tests" in sys.argv:
-#    log.logging.basicConfig(format='%(created)f pid:%(process)d %(message)s')
-#    logger.setLevel(log.logging.DEBUG)
-#    logger.addHandler(log.logging.StreamHandler())
-
-
 SMOOTH_CACHE_CHANGE_TIME = getattr(settings, "SMOOTH_CACHE_CHANGE_TIME", "DJANGO_TOOLS_SMOOTH_CACHE_CHANGE_TIME")
 SMOOTH_CACHE_UPDATE_TIMESTAMP = getattr(settings, "SMOOTH_CACHE_UPDATE_TIMESTAMP", 10)
 SMOOTH_CACHE_TIMES = getattr(settings, "SMOOTH_CACHE_TIMES", (
     # load value, max age in sec.
-    (0, 5), #          < 0.1 ->  5sec
-    (0.1, 10), #   0.1 - 0.5 -> 10sec
-    (0.5, 30), #   0.5 - 1.0 -> 30sec
-    (1.0, 60), #   1.0 - 1.5 ->  1Min
-    (1.5, 120), #  1.5 - 2.0 ->  2Min
-    (2.0, 300), #  2.0 - 3.0 ->  5Min
-    (3.0, 900), #  3.0 - 4.0 -> 15Min
-    (4.0, 3600), #     > 4.0 ->  1h
+    (0, 5),       # < 0.1 ->  5sec
+    (0.1, 10),    # 0.1 - 0.5 -> 10sec
+    (0.5, 30),    # 0.5 - 1.0 -> 30sec
+    (1.0, 60),    # 1.0 - 1.5 ->  1Min
+    (1.5, 120),   # 1.5 - 2.0 ->  2Min
+    (2.0, 300),   # 2.0 - 3.0 ->  5Min
+    (3.0, 900),   # 3.0 - 4.0 -> 15Min
+    (4.0, 3600),  # > 4.0 ->  1h
 ))
 
 # Sort from biggest to lowest:
@@ -64,7 +55,7 @@ SMOOTH_CACHE_TIMES = tuple(SMOOTH_CACHE_TIMES)
 def get_max_age(load_average):
     """
     return max age for the given load average.
-    
+
     >>> get_max_age(0)
     5
     >>> get_max_age(0.09)
@@ -89,8 +80,8 @@ class SmoothCacheTime(int):
 
 
 class _SmoothCache(object):
-    __CHANGE_TIME = None # Timestamp of the "last update"
-    __NEXT_SYNC = None # Point in the future to update the __CHANGE_TIME
+    __CHANGE_TIME = None  # Timestamp of the "last update"
+    __NEXT_SYNC = None  # Point in the future to update the __CHANGE_TIME
 
     def __init__(self, *args, **kwargs):
         super(_SmoothCache, self).__init__(*args, **kwargs)
@@ -99,7 +90,7 @@ class _SmoothCache(object):
     def __get_change_time(self):
         """
         return current "last change" timestamp.
-        To save cache access, update the timestamp only in  
+        To save cache access, update the timestamp only in
         SMOOTH_CACHE_UPDATE_TIMESTAMP frequency from cache.
         """
         now = time.time()
@@ -111,12 +102,10 @@ class _SmoothCache(object):
             change_time = self.get(SMOOTH_CACHE_CHANGE_TIME, raw=True)
             if change_time is None:
                 logger.debug("CHANGE_TIME is None")
-                self.smooth_update() # save change time into cache           
+                self.smooth_update()  # save change time into cache
             elif change_time > self.__CHANGE_TIME:
                 self.__CHANGE_TIME = change_time
                 logger.debug("update change time to: %r" % change_time)
-#        else:
-#            logger.debug("Use old CHANGE_TIME %r" % self.__CHANGE_TIME)
 
         return self.__CHANGE_TIME
 
@@ -130,12 +119,11 @@ class _SmoothCache(object):
             # Item was added to the cache after the last clear() time.
             logger.debug(
                 "%r not out-dated: added %ssec before clear()" % (
-                    key, (create_time - last_change_time)
-            ))
+                    key, (create_time - last_change_time)))
             return False
 
         outdate_age = time.time() - last_change_time
-        load_average = os.getloadavg()[0] # load over last minute
+        load_average = os.getloadavg()[0]  # load over last minute
         max_age = get_max_age(load_average)
         if outdate_age > max_age:
             logger.debug("Out-dated %r (added %ssec after clear() - age: %s, max age: %s, load: %s)" % (
@@ -155,7 +143,7 @@ class _SmoothCache(object):
         """
         now = int(time.time())
         self.__CHANGE_TIME = now
-        self.set(SMOOTH_CACHE_CHANGE_TIME, now, raw=True) # will be get via __origin_get()
+        self.set(SMOOTH_CACHE_CHANGE_TIME, now, raw=True)  # will be get via __origin_get()
         logger.debug("Set CHANGE_TIME to %r" % now)
 
     #--------------------------------------------------------------------------
@@ -200,14 +188,18 @@ class _SmoothCache(object):
 class SmoothFileBasedCache(_SmoothCache, FileBasedCache):
     pass
 
+
 class SmoothDatabaseCache(_SmoothCache, DatabaseCache):
     pass
+
 
 class SmoothLocMemCache(_SmoothCache, LocMemCache):
     pass
 
+
 class SmoothMemcachedCache(_SmoothCache, MemcachedCache):
     pass
+
 
 class SmoothPyLibMCCache(_SmoothCache, PyLibMCCache):
     pass

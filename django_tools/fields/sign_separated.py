@@ -3,7 +3,7 @@
 """
     sign separated
     ~~~~~~~~~~~~~~
-    
+
      * model field
      * form field
      * widget
@@ -14,15 +14,15 @@
 
 from __future__ import absolute_import, division, print_function
 
+from django.utils import six
+from django import forms
+from django.db import models
+
 
 if __name__ == "__main__":
     # For doctest only
     import os
     os.environ["DJANGO_SETTINGS_MODULE"] = "django_tools.tests.test_settings"
-
-from django.utils import six
-from django import forms
-from django.db import models
 
 
 def _split(raw_value, separator, strip_items, skip_empty):
@@ -44,6 +44,7 @@ def _split(raw_value, separator, strip_items, skip_empty):
 
     values = tuple(values)
     return values
+
 
 def _join(value, separator):
     if value is None:
@@ -69,22 +70,22 @@ class SignSeparatedFormField(forms.CharField):
     """
     >>> SignSeparatedFormField().clean(u"one, two")
     (u'one', u'two')
-    
+
     >>> SignSeparatedFormField().to_python(u"one , two, 3,4")
     (u'one', u'two', u'3', u'4')
     >>> SignSeparatedFormField(strip_items=False).clean(u"one , two, 3,4")
     (u'one ', u' two', u' 3', u'4')
-    
+
     >>> SignSeparatedFormField(separator=" ").clean(u"one  two 3")
     (u'one', u'two', u'3')
     >>> SignSeparatedFormField(separator=" ", skip_empty=False).clean(u"one  two 3")
     (u'one', u'', u'two', u'3')
-    
+
     >>> SignSeparatedFormField().clean(None)
     Traceback (most recent call last):
         ...
     ValidationError: [u'This field is required.']
-    
+
     >>> SignSeparatedFormField().clean("")
     Traceback (most recent call last):
         ...
@@ -109,37 +110,37 @@ class SignSeparatedModelField(models.TextField):
     """
     A dict field.
     Stores a python dict into a text field.
-    
+
     >>> SignSeparatedModelField().to_python("foo, bar")
     ('foo', 'bar')
 
     >>> SignSeparatedModelField().get_db_prep_save(('foo', 'bar'))
     'foo,bar'
-    
+
     >>> f = SignSeparatedModelField().formfield()
     >>> isinstance(f, SignSeparatedFormField)
     True
     >>> f.clean(u"one , two, 3,4")
     (u'one', u'two', u'3', u'4')
-    
+
     kwargs would be pass to the widget:
     >>> f = SignSeparatedModelField(separator="x", strip_items=False, skip_empty=False).formfield()
     >>> f.clean("1x2x x 3")
     ('1', '2', ' ', ' 3')
-    
-    
+
+
     >>> from django.db import models
     >>> from django.forms.models import ModelForm
-        
+
     >>> class TestModel(models.Model):
     ...     test = SignSeparatedModelField(separator=";")
     ...     class Meta:
     ...         app_label = "django_tools"
-    
+
     >>> class TestForm(ModelForm):
     ...     class Meta:
     ...         model = TestModel
-    
+
     >>> f = TestForm({'test': None})
     >>> f.is_valid()
     False
@@ -188,12 +189,10 @@ class SignSeparatedModelField(models.TextField):
         return super(SignSeparatedModelField, self).formfield(**kwargs)
 
 
-
 if __name__ == "__main__":
     # Run all unittest directly
     import doctest
     print(doctest.testmod(
-#        verbose=True
         verbose=False,
     ))
     print("DocTest end.")

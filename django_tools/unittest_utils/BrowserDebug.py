@@ -38,16 +38,13 @@ RESPONSE_INFO_ATTR = (
 )
 
 
-
-
-
 def debug_response(response, browser_traceback=True, msg="", display_tb=True):
     """
     Display the response content with a error traceback in a webbrowser.
     TODO: We should delete the temp files after viewing!
     """
     global BROWSER_TRACEBACK_OPENED
-    if browser_traceback != True or BROWSER_TRACEBACK_OPENED == True:
+    if browser_traceback is not True or BROWSER_TRACEBACK_OPENED is True:
         return
     # Save for the next traceback
     BROWSER_TRACEBACK_OPENED = True
@@ -99,7 +96,6 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
 
     response_info += "</dl>\n"
 
-
     if "</body>" in content:
         info = (
             "\n<br /><hr />\n"
@@ -124,7 +120,6 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
             "response info:\n%s\n"
         ) % (url, stack_info, response_info)
 
-
     fd, file_path = tempfile.mkstemp(prefix="PyLucid_unittest_", suffix=".html")
     os.write(fd, content.encode("utf-8"))
     os.close(fd)
@@ -134,6 +129,3 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
         webbrowser.open(url)
     except:
         pass
-    #time.sleep(0.5)
-    #os.remove(file_path)
-

@@ -3,7 +3,7 @@
 """
     Dynamic SITE ID unittests
     ~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     :copyleft: 2012 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
@@ -19,7 +19,6 @@ from django.contrib.sites.models import Site
 from django_tools.middlewares.ThreadLocal import get_current_request
 
 
-
 def display_site(request):
 
     settings_id = settings.SITE_ID
@@ -30,7 +29,6 @@ def display_site(request):
         settings_id, current_id
     )
     return HttpResponse(txt)
-
 
 
 def raise_exception(request):

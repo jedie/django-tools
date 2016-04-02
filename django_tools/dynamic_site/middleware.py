@@ -3,11 +3,11 @@
 """
     Dynamic SITE ID
     ~~~~~~~~~~~~~~~
-    
+
     Set the SITE_ID dynamic by the current Domain Name.
-    
+
     More info: read .../django_tools/dynamic_site/README.creole
-    
+
     :copyleft: 2011-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
@@ -15,9 +15,7 @@
 from __future__ import absolute_import, division, print_function
 
 
-
 import os
-import sys
 import warnings
 
 try:
@@ -43,22 +41,21 @@ Site = sites_models.Site  # Shortcut
 
 class DynamicSiteId(object):
     def __getattribute__(self, name):
-#        print "DynamicSiteId __getattribute__", name
         return getattr(SITE_THREAD_LOCAL.SITE_ID, name)
+
     def __int__(self):
-#        print "DynamicSiteId __int__"
         return SITE_THREAD_LOCAL.SITE_ID
+
     def __hash__(self):
-#        print "DynamicSiteId __hash__"
         return hash(SITE_THREAD_LOCAL.SITE_ID)
+
     def __repr__(self):
-#        print "DynamicSiteId __repr__"
         return repr(SITE_THREAD_LOCAL.SITE_ID)
+
     def __str__(self):
-#        print "DynamicSiteId __str__"
         return str(SITE_THREAD_LOCAL.SITE_ID)
+
     def __unicode__(self):
-#        print "DynamicSiteId __unicode__"
         return str(SITE_THREAD_LOCAL.SITE_ID)
 
 
@@ -67,7 +64,7 @@ def _clear_cache(self):
     SITE_CACHE.clear()
 
 
-if USE_DYNAMIC_SITE_MIDDLEWARE == True:
+if USE_DYNAMIC_SITE_MIDDLEWARE is True:
     # Use the same SITE_CACHE for getting site object by host [1] and get current site by SITE_ID [2]
     # [1] here in DynamicSiteMiddleware._get_site_id_from_host()
     # [2] in django.contrib.sites.models.SiteManager.get_current()
@@ -111,7 +108,7 @@ class DynamicSiteMiddleware(object):
     def __init__(self):
         # User must add "USE_DYNAMIC_SITE_MIDDLEWARE = True" in his local_settings.py
         # to activate this middleware
-        if USE_DYNAMIC_SITE_MIDDLEWARE != True:
+        if USE_DYNAMIC_SITE_MIDDLEWARE is not True:
             logger.info("DynamicSiteMiddleware is deactivated.")
             raise MiddlewareNotUsed()
         else:
@@ -126,18 +123,6 @@ class DynamicSiteMiddleware(object):
 
         # Put site in cache for django.contrib.sites.models.SiteManager.get_current():
         SITE_CACHE[SITE_THREAD_LOCAL.SITE_ID] = site
-
-#        def test():
-#            from django.contrib.sites.models import Site, SITE_CACHE
-#            from django.conf import settings
-#            print id(SITE_CACHE), SITE_CACHE
-#            print "-"*79
-#            for k, v in SITE_CACHE.items():
-#                print k, type(k), id(k), hash(k), v
-#            print "-"*79
-#            print id(settings.SITE_ID), settings.SITE_ID
-#            print "TEST:", Site.objects.get_current()
-#        test()
 
     def _get_site_id_from_host(self, request):
         host = request.get_host().lower()
@@ -160,7 +145,7 @@ class DynamicSiteMiddleware(object):
             site = Site.objects.get(domain__iexact=host)
         except Site.DoesNotExist:
             # Look if there is a alias
-            from django_tools.dynamic_site.models import SiteAlias # against import loops ;(
+            from django_tools.dynamic_site.models import SiteAlias  # against import loops ;(
             try:
                 site = SiteAlias.objects.get_from_host(host)
             except SiteAlias.DoesNotExist:
@@ -170,9 +155,5 @@ class DynamicSiteMiddleware(object):
                     host, repr(all_sites.values_list("id", "domain").order_by('id'))
                 )
                 logger.critical(msg)
-#                if settings.DEBUG:
-#                    raise RuntimeError(msg)
-#                else:
                 warnings.warn(msg)
         return site
-

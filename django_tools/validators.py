@@ -11,7 +11,6 @@
 from __future__ import absolute_import, division, print_function
 
 
-
 import os
 import re
 
@@ -56,11 +55,10 @@ class ExistingDirValidator(object):
         return abs_path
 
 
-
 class URLValidator2(URLValidator):
     """
     A flexible version of the original django URLValidator ;)
-    
+
     scheme://netloc/path?query#fragment
     """
     regex = re.compile(r'^.+$', re.IGNORECASE)
@@ -100,10 +98,8 @@ class URLValidator2(URLValidator):
             raise ValidationError(_('Enter a valid URL without a fragment.'), code='fragment')
 
 
-
 if __name__ == "__main__":
     import doctest
     print(doctest.testmod(
-#        verbose=True
         verbose=False
     ))

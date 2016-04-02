@@ -3,7 +3,7 @@
 """
     some decorators
     ~~~~~~~~~~~~~~~
-    
+
     from PyLucid decorators.
 
     :copyleft: 2009-2015 by the PyLucid team, see AUTHORS for more details.
@@ -13,7 +13,6 @@
 from __future__ import absolute_import, division, print_function
 
 
-import sys
 import warnings
 from django.contrib import messages
 try:
@@ -25,20 +24,19 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.contrib.auth.models import Permission
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
+from django.http import HttpRequest
 
 
 def check_permissions(superuser_only, permissions=()):
     """
     Protect a view and limit it to users witch are log in and has the permissions.
     If the user is not log in -> Redirect him to a log in view with a next_url back to the requested page.
-    
+
     TODO: Add a log entry, if user has not all permissions.
-    
+
     Usage:
-    --------------------------------------------------------------------------    
+    --------------------------------------------------------------------------
     @check_permissions(superuser_only=False, permissions=(u'appname.add_modelname', u'appname.change_modelname'))
     def my_view(request):
         ...
@@ -55,7 +53,7 @@ def check_permissions(superuser_only, permissions=()):
             if not user.is_authenticated():
                 #FIXME: HttpResponseRedirect to admin login?
                 msg = _("Permission denied for anonymous user. Please log in.")
-                if settings.DEBUG: # Usefull??
+                if settings.DEBUG:  # Usefull??
                     warnings.warn(msg)
                 raise PermissionDenied(msg)
 
@@ -63,7 +61,7 @@ def check_permissions(superuser_only, permissions=()):
                 msg = "User %r has not all permissions: %r (existing permissions: %r)" % (
                     user, permissions, user.get_all_permissions()
                 )
-                if settings.DEBUG: # Usefull??
+                if settings.DEBUG:  # Usefull??
                     warnings.warn(msg)
                 raise PermissionDenied(msg)
             return view_function(request, *args, **kwargs)
@@ -82,17 +80,17 @@ def render_to(template_name=None, debug=False, **response_kwargs):
     Based on the decorators from django-annoying.
 
     Example:
- 
+
         @render_to('foo/template.html')
         def PyLucidPluginFoo(request):
-            bar = Bar.object.all()  
+            bar = Bar.object.all()
             return {'bar': bar}
-        
+
     The view can also insert the template name in the context, e.g.:
 
         @render_to
         def PyLucidPluginFoo(request):
-            bar = Bar.object.all()  
+            bar = Bar.object.all()
             return {'bar': bar, 'template_name': 'foo/template.html'}
     """
     def renderer(function):
@@ -118,7 +116,7 @@ def render_to(template_name=None, debug=False, **response_kwargs):
                 return context
 
             template_name2 = context.pop('template_name', template_name)
-            assert template_name2 != None, \
+            assert template_name2 is not None, \
                 ("Template name must be passed as render_to parameter"
                 " or 'template_name' must be inserted into context!")
 

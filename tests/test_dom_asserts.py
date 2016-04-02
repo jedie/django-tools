@@ -3,13 +3,13 @@
 """
     Test DOM asserts
     ~~~~~~~~~~~~~~~~
-    
+
     Test the DOM unittest stuff from
         Gregor Müllegger GSoC work in the Django soc2011/form-rendering branch
 
     https://github.com/gregmuellegger/django/blob/soc2011%2Fform-rendering/django/test/testcases.py
     https://github.com/gregmuellegger/django/blob/soc2011%2Fform-rendering/django/test/html.py
-    
+
     :copyleft: 2011 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
@@ -19,15 +19,15 @@ from __future__ import absolute_import, division, print_function
 
 import unittest
 
+from django_tools.unittest_utils.unittest_base import BaseTestCase
+from django_tools.unittest_utils.selenium_utils import FakedHttpResponse
+
 
 if __name__ == "__main__":
     # run unittest directly
     import os
     os.environ["DJANGO_SETTINGS_MODULE"] = "django_tools.tests.test_settings"
 
-
-from django_tools.unittest_utils.unittest_base import BaseTestCase
-from django_tools.unittest_utils.selenium_utils import FakedHttpResponse
 
 FAKE_RESPONSE1 = FakedHttpResponse("""\
 <!DOCTYPE HTML>
@@ -120,4 +120,3 @@ class DOMassertTest(BaseTestCase):
 if __name__ == "__main__":
     # Run this unittest directly
     unittest.main()
-

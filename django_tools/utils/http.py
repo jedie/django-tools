@@ -3,32 +3,32 @@
 """
     http utils
     ~~~~~~~~~~
-    
+
     Small helpers around getting a webpage via http GET.
-    
+
     You can easy get a web page encoding in unicode with HttpRequest().
-    
+
     HttpRequest() and HTTPHandler2() make it possible to get the complete
     sent request headers. See also:
     http://stackoverflow.com/questions/603856/get-urllib2-request-headers
-    
+
     examples:
     ~~~~~~~~~
-    
+
     Get a page as unicode:
         from django_tools.utils.http import HttpRequest
         r = HttpRequest("http://www.google.com")
         print r.get_unicode()
-        
+
     Get the request/response headers:
         from django_tools.utils.http import HttpRequest
         r = HttpRequest("http://www.google.com")
         response = r.get_response()
         print "Request headers as list:", response.request_headers
         print "Raw Request header:", response.request_header
-    
+
     more info, see DocStrings below...
-    
+
     :copyleft: 2011-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
@@ -45,7 +45,6 @@ from django.utils.six.moves import urllib
 
 
 HTTPS_SUPPORT = hasattr(http_client, 'HTTPS')
-
 
 
 class HTTPConnection2(http_client.HTTPConnection):
@@ -117,15 +116,15 @@ class HTTPHandler2(urllib.request.HTTPHandler):
     """
     A HTTPHandler which stores the request headers.
     Used HTTPConnection3, see above.
-    
+
     >>> opener = http_client.build_opener(HTTPHandler2)
     >>> opener.addheaders = [("User-agent", "Python test")]
     >>> response = opener.open('http://www.python.org/')
-   
+
     Get the request headers as a list build with HTTPConnection.putheader():
     >>> response.request_headers
     [('Accept-Encoding', 'identity'), ('Host', 'www.python.org'), ('Connection', 'close'), ('User-Agent', 'Python test')]
-   
+
     >>> response.request_header.split("\\r\\n")[0]
     'GET / HTTP/1.1'
     """
@@ -150,34 +149,34 @@ class HttpRequest(object):
     """
     Helper class for easy request a web page and encode the response into unicode.
     Used HTTPHandler2, so the complete request headers are available.
-    
+
     timeout
     ~~~~~~~
     HttpRequest() can take the argument 'timeout' but this works only since Python 2.6
     For Python < 2.6 the timeout TypeError would be silently catch.
     Activate a work-a-round with 'threadunsafe_workaround' to use socket.setdefaulttimeout()
     But this is not thread-safe!
-    more info: 
+    more info:
         http://kurtmckee.livejournal.com/32616.html (Supporting a timeout in feedparser)
-    
+
     examples
     ~~~~~~~~
-    
+
     >>> r = HttpRequest("http://www.heise.de")
     >>> r.request.add_header("User-agent", "Python test")
     >>> response = r.get_response()
-       
+
     List of all headers, used to create the Request:
     >>> response.request_headers
     [('Accept-Encoding', 'identity'), ('Host', 'www.heise.de'), ('Connection', 'close'), ('User-Agent', 'Python test')]
-    
+
     The used Request as Text:
     >>> response.request_header.split("\\r\\n")[0]
     'GET / HTTP/1.1'
-           
-    
+
+
     Get the response httplib.HTTPMessage instance:
-    
+
     >>> info = response.info()
     >>> info["content-type"]
     'text/html; charset=utf-8'
@@ -187,22 +186,22 @@ class HttpRequest(object):
     >>> response.geturl()
     'http://www.heise.de'
 
-    
+
     Get the content in unicode:
-    
+
     >>> content = r.get_unicode()
     >>> isinstance(content, unicode)
     True
     >>> content[:14].lower()
     u'<!doctype html'
-    
-    
+
+
     If some encodings wrong, these list stored the tried encodings:
-    
+
     >>> r.tried_encodings
     []
-    
-    
+
+
     Work's with https, too:
     >>> r = HttpRequest("https://encrypted.google.com")
     >>> r.request.add_header("User-agent", "Python https test")
@@ -243,7 +242,7 @@ class HttpRequest(object):
                 self.response = self.opener.open(self.request, timeout=self.timeout)
             except TypeError as err:
                 # timeout argument is new since Python v2.6
-                if not "timeout" in str(err):
+                if not ("timeout" in str(err)):
                     raise
 
                 if self.threadunsafe_workaround:
@@ -257,7 +256,7 @@ class HttpRequest(object):
                     # restore global socket timeout
                     socket.setdefaulttimeout(old_timeout)
 
-            self.response_header = self.response.info() # httplib.HTTPMessage instance
+            self.response_header = self.response.info()
         return self.response
 
     def get_content(self):
@@ -317,7 +316,7 @@ if __name__ == "__main__":
     print("Run doctests...")
     import doctest
     print(doctest.testmod())
-    print("-"*79)
+    print("-" * 79)
 
     r = HttpRequest("http://www.python.org/index.html", timeout=3, threadunsafe_workaround=True)
     response = r.get_response()
@@ -325,7 +324,7 @@ if __name__ == "__main__":
     print(response.info())
     print(repr(r.get_unicode()))
 
-    print("-"*79)
+    print("-" * 79)
 
     r = HttpRequest("https://raw.github.com/jedie/django-tools/master/README.creole", timeout=3, threadunsafe_workaround=True)
     r.request.add_header("User-agent", "Python test")

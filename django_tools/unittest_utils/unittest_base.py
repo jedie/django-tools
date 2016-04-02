@@ -1,9 +1,9 @@
 # coding: utf-8
 
-"""   
+"""
     unittest base
     ~~~~~~~~~~~~~
-    
+
     :copyleft: 2009-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
@@ -19,12 +19,9 @@ from django.test import TestCase
 from django.contrib.auth.models import User, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core import management
-from django.test import SimpleTestCase
-from django.test.html import HTMLParseError, parse_html
-from django.utils.encoding import smart_str
 
 from .BrowserDebug import debug_response
-import difflib
+
 
 class BaseUnittestCase(TestCase):
     """
@@ -108,7 +105,7 @@ class BaseTestCase(BaseUnittestCase):
         """
         Create a user and return the instance.
         """
-        defaults = {'password':password, 'email':email}
+        defaults = {'password': password, 'email': email}
         user, created = User.objects.get_or_create(
             username=username, defaults=defaults
         )
@@ -121,7 +118,7 @@ class BaseTestCase(BaseUnittestCase):
         if verbosity >= 2:
             print("Test user %r created." % user)
         return user
-    
+
     def create_testusers(self, verbosity=2):
         """
         Create all available testusers and UserProfiles
@@ -165,7 +162,6 @@ class BaseTestCase(BaseUnittestCase):
                 ))
                 raise etype(evalue).with_traceback(etb)
 
-
             perm = Permission.objects.get(content_type=content_type, codename=permission_codename)
             user.user_permissions.add(perm)
             user.save()
@@ -194,7 +190,7 @@ class BaseTestCase(BaseUnittestCase):
             """
             Create a user and return the instance.
             """
-            defaults = {'password':password, 'email':email}
+            defaults = {'password': password, 'email': email}
             user, created = User.objects.get_or_create(
                 username=username, defaults=defaults
             )
@@ -219,34 +215,15 @@ class BaseTestCase(BaseUnittestCase):
         assert response status code, if wrong, do a browser traceback.
         """
         if response.status_code == excepted_code:
-            return # Status code is ok.
+            # Status code is ok.
+            return
         msg = "assertStatusCode error: %r != %r" % (response.status_code, excepted_code)
         self.raise_browser_traceback(response, msg)
-
-    # def _assert_and_parse_html(self, html, user_msg, msg):
-    #     """
-    #     convert a html snippet into a DOM tree.
-    #     raise error if snippet is no valid html.
-    #     """
-    #     try:
-    #         return parse_html(html)
-    #     except HTMLParseError as e:
-    #         self.fail("html code is not valid: %s - code: %r" % (e, html))
-    #
-    # def _assert_and_parse_html_response(self, response):
-    #     """
-    #     convert html response content into a DOM tree.
-    #     raise browser traceback, if content is no valid html.
-    #     """
-    #     try:
-    #         return parse_html(response.content)
-    #     except HTMLParseError as e:
-    #         self.raise_browser_traceback(response, "Response's content is no valid html: %s" % e)
 
     def assertDOM(self, response, must_contain=(), must_not_contain=(), use_browser_traceback=True):
         """
         Asserts that html response contains 'must_contain' nodes, but no
-        nodes from must_not_contain.      
+        nodes from must_not_contain.
         """
         for txt in must_contain:
             try:
@@ -310,7 +287,7 @@ def direct_run(raw_filename):
     """
     Run a test direct from a unittest file.
     A unittest file should add something like this:
-    
+
     if __name__ == "__main__":
         # Run this unittest directly
         direct_run(__file__)
@@ -318,4 +295,3 @@ def direct_run(raw_filename):
     appname = os.path.splitext(os.path.basename(raw_filename))[0]
     print("direct run %r" % appname)
     management.call_command('test', appname)
-

@@ -7,7 +7,6 @@ from django.test.utils import override_settings
 from django.utils import six
 
 import django_tools
-from django_tools.filemanager.exceptions import DirectoryTraversalAttack
 from django_tools.filemanager.filesystem_browser import BaseFilesystemBrowser
 
 
@@ -17,7 +16,7 @@ class TestFilesystemBrowser(SimpleTestCase):
     e.g.:
     https://en.wikipedia.org/wiki/Directory_traversal_attack
     """
-    BASE_PATH=os.path.abspath(os.path.dirname(django_tools.__file__))
+    BASE_PATH = os.path.abspath(os.path.dirname(django_tools.__file__))
 
     def test_directory_traversal_attack1(self):
         try:
@@ -37,8 +36,6 @@ class TestFilesystemBrowser(SimpleTestCase):
             )
 
     def test_directory_traversal_attack_encodings(self):
-        base_path=os.path.abspath(os.path.dirname(django_tools.__file__))
-
         rest_urls = (
             "/etc/passwd",
             "..",
@@ -46,16 +43,16 @@ class TestFilesystemBrowser(SimpleTestCase):
             "\\\\",
 
             # URI encoded directory traversal:
-            "%2e%2e%2f", # ../
-            "%2e%2e/", # ../
-            "..%2f", # ../
-            "%2e%2e%5c", # ..\
+            "%2e%2e%2f",    # ../
+            "%2e%2e/",      # ../
+            "..%2f",        # ../
+            "%2e%2e%5c",    # ..\
 
             # Unicode / UTF-8 encoded directory traversal:
-            "..%c1%1c", # ../
-            "..%c0%af", # ..\
-            "%c0%ae%c0%ae%c1%1c", # %c0%ae -> . -> ../
-            "%c0%ae%c0%ae%c0%af", # %c0%ae -> . -> ..\
+            "..%c1%1c",            # ../
+            "..%c0%af",            # ..\
+            "%c0%ae%c0%ae%c1%1c",  # %c0%ae -> . -> ../
+            "%c0%ae%c0%ae%c0%af",  # %c0%ae -> . -> ..\
         )
         for rest_url in rest_urls:
             # print(rest_url)

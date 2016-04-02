@@ -15,20 +15,21 @@ import datetime
 
 from django_tools.utils.time_utils import datetime2float
 
+from django.template.defaultfilters import stringfilter
+from django.utils.translation import ugettext as _
+
 
 if __name__ == "__main__":
     # For doctest only
     import os
     os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
 
-from django.template.defaultfilters import stringfilter
-from django.utils.translation import ugettext as _
-from django.utils.encoding import force_unicode
-
 
 CHMOD_TRANS_DATA = (
     "---", "--x", "-w-", "-wx", "r--", "r-x", "rw-", "rwx"
 )
+
+
 def chmod_symbol(octal_value):
     """
     Transform a os.stat().st_octal_value octal value to a symbolic string.
@@ -41,7 +42,7 @@ def chmod_symbol(octal_value):
     >>> chmod_symbol("777")
     u'rwxrwxrwx'
     """
-    octal_value_string = str(octal_value)[-3:] # strip "meta info"
+    octal_value_string = str(octal_value)[-3:]  # strip "meta info"
     return ''.join(CHMOD_TRANS_DATA[int(num)] for num in octal_value_string)
 chmod_symbol.is_safe = True
 chmod_symbol = stringfilter(chmod_symbol)
@@ -61,13 +62,13 @@ get_oct.is_safe = False
 def human_duration(t):
     """
     Converts a time duration into a friendly text representation.
-    
+
     >>> human_duration("type error")
     Traceback (most recent call last):
         ...
     TypeError: human_duration() argument must be timedelta, integer or float)
-    
-    
+
+
     >>> human_duration(datetime.timedelta(microseconds=1000))
     u'1.0 ms'
     >>> human_duration(0.01)
@@ -96,11 +97,11 @@ def human_duration(t):
         raise TypeError("human_duration() argument must be timedelta, integer or float)")
 
     chunks = (
-      (60 * 60 * 24 * 365, _('years')),
-      (60 * 60 * 24 * 30, _('months')),
-      (60 * 60 * 24 * 7, _('weeks')),
-      (60 * 60 * 24, _('days')),
-      (60 * 60, _('hours')),
+        (60 * 60 * 24 * 365, _('years')),
+        (60 * 60 * 24 * 30, _('months')),
+        (60 * 60 * 24 * 7, _('weeks')),
+        (60 * 60 * 24, _('days')),
+        (60 * 60, _('hours')),
     )
 
     if t < 1:

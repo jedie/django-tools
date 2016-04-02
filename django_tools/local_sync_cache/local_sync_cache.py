@@ -3,28 +3,28 @@
 """
     Local sync cache
     ~~~~~~~~~~~~~~~~
-    
+
     The Problem:
     If you use a normal dict for cache some values, you can't clear it in
     a multi-threaded environment, because you have no access to the dict in
     other threads.
-    
+
     The Solution:
     Use LocalSyncCache() as a cache dict. If dict.clear() called, the dict
     in all threads would be cleared.
-    
+
     How it works:
-    * Every cache dict memorize his own creation/reset time.  
+    * Every cache dict memorize his own creation/reset time.
     * in dict.clear() the reset time would be saved
       into django cache (to share it with all threads)
     * On every request the LocalSyncCacheMiddleware called all existing cache dict
-      in the current threads to look into the shared django cache, if they 
-      are outdatet or not. If they are outdated, the dict would be cleaned. 
-    
-    
+      in the current threads to look into the shared django cache, if they
+      are outdatet or not. If they are outdated, the dict would be cleaned.
+
+
     usage
     ~~~~~
-    
+
     Add LocalSyncCacheMiddleware to settings, e.g:
     ---------------------------------------------------------------------------
         MIDDLEWARE_CLASSES = (
@@ -33,49 +33,49 @@
             ...
         )
     ---------------------------------------------------------------------------
-    
+
 
     Create a cache dict with a id.
     Use it in a model, e.g.:
     ---------------------------------------------------------------------------
         from django.db import models
         from django_tools.local_sync_cache.local_sync_cache import LocalSyncCache
-        
+
         class PageTree(models.Model):
             parent = models.ForeignKey("self", null=True, blank=True)
             slug = models.SlugField()
-            
+
             _url_cache = LocalSyncCache(id="PageTree_absolute_url") # <<<---
             def get_absolute_url(self):
                 if self.pk in self._url_cache:
                     return self._url_cache[self.pk]
-        
+
                 if self.parent:
                     parent_url = self.parent.get_absolute_url()
                     url = parent_url + self.slug + "/"
                 else:
                     url = "/" + self.slug + "/"
-        
+
                 self._url_cache[self.pk] = url
                 return url
-                
-        def save(self, *args, **kwargs):  
+
+        def save(self, *args, **kwargs):
             self._url_cache.clear() # Clean the local url cache dict
             return super(PageTree, self).save(*args, **kwargs)
     ---------------------------------------------------------------------------
-    
-    
+
+
     logging
     ~~~~~~~
-    
+
     To enable logging, add this to your settings, e.g.:
-    
+
         from django.utils import log
         logger = log.getLogger("django_tools.local_sync_cache")
         logger.setLevel(log.logging.DEBUG)
         logger.addHandler(log.logging.FileHandler("local_sync_cache.log"))
-    
-    
+
+
     :copyleft: 2011-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
@@ -94,16 +94,6 @@ from django.utils import log
 
 logger = log.getLogger("django_tools.local_sync_cache")
 
-#if "runserver" in sys.argv or "tests" in sys.argv:
-#    log.logging.basicConfig(format='%(created)f pid:%(process)d %(message)s')
-#    logger.setLevel(log.logging.DEBUG)
-#    logger.addHandler(log.logging.StreamHandler())
-
-#if not logger.handlers:
-#    # ensures we don't get any 'No handlers could be found...' messages
-#    logger.addHandler(log.NullHandler())
-
-
 LOCAL_SYNC_CACHE_BACKEND = getattr(settings, "LOCAL_SYNC_CACHE_BACKEND", "local_sync_cache")
 
 
@@ -116,7 +106,7 @@ def _get_cache():
         # TODO: Not needed in django v1.4: https://code.djangoproject.com/ticket/16410
         msg = "You should define a '%s' cache in your settings.CACHES (use default cache)" % LOCAL_SYNC_CACHE_BACKEND
         logger.critical(msg)
-        cache_name = "default" # fallback to default cache entry
+        cache_name = "default"  # fallback to default cache entry
     else:
         cache_name = LOCAL_SYNC_CACHE_BACKEND
 
@@ -131,7 +121,7 @@ def _get_cache():
 
 
 class LocalSyncCache(dict):
-    INIT_COUNTER = {} # Counts how often __init__ used, should always be 1!
+    INIT_COUNTER = {}  # Counts how often __init__ used, should always be 1!
 
     # Stores all existing instance, used in middleware to call check_state()
     CACHES = []
@@ -154,18 +144,18 @@ class LocalSyncCache(dict):
 
         self.id = id
         self.django_cache = _get_cache()
-        self.last_reset = time.time() # Save last creation/reset time
+        self.last_reset = time.time()  # Save last creation/reset time
         self.CACHES.append(self)
 
-        if not self.id in self.INIT_COUNTER:
+        if not (self.id in self.INIT_COUNTER):
             self.INIT_COUNTER[self.id] = 1
         else:
             logger.error("Error: __init__ for %s was called to often!" % self.id)
             self.INIT_COUNTER[self.id] += 1
 
-        self.request_counter = 0 # Counts how often check_state called (Normally called one time per request)
-        self.own_clear_counter = 0 # Counts how often clear called in this thread
-        self.ext_clear_counter = 0 # Counts how often clears from external thread
+        self.request_counter = 0  # Counts how often check_state called (Normally called one time per request)
+        self.own_clear_counter = 0  # Counts how often clear called in this thread
+        self.ext_clear_counter = 0  # Counts how often clears from external thread
 
         logger.debug("%r __init__" % id)
 
@@ -222,8 +212,8 @@ class LocalSyncCache(dict):
         django_cache = _get_cache()
         for instance in LocalSyncCache.CACHES:
             try:
-                instance_size = sys.getsizeof(instance) # New in version 2.6
-            except (AttributeError, TypeError): # PyPy raised a TypeError
+                instance_size = sys.getsizeof(instance)  # New in version 2.6
+            except (AttributeError, TypeError):  # PyPy raised a TypeError
                 instance_size = None
 
             id = instance.id

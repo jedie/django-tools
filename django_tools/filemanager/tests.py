@@ -15,16 +15,16 @@ import os
 import unittest
 import tempfile
 
+from django.http import Http404
+
+from django_tools.filemanager.filemanager import BaseFilemanager
+from django_tools.filemanager.exceptions import DirectoryTraversalAttack
+
 if __name__ == "__main__":
     # For doctest only
     os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
     from django.conf import global_settings
     global_settings.SITE_ID = 1
-
-from django.http import Http404
-
-from django_tools.filemanager.filemanager import BaseFilemanager
-from django_tools.filemanager.exceptions import DirectoryTraversalAttack
 
 
 class FilemanagerBaseTestCase(unittest.TestCase):

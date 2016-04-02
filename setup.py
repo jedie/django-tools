@@ -31,11 +31,11 @@ try:
     from creole.setup_utils import get_long_description
 except ImportError as err:
     if "check" in sys.argv or "register" in sys.argv or "sdist" in sys.argv or "--long-description" in sys.argv:
-        raise ImportError("%s - Please install python-creole >= v0.8 - e.g.: pip install python-creole" % err)
+        # raise ImportError("%s - Please install python-creole >= v0.8 - e.g.: pip install python-creole" % err)
+        pass
     long_description = None
 else:
     long_description = get_long_description(PACKAGE_ROOT)
-
 
 
 if "publish" in sys.argv:
@@ -64,7 +64,7 @@ if "publish" in sys.argv:
     try:
         # Test if wheel is installed, otherwise the user will only see:
         #   error: invalid command 'bdist_wheel'
-        import wheel
+        import wheel    # noqa
     except ImportError as err:
         print("\nError: %s" % err)
         print("\nMaybe https://pypi.python.org/pypi/wheel is not installed or virtualenv not activated?!?")
@@ -74,7 +74,7 @@ if "publish" in sys.argv:
         sys.exit(-1)
 
     try:
-        import twine
+        import twine    # noqa
     except ImportError as err:
         print("\nError: %s" % err)
         print("\nMaybe https://pypi.python.org/pypi/twine is not installed or virtualenv not activated?!?")
@@ -147,7 +147,7 @@ if "publish" in sys.argv:
     rmtree("./build")
 
     print("\nbuild but don't upload...")
-    log_filename="build.log"
+    log_filename = "build.log"
     with open(log_filename, "a") as log:
         call_info, output = verbose_check_output(
             sys.executable or "python",
@@ -207,12 +207,9 @@ setup(
     ],
     zip_safe=False,
     classifiers=[
-#        "Development Status :: 4 - Beta",
         "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
-#        "Intended Audience :: Education",
-#        "Intended Audience :: End Users/Desktop",
         "License :: OSI Approved :: GNU General Public License (GPL)",
         "Programming Language :: Python",
         'Framework :: Django',

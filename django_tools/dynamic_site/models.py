@@ -3,11 +3,11 @@
 """
     Dynamic SITE ID
     ~~~~~~~~~~~~~~~
-    
+
     Set the SITE_ID dynamic by the current Domain Name.
-    
+
     More info: read .../django_tools/dynamic_site/README.creole
-    
+
     :copyleft: 2012 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
@@ -21,8 +21,6 @@ from django.contrib.sites import models as sites_models
 from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch.dispatcher import receiver
 from django.utils import log
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
@@ -125,5 +123,3 @@ class SiteAlias(UpdateInfoBaseModel):
     class Meta:
         verbose_name = "site alias"
         verbose_name_plural = "site aliases"
-
-

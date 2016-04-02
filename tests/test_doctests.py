@@ -14,9 +14,6 @@ from __future__ import unicode_literals, print_function
 import os
 import doctest
 import sys
-from django.utils import unittest
-
-import django_tools
 
 
 SKIP_DIRS = (".settings", ".git", "dist", ".egg-info")
@@ -28,7 +25,7 @@ def get_all_doctests(base_path, verbose=False):
     for root, dirs, filelist in os.walk(base_path, followlinks=True):
         for skip_dir in SKIP_DIRS:
             if skip_dir in dirs:
-                dirs.remove(skip_dir) # don't visit this directories
+                dirs.remove(skip_dir)
 
         for filename in filelist:
             if not filename.endswith(".py"):
@@ -54,11 +51,11 @@ def get_all_doctests(base_path, verbose=False):
             else:
                 try:
                     suite = doctest.DocTestSuite(module)
-                except ValueError: # has no docstrings
+                except ValueError:
                     continue
 
                 test_count = suite.countTestCases()
-                if test_count<1:
+                if test_count < 1:
                     if verbose:
                         print(
                             "\tNo DocTests in %r" % module.__name__,
@@ -71,7 +68,7 @@ def get_all_doctests(base_path, verbose=False):
                 else:
                     file_info = module.__name__
                 print(
-                    "\t%i DocTests in %r" % (test_count,file_info),
+                    "\t%i DocTests in %r" % (test_count, file_info),
                     file=sys.stderr
                 )
                 modules.append(module)
@@ -81,15 +78,13 @@ def get_all_doctests(base_path, verbose=False):
     return modules
 
 
-
 def load_tests(loader, tests, ignore):
     print("\ncollect DocTests:", file=sys.stderr)
-    path = os.path.abspath(os.path.dirname(django_tools.__file__))
-    modules = get_all_doctests(
-        base_path=path,
-        # verbose=True
-    )
     # TODO:
+    # path = os.path.abspath(os.path.dirname(django_tools.__file__))
+    # modules = get_all_doctests(
+    #     base_path=path,
+    # )
     # for module in modules:
     #     suite = doctest.DocTestSuite(module)
     #     suite = unittest.expectedFailure(suite) # FIXME
