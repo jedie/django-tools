@@ -4,24 +4,24 @@
 """
     upgrade packages in virtualenv
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+    
     A simple commandline script for call "pip install ---upgrade XY" for every
     package thats installed in a virtualenv.
-
+    
     Simply copy/symlink it into the root directory of your virtualenv and
     start it.
-
+    
     You can select witch package type should be upgrade:
         * both: package + editables
         * only packages
         * only editables
-
+        
     More information, call:
         ./upgrade_virtualenv --help
-
-    This will be obsolete, if pip has a own upgrade command, see:
+        
+    This will be obsolete, if pip has a own upgrade command, see: 
         https://github.com/pypa/pip/issues/59
-
+    
     :copyleft: 2011 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
@@ -30,14 +30,9 @@ from __future__ import absolute_import, division, print_function
 
 
 import os
-import pip
-import pkg_resources
 import sys
 import subprocess
 from optparse import OptionParser
-from pip import locations
-from pip.util import get_installed_distributions, get_terminal_size
-
 
 if __name__ == "__main__":
     # precheck if we in a activated virtualenv
@@ -52,12 +47,18 @@ if __name__ == "__main__":
         print("")
         sys.exit(-1)
 
+import pkg_resources
+
+from pip import locations
+from pip.util import get_installed_distributions, get_terminal_size
+import pip
+
 
 class ColorOut(object):
     """
     Borrowed from Django:
     http://code.djangoproject.com/browser/django/trunk/django/utils/termcolors.py
-
+    
     >>> c = ColorOut()
     >>> c.supports_colors()
     True
@@ -201,7 +202,7 @@ def call_pip(options, *args):
     if options.logfile:
         cmd.append("--log=%s" % options.logfile)
     cmd += args
-    print(("-" * get_terminal_size()[0]))
+    print(("-"*get_terminal_size()[0]))
     print(("run: %s" % c.colorize(" ".join(cmd), foreground="blue")))
     if not options.dryrun:
         subprocess.call(cmd)
@@ -256,7 +257,7 @@ def main():
         for editable in editables:
             call_pip(options, "--editable", editable)
 
-    print(("-" * get_terminal_size()[0]))
+    print(("-"*get_terminal_size()[0]))
 
     print("")
     if choice == "1":
@@ -270,3 +271,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

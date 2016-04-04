@@ -3,15 +3,24 @@
 
 import unittest
 
-from django.utils.six import PY2
+from django.utils.six import PY2, binary_type
 
 from django_tools.utils import http
+
 
 
 class HttpTests(unittest.TestCase):
     def test_http_request(self):
         r = http.HttpRequest("http://www.google.com", timeout=3, threadunsafe_workaround=True)
         response = r.get_response()
+
+        # print("-"*79)
+        # print("repr(request_header):")
+        # print(repr(response.request_header))
+        # print("-"*79)
+        # print("response.info():")
+        # print(response.info())
+        # print("-"*79)
 
         if PY2:
             self.assertIn("Host: www.google.", response.request_header)

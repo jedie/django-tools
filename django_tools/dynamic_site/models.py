@@ -122,3 +122,5 @@ class SiteAlias(UpdateInfoBaseModel):
     class Meta:
         verbose_name = "site alias"
         verbose_name_plural = "site aliases"
+
+

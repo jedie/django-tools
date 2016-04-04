@@ -6,7 +6,6 @@ Useful for optimizing database calls.
 Inspired by the method at: <http://www.djangosnippets.org/snippets/344/>
 """
 
-
 class QueryLogMiddleware:
 
     def process_response(self, request, response):
@@ -28,3 +27,4 @@ class QueryLogMiddleware:
                 print("%s x %s" % (count, query))
             print("------------------------------------------------------")
         return response
+

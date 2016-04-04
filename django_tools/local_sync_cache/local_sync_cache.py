@@ -93,6 +93,7 @@ from django.core.cache import caches
 
 logger = logging.getLogger("django_tools.local_sync_cache")
 
+
 LOCAL_SYNC_CACHE_BACKEND = getattr(settings, "LOCAL_SYNC_CACHE_BACKEND", "local_sync_cache")
 
 
@@ -105,7 +106,7 @@ def _get_cache():
         # TODO: Not needed in django v1.4: https://code.djangoproject.com/ticket/16410
         msg = "You should define a '%s' cache in your settings.CACHES (use default cache)" % LOCAL_SYNC_CACHE_BACKEND
         logger.critical(msg)
-        cache_name = "default"  # fallback to default cache entry
+        cache_name = "default" # fallback to default cache entry
     else:
         cache_name = LOCAL_SYNC_CACHE_BACKEND
 
@@ -120,7 +121,7 @@ def _get_cache():
 
 
 class LocalSyncCache(dict):
-    INIT_COUNTER = {}  # Counts how often __init__ used, should always be 1!
+    INIT_COUNTER = {} # Counts how often __init__ used, should always be 1!
 
     # Stores all existing instance, used in middleware to call check_state()
     CACHES = []
@@ -143,18 +144,18 @@ class LocalSyncCache(dict):
 
         self.id = id
         self.django_cache = _get_cache()
-        self.last_reset = time.time()  # Save last creation/reset time
+        self.last_reset = time.time() # Save last creation/reset time
         self.CACHES.append(self)
 
-        if not (self.id in self.INIT_COUNTER):
+        if not self.id in self.INIT_COUNTER:
             self.INIT_COUNTER[self.id] = 1
         else:
             logger.error("Error: __init__ for %s was called to often!" % self.id)
             self.INIT_COUNTER[self.id] += 1
 
-        self.request_counter = 0  # Counts how often check_state called (Normally called one time per request)
-        self.own_clear_counter = 0  # Counts how often clear called in this thread
-        self.ext_clear_counter = 0  # Counts how often clears from external thread
+        self.request_counter = 0 # Counts how often check_state called (Normally called one time per request)
+        self.own_clear_counter = 0 # Counts how often clear called in this thread
+        self.ext_clear_counter = 0 # Counts how often clears from external thread
 
         logger.debug("%r __init__" % id)
 
@@ -211,8 +212,8 @@ class LocalSyncCache(dict):
         django_cache = _get_cache()
         for instance in LocalSyncCache.CACHES:
             try:
-                instance_size = sys.getsizeof(instance)  # New in version 2.6
-            except (AttributeError, TypeError):  # PyPy raised a TypeError
+                instance_size = sys.getsizeof(instance) # New in version 2.6
+            except (AttributeError, TypeError): # PyPy raised a TypeError
                 instance_size = None
 
             id = instance.id

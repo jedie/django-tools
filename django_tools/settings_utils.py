@@ -30,6 +30,6 @@ class InternalIps(list):
     """
     def __contains__(self, key):
         for ip in self:
-            if fnmatch(key, ip):
-                return True
+            if fnmatch(key, ip): return True
         return False
+

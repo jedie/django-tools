@@ -4,7 +4,7 @@
 """
     url form/model field
     ~~~~~~~~~~~~~~~~~~~~
-
+    
     flexible URL form and model field used own URLValidator2.
 
     :copyleft: 2011-2013 by the django-tools team, see AUTHORS for more details.
@@ -13,11 +13,6 @@
 
 from __future__ import absolute_import, division, print_function
 
-from django_tools.validators import URLValidator2
-
-from django.db.models.fields import CharField as OriginModelCharField
-from django.forms.fields import CharField as OriginFormsCharField
-from django.utils.translation import ugettext_lazy as _
 
 
 if __name__ == "__main__":
@@ -27,14 +22,21 @@ if __name__ == "__main__":
     from django.conf import global_settings
     global_settings.SECRET_KEY = "unittest"
 
+from django_tools.validators import URLValidator2
+
+from django.core import validators
+from django.db.models.fields import CharField as OriginModelCharField
+from django.forms.fields import CharField as OriginFormsCharField
+from django.utils.translation import ugettext_lazy as _
+
 
 class URLFormField2(OriginFormsCharField):
     """
     A flexible version of the original django form URLField ;)
-
+    
     Please read the django_tools.validators.URLValidator2 DocString, too!
-
-
+    
+    
     To allow only local domains, disallow scheme and netloc:
     >>> URLFormField2(allow_schemes=None, allow_netloc=False).clean("/path/?query#fragment")
     u'/path/?query#fragment'
@@ -42,12 +44,12 @@ class URLFormField2(OriginFormsCharField):
     Traceback (most recent call last):
         ...
     ValidationError: [u'Please enter a local URL (without protocol/domain).']
-
+    
     **Note:** this is also a valid "local" path (more info in URLValidator2 DocString):
     >>> URLFormField2(allow_schemes=None, allow_netloc=False).clean("domain.tld/path/?query#fragment")
     u'domain.tld/path/?query#fragment'
-
-
+    
+    
     >>> URLFormField2(allow_schemes=("svn",)).clean("svn://domain.tld")
     u'svn://domain.tld'
     >>> URLFormField2(allow_schemes=("http","ftp")).clean("svn://domain.tld")
@@ -74,26 +76,27 @@ class URLFormField2(OriginFormsCharField):
         )
 
 
+
 class URLModelField2(OriginModelCharField):
     """
     A flexible version of the original django model URLField ;)
-
+    
     Please read the django_tools.validators.URLValidator2 DocString, too!
-
-
+    
+    
     >>> f = URLModelField2(verify_exists=False).formfield()
     >>> isinstance(f, URLFormField2)
     True
     >>> f.clean(u"http://www.domain.tld/path?query#fragment")
     u'http://www.domain.tld/path?query#fragment'
-
+    
     >>> f = URLModelField2().formfield()
     >>> f.clean("svn://domain.tld")
     Traceback (most recent call last):
         ...
     ValidationError: [u"The URL doesn't start with a allowed scheme."]
-
-
+    
+    
     >>> f = URLModelField2(allow_query=False).formfield()
     >>> f.clean("http://www.domain.tld/without/query/")
     u'http://www.domain.tld/without/query/'
@@ -101,7 +104,7 @@ class URLModelField2(OriginModelCharField):
     Traceback (most recent call last):
         ...
     ValidationError: [u'Enter a valid URL without a query.']
-
+    
     """
     description = _("URL")
 
@@ -129,18 +132,21 @@ class URLModelField2(OriginModelCharField):
         # As with CharField, this will cause URL validation to be performed twice
         defaults = {
             'form_class': URLFormField2,
-            "allow_schemes": self.allow_schemes,
-            "allow_all_schemes": self.allow_all_schemes,
-            "allow_netloc": self.allow_netloc,
-            "allow_query": self.allow_query,
-            "allow_fragment": self.allow_fragment,
+
+            "allow_schemes":self.allow_schemes,
+            "allow_all_schemes":self.allow_all_schemes,
+            "allow_netloc":self.allow_netloc,
+            "allow_query":self.allow_query,
+            "allow_fragment":self.allow_fragment,
         }
         defaults.update(kwargs)
         return super(URLModelField2, self).formfield(**defaults)
 
 
+
 if __name__ == "__main__":
     import doctest
     print(doctest.testmod(
+#        verbose=True
         verbose=False
     ))

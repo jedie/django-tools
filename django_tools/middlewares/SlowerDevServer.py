@@ -3,11 +3,11 @@
 """
     SlowerDevServer
     ~~~~~~~~~~~~~~~
-
+    
     Simple slow down the django developer server.
     The middleware insert in every 200 response a time.sleep
-
-    Put this into your settings:
+    
+    Put this into your settings:   
     --------------------------------------------------------------------------
         MIDDLEWARE_CLASSES = (
             ...
@@ -16,7 +16,7 @@
         )
         SLOWER_DEV_SERVER_SLEEP = 0.3 # time.sleep() value (in sec.)
     --------------------------------------------------------------------------
-
+    
     Last commit info:
     ~~~~~~~~~~~~~~~~~
     $LastChangedDate$
@@ -35,13 +35,12 @@ import warnings
 
 from django.conf import settings
 
-
 class SlowerDevServerMiddleware(object):
     def __init__(self):
         warnings.warn("Slower developer server used!")
-
+        
     def process_response(self, request, response):
-        if response.status_code == 200:
+        if response.status_code == 200: 
             print("SlowerDevServerMiddleware: Wait for %sSec..." % settings.SLOWER_DEV_SERVER_SLEEP)
             time.sleep(settings.SLOWER_DEV_SERVER_SLEEP)
         return response

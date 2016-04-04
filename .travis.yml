@@ -11,9 +11,10 @@ env:
     - DJANGO=1.8
     - DJANGO=1.9
 
-before_install:
-    - pip install -q flake8
-    - flake8
+# selenium:
+#before_install:
+#    - "export DISPLAY=:99.0"
+#    - "sh -e /etc/init.d/xvfb start"
 
 install:
     - pip install --upgrade pip

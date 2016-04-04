@@ -3,7 +3,7 @@
 """
     Dynamic SITE ID - model admin
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+    
     :copyleft: 2012 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
@@ -26,5 +26,5 @@ class SiteAliasAdmin(admin.ModelAdmin):
     search_fields = ("alias",)
 
 
-if getattr(settings, "USE_DYNAMIC_SITE_MIDDLEWARE", False) is True:
+if getattr(settings, "USE_DYNAMIC_SITE_MIDDLEWARE", False) == True:
     admin.site.register(SiteAlias, SiteAliasAdmin)

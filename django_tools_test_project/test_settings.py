@@ -8,7 +8,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 SECRET_KEY = "Unittests"
-ALLOWED_HOSTS = ["*"]  # Allow any domain/subdomain
+ALLOWED_HOSTS = ["*"] # Allow any domain/subdomain
 
 DATABASES = {
     'default': {
@@ -47,7 +47,7 @@ USE_DYNAMIC_SITE_MIDDLEWARE = True
 
 ROOT_URLCONF = 'django_tools_test_project.django_tools_test_app.urls'
 
-PASSWORD_HASHERS = (  # Speedup tests
+PASSWORD_HASHERS = ( # Speedup tests
     'django.contrib.auth.hashers.MD5PasswordHasher',
 )
 
@@ -63,7 +63,7 @@ LOGGING = {
         },
     },
     'handlers': {
-        'null': {'class': 'logging.NullHandler'},
+        'null': {'class': 'logging.NullHandler',},
         'console': {
             'class': 'logging.StreamHandler',
             # 'formatter': 'simple'

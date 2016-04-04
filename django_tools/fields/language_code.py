@@ -11,6 +11,12 @@
 from __future__ import absolute_import, division, print_function
 
 
+if __name__ == "__main__":
+    # For doctest only
+    import os
+    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
+
+
 from django import forms
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -18,32 +24,26 @@ from django.utils.translation import ugettext_lazy as _
 from django_tools import validators
 
 
-if __name__ == "__main__":
-    # For doctest only
-    import os
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
-
-
 class LanguageCodeFormField(forms.CharField):
     """
     Language Code form field in Accept-Language header format (RFC 2616)
-
+    
     >>> LanguageCodeFormField().clean('en')
     u'en'
-
+    
     >>> LanguageCodeFormField().clean('en-GB')
     u'en-GB'
-
+    
     >>> LanguageCodeFormField().clean("this is wrong")
     Traceback (most recent call last):
         ...
     ValidationError: [u'Enter a valid value.']
-
+    
     >>> LanguageCodeFormField().clean(None)
     Traceback (most recent call last):
         ...
     ValidationError: [u'This field is required.']
-
+    
     >>> LanguageCodeFormField(required=False).clean(None)
     u''
     """
@@ -55,7 +55,7 @@ class LanguageCodeFormField(forms.CharField):
 class LanguageCodeModelField(models.CharField):
     """
     >>> LanguageCodeModelField(max_length=20).run_validators('en-GB')
-
+    
     >>> LanguageCodeModelField(max_length=20).run_validators("this is wrong")
     Traceback (most recent call last):
         ...
@@ -76,6 +76,7 @@ except ImportError:
 if __name__ == "__main__":
     import doctest
     doctest.testmod(
+#        verbose=True
         verbose=False
     )
     print("DocTest end.")

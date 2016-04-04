@@ -1,4 +1,5 @@
 import os
+import unittest
 import sys
 
 import django
@@ -65,6 +66,7 @@ class TestBaseUnittestCase(BaseUnittestCase):
             self.assert_not_is_dir(existing_path)
         except AssertionError as err:
             self.assertEqual(six.text_type(err), "Directory '%s' exists, but should not exists!" % existing_path)
+
 
     def test_assert_is_file(self):
         self.assert_is_file(__file__)
@@ -143,6 +145,7 @@ class TestPrintSQL(BaseTestCase):
                 User.objects.all().count()
 
         output = buffer.get_output()
+        # print(output)
 
         self.assertIn("*** Create object ***", output)
         # FIXME: Will fail if not SQLite/MySQL is used?!?

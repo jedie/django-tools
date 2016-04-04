@@ -3,10 +3,10 @@
 """
     static path selection
     ~~~~~~~~~~~~~~~~~~~~
-
+    
     TODO: Made this generic and don't use settings.STATIC_ROOT direct, let it
     be set as a argument to widget/fields etc.
-
+    
      * model field
      * form field
      * widget
@@ -20,16 +20,16 @@ from __future__ import absolute_import, division, print_function
 
 import os
 
+if __name__ == "__main__":
+    # For doctest only
+    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
+
 from django.utils import six
 from django import forms
 from django.db import models
 from django.conf import settings
 
 from django_tools.utils.messages import failsafe_message
-
-if __name__ == "__main__":
-    # For doctest only
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
 
 
 def directory_walk(path):
@@ -56,10 +56,12 @@ def directory_walk(path):
             yield x
 
 
+
+
 class StaticPathWidget(forms.Select):
     """
     Select a sub directory in settings.STATIC_ROOT
-
+    
     >>> import os, django_tools
     >>> settings.STATIC_ROOT = os.path.dirname(os.path.abspath(django_tools.__file__))
     >>> StaticPathWidget().choices # doctest: +ELLIPSIS
@@ -92,15 +94,24 @@ class StaticPathModelField(models.TextField):
     """
     Model field for select a sub directory in settings.STATIC_ROOT
     """
+
+#    def __init__(self, separator=",", strip_items=True, skip_empty=True, *args, **kwargs):
+#        self.separator = separator
+#        self.strip_items = strip_items
+#        self.skip_empty = skip_empty
+#        super(StaticPathModelField, self).__init__(*args, **kwargs)
+
     def formfield(self, **kwargs):
         """ Use always own widget and form field. """
         kwargs["widget"] = StaticPathWidget
+#        kwargs["form_class"] = SignSeparatedFormField
         return super(StaticPathModelField, self).formfield(**kwargs)
 
 
 if __name__ == "__main__":
     import doctest
     print(doctest.testmod(
+#        verbose=True
         verbose=False
     ))
     print("DocTest end.")

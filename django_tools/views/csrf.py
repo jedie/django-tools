@@ -4,13 +4,13 @@
     csrf related views
     ~~~~~~~~~~~~~~~~~~
 
-
+    
     debug_csrf_failure()
     ~~~~~~~~~~~~~~~~~~~~
     Display the normal debug page and not the minimal csrf debug page.
-
+    
     usage: Add this to your settings:
-    -----------------------------------------------------------------------
+    -----------------------------------------------------------------------    
     CSRF_FAILURE_VIEW='django_tools.views.csrf.debug_csrf_failure'
     -----------------------------------------------------------------------
 
@@ -24,6 +24,7 @@ from __future__ import absolute_import, division, print_function
 
 from django.views.csrf import csrf_failure
 from django.conf import settings
+from django.http import Http404
 
 
 class CsrfFailure(Exception):
@@ -36,7 +37,7 @@ def debug_csrf_failure(request, reason=""):
     Csrf failures.
     See also:
         https://docs.djangoproject.com/en/1.3/ref/contrib/csrf/#rejected-requests
-
+        
     More Info: See DocString above.
     """
     if not settings.DEBUG:
