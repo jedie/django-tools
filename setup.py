@@ -58,8 +58,8 @@ if "publish" in sys.argv:
     Source: https://github.com/jedie/python-code-snippets/blob/master/CodeSnippets/setup_publish.py
     copyleft 2015 Jens Diemer - GNU GPL v2+
     """
-    if sys.version_info[0] == 2:
-        input = raw_input
+    if sys.version_info[0] == 2 and sys.version_info < (3, 0):
+        input = raw_input   # noqa
 
     try:
         # Test if wheel is installed, otherwise the user will only see:
@@ -203,7 +203,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,  # include package data under svn source control
     install_requires=[
-        "Django>=1.6,<1.9",
+        "Django>=1.8,<1.10",
     ],
     zip_safe=False,
     classifiers=[

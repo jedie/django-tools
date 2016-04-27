@@ -54,7 +54,7 @@ class BaseFilesystemBrowser(object):
 
         rest_url = add_slash(rest_url)
         try:
-            rest_path = self.dir_validator(rest_url)
+            self.dir_validator(rest_url)
         except ValidationError as err:
             if settings.DEBUG:
                 raise Http404(err)
@@ -62,10 +62,11 @@ class BaseFilesystemBrowser(object):
                 raise Http404(_("Directory doesn't exist!"))
 
         self.rel_url = posixpath.normpath(rest_url).lstrip("/")
-        self.abs_url = posixpath.join(self.base_url, rest_path)
-        if not os.path.isdir(self.abs_path):
+        self.abs_url = posixpath.join(self.base_url, rest_url)
+        if not os.path.isdir(self.absolute_path):
             if settings.DEBUG:
-                raise Http404("Formed path %r doesn't exist." % self.abs_path)
+                raise Http404(
+                    "Formed path %r doesn't exist." % self.absolute_path)
             else:
                 raise Http404(_("Directory doesn't exist!"))
 

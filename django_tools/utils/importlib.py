@@ -12,20 +12,19 @@
 
 from __future__ import absolute_import, division, print_function
 
-
+import logging
 import os
+from importlib import import_module
 
 if __name__ == "__main__":
     # For doctest only
     os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
 
 from django.conf import settings
-from django.utils.log import getLogger
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.importlib import import_module
 
 
-logger = getLogger("DjangoToolsImportLib")
+logger = logging.getLogger("DjangoToolsImportLib")
 
 
 def get_attr_from_string(path, obj_name=""):

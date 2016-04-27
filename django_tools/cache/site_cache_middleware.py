@@ -3,32 +3,28 @@
 """
     per-site cache middleware
     ~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     more information in the README.
-    
+
     :copyleft: 2012 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 from __future__ import absolute_import, division, print_function
 
-
-import sys
 import logging
+import sys
 
 from django.conf import settings
 from django.contrib import messages
 from django.core.cache import cache
 from django.http import HttpResponse
 from django.utils.cache import get_max_age, patch_response_headers
-from django.utils.log import getLogger
 
 from django_tools.utils.importlib import get_attr_from_settings
 
 
-logger = getLogger("django-tools.CacheMiddleware")
-#logger.setLevel(logging.DEBUG)
-#logger.addHandler(logging.StreamHandler())
+logger = logging.getLogger("django-tools.CacheMiddleware")
 
 CACHE_MIDDLEWARE_ANONYMOUS_ONLY = getattr(settings, 'CACHE_MIDDLEWARE_ANONYMOUS_ONLY', False)
 RUN_WITH_DEV_SERVER = getattr(settings, "RUN_WITH_DEV_SERVER", "runserver" in sys.argv)
@@ -74,7 +70,7 @@ def init_cache_counting():
         cache.delete(key) # delete old entrie, if exist
 
     if COUNT_FETCH_FROM_CACHE:
-        # Count in FetchFromCacheMiddleware is enabled 
+        # Count in FetchFromCacheMiddleware is enabled
         LOCAL_CACHE_INFO["requests"] = 0
         LOCAL_CACHE_INFO["request hits"] = 0
         if COUNT_IN_CACHE:
@@ -83,7 +79,7 @@ def init_cache_counting():
             cache.set(CACHE_REQUEST_HITS, 0)
 
     if COUNT_UPDATE_CACHE:
-        # Count in UpdateCacheMiddleware is enabled 
+        # Count in UpdateCacheMiddleware is enabled
         LOCAL_CACHE_INFO["responses"] = 0
         LOCAL_CACHE_INFO["response hits"] = 0
         if COUNT_IN_CACHE:
@@ -104,7 +100,7 @@ def build_cache_key(url, language_code, site_id):
 def get_cache_key(request):
     """
     Build the cache key based on the url and:
-    
+
     * LANGUAGE_CODE: The language code in the url can be different than the
         used language for gettext translation.
     * SITE_ID: request.path is the url without the domain name. So the same

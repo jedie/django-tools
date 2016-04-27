@@ -3,18 +3,18 @@
 """
     Info print
     ~~~~~~~~~~
-    
+
     Insert in every stdout.write() a info line from witch code line this print comes.
     Usefull to find debug print statements ;)
-    
+
     WARNING: This is very slow and should only be used with the developer server ;)
-    
+
     Simply put this two lines in your settings:
-        ---------------------------------------------------------------------- 
+        ----------------------------------------------------------------------
         from django_tools.utils import info_print
         info_print.redirect_stdout()
         ----------------------------------------------------------------------
-    
+
     Last commit info:
     ~~~~~~~~~~~~~~~~~
     $LastChangedDate$
@@ -34,7 +34,6 @@ import inspect
 import warnings
 
 MAX_FILEPATH_LEN = 66
-
 
 
 class InfoStdout(object):
@@ -78,8 +77,8 @@ class InfoStdout(object):
         return fileinfo
 
 
-
 __redirected = False
+
 
 def redirect_stdout():
     global __redirected
@@ -91,6 +90,6 @@ def redirect_stdout():
             orig_stdout = sys.stdout
             sys.stdout = InfoStdout(orig_stdout)
             orig_stderr = sys.stderr
-            sys.stderr = InfoStdout(orig_stdout)
+            sys.stderr = InfoStdout(orig_stderr)
         except Exception as err:
             print("Error:", err)

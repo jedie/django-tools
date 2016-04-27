@@ -48,7 +48,7 @@ def directory_walk(path):
     yield path
 
     # Sort case-insensitive
-    dirs.sort(cmp=lambda x, y: cmp(x.lower(), y.lower()))
+    dirs.sort(key=str.lower)
 
     for dir in dirs:
         sub_path = os.path.join(path, dir)

@@ -3,15 +3,14 @@
 """
     smooth cache backends
     ~~~~~~~~~~~~~~~~~~~~~
-    
+
     more information in the README.
-    
+
     :copyleft: 2012 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 from __future__ import absolute_import, division, print_function
-
 
 import logging
 import os
@@ -26,14 +25,13 @@ from django.core.cache.backends.db import DatabaseCache
 from django.core.cache.backends.filebased import FileBasedCache
 from django.core.cache.backends.locmem import LocMemCache
 from django.core.cache.backends.memcached import MemcachedCache, PyLibMCCache
-from django.utils import log
 
 
 
-logger = log.getLogger("django-tools.SmoothCache")
+logger = logging.getLogger("django-tools.SmoothCache")
 if not logger.handlers:
     # ensures we don't get any 'No handlers could be found...' messages
-    logger.addHandler(log.NullHandler())
+    logger.addHandler(logging.NullHandler())
 
 #if "runserver" in sys.argv or "tests" in sys.argv:
 #    log.logging.basicConfig(format='%(created)f pid:%(process)d %(message)s')
@@ -64,7 +62,7 @@ SMOOTH_CACHE_TIMES = tuple(SMOOTH_CACHE_TIMES)
 def get_max_age(load_average):
     """
     return max age for the given load average.
-    
+
     >>> get_max_age(0)
     5
     >>> get_max_age(0.09)
@@ -99,7 +97,7 @@ class _SmoothCache(object):
     def __get_change_time(self):
         """
         return current "last change" timestamp.
-        To save cache access, update the timestamp only in  
+        To save cache access, update the timestamp only in
         SMOOTH_CACHE_UPDATE_TIMESTAMP frequency from cache.
         """
         now = time.time()
@@ -111,7 +109,7 @@ class _SmoothCache(object):
             change_time = self.get(SMOOTH_CACHE_CHANGE_TIME, raw=True)
             if change_time is None:
                 logger.debug("CHANGE_TIME is None")
-                self.smooth_update() # save change time into cache           
+                self.smooth_update() # save change time into cache
             elif change_time > self.__CHANGE_TIME:
                 self.__CHANGE_TIME = change_time
                 logger.debug("update change time to: %r" % change_time)

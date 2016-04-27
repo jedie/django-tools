@@ -3,19 +3,18 @@
 """
     Dynamic SITE ID
     ~~~~~~~~~~~~~~~
-    
+
     Set the SITE_ID dynamic by the current Domain Name.
-    
+
     More info: read .../django_tools/dynamic_site/README.creole
-    
+
     :copyleft: 2011-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 from __future__ import absolute_import, division, print_function
 
-
-
+import logging
 import os
 import sys
 import warnings
@@ -28,14 +27,13 @@ except ImportError:
 from django.conf import settings
 from django.contrib.sites import models as sites_models
 from django.core.exceptions import MiddlewareNotUsed, ImproperlyConfigured
-from django.utils import log
 
 from django_tools.local_sync_cache.local_sync_cache import LocalSyncCache
 
 
 USE_DYNAMIC_SITE_MIDDLEWARE = getattr(settings, "USE_DYNAMIC_SITE_MIDDLEWARE", False)
 
-logger = log.getLogger("django_tools.DynamicSite")
+logger = logging.getLogger("django_tools.DynamicSite")
 
 
 Site = sites_models.Site  # Shortcut

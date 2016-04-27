@@ -14,7 +14,6 @@ from __future__ import unicode_literals, print_function
 import os
 import doctest
 import sys
-from django.utils import unittest
 
 import django_tools
 

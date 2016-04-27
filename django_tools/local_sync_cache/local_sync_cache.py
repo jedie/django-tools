@@ -3,28 +3,28 @@
 """
     Local sync cache
     ~~~~~~~~~~~~~~~~
-    
+
     The Problem:
     If you use a normal dict for cache some values, you can't clear it in
     a multi-threaded environment, because you have no access to the dict in
     other threads.
-    
+
     The Solution:
     Use LocalSyncCache() as a cache dict. If dict.clear() called, the dict
     in all threads would be cleared.
-    
+
     How it works:
-    * Every cache dict memorize his own creation/reset time.  
+    * Every cache dict memorize his own creation/reset time.
     * in dict.clear() the reset time would be saved
       into django cache (to share it with all threads)
     * On every request the LocalSyncCacheMiddleware called all existing cache dict
-      in the current threads to look into the shared django cache, if they 
-      are outdatet or not. If they are outdated, the dict would be cleaned. 
-    
-    
+      in the current threads to look into the shared django cache, if they
+      are outdatet or not. If they are outdated, the dict would be cleaned.
+
+
     usage
     ~~~~~
-    
+
     Add LocalSyncCacheMiddleware to settings, e.g:
     ---------------------------------------------------------------------------
         MIDDLEWARE_CLASSES = (
@@ -33,75 +33,65 @@
             ...
         )
     ---------------------------------------------------------------------------
-    
+
 
     Create a cache dict with a id.
     Use it in a model, e.g.:
     ---------------------------------------------------------------------------
         from django.db import models
         from django_tools.local_sync_cache.local_sync_cache import LocalSyncCache
-        
+
         class PageTree(models.Model):
             parent = models.ForeignKey("self", null=True, blank=True)
             slug = models.SlugField()
-            
+
             _url_cache = LocalSyncCache(id="PageTree_absolute_url") # <<<---
             def get_absolute_url(self):
                 if self.pk in self._url_cache:
                     return self._url_cache[self.pk]
-        
+
                 if self.parent:
                     parent_url = self.parent.get_absolute_url()
                     url = parent_url + self.slug + "/"
                 else:
                     url = "/" + self.slug + "/"
-        
+
                 self._url_cache[self.pk] = url
                 return url
-                
-        def save(self, *args, **kwargs):  
+
+        def save(self, *args, **kwargs):
             self._url_cache.clear() # Clean the local url cache dict
             return super(PageTree, self).save(*args, **kwargs)
     ---------------------------------------------------------------------------
-    
-    
+
+
     logging
     ~~~~~~~
-    
+
     To enable logging, add this to your settings, e.g.:
-    
-        from django.utils import log
-        logger = log.getLogger("django_tools.local_sync_cache")
+
+        import logging
+        logger = logging.getLogger("django_tools.local_sync_cache")
         logger.setLevel(log.logging.DEBUG)
         logger.addHandler(log.logging.FileHandler("local_sync_cache.log"))
-    
-    
+
+
     :copyleft: 2011-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 from __future__ import absolute_import, division, print_function
 
-
+import logging
 import sys
 import time
 import datetime
 
 from django.conf import settings
-from django.core import cache
-from django.utils import log
+from django.core.cache import caches
 
 
-logger = log.getLogger("django_tools.local_sync_cache")
-
-#if "runserver" in sys.argv or "tests" in sys.argv:
-#    log.logging.basicConfig(format='%(created)f pid:%(process)d %(message)s')
-#    logger.setLevel(log.logging.DEBUG)
-#    logger.addHandler(log.logging.StreamHandler())
-
-#if not logger.handlers:
-#    # ensures we don't get any 'No handlers could be found...' messages
-#    logger.addHandler(log.NullHandler())
+logger = logging.getLogger("django_tools.local_sync_cache")
 
 
 LOCAL_SYNC_CACHE_BACKEND = getattr(settings, "LOCAL_SYNC_CACHE_BACKEND", "local_sync_cache")
@@ -125,7 +115,7 @@ def _get_cache():
         msg = "You should use Memcache, FileBasedCache or DatabaseCache and not: %s" % backend
         logger.critical(msg)
 
-    django_cache = cache.get_cache(cache_name)
+    django_cache = caches[cache_name]
     logger.debug("Use django '%s' cache: %r" % (cache_name, django_cache))
     return django_cache
 
