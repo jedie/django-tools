@@ -1,6 +1,10 @@
 # coding: utf-8
 
+
 from __future__ import print_function
+
+from django_tools.unittest_utils.disable_migrations import DisableMigrations
+
 
 print("Use settings:", __file__)
 
@@ -16,6 +20,8 @@ DATABASES = {
         'NAME': ":memory:"
     }
 }
+
+MIGRATION_MODULES = DisableMigrations()
 
 CACHES = {
     'default': {
