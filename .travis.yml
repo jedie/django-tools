@@ -26,8 +26,7 @@ matrix:
   fast_finish: true
 
 install:
-    - pip install --upgrade pip
-    - travis_retry pip install 'tox>=2.3.1' coveralls
+    - pip install -r$TRAVIS_BUILD_DIR/requirements-test.txt
 
 script:
   - travis_retry tox

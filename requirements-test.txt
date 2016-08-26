@@ -1,2 +1,5 @@
 tox
+coverage
 coveralls
+python-creole
+docutils
