@@ -14,7 +14,7 @@
      INFO: This exist only for backward-compatibility and will be removed
      in the future. Please use static_path!
 
-    :copyleft: 2010-2012 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2010-2016 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -31,6 +31,7 @@ if __name__ == "__main__":
 from django import forms
 from django.db import models
 from django.conf import settings
+from django.utils.six import with_metaclass
 
 from django_tools.utils.messages import failsafe_message
 
@@ -98,7 +99,7 @@ class MediaPathWidget(forms.Select):
         return media_dirs_choices
 
 
-class MediaPathModelField(models.TextField, metaclass=models.SubfieldBase):
+class MediaPathModelField(models.TextField, with_metaclass(models.SubfieldBase)):
     """
     
     """

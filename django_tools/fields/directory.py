@@ -5,7 +5,7 @@
     directory selection
     ~~~~~~~~~~~~~~~~~~~~
 
-    :copyleft: 2011 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2011-2016 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -20,6 +20,7 @@ from django import forms
 from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+from django.utils.six import with_metaclass
 
 from django_tools.utils.messages import failsafe_message
 from django_tools import validators
@@ -45,7 +46,7 @@ class DirectoryFormField(forms.CharField):
         return value
 
 
-class DirectoryModelField(models.CharField, metaclass=models.SubfieldBase):
+class DirectoryModelField(models.CharField, with_metaclass(models.SubfieldBase)):
     """
     >>> dir = DirectoryModelField()
     >>> dir.run_validators(settings.MEDIA_ROOT)
