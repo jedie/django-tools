@@ -24,29 +24,32 @@ class DjangoCommandMixin(object):
 
         similar to subprocess.getstatusoutput but pass though kwargs
         """
-        kwargs.update({
-            "shell": True,
-            "universal_newlines": True,
-            "stderr": subprocess.STDOUT,
-        })
-        if "cwd" in kwargs:
-            cwd = kwargs["cwd"]
-            self.assertTrue(os.path.isdir(cwd), "cwd %r doesn't exists!" % cwd)
-            if debug:
-                print("DEBUG: cwd %r, ok" % cwd)
 
         # Assume that DJANGO_SETTINGS_MODULE not in environment
         # e.g:
         #   manage.py use os.environ.setdefault("DJANGO_SETTINGS_MODULE",...)
         #   so it will ignore the own module path!
+        # You can set env by given kwargs, too.
         env=dict(os.environ)
         if "DJANGO_SETTINGS_MODULE" in env:
             del(env["DJANGO_SETTINGS_MODULE"])
-        kwargs["env"] = env
+
+        subprocess_kwargs = {
+            "env": env,
+            "shell": True,
+            "universal_newlines": True,
+            "stderr": subprocess.STDOUT,
+        }
+        subprocess_kwargs.update(kwargs)
+        if "cwd" in subprocess_kwargs:
+            cwd = subprocess_kwargs["cwd"]
+            assert os.path.isdir(cwd), "cwd %r doesn't exists!" % cwd
+            if debug:
+                print("DEBUG: cwd %r, ok" % cwd)
 
         cmd=" ".join(cmd) # FIXME: Why?!?
         try:
-            output = subprocess.check_output(cmd, **kwargs)
+            output = subprocess.check_output(cmd, **subprocess_kwargs)
             status = 0
         except subprocess.CalledProcessError as ex:
             output = ex.output
@@ -67,7 +70,7 @@ class DjangoCommandMixin(object):
             ) % {
                 "status": status,
                 "cmd": cmd,
-                "kwargs": pprint.pformat(kwargs),
+                "kwargs": pprint.pformat(subprocess_kwargs),
                 "output": output
             }
             if status != 0:
