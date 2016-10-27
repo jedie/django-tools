@@ -1,0 +1,90 @@
+# coding: utf-8
+
+"""
+    DjangoCommandMixin
+    ~~~~~~~~~~~~~~~~~~
+
+    :copyleft: 2012-2015 by the django-tools team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
+"""
+
+from __future__ import unicode_literals, print_function
+
+import os
+import pprint
+import subprocess
+
+import sys
+
+
+class DjangoCommandMixin(object):
+    def subprocess_getstatusoutput(self, cmd, debug=False, **kwargs):
+        """
+        Return (status, output) of executing cmd in a shell.
+
+        similar to subprocess.getstatusoutput but pass though kwargs
+        """
+        kwargs.update({
+            "shell": True,
+            "universal_newlines": True,
+            "stderr": subprocess.STDOUT,
+        })
+        if "cwd" in kwargs:
+            cwd = kwargs["cwd"]
+            self.assertTrue(os.path.isdir(cwd), "cwd %r doesn't exists!" % cwd)
+            if debug:
+                print("DEBUG: cwd %r, ok" % cwd)
+
+        # Assume that DJANGO_SETTINGS_MODULE not in environment
+        # e.g:
+        #   manage.py use os.environ.setdefault("DJANGO_SETTINGS_MODULE",...)
+        #   so it will ignore the own module path!
+        env=dict(os.environ)
+        if "DJANGO_SETTINGS_MODULE" in env:
+            del(env["DJANGO_SETTINGS_MODULE"])
+        kwargs["env"] = env
+
+        cmd=" ".join(cmd) # FIXME: Why?!?
+        try:
+            output = subprocess.check_output(cmd, **kwargs)
+            status = 0
+        except subprocess.CalledProcessError as ex:
+            output = ex.output
+            status = ex.returncode
+
+        if output[-1:] == '\n':
+            output = output[:-1]
+
+        if status != 0 or debug:
+            msg = (
+                "subprocess exist status == %(status)r\n"
+                "Call %(cmd)r with:\n"
+                "%(kwargs)s\n"
+                "subprocess output:\n"
+                "------------------------------------------------------------\n"
+                "%(output)s\n"
+                "------------------------------------------------------------\n"
+            ) % {
+                "status": status,
+                "cmd": cmd,
+                "kwargs": pprint.pformat(kwargs),
+                "output": output
+            }
+            if status != 0:
+                raise AssertionError(msg)
+            else:
+                print(msg)
+
+        return output
+
+    def call_manage_py(self, cmd, manage_dir, **kwargs):
+        """
+        call manage.py from pylucid_installer.page_instance_template.example_project
+        """
+        cmd = [sys.executable, "manage.py"] + list(cmd)
+        kwargs.update({
+            "cwd": manage_dir,
+            #"debug": True,
+        })
+        return self.subprocess_getstatusoutput(cmd, **kwargs)
+
