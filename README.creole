@@ -239,6 +239,7 @@ There exist many miscellaneous stuff. Look in the source, luke!
 
 There exist different ways to run unittests, e.g.:
 {{{
+.../django-tools $ tox
 .../django-tools $ ./setup.py test
 .../django-tools $ ./manage.py test
 .../django-tools $ ./runtests.sh
