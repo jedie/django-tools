@@ -11,6 +11,8 @@ import os
 
 from unittest import TestCase
 
+from django.utils.six import PY2
+
 import django_tools
 from django_tools.unittest_utils.django_command import DjangoCommandMixin
 
@@ -40,4 +42,9 @@ class TestDjangoCommand(DjangoCommandMixin, TestCase):
         # print(output)
 
         self.assertIn("subprocess exist status == 1", output)
-        self.assertIn("ImportError: No module named 'does-not-exist'", output)
+        
+        if PY2:
+            member = "ImportError: No module named does-not-exist"
+        else:
+            member = "ImportError: No module named 'does-not-exist'"
+        self.assertIn(member, output)
