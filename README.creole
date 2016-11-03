@@ -318,7 +318,7 @@ to:
 
 == history
 
-* v0.31.0 - **dev**
+* v0.31.0 - 03.11.2016 - [[https://github.com/jedie/django-tools/compare/v0.30.4...v0.31.0|compare v0.30.4...v0.31.0]]
 ** add Mockup utils to create dummy PIL/django-filer images with Text (see above)
 ** move tests into {{{/django_tools_tests/}}}
 * v0.30.4 - 27.10.2016 - [[https://github.com/jedie/django-tools/compare/v0.30.2...v0.30.4|compare v0.30.2...v0.30.4]]
