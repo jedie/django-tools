@@ -15,7 +15,28 @@ from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand, CommandError
 from django.core.files import File as DjangoFile
 
-from filer.models import Image as FilerImage
+#==============================================================================
+# TODO: Remove after django-filer v1.2.6 is released!
+# Problem: AttributeError: 'Manager' object has no attribute '_inherited'
+# with Django v1.10 and django-filer v1.2.5
+# see also:
+# https://github.com/divio/django-filer/issues/899
+
+from pip._vendor.packaging.version import parse as _parse_version
+from filer import __version__ as _filer_version
+from django import __version__ as _django_version
+
+_filer_version=_parse_version(_filer_version)
+_django_version=_parse_version(_django_version)
+
+if _django_version < _parse_version("1.10") or _filer_version >= _parse_version("1.2.6"):
+    NOT_SUPPORTED = False
+    from filer.models import Image as FilerImage
+else:
+    NOT_SUPPORTED = True
+
+#==============================================================================
+
 
 
 DUMMY_TEXT = """Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula
@@ -71,6 +92,9 @@ def create_filer_image(pil_image, user):
 
 
 def create_temp_filer_info_image(width, height, text, user):
+    if NOT_SUPPORTED:
+        raise RuntimeError("Combination Django v1.10 and django-filer v1.2.5 is not supported")
+
     f = tempfile.NamedTemporaryFile(prefix='dummy_', suffix='.png')
     im = create_info_image(width, height, text)
     im.save(f, format='png')
