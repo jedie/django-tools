@@ -190,7 +190,7 @@ def get_authors():
 
 if "test" in sys.argv:
     # for e.g.:
-    #   ./setup.py test tests.test_unittest_utils.TestPrintSQL
+    #   ./setup.py test django_tools_tests.test_unittest_utils.TestPrintSQL
     from manage import run_tests
     run_tests()
 

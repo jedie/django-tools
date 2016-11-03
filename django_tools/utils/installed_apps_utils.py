@@ -19,7 +19,7 @@ def get_filtered_apps(resolve_url="/", no_args=True, debug=False, skip_fail=Fals
 
     Please look at:
 
-        django_tools.tests.test_installed_apps_utils
+        django_tools.django_tools_tests.test_installed_apps_utils
     
     with debug, some print messages would be created:
 

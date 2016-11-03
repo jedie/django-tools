@@ -87,7 +87,7 @@ Create dummy PIL/django-filer images with Text, see:
 
 usage/tests:
 
-* [[https://github.com/jedie/django-tools/blob/master/tests/test_mockup.py|/tests/test_mockup.py]]
+* [[https://github.com/jedie/django-tools/blob/master/django_tools_tests/test_mockup.py|/django_tools_tests/test_mockup.py]]
 
 
 === BaseUnittestCase
@@ -109,7 +109,7 @@ with TempDir(prefix="foo_") as tempfolder:
 
 usage/tests:
 
-* [[https://github.com/jedie/django-tools/blob/master/tests/test_unittest_utils.py|/tests/test_unittest_utils.py]]
+* [[https://github.com/jedie/django-tools/blob/master/django_tools_tests/test_unittest_utils.py|/django_tools_tests/test_unittest_utils.py]]
 
 
 === DjangoCommandMixin
@@ -118,7 +118,7 @@ Helper to run shell commands. e.g.: "./manage.py cms check"
 
 usage/tests:
 
-* [[https://github.com/jedie/django-tools/blob/master/tests/test_unittest_django_command.py|/tests/test_unittest_django_command.py]]
+* [[https://github.com/jedie/django-tools/blob/master/django_tools_tests/test_unittest_django_command.py|/django_tools_tests/test_unittest_django_command.py]]
 
 
 === DOM compare in unittests
@@ -138,7 +138,7 @@ You will have the following assert methods inherit from: django_tools.unittest_u
 * self.assertDOM() – for check if nodes in response or not.
 * self.assertContains() – Check if ond node occurs 'count’ times in response
 
-More info and examples in [[https://github.com/jedie/django-tools/blob/master/django_tools/tests/test_dom_asserts.py|./tests/test_dom_asserts.py]]
+More info and examples in [[https://github.com/jedie/django-tools/blob/master/django_tools/django_tools_tests/test_dom_asserts.py|./django_tools_tests/test_dom_asserts.py]]
 
 === Speedup tests
 
@@ -184,7 +184,7 @@ Store information in signed Cookies, use **django.core.signing**.
 So the cookie data can't be manipulated from the client.
 Sources/examples:
 * [[https://github.com/jedie/django-tools/blob/master/django_tools/utils/client_storage.py|/django_tools/utils/client_storage.py]]
-* [[https://github.com/jedie/django-tools/blob/master/tests/test_signed_cookie.py|/tests/test_signed_cookie.py]]
+* [[https://github.com/jedie/django-tools/blob/master/django_tools_tests/test_signed_cookie.py|/django_tools_tests/test_signed_cookie.py]]
 
 
 === Print SQL Queries
@@ -318,8 +318,9 @@ to:
 
 == history
 
-* **dev**
+* v0.31.0 - **dev**
 ** add Mockup utils to create dummy PIL/django-filer images with Text (see above)
+** move tests into {{{/django_tools_tests/}}}
 * v0.30.4 - 27.10.2016 - [[https://github.com/jedie/django-tools/compare/v0.30.2...v0.30.4|compare v0.30.2...v0.30.4]]
 ** add DjangoCommandMixin
 * v0.30.2 - 05.10.2016 - [[https://github.com/jedie/django-tools/compare/v0.30.1...v0.30.2|compare v0.30.1...v0.30.2]]

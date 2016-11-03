@@ -21,7 +21,7 @@ from django_tools.unittest_utils.logging_utils import LoggingBuffer
 if __name__ == "__main__":
     # run unittest directly
     import os
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django_tools.tests.test_settings"
+    os.environ["DJANGO_SETTINGS_MODULE"] = "django_tools.django_tools_tests.test_settings"
 
 from django.core import management
 from django.core.cache import cache
@@ -167,7 +167,7 @@ class LocalSyncCacheTest(unittest.TestCase):
 
 if __name__ == "__main__":
     # Run this unittest directly
-#    management.call_command('test', "django_tools.tests.test_local_sync_cache.LocalSyncCacheTest",
+#    management.call_command('test', "django_tools.django_tools_tests.test_local_sync_cache.LocalSyncCacheTest",
 #        verbosity=2,
 #        failfast=True
 #    )

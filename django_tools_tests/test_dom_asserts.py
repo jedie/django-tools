@@ -23,7 +23,7 @@ import unittest
 if __name__ == "__main__":
     # run unittest directly
     import os
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django_tools.tests.test_settings"
+    os.environ["DJANGO_SETTINGS_MODULE"] = "django_tools.django_tools_tests.test_settings"
 
 
 from django_tools.unittest_utils.unittest_base import BaseTestCase

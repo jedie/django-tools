@@ -18,7 +18,7 @@ from __future__ import absolute_import, division, print_function
 if __name__ == "__main__":
     # For doctest only
     import os
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django_tools.tests.test_settings"
+    os.environ["DJANGO_SETTINGS_MODULE"] = "django_tools.django_tools_tests.test_settings"
 
 from django.utils import six
 from django import forms

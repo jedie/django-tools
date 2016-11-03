@@ -48,7 +48,7 @@ class SignedCookieStorageError(signing.BadSignature):
 class SignedCookieStorage(object):
     """  
     see:
-        tests.test_signed_cookie.TestSignedCookieStorage
+        django_tools_tests.test_signed_cookie.TestSignedCookieStorage
     """
     def __init__(self, cookie_key, max_age=60 * 60 * 24 * 7 * 52, compress=False):
         self.cookie_key = cookie_key

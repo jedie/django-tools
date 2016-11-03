@@ -4,8 +4,8 @@
     Dynamic SITE ID unittests
     ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    run only these tests:
-        .../django-tools $ ./runtests.sh tests.test_dynamic_site
+    run only these django_tools_tests:
+        .../django-tools $ ./runtests.sh django_tools_tests.test_dynamic_site
 
     To see debug output: enable LOGGING in:
         .../django-tools/django_tools_test_project/test_settings.py

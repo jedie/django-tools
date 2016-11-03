@@ -92,5 +92,5 @@ def load_tests(loader, tests, ignore):
     # for module in modules:
     #     suite = doctest.DocTestSuite(module)
     #     suite = unittest.expectedFailure(suite) # FIXME
-    #     tests.addTests(suite)
+    #     django_tools_tests.addTests(suite)
     return tests
