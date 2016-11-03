@@ -43,15 +43,15 @@ class DynamicSiteTest(BaseTestCase):
         self.assertTrue(settings.DEBUG, "Must be true to skip hostname validation!")
 
         Site.objects.all().delete()
-        self.site1 = Site.objects.create(pk=1, domain="domain_one.tld", name="site 1")
+        self.site1 = Site.objects.create(pk=1, domain="domain-one.test", name="site 1")
         self.assertEqual(self.site1.pk, 1)
-        self.site2 = Site.objects.create(pk=2, domain="domain_two.tld", name="site 2")
+        self.site2 = Site.objects.create(pk=2, domain="domain-two.test", name="site 2")
         self.assertEqual(self.site2.pk, 2)
 
-        self.alias1 = SiteAlias.objects.create(site=self.site1, alias="domain_one_alias_one.tld", regex=False)
-        self.alias2 = SiteAlias.objects.create(site=self.site1, alias="domain_one_alias_two.tld", regex=False)
-        self.alias3 = SiteAlias.objects.create(site=self.site2, alias="www.domain_one.tld", regex=False)
-        self.alias4 = SiteAlias.objects.create(site=self.site2, alias=r"^(.*?\.domain_two\.tld)$", regex=True)
+        self.alias1 = SiteAlias.objects.create(site=self.site1, alias="domain-one-alias-one.test", regex=False)
+        self.alias2 = SiteAlias.objects.create(site=self.site1, alias="domain-one-alias-two.test", regex=False)
+        self.alias3 = SiteAlias.objects.create(site=self.site2, alias="www.domain-one.test", regex=False)
+        self.alias4 = SiteAlias.objects.create(site=self.site2, alias=r"^(.*?\.domain-two\.test)$", regex=True)
 
     def test_fallback(self):
         response = self.client.get("/display_site/") # request with 'testserver'
@@ -60,43 +60,43 @@ class DynamicSiteTest(BaseTestCase):
         )
 
     def test_no_alias1(self):
-        response = self.client.get("/display_site/", HTTP_HOST="domain_one.tld")
+        response = self.client.get("/display_site/", HTTP_HOST="domain-one.test")
         self.assertEqual(response.content.decode("utf-8"),
             'ID from settings: 1 - id from get_current(): 1'
         )
 
     def test_no_alias2(self):
-        response = self.client.get("/display_site/", HTTP_HOST="domain_two.tld")
+        response = self.client.get("/display_site/", HTTP_HOST="domain-two.test")
         self.assertEqual(response.content.decode("utf-8"),
             'ID from settings: 2 - id from get_current(): 2'
         )
 
     def test_string_alias1(self):
-        response = self.client.get("/display_site/", HTTP_HOST="domain_one_alias_one.tld")
+        response = self.client.get("/display_site/", HTTP_HOST="domain-one-alias-one.test")
         self.assertEqual(response.content.decode("utf-8"),
             'ID from settings: 1 - id from get_current(): 1'
         )
 
     def test_string_alias2(self):
-        response = self.client.get("/display_site/", HTTP_HOST="domain_one_alias_two.tld")
+        response = self.client.get("/display_site/", HTTP_HOST="domain-one-alias-two.test")
         self.assertEqual(response.content.decode("utf-8"),
             'ID from settings: 1 - id from get_current(): 1'
         )
 
     def test_regex_alias1(self):
-        response = self.client.get("/display_site/", HTTP_HOST="foo.domain_two.tld")
+        response = self.client.get("/display_site/", HTTP_HOST="foo.domain-two.test")
         self.assertEqual(response.content.decode("utf-8"),
             'ID from settings: 2 - id from get_current(): 2'
         )
 
     def test_regex_alias2(self):
-        response = self.client.get("/display_site/", HTTP_HOST="foo.bar.domain_two.tld")
+        response = self.client.get("/display_site/", HTTP_HOST="foo.bar.domain-two.test")
         self.assertEqual(response.content.decode("utf-8"),
             'ID from settings: 2 - id from get_current(): 2'
         )
 
     def test_change(self):
-        response = self.client.get("/display_site/", HTTP_HOST="www.domain_one.tld")
+        response = self.client.get("/display_site/", HTTP_HOST="www.domain-one.test")
         self.assertEqual(response.content.decode("utf-8"),
             'ID from settings: 2 - id from get_current(): 2'
         )
@@ -104,13 +104,13 @@ class DynamicSiteTest(BaseTestCase):
         self.alias3.site = self.site1
         self.alias3.save() # Should clean all site caches
 
-        response = self.client.get("/display_site/", HTTP_HOST="www.domain_one.tld")
+        response = self.client.get("/display_site/", HTTP_HOST="www.domain-one.test")
         self.assertEqual(response.content.decode("utf-8"),
             'ID from settings: 1 - id from get_current(): 1'
         )
 
     def test_create(self):
-        host = "not_exist_yet.tld"
+        host = "does-not-exist-yet.test"
 
         # Fallback to default:
         response = self.client.get("/display_site/", HTTP_HOST=host)

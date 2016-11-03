@@ -87,25 +87,25 @@ class TestUrlValidator(SimpleTestCase):
             self.assertEqual(str(err), "allow_schemes would be ignored, while allow_all_schemes==True!")
 
     def test_not_start_with_allow_all_schemes(self):
-        URLValidator2(allow_schemes=("svn",))("svn://domain.tld")
+        URLValidator2(allow_schemes=("svn",))("svn://domain.test")
         try:
-            URLValidator2(allow_schemes=("http","ftp"))("svn://domain.tld")
+            URLValidator2(allow_schemes=("http","ftp"))("svn://domain.test")
         except ValidationError as err:
             self.assertEqual(six.text_type(err.message), "The URL doesn't start with a allowed scheme.")
 
     def test_allow_query(self):
         validator = URLValidator2(allow_query=False)
-        validator("http://www.domain.tld/without/query/")
+        validator("http://www.domain.test/without/query/")
         try:
-            validator("http://www.domain.tld/with/?query")
+            validator("http://www.domain.test/with/?query")
         except ValidationError as err:
             self.assertEqual(six.text_type(err.message), "Enter a valid URL without a query.")
 
     def test_allow_fragment(self):
         validator = URLValidator2(allow_fragment=False)
-        validator("http://www.domain.tld/without/fragment/")
+        validator("http://www.domain.test/without/fragment/")
         try:
-            validator("http://www.domain.tld/with/a/#fragment")
+            validator("http://www.domain.test/with/a/#fragment")
         except ValidationError as err:
             self.assertEqual(six.text_type(err.message), "Enter a valid URL without a fragment.")
 
@@ -113,7 +113,7 @@ class TestUrlValidator(SimpleTestCase):
         validator = URLValidator2(allow_schemes=None, allow_netloc=False)
         validator("/path/?query#fragment")
         try:
-            validator("http://domain.tld/path/?query#fragment")
+            validator("http://domain.test/path/?query#fragment")
         except ValidationError as err:
             self.assertEqual(six.text_type(err.message), "Please enter a local URL (without protocol/domain).")
 
