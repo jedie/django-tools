@@ -42,6 +42,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
 
+    'easy_thumbnails', 'filer', # for django_tools.unittest_utils.mockup
+
     'django_tools',
     'django_tools.local_sync_cache',
     'django_tools.dynamic_site',

@@ -3,3 +3,5 @@ coverage
 coveralls
 python-creole
 docutils
+Pillow
+cmsplugin-filer

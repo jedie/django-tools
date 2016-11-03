@@ -66,3 +66,6 @@ target/
 # PyDev
 .project
 .pydevproject
+
+# django-filer (created by unittest run)
+filer_public/
