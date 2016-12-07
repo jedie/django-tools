@@ -249,18 +249,22 @@ There exist many miscellaneous stuff. Look in the source, luke!
 
 == running django-tools unittests
 
-There exist different ways to run unittests, e.g.:
+Run all tests in all environment combinations:
+
 {{{
 .../django-tools $ tox
-.../django-tools $ ./setup.py test
-.../django-tools $ ./manage.py test
-.../django-tools $ ./runtests.sh
 }}}
-Run specific tests, e.g.:
+
+Run all tests in current environment:
+
 {{{
-.../django-tools $ ./setup.py test tests.test_local_sync_cache
-.../django-tools $ ./manage.py test tests.test_local_sync_cache
-.../django-tools $ ./runtests.sh tests.test_local_sync_cache
+.../django-tools $ pytest
+}}}
+
+Run specific tests, e.g.:
+
+{{{
+.../django-tools $ pytest django_tools_tests/test_unittest_utils.py
 }}}
 
 
@@ -318,6 +322,8 @@ to:
 
 == history
 
+* dev
+** use [[https://pypi.python.org/pypi/pytest-django|pytest-django]]
 * v0.31.0 - 03.11.2016 - [[https://github.com/jedie/django-tools/compare/v0.30.4...v0.31.0|compare v0.30.4...v0.31.0]]
 ** add Mockup utils to create dummy PIL/django-filer images with Text (see above)
 ** move tests into {{{/django_tools_tests/}}}
