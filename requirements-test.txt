@@ -5,3 +5,5 @@ python-creole
 docutils
 Pillow
 cmsplugin-filer
+pytest-django
+pytest-cov
