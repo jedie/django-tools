@@ -324,6 +324,10 @@ to:
 
 * dev
 ** use [[https://pypi.python.org/pypi/pytest-django|pytest-django]]
+** remove outdated stuff:
+*** django-tagging addon
+*** upgrade_virtualenv.py (Alternative: [[https://github.com/jedie/python-code-snippets/blob/master/CodeSnippets/update_virtualenv_git_repos.py|update_virtualenv_git_repos.py]])
+*** utils.http
 * v0.31.0 - 03.11.2016 - [[https://github.com/jedie/django-tools/compare/v0.30.4...v0.31.0|compare v0.30.4...v0.31.0]]
 ** add Mockup utils to create dummy PIL/django-filer images with Text (see above)
 ** move tests into {{{/django_tools_tests/}}}
