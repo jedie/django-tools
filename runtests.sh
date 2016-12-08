@@ -2,4 +2,4 @@
 
 set -x
 
-python manage.py test --verbosity=2 $*
+pytest $*

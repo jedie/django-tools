@@ -11,10 +11,9 @@ def main():
 
 
 def run_tests():
-    if "test" not in sys.argv:
-        sys.argv.insert(1, "test")
-    main()
-    sys.exit()
+    import pytest
+    errno = pytest.main(args=[])
+    sys.exit(errno)
 
 
 if __name__ == "__main__":
