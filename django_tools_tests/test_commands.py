@@ -32,17 +32,19 @@ class TestListModelsCommand(DjangoCommandMixin, TestCase):
         print(output)
 
         self.assertNotIn("ERROR", output)
-        self.assertIn("existing models as dot names:", output)
+        self.assertIn("existing models in app_label.ModelName format:", output)
 
-        self.assertIn("01 - django.contrib.auth.models.Permission", output)
-        self.assertIn("08 - django_tools.dynamic_site.models.SiteAlias", output)
-        self.assertIn("09 - django_tools_test_project.django_tools_test_app.models.LimitToUsergroupsTestModel", output)
+        self.assertIn("01 - admin.LogEntry", output)
+        self.assertIn("02 - auth.Group", output)
 
-        # TODO: activate after django-filer v1.2.6 is released!
+        self.assertIn("06 - django_tools_test_app.LimitToUsergroupsTestModel", output)
+        self.assertIn("07 - dynamic_site.SiteAlias", output)
+
+        # TODO: Add numbers after django-filer v1.2.6 is released!
         # see:
         # https://github.com/jedie/django-tools/commit/b427e148c2decd3410239152550bf509854b78be
-        #self.assertIn("11 INSTALLED_APPS", output)
-        #self.assertIn("11 apps with models", output)
+        self.assertIn("INSTALLED_APPS....:", output)
+        self.assertIn("Apps with models..:", output)
 
 class TestNiceDiffSettingsCommand(DjangoCommandMixin, TestCase):
     def test_help(self):

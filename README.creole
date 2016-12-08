@@ -254,7 +254,7 @@ $ ./manage.py nice_diffsettings
 
 ==== list_models
 
-Just list all existing models as dotnames. Useful to use this in 'dumpdata' etc.
+Just list all existing models in app_label.ModelName format. Useful to use this in 'dumpdata' etc.
 
 To use it, add {{{'django_tools.manage_commands.django_tools_list_models'}}} to your INSTALLED_APPS and call:
 {{{

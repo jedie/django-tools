@@ -14,19 +14,23 @@ from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
-    help = 'Just list all existing models as dot names.'
+    help = 'Just list all existing models in app_label.ModelName format.'
 
     def handle(self, *args, **options):
-        self.stdout.write("\nexisting models as dot names:\n\n")
+        self.stdout.write("\nexisting models in app_label.ModelName format:\n\n")
 
-        model_count = 0
+        dotnames = []
         app_configs = apps.get_app_configs()
         for app_config in app_configs:
-            app_name = app_config.name
+            app_label = app_config.label
             models = app_config.get_models()
             for model in models:
-                model_count += 1
-                self.stdout.write("%02i - %s.models.%s\n" % (model_count, app_name, model._meta.object_name))
+                dotnames.append(
+                    "%s.%s" % (app_label, model._meta.object_name)
+                )
 
-        self.stdout.write("\n%i INSTALLED_APPS\n" % len(settings.INSTALLED_APPS))
-        self.stdout.write("%i apps with models\n\n" % len(app_configs))
+        for no, dotname in enumerate(sorted(dotnames), 1):
+            self.stdout.write("%02i - %s\n" % (no, dotname))
+
+        self.stdout.write("\nINSTALLED_APPS....: %i\n" % len(settings.INSTALLED_APPS))
+        self.stdout.write("Apps with models..: %i\n\n" % len(app_configs))
