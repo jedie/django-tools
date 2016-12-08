@@ -5,15 +5,19 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-import unittest
-
 from django.conf import settings
 from django.test import SimpleTestCase
 from django.core.mail.backends.locmem import EmailBackend
+from django.utils import six
 
 from django_tools.cache.site_cache_middleware import UpdateCacheMiddleware
 from django_tools.utils.importlib import ImproperlyConfigured, get_attr_from_string, get_setting, \
     get_attr_from_settings, get_class_instance_from_settings
+
+if six.PY3:
+    from unittest import mock
+else:
+    import mock # https://pypi.python.org/pypi/mock
 
 
 class TestImportlib(SimpleTestCase):
@@ -39,14 +43,14 @@ class TestImportlib(SimpleTestCase):
             'django.core.mail.backends.locmem.EmailBackend'
         )
 
-    @unittest.mock.patch('django_tools.utils.importlib.logger')
+    @mock.patch('django_tools.utils.importlib.logger')
     def test_get_setting_not_exists(self, mock_logger):
         get_setting("DOESN'T EXISTS")
         mock_logger.debug.assert_called_with(
             '''"DOESN'T EXISTS" not in settings defined'''
         )
 
-    @unittest.mock.patch('django_tools.utils.importlib.logger')
+    @mock.patch('django_tools.utils.importlib.logger')
     def test_get_setting_empty(self, mock_logger):
         self.assertEqual(settings.STATIC_URL, None)
         get_setting("STATIC_URL")
@@ -58,14 +62,14 @@ class TestImportlib(SimpleTestCase):
         obj = get_attr_from_settings("EMAIL_BACKEND", "email backend")
         self.assertIs(obj, EmailBackend)
 
-    @unittest.mock.patch('django_tools.utils.importlib.logger')
+    @mock.patch('django_tools.utils.importlib.logger')
     def test_get_attr_from_settings_not_exists(self, mock_logger):
         get_attr_from_settings("DOESN'T EXISTS", "a test")
         mock_logger.debug.assert_called_with(
             '''"DOESN'T EXISTS" not in settings defined'''
         )
 
-    @unittest.mock.patch('django_tools.utils.importlib.logger')
+    @mock.patch('django_tools.utils.importlib.logger')
     def test_get_attr_from_settings_empty(self, mock_logger):
         self.assertEqual(settings.STATIC_URL, None)
         get_attr_from_settings("STATIC_URL", "a test")
@@ -77,14 +81,14 @@ class TestImportlib(SimpleTestCase):
         obj = get_class_instance_from_settings("EMAIL_BACKEND", "email backend")
         self.assertIsInstance(obj, EmailBackend)
 
-    @unittest.mock.patch('django_tools.utils.importlib.logger')
+    @mock.patch('django_tools.utils.importlib.logger')
     def test_get_class_instance_from_settings_not_exists(self, mock_logger):
         get_class_instance_from_settings("DOESN'T EXISTS", "a test")
         mock_logger.debug.assert_called_with(
             '''"DOESN'T EXISTS" not in settings defined'''
         )
 
-    @unittest.mock.patch('django_tools.utils.importlib.logger')
+    @mock.patch('django_tools.utils.importlib.logger')
     def test_get_class_instance_from_settings_empty(self, mock_logger):
         self.assertEqual(settings.STATIC_URL, None)
         get_class_instance_from_settings("STATIC_URL", "a test")

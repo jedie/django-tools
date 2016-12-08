@@ -3,10 +3,10 @@
 """
     static path selection
     ~~~~~~~~~~~~~~~~~~~~
-    
+
     TODO: Made this generic and don't use settings.STATIC_ROOT direct, let it
     be set as a argument to widget/fields etc.
-    
+
      * model field
      * form field
      * widget
@@ -61,11 +61,11 @@ def directory_walk(path):
 class StaticPathWidget(forms.Select):
     """
     Select a sub directory in settings.STATIC_ROOT
-    
+
     >>> import os, django_tools
     >>> settings.STATIC_ROOT = os.path.dirname(os.path.abspath(django_tools.__file__))
-    >>> StaticPathWidget().choices # doctest: +ELLIPSIS
-    [('auto_update_cache', 'auto_update_cache'), ..., ('views', 'views')]
+    >>> StaticPathWidget().choices[:2]
+    [('__pycache__', '__pycache__'), ('auto_update_cache', 'auto_update_cache')]
     """
     def __init__(self, attrs=None):
         super(StaticPathWidget, self).__init__(attrs)
@@ -89,7 +89,7 @@ class StaticPathWidget(forms.Select):
         return Static_dirs_choices
 
 
-@six.add_metaclass(models.SubfieldBase)
+# @six.add_metaclass(models.SubfieldBase)
 class StaticPathModelField(models.TextField):
     """
     Model field for select a sub directory in settings.STATIC_ROOT

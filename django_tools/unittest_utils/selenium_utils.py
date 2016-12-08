@@ -1,7 +1,10 @@
 import time
+import warnings
 
+from django.http import HttpRequest
 from django.http import HttpResponse
 from django.http import SimpleCookie
+from django.test import RequestFactory
 
 
 class FakedHttpResponse(HttpResponse):
@@ -13,7 +16,7 @@ class FakedHttpResponse(HttpResponse):
     pass
 
 
-def selenium2fakes_response(driver, client, client_class):
+def selenium2faked_response(driver, client, client_class):
     """
     Create a similar 'testing-response' [1] here.
     So that some of the django testing assertions [2] can be used
@@ -35,11 +38,11 @@ def selenium2fakes_response(driver, client, client_class):
         * response.session
 
     usage e.g.:
-        from django_tools.unittest_utils.selenium_utils import selenium2fakes_response
+        from django_tools.unittest_utils.selenium_utils import selenium2faked_response
 
         class MySeleniumTests(StaticLiveServerTestCase):
             def get_faked_response(self):
-                return selenium2fakes_response(self.driver, self.client, self.client_class)
+                return selenium2faked_response(self.driver, self.client, self.client_class)
             def test_foo(self):
                 self.driver.get("/foo")
                 faked_response = self.get_faked_response()
@@ -69,4 +72,17 @@ def selenium2fakes_response(driver, client, client_class):
     response.session = response.client.session
     # print("\nresponse.session:", dict(response.session))
 
+    help(driver)
+
+    response.request=RequestFactory()
+    response.request.path = driver.current_url
+
     return response
+
+
+def selenium2fakes_response(*args, **kwargs):
+    warnings.warn(
+        "selenium2fakes_response() is deprecated, use selenium2faked_response() !",
+        category=DeprecationWarning
+    )
+    return selenium2faked_response(*args, **kwargs)

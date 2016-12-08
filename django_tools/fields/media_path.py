@@ -3,14 +3,14 @@
 """
     media path selection
     ~~~~~~~~~~~~~~~~~~~~
-    
+
     TODO: Made this generic and don't use settings.MEDIA_ROOT direct, let it
     be set as a argument to widget/fields etc.
-    
+
      * model field
      * form field
      * widget
-     
+
      INFO: This exist only for backward-compatibility and will be removed
      in the future. Please use static_path!
 
@@ -23,10 +23,6 @@ from __future__ import absolute_import, division, print_function
 
 import os
 import warnings
-
-if __name__ == "__main__":
-    # For doctest only
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
 
 from django import forms
 from django.db import models
@@ -65,11 +61,11 @@ def directory_walk(path):
 class MediaPathWidget(forms.Select):
     """
     Select a sub directory in settings.MEDIA_ROOT
-    
+
     >>> import os, django_tools
     >>> settings.MEDIA_ROOT = os.path.dirname(os.path.abspath(django_tools.__file__))
-    >>> MediaPathWidget().choices # doctest: +ELLIPSIS
-    [('auto_update_cache', 'auto_update_cache'), ..., ('views', 'views')]
+    >>> MediaPathWidget().choices[:2]
+    [('__pycache__', '__pycache__'), ('auto_update_cache', 'auto_update_cache')]
     """
     def __init__(self, attrs=None):
         super(MediaPathWidget, self).__init__(attrs)
@@ -99,9 +95,9 @@ class MediaPathWidget(forms.Select):
         return media_dirs_choices
 
 
-class MediaPathModelField(models.TextField, with_metaclass(models.SubfieldBase)):
+class MediaPathModelField(models.TextField):#, with_metaclass(models.SubfieldBase)):
     """
-    
+
     """
 
 #    def __init__(self, separator=",", strip_items=True, skip_empty=True, *args, **kwargs):
@@ -124,10 +120,3 @@ class MediaPathModelField(models.TextField, with_metaclass(models.SubfieldBase))
         return super(MediaPathModelField, self).formfield(**kwargs)
 
 
-if __name__ == "__main__":
-    import doctest
-    print(doctest.testmod(
-#        verbose=True
-        verbose=False
-    ))
-    print("DocTest end.")

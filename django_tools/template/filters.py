@@ -4,26 +4,18 @@
     some additional template filters
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    :copyleft: 2007-2009 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2007-2016 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 from __future__ import absolute_import, division, print_function
 
-
 import datetime
-
-from django_tools.utils.time_utils import datetime2float
-
-
-if __name__ == "__main__":
-    # For doctest only
-    import os
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
 
 from django.template.defaultfilters import stringfilter
 from django.utils.translation import ugettext as _
-from django.utils.encoding import force_unicode
+
+from django_tools.utils.time_utils import datetime2float
 
 
 CHMOD_TRANS_DATA = (
@@ -35,11 +27,11 @@ def chmod_symbol(octal_value):
     ignores meta information like SUID, SGID or the Sticky-Bit.
     e.g. 40755 -> rwxr-xr-x
     >>> chmod_symbol(644)
-    u'rw-r--r--'
+    'rw-r--r--'
     >>> chmod_symbol(40755)
-    u'rwxr-xr-x'
+    'rwxr-xr-x'
     >>> chmod_symbol("777")
-    u'rwxrwxrwx'
+    'rwxrwxrwx'
     """
     octal_value_string = str(octal_value)[-3:] # strip "meta info"
     return ''.join(CHMOD_TRANS_DATA[int(num)] for num in octal_value_string)
@@ -61,37 +53,36 @@ get_oct.is_safe = False
 def human_duration(t):
     """
     Converts a time duration into a friendly text representation.
-    
+
     >>> human_duration("type error")
     Traceback (most recent call last):
         ...
     TypeError: human_duration() argument must be timedelta, integer or float)
-    
-    
+
+
     >>> human_duration(datetime.timedelta(microseconds=1000))
-    u'1.0 ms'
+    '1.0 ms'
     >>> human_duration(0.01)
-    u'10.0 ms'
+    '10.0 ms'
     >>> human_duration(0.9)
-    u'900.0 ms'
+    '900.0 ms'
     >>> human_duration(datetime.timedelta(seconds=1))
-    u'1.0 sec'
+    '1.0 sec'
     >>> human_duration(65.5)
-    u'1.1 min'
-    >>> human_duration((60 * 60)-1)
-    u'59.0 min'
+    '1.1 min'
+    >>> human_duration(59 * 60)
+    '59.0 min'
     >>> human_duration(60*60)
-    u'1.0 hours'
+    '1.0 hours'
     >>> human_duration(1.05*60*60)
-    u'1.1 hours'
+    '1.1 hours'
     >>> human_duration(datetime.timedelta(hours=24))
-    u'1.0 days'
+    '1.0 days'
     >>> human_duration(2.54 * 60 * 60 * 24 * 365)
-    u'2.5 years'
+    '2.5 years'
     """
     if isinstance(t, datetime.timedelta):
-        # timedelta.total_seconds() is new in Python 2.7
-        t = datetime2float(t)
+        t = t.total_seconds()
     elif not isinstance(t, (int, float)):
         raise TypeError("human_duration() argument must be timedelta, integer or float)")
 
@@ -118,7 +109,3 @@ def human_duration(t):
     return "%(number).1f %(type)s" % {'number': count, 'type': name}
 human_duration.is_safe = True
 
-
-if __name__ == "__main__":
-    import doctest
-    print(doctest.testmod(verbose=False))

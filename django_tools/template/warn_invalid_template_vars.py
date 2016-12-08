@@ -2,9 +2,9 @@
 
 """
     Send warnings if a template variable does not exist in the content.
-    
+
     experimental.
-    
+
     Put this into your settings.py:
     --------------------------------------------------------------------------
     if DEBUG:
@@ -16,7 +16,7 @@
 import warnings
 
 from django import template
-from django.utils.encoding import smart_unicode, force_unicode, smart_str
+# from django.utils.encoding import smart_unicode, force_unicode, smart_str
 
 _WARN_ADDED = False
 

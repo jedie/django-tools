@@ -12,9 +12,7 @@
 from __future__ import absolute_import, division, print_function
 
 
-
 import os
-
 
 from django import forms
 from django.db import models
@@ -46,27 +44,31 @@ class DirectoryFormField(forms.CharField):
         return value
 
 
-class DirectoryModelField(models.CharField, with_metaclass(models.SubfieldBase)):
+class DirectoryModelField(models.CharField):#, with_metaclass(models.SubfieldBase)):
     """
     >>> dir = DirectoryModelField()
     >>> dir.run_validators(settings.MEDIA_ROOT)
-    >>> dir.run_validators("does/not/exist")
-    Traceback (most recent call last):
-        ...
-    ValidationError: [u"Directory doesn't exist!"]
-    
-    >>> dir.run_validators("../")
-    Traceback (most recent call last):
-        ...
-    ValidationError: [u'Directory is not in base path!']
-    
+    >>> try:
+    ...     dir.run_validators("does/not/exist")
+    ... except Exception as err:
+    ...     print(err.__class__.__name__, err)
+    ValidationError ["Directory doesn't exist!"]
+
+    >>> try:
+    ...     dir.run_validators("../")
+    ... except Exception as err:
+    ...     print(err.__class__.__name__, err)
+    ValidationError ['Directory is not in base path!']
+
     >>> dir = DirectoryModelField(base_path="/")
     >>> dir.run_validators("/etc/default/")
     >>> dir.run_validators("var/log")
-    >>> dir.run_validators("../bullshit")
-    Traceback (most recent call last):
-        ...
-    ValidationError: [u"Directory doesn't exist!"]
+
+    >>> try:
+    ...     dir.run_validators("../bullshit")
+    ... except Exception as err:
+    ...     print(err.__class__.__name__, err)
+    ValidationError ["Directory doesn't exist!"]
     """
     default_validators = []
     description = _("A existing/accessible directory")
@@ -82,12 +84,3 @@ class DirectoryModelField(models.CharField, with_metaclass(models.SubfieldBase))
         kwargs["widget"] = DirectoryWidget
         kwargs['form_class'] = DirectoryFormField
         return super(DirectoryModelField, self).formfield(**kwargs)
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod(
-#        verbose=True
-        verbose=False
-    )
-    print("DocTest end.")

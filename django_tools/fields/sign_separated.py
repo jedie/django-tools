@@ -3,7 +3,7 @@
 """
     sign separated
     ~~~~~~~~~~~~~~
-    
+
      * model field
      * form field
      * widget
@@ -69,26 +69,28 @@ class SignSeparatedFormField(forms.CharField):
     """
     >>> SignSeparatedFormField().clean(u"one, two")
     (u'one', u'two')
-    
+
     >>> SignSeparatedFormField().to_python(u"one , two, 3,4")
     (u'one', u'two', u'3', u'4')
     >>> SignSeparatedFormField(strip_items=False).clean(u"one , two, 3,4")
     (u'one ', u' two', u' 3', u'4')
-    
+
     >>> SignSeparatedFormField(separator=" ").clean(u"one  two 3")
     (u'one', u'two', u'3')
     >>> SignSeparatedFormField(separator=" ", skip_empty=False).clean(u"one  two 3")
     (u'one', u'', u'two', u'3')
-    
-    >>> SignSeparatedFormField().clean(None)
-    Traceback (most recent call last):
-        ...
-    ValidationError: [u'This field is required.']
-    
-    >>> SignSeparatedFormField().clean("")
-    Traceback (most recent call last):
-        ...
-    ValidationError: [u'This field is required.']
+
+    >>> try:
+    ...     SignSeparatedFormField().clean(None)
+    ... except Exception as err:
+    ...     print(err.__class__.__name__, err)
+    ValidationError ['This field is required.']
+
+    >>> try:
+    ...     SignSeparatedFormField().clean("")
+    ... except Exception as err:
+    ...     print(err.__class__.__name__, err)
+    ValidationError ['This field is required.']
     """
     def __init__(self, separator=",", strip_items=True, skip_empty=True, *args, **kwargs):
         self.separator = separator
@@ -104,42 +106,43 @@ class SignSeparatedFormField(forms.CharField):
         return values
 
 
-@six.add_metaclass(models.SubfieldBase)
+# @six.add_metaclass(models.SubfieldBase)
 class SignSeparatedModelField(models.TextField):
     """
     A dict field.
     Stores a python dict into a text field.
-    
+
     >>> SignSeparatedModelField().to_python("foo, bar")
     ('foo', 'bar')
 
     >>> SignSeparatedModelField().get_db_prep_save(('foo', 'bar'))
     'foo,bar'
-    
+
     >>> f = SignSeparatedModelField().formfield()
     >>> isinstance(f, SignSeparatedFormField)
     True
     >>> f.clean(u"one , two, 3,4")
     (u'one', u'two', u'3', u'4')
-    
+
     kwargs would be pass to the widget:
     >>> f = SignSeparatedModelField(separator="x", strip_items=False, skip_empty=False).formfield()
     >>> f.clean("1x2x x 3")
     ('1', '2', ' ', ' 3')
-    
-    
+
+
     >>> from django.db import models
     >>> from django.forms.models import ModelForm
-        
+
     >>> class TestModel(models.Model):
     ...     test = SignSeparatedModelField(separator=";")
     ...     class Meta:
     ...         app_label = "django_tools"
-    
+
     >>> class TestForm(ModelForm):
     ...     class Meta:
     ...         model = TestModel
-    
+    ...         exclude=()
+
     >>> f = TestForm({'test': None})
     >>> f.is_valid()
     False
@@ -151,10 +154,6 @@ class SignSeparatedModelField(models.TextField):
     True
     >>> f.cleaned_data
     {'test': ('one', 'two', 'three')}
-    >>> from django.core import management
-    >>> management.call_command("syncdb", interactive=False, verbosity=0)
-    >>> f.save()
-    <TestModel: TestModel object>
     """
 
     def __init__(self, separator=",", strip_items=True, skip_empty=True, *args, **kwargs):

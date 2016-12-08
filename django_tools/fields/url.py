@@ -4,58 +4,53 @@
 """
     url form/model field
     ~~~~~~~~~~~~~~~~~~~~
-    
+
     flexible URL form and model field used own URLValidator2.
 
-    :copyleft: 2011-2013 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2011-2016 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 from __future__ import absolute_import, division, print_function
 
 
-
-if __name__ == "__main__":
-    # For doctest only
-    import os
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
-    from django.conf import global_settings
-    global_settings.SECRET_KEY = "unittest"
-
-from django_tools.validators import URLValidator2
-
-from django.core import validators
 from django.db.models.fields import CharField as OriginModelCharField
 from django.forms.fields import CharField as OriginFormsCharField
 from django.utils.translation import ugettext_lazy as _
+
+from django_tools.validators import URLValidator2
 
 
 class URLFormField2(OriginFormsCharField):
     """
     A flexible version of the original django form URLField ;)
-    
+
     Please read the django_tools.validators.URLValidator2 DocString, too!
-    
-    
+
+
     To allow only local domains, disallow scheme and netloc:
     >>> URLFormField2(allow_schemes=None, allow_netloc=False).clean("/path/?query#fragment")
     u'/path/?query#fragment'
-    >>> URLFormField2(allow_schemes=None, allow_netloc=False).clean("http://domain.tld/path/?query#fragment")
-    Traceback (most recent call last):
-        ...
-    ValidationError: [u'Please enter a local URL (without protocol/domain).']
-    
+
+    >>> try:
+    ...     URLFormField2(allow_schemes=None, allow_netloc=False).clean("http://domain.tld/path/?query#fragment")
+    ... except Exception as err:
+    ...     print(err.__class__.__name__, err)
+    ValidationError ['Please enter a local URL (without protocol/domain).']
+
     **Note:** this is also a valid "local" path (more info in URLValidator2 DocString):
     >>> URLFormField2(allow_schemes=None, allow_netloc=False).clean("domain.tld/path/?query#fragment")
     u'domain.tld/path/?query#fragment'
-    
-    
+
+
     >>> URLFormField2(allow_schemes=("svn",)).clean("svn://domain.tld")
     u'svn://domain.tld'
-    >>> URLFormField2(allow_schemes=("http","ftp")).clean("svn://domain.tld")
-    Traceback (most recent call last):
-        ...
-    ValidationError: [u"The URL doesn't start with a allowed scheme."]
+
+    >>> try:
+    ...     URLFormField2(allow_schemes=("http","ftp")).clean("svn://domain.tld")
+    ... except Exception as err:
+    ...     print(err.__class__.__name__, err)
+    ValidationError ["The URL doesn't start with a allowed scheme."]
     """
     default_error_messages = {
         'invalid': _('Enter a valid URL.'),
@@ -80,31 +75,35 @@ class URLFormField2(OriginFormsCharField):
 class URLModelField2(OriginModelCharField):
     """
     A flexible version of the original django model URLField ;)
-    
+
     Please read the django_tools.validators.URLValidator2 DocString, too!
-    
-    
+
+
     >>> f = URLModelField2(verify_exists=False).formfield()
     >>> isinstance(f, URLFormField2)
     True
     >>> f.clean(u"http://www.domain.tld/path?query#fragment")
     u'http://www.domain.tld/path?query#fragment'
-    
+
     >>> f = URLModelField2().formfield()
-    >>> f.clean("svn://domain.tld")
-    Traceback (most recent call last):
-        ...
-    ValidationError: [u"The URL doesn't start with a allowed scheme."]
-    
-    
+
+    >>> try:
+    ...     f.clean("svn://domain.tld")
+    ... except Exception as err:
+    ...     print(err.__class__.__name__, err)
+    ValidationError ["The URL doesn't start with a allowed scheme."]
+
+
     >>> f = URLModelField2(allow_query=False).formfield()
     >>> f.clean("http://www.domain.tld/without/query/")
     u'http://www.domain.tld/without/query/'
-    >>> f.clean("http://www.domain.tld/with/?query")
-    Traceback (most recent call last):
-        ...
-    ValidationError: [u'Enter a valid URL without a query.']
-    
+
+    >>> try:
+    ...     f.clean("http://www.domain.tld/with/?query")
+    ... except Exception as err:
+    ...     print(err.__class__.__name__, err)
+    ValidationError ['Enter a valid URL without a query.']
+
     """
     description = _("URL")
 
@@ -142,11 +141,3 @@ class URLModelField2(OriginModelCharField):
         defaults.update(kwargs)
         return super(URLModelField2, self).formfield(**defaults)
 
-
-
-if __name__ == "__main__":
-    import doctest
-    print(doctest.testmod(
-#        verbose=True
-        verbose=False
-    ))
