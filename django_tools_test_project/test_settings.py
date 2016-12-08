@@ -9,7 +9,6 @@ from django_tools.unittest_utils.disable_migrations import DisableMigrations
 print("Use settings:", __file__)
 
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 
 SECRET_KEY = "Unittests"
 ALLOWED_HOSTS = ["*"] # Allow any domain/subdomain
@@ -46,6 +45,10 @@ INSTALLED_APPS = (
     'django_tools.local_sync_cache',
     'django_tools.dynamic_site',
     'django_tools_test_project.django_tools_test_app',
+
+    'django_tools.manage_commands.django_tools_list_models',
+
+    'django_tools.manage_commands.django_tools_nice_diffsettings',
 )
 
 TEMPLATES = [
@@ -56,6 +59,7 @@ TEMPLATES = [
         ],
         'APP_DIRS': True,
         'OPTIONS': {
+            'DEBUG': DEBUG,
             'context_processors': [
                 # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
                 # list if you haven't customized them:

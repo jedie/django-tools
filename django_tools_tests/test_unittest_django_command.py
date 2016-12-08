@@ -28,6 +28,11 @@ class TestDjangoCommand(DjangoCommandMixin, TestCase):
         self.assertIn("[django]", output)
         self.assertIn("Type 'manage.py help <subcommand>' for help on a specific subcommand.", output)
 
+    def test_check(self):
+        output = self.call_manage_py(["check"], manage_dir=MANAGE_DIR)
+        self.assertNotIn("ERROR", output)
+        self.assertIn("System check identified no issues (0 silenced).", output)
+
     def test_set_env(self):
         """
         Test if we can set "DJANGO_SETTINGS_MODULE"
@@ -42,7 +47,7 @@ class TestDjangoCommand(DjangoCommandMixin, TestCase):
         # print(output)
 
         self.assertIn("subprocess exist status == 1", output)
-        
+
         if PY2:
             member = "ImportError: No module named does-not-exist"
         else:

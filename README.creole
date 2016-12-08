@@ -241,6 +241,25 @@ with StdoutStderrBuffer() as buffer:
 output = buffer.get_output() # contains "foo\n"
 }}}
 
+=== Management commands
+
+==== nice_diffsettings
+
+Similar to django 'diffsettings', but used pretty-printed representation.
+
+To use it, add {{{'django_tools.manage_commands.django_tools_nice_diffsettings'}}} to your INSTALLED_APPS and call:
+{{{
+$ ./manage.py nice_diffsettings
+}}}
+
+==== list_models
+
+Just list all existing models as dotnames. Useful to use this in 'dumpdata' etc.
+
+To use it, add {{{'django_tools.manage_commands.django_tools_list_models'}}} to your INSTALLED_APPS and call:
+{{{
+$ ./manage.py list_models
+}}}
 
 === ..all others…
 
@@ -270,6 +289,14 @@ Run specific tests, e.g.:
 
 
 == Backwards-incompatible changes
+
+== v0.32
+
+remove outdated stuff:
+
+* django-tagging addon
+* upgrade_virtualenv.py (Alternative: [[https://github.com/jedie/python-code-snippets/blob/master/CodeSnippets/update_virtualenv_git_repos.py|update_virtualenv_git_repos.py]])
+* utils.http
 
 == v0.29
 
@@ -323,11 +350,9 @@ to:
 == history
 
 * dev
+** NEW: Management commands: 'nice_diffsettings', 'list_models'
 ** use [[https://pypi.python.org/pypi/pytest-django|pytest-django]]
-** remove outdated stuff:
-*** django-tagging addon
-*** upgrade_virtualenv.py (Alternative: [[https://github.com/jedie/python-code-snippets/blob/master/CodeSnippets/update_virtualenv_git_repos.py|update_virtualenv_git_repos.py]])
-*** utils.http
+** remove outdated stuff: See 'Backwards-incompatible changes' above.
 * v0.31.0 - 03.11.2016 - [[https://github.com/jedie/django-tools/compare/v0.30.4...v0.31.0|compare v0.30.4...v0.31.0]]
 ** add Mockup utils to create dummy PIL/django-filer images with Text (see above)
 ** move tests into {{{/django_tools_tests/}}}
