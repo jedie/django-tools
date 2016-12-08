@@ -3,40 +3,40 @@
 """
     Limit to usergroups
     ~~~~~~~~~~~~~~~~~~~
-    
+
     Helper to limit something to:
         * for everyone (anonymous users)
         * for staff users
         * for superusers
         * for a user group
-        
+
     In forms you will get a select field with:
         * anonymous users
         * staff users
         * superusers
         * ..all existing user groups..
-        
-        
+
+
     usage example
     ~~~~~~~~~~~~~
-    
+
     model.py
     ---------------------------------------------------------------------------
     class FooBar(models.Model):
         permit_edit = limit_to_usergroups.UsergroupsModelField()
         permit_view = limit_to_usergroups.UsergroupsModelField()
     ---------------------------------------------------------------------------
-    
+
     views.py
     ---------------------------------------------------------------------------
     def view(request):
         queryset = FooBar.objects.all()
         queryset = limit_to_usergroups.filter_permission(queryset, permit_view=request.user)
         ...
-        
+
     def edit(request, id):
         foo = FooBar.objects.get(id=id)
-        
+
         if not limit_to_usergroups.has_permission(poll, permit_edit=request.user):
             msg = _("You have no permission to edit this.")
             if settings.DEBUG:
@@ -47,7 +47,7 @@
         ...
     ---------------------------------------------------------------------------
 
-    
+
     :copyleft: 2011-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
@@ -64,10 +64,10 @@ from django.contrib.auth.models import Group
 def has_permission(item, **kwargs):
     """
     return True/False if use has permission stored in UsergroupsModelField.
-    
+
     return True, if permission are ok
     return False, if permission are not sufficient.
-    
+
     e.g.:
         has_permission(poll, permit_vote=request.user)
         has_permission(item, model_field1=user, model_field2=user)
@@ -112,11 +112,11 @@ def has_permission(item, **kwargs):
 def filter_permission(queryset, **kwargs):
     """
     Filter a given queryset with UsergroupsModelField.
-    
+
     e.g.:
         queryset = filter_permission(queryset, permit_view=request.user)
         queryset = filter_permission(queryset, model_field1=user, model_field2=user)
-    
+
     FIXME: Would be nice, if this is a normal QuerySet method
     """
     result = [item for item in queryset if has_permission(item, **kwargs)]
@@ -126,10 +126,10 @@ def filter_permission(queryset, **kwargs):
 def get_verbose_limit_name(value):
     """
     Simply convert the integer value of a UsergroupsModelField to his select choice text
-    
-    >>> x = get_verbose_limit_name(-1)
-    >>> x == "staff users"
-    True
+
+    e.g.:
+        x = get_verbose_limit_name(-1)
+        print(x) # "staff users"
     """
     limit_dict = get_limit_dict()
     return limit_dict[value]
@@ -150,7 +150,7 @@ def get_limit_dict():
 
 
 class UsergroupsModelField(models.IntegerField):
-    """  
+    """
     TODO: Use html select optgroup [1] to group anonymous, staff and superusers
     from user groups
         [1] http://www.w3.org/wiki/HTML/Elements/optgroup
@@ -177,7 +177,7 @@ class UsergroupsModelField(models.IntegerField):
         the user groups
         """
         kwargs["choices"] = self.USER_TYPES_CHOICES
-        
+
         super(UsergroupsModelField, self).__init__(*args, **kwargs)
 
     def get_choices(self, *args, **kwargs):
