@@ -161,6 +161,10 @@ more info in the sourcecode: [[https://github.com/jedie/django-tools/blob/master
 Pimped HttpRequest to get some more information about a request.
 More info in DocString here: [[https://github.com/jedie/django-tools/blob/master/django_tools/utils/http.py|django_tools/utils/http.py]]
 
+==== @display_admin_error
+Developer helper to display silent errors in ModelAdmin.list_display callables.
+See: **display_admin_error** in [[https://github.com/jedie/django-tools/blob/master/django_tools/decorators.py|decorators.py]]
+
 === upgrade virtualenv
 A simple commandline script that calls {{{pip install —-upgrade XY}}} for every package thats installed in a virtualenv.
 Simply copy/symlink it into the root directory of your virtualenv and start it.
@@ -351,6 +355,7 @@ to:
 
 * dev
 ** NEW: Management commands: 'nice_diffsettings', 'list_models'
+** NEW: @display_admin_error to display silent errors in ModelAdmin.list_display callables.
 ** use [[https://pypi.python.org/pypi/pytest-django|pytest-django]]
 ** remove outdated stuff: See 'Backwards-incompatible changes' above.
 * v0.31.0 - 03.11.2016 - [[https://github.com/jedie/django-tools/compare/v0.30.4...v0.31.0|compare v0.30.4...v0.31.0]]

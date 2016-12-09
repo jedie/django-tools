@@ -6,7 +6,7 @@
     
     from PyLucid decorators.
 
-    :copyleft: 2009-2015 by the PyLucid team, see AUTHORS for more details.
+    :copyleft: 2009-2016 by the PyLucid team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -14,6 +14,7 @@ from __future__ import absolute_import, division, print_function
 
 
 import sys
+import traceback
 import warnings
 from django.contrib import messages
 try:
@@ -132,3 +133,27 @@ def render_to(template_name=None, debug=False, **response_kwargs):
             return response
         return wrapper
     return renderer
+
+
+def display_admin_error(func):
+    """
+    For temporary display errors in admin functions. e.g.:
+
+        class MyAdmin(admin.ModelAdmin):
+
+            @display_admin_error
+            def bsp(obj):
+                raise FooBar
+
+            list_display = ('bsp',)
+    """
+    def wrapped(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as err:
+            traceback.print_exc(file=sys.stderr)
+            if settings.DEBUG:
+                return "%s: %s" % (err.__class__.__name__, err)
+            else:
+                raise
+    return wrapped
