@@ -3,7 +3,7 @@
 """
     some decorators
     ~~~~~~~~~~~~~~~
-    
+
     from PyLucid decorators.
 
     :copyleft: 2009-2016 by the PyLucid team, see AUTHORS for more details.
@@ -35,11 +35,11 @@ def check_permissions(superuser_only, permissions=()):
     """
     Protect a view and limit it to users witch are log in and has the permissions.
     If the user is not log in -> Redirect him to a log in view with a next_url back to the requested page.
-    
+
     TODO: Add a log entry, if user has not all permissions.
-    
+
     Usage:
-    --------------------------------------------------------------------------    
+    --------------------------------------------------------------------------
     @check_permissions(superuser_only=False, permissions=(u'appname.add_modelname', u'appname.change_modelname'))
     def my_view(request):
         ...
@@ -83,17 +83,17 @@ def render_to(template_name=None, debug=False, **response_kwargs):
     Based on the decorators from django-annoying.
 
     Example:
- 
+
         @render_to('foo/template.html')
         def PyLucidPluginFoo(request):
-            bar = Bar.object.all()  
+            bar = Bar.object.all()
             return {'bar': bar}
-        
+
     The view can also insert the template name in the context, e.g.:
 
         @render_to
         def PyLucidPluginFoo(request):
-            bar = Bar.object.all()  
+            bar = Bar.object.all()
             return {'bar': bar, 'template_name': 'foo/template.html'}
     """
     def renderer(function):
