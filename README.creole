@@ -353,7 +353,7 @@ to:
 
 == history
 
-* dev
+* v0.32.0 - 19.12.2016 - [[https://github.com/jedie/django-tools/compare/v0.31.0...v0.32.0|compare v0.31.0...v0.32.0]]
 ** NEW: Management commands: 'nice_diffsettings', 'list_models'
 ** NEW: @display_admin_error to display silent errors in ModelAdmin.list_display callables.
 ** NEW: django_tools.template.render.render_template_file
