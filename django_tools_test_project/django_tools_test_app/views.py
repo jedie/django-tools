@@ -3,7 +3,7 @@
 """
     Dynamic SITE ID unittests
     ~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     :copyleft: 2012 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
@@ -33,12 +33,12 @@ def display_site(request):
 
 
 
-def raise_exception(request):
+def raise_exception(request, msg=""):
     """
     This view just raises an exception as a way to test middleware exception
     handling.
     """
-    raise Exception()
+    raise Exception(msg)
 
 
 def get_current_get_parameters(request):
