@@ -189,6 +189,8 @@ Similar to origin django.http.QueryDict but:
  * always mutable
  * output will be sorted (easier for tests ;)
 
+More info, see tests: [[https://github.com/jedie/django-tools/blob/master/django_tools_tests/test_utils_url.py|django_tools_tests/test_utils_url.py]]
+
 
 ==== SignedCookieStorage
 
