@@ -182,6 +182,14 @@ To use it, without installing django-tools:
 This script will be obsolete, if [[https://github.com/pypa/pip/issues/59|pip has a own upgrade command]].
 
 
+=== django_tools.utils.url.GetDict
+
+Similar to origin django.http.QueryDict but:
+ * urlencode() doesn't add "=" to empty values: "?empty" instead of "?empty="
+ * always mutable
+ * output will be sorted (easier for tests ;)
+
+
 ==== SignedCookieStorage
 
 Store information in signed Cookies, use **django.core.signing**.
@@ -365,6 +373,8 @@ to:
 
 == history
 
+* v0.32.2 - 13.01.2017 - *dev*
+** NEW: django_tools.utils.url.GetDict
 * v0.32.1 - 29.12.2016 - [[https://github.com/jedie/django-tools/compare/v0.32.0...v0.32.1|compare v0.32.0...v0.32.1]]
 ** NEW: TracebackLogMiddleware
 * v0.32.0 - 19.12.2016 - [[https://github.com/jedie/django-tools/compare/v0.31.0...v0.32.0|compare v0.31.0...v0.32.0]]
