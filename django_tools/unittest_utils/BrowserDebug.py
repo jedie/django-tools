@@ -7,12 +7,13 @@
 
     Helper functions for displaying test responses in webbrowser.
 
-    :copyleft: 2009-2011 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2009-2017 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
+from __future__ import unicode_literals, absolute_import, division, print_function
 
+import logging
 
 from pprint import pformat
 from xml.sax.saxutils import escape
@@ -21,14 +22,13 @@ import tempfile
 import webbrowser
 
 from django.contrib import messages
+from django.utils.encoding import force_text
 from django.views.debug import get_safe_settings
 
 from django_tools.utils.stack_info import get_stack_info
 
+log = logging.getLogger(__name__)
 
-# Bug with Firefox under Ubuntu.
-# http://www.python-forum.de/topic-11568.html
-#webbrowser._tryorder.insert(0, 'epiphany') # Use Epiphany, if installed.
 
 # Variable to save if the browser is opend in the past.
 BROWSER_TRACEBACK_OPENED = False
@@ -91,6 +91,13 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
         response_info += "\t<dt><h3>%s</h3></dt>\n" % attr
         value = getattr(response, attr, "---")
         value = pformat(value)
+
+        try:
+            value = force_text(value, errors='strict')
+        except UnicodeDecodeError:
+            log.exception("decode error in attr %r:" % attr)
+            value = force_text(value, errors='replace')
+
         value = escape(value)
         response_info += "\t<dd><pre>%s</pre></dd>\n" % value
 

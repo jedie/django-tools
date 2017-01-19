@@ -375,7 +375,9 @@ to:
 
 == history
 
-* v0.32.2 - 13.01.2017 - *dev*
+* v0.32.3 - 19.01.2017 - *dev*
+** Fix UnicodeDecodeError in BrowserDebug
+* v0.32.2 - 13.01.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.2...v0.32.2|compare v0.32.1...v0.32.2]]
 ** NEW: django_tools.utils.url.GetDict
 * v0.32.1 - 29.12.2016 - [[https://github.com/jedie/django-tools/compare/v0.32.0...v0.32.1|compare v0.32.0...v0.32.1]]
 ** NEW: TracebackLogMiddleware
