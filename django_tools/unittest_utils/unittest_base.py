@@ -1,10 +1,10 @@
 # coding: utf-8
 
-"""   
+"""
     unittest base
     ~~~~~~~~~~~~~
-    
-    :copyleft: 2009-2015 by the django-tools team, see AUTHORS for more details.
+
+    :copyleft: 2009-2017 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -19,12 +19,9 @@ from django.test import TestCase
 from django.contrib.auth.models import User, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core import management
-from django.test import SimpleTestCase
-from django.test.html import HTMLParseError, parse_html
-from django.utils.encoding import smart_str
 
 from .BrowserDebug import debug_response
-import difflib
+
 
 class BaseUnittestCase(TestCase):
     """
@@ -58,19 +55,19 @@ class BaseUnittestCase(TestCase):
 
     def assert_is_dir(self, path):
         if not os.path.isdir(path):
-            self.fail("Directory %r doesn't exists!" % path)
+            self.fail('Directory "%s" doesn\'t exists!' % path)
 
     def assert_not_is_dir(self, path):
         if os.path.isdir(path):
-            self.fail("Directory %r exists, but should not exists!" % path)
+            self.fail('Directory "%s" exists, but should not exists!' % path)
 
     def assert_is_file(self, path):
         if not os.path.isfile(path):
-            self.fail("File %r doesn't exists!" % path)
+            self.fail('File "%s" doesn\'t exists!' % path)
 
     def assert_not_is_File(self, path):
         if os.path.isfile(path):
-            self.fail("File %r exists, but should not exists!" % path)
+            self.fail('File "%s" exists, but should not exists!' % path)
 
 
 class BaseTestCase(BaseUnittestCase):
@@ -119,9 +116,9 @@ class BaseTestCase(BaseUnittestCase):
         user.is_superuser = is_superuser
         user.save()
         if verbosity >= 2:
-            print("Test user %r created." % user)
+            print('Test user "%s" created.' % user)
         return user
-    
+
     def create_testusers(self, verbosity=2):
         """
         Create all available testusers and UserProfiles
@@ -142,7 +139,7 @@ class BaseTestCase(BaseUnittestCase):
 
         ok = self.client.login(username=test_user["username"],
                                password=test_user["password"])
-        self.failUnless(ok, "Can't login test user '%s'!" % usertype)
+        self.failUnless(ok, 'Can\'t login test user "%s"!' % usertype)
         return self._get_user(usertype)
 
     def add_user_permissions(self, user, permissions):
@@ -160,7 +157,7 @@ class BaseTestCase(BaseUnittestCase):
                 content_type = ContentType.objects.get(app_label=app_label, model=model_name)
             except ContentType.DoesNotExist:
                 etype, evalue, etb = sys.exc_info()
-                evalue = etype("Can't get ContentType for app %r and model %r: %s" % (
+                evalue = etype('Can\'t get ContentType for app "%s" and model "%s": %s' % (
                     app_label, model_name, evalue
                 ))
                 raise etype(evalue).with_traceback(etb)
@@ -179,7 +176,7 @@ class BaseTestCase(BaseUnittestCase):
         except KeyError as err:
             etype, evalue, etb = sys.exc_info()
             evalue = etype(
-                "Wrong usetype %s! Existing usertypes are: %s" % (err, ", ".join(list(self.TEST_USERS.keys())))
+                'Wrong usetype %s! Existing usertypes are: %s' % (err, ", ".join(list(self.TEST_USERS.keys())))
             )
             raise etype(evalue).with_traceback(etb)
 
@@ -211,7 +208,7 @@ class BaseTestCase(BaseUnittestCase):
         debug_response(
             response, self.browser_traceback, msg, display_tb=False
         )
-        msg += " (url: %r)" % response.request.get("PATH_INFO", "???")
+        msg += ' (url: "%s")' % response.request.get("PATH_INFO", "???")
         raise self.failureException(msg)
 
     def assertStatusCode(self, response, excepted_code=200):
@@ -220,7 +217,7 @@ class BaseTestCase(BaseUnittestCase):
         """
         if response.status_code == excepted_code:
             return # Status code is ok.
-        msg = "assertStatusCode error: %r != %r" % (response.status_code, excepted_code)
+        msg = 'assertStatusCode error: "%s" != "%s"' % (response.status_code, excepted_code)
         self.raise_browser_traceback(response, msg)
 
     # def _assert_and_parse_html(self, html, user_msg, msg):
@@ -231,7 +228,7 @@ class BaseTestCase(BaseUnittestCase):
     #     try:
     #         return parse_html(html)
     #     except HTMLParseError as e:
-    #         self.fail("html code is not valid: %s - code: %r" % (e, html))
+    #         self.fail('html code is not valid: %s - code: "%s"' % (e, html))
     #
     # def _assert_and_parse_html_response(self, response):
     #     """
@@ -241,12 +238,12 @@ class BaseTestCase(BaseUnittestCase):
     #     try:
     #         return parse_html(response.content)
     #     except HTMLParseError as e:
-    #         self.raise_browser_traceback(response, "Response's content is no valid html: %s" % e)
+    #         self.raise_browser_traceback(response, "Response's content is no valid html: %s' % e)
 
     def assertDOM(self, response, must_contain=(), must_not_contain=(), use_browser_traceback=True):
         """
         Asserts that html response contains 'must_contain' nodes, but no
-        nodes from must_not_contain.      
+        nodes from must_not_contain.
         """
         for txt in must_contain:
             try:
@@ -281,7 +278,7 @@ class BaseTestCase(BaseUnittestCase):
                     )
                 except AssertionError as err:
                     if browser_traceback:
-                        msg = "Text not in response: '%s': %s" % (
+                        msg = 'Text not in response: "%s": %s' % (
                             must_contain_snippet, err
                         )
                         debug_response(
@@ -297,7 +294,7 @@ class BaseTestCase(BaseUnittestCase):
                     )
                 except AssertionError as err:
                     if browser_traceback:
-                        msg = "Text should not be in response: '%s': %s" % (
+                        msg = 'Text should not be in response: "%s": %s' % (
                             must_not_contain_snippet, err
                         )
                         debug_response(
@@ -310,12 +307,12 @@ def direct_run(raw_filename):
     """
     Run a test direct from a unittest file.
     A unittest file should add something like this:
-    
+
     if __name__ == "__main__":
         # Run this unittest directly
         direct_run(__file__)
     """
     appname = os.path.splitext(os.path.basename(raw_filename))[0]
-    print("direct run %r" % appname)
+    print('direct run "%s"' % appname)
     management.call_command('test', appname)
 

@@ -67,7 +67,10 @@ class TestBaseUnittestCase(BaseUnittestCase):
         try:
             self.assert_is_dir("foobar_dir")
         except AssertionError as err:
-            self.assertEqual(six.text_type(err), "Directory 'foobar_dir' doesn't exists!")
+            self.assertEqual(
+                six.text_type(err),
+                six.text_type('Directory "foobar_dir" doesn\'t exists!')
+            )
 
     def test_assert_not_is_dir(self):
         self.assert_not_is_dir("foobar_dir")
@@ -75,7 +78,10 @@ class TestBaseUnittestCase(BaseUnittestCase):
         try:
             self.assert_not_is_dir(existing_path)
         except AssertionError as err:
-            self.assertEqual(six.text_type(err), "Directory '%s' exists, but should not exists!" % existing_path)
+            self.assertEqual(
+                six.text_type(err),
+                six.text_type('Directory "%s" exists, but should not exists!' % existing_path)
+            )
 
 
     def test_assert_is_file(self):
@@ -83,14 +89,20 @@ class TestBaseUnittestCase(BaseUnittestCase):
         try:
             self.assert_is_file("foobar_file.txt")
         except AssertionError as err:
-            self.assertEqual(six.text_type(err), "File 'foobar_file.txt' doesn't exists!")
+            self.assertEqual(
+                six.text_type(err),
+                six.text_type('File "foobar_file.txt" doesn\'t exists!')
+            )
 
     def test_assert_not_is_File(self):
         self.assert_not_is_File("foobar_file.txt")
         try:
             self.assert_not_is_File(__file__)
         except AssertionError as err:
-            self.assertEqual(six.text_type(err), "File '%s' exists, but should not exists!" % __file__)
+            self.assertEqual(
+                six.text_type(err),
+                six.text_type('File "%s" exists, but should not exists!' % __file__)
+            )
 
 
 class TestTempDir(BaseUnittestCase):
