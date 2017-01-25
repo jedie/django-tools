@@ -160,6 +160,26 @@ class TestMyTemplate(SimpleTestCase):
 You can also decorate the test method ;)
 
 
+=== @task_always_eager() decorator
+
+Decorator that set 'task_always_eager=True' in settings, so that all Celery tasks will be executed locally instead of being sent to the queue
+See: http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-task_always_eager
+
+Usage, e.g.:
+
+{{{
+from django.core import mail
+from django.test import SimpleTestCase
+from django_tools.unittest_utils.celery import task_always_eager
+
+@task_always_eager()
+class TestMyCeleryJobs(SimpleTestCase):
+    def test_send_mail(self):
+        response = self.client.get('/send_mail/foo/')
+        self.assertEqual(len(mail.outbox), 1)
+}}}
+You can also decorate the test method ;)
+
 
 === Speedup tests
 
@@ -396,9 +416,10 @@ to:
 
 == history
 
-* v0.32.3 - ??? - *dev*
+* v0.32.3 - 25.01.2017 - *dev*
 ** Fix UnicodeDecodeError in BrowserDebug
 ** NEW: @set_string_if_invalid() decorator
+** NEW: @task_always_eager() decorator
 * v0.32.2 - 13.01.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.2...v0.32.2|compare v0.32.1...v0.32.2]]
 ** NEW: django_tools.utils.url.GetDict
 * v0.32.1 - 29.12.2016 - [[https://github.com/jedie/django-tools/compare/v0.32.0...v0.32.1|compare v0.32.0...v0.32.1]]
