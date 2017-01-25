@@ -208,4 +208,4 @@ class TestCeleryDecorator(SimpleTestCase):
     def test_disabled_celery(self):
         from celery import current_app
         self.assertTrue(current_app.conf.CELERY_ALWAYS_EAGER)
-        self.assertTrue(current_app.conf['task_always_eager'])
+        self.assertTrue(current_app.conf['CELERY_ALWAYS_EAGER'])
