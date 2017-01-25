@@ -8,3 +8,4 @@ cmsplugin-filer
 pytest-django
 pytest-cov
 mock
+celery

@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 
 import os
-import unittest
 import sys
 
 import django
@@ -13,6 +12,7 @@ from django.contrib.auth.models import User
 from django.test import SimpleTestCase
 from django.utils import six
 from django_tools.template.render import render_string_template
+from django_tools.unittest_utils.celery import task_always_eager
 from django_tools.unittest_utils.print_sql import PrintQueries
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 from django_tools.unittest_utils.tempdir import TempDir
@@ -181,7 +181,6 @@ class TestPrintSQL(BaseTestCase):
 
 @set_string_if_invalid()
 class TestSetStringIfInvalidDecorator(SimpleTestCase):
-
     def assert_activation(self):
         from django.conf import settings
         string_if_invalid = settings.TEMPLATES[0]['OPTIONS']['string_if_invalid']
@@ -198,3 +197,15 @@ class TestSetStringIfInvalidDecorator(SimpleTestCase):
         content = render_string_template("pre{{ tag }}post", {})
         self.assertEqual(content, 'pre***invalid:tag***post')
         self.assertIn(TEMPLATE_INVALID_PREFIX, content)
+
+
+@task_always_eager()
+class TestCeleryDecorator(SimpleTestCase):
+    def test_settings_set(self):
+        from django.conf import settings
+        self.assertTrue(settings.CELERY_ALWAYS_EAGER)
+
+    def test_disabled_celery(self):
+        from celery import current_app
+        self.assertTrue(current_app.conf.CELERY_ALWAYS_EAGER)
+        self.assertTrue(current_app.conf['task_always_eager'])
