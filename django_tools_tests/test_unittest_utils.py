@@ -5,9 +5,12 @@ import sys
 import django
 from django.contrib.auth.models import User
 from django.utils import six
+from django_tools.template.render import render_string_template
 from django_tools.unittest_utils.print_sql import PrintQueries
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 from django_tools.unittest_utils.tempdir import TempDir
+from django_tools.unittest_utils.template import TemplateInvalidMixin, \
+    TEMPLATE_INVALID_PREFIX
 from django_tools.unittest_utils.unittest_base import BaseUnittestCase, BaseTestCase
 
 
@@ -154,3 +157,15 @@ class TestPrintSQL(BaseTestCase):
         else:
             self.assertIn("1 - SELECT COUNT(", output)
         self.assertIn('FROM "auth_user"', output)
+
+
+class TestTemplateInvalidMixin(TemplateInvalidMixin, unittest.TestCase):
+    def test_valid_tag(self):
+        content = render_string_template("pre{{ tag }}post", {"tag": "FooBar!"})
+        self.assertEqual(content, 'preFooBar!post')
+        self.assertNotIn(TEMPLATE_INVALID_PREFIX, content)
+
+    def test_invalid_tag(self):
+        content = render_string_template("pre{{ tag }}post", {})
+        self.assertEqual(content, 'pre***invalid:tag***post')
+        self.assertIn(TEMPLATE_INVALID_PREFIX, content)
