@@ -140,6 +140,23 @@ You will have the following assert methods inherit from: django_tools.unittest_u
 
 More info and examples in [[https://github.com/jedie/django-tools/blob/master/django_tools/django_tools_tests/test_dom_asserts.py|./django_tools_tests/test_dom_asserts.py]]
 
+
+=== TemplateInvalidMixin
+
+Helper to check if there are missing template tags by set temporary {{{'string_if_invalid'}}}, see: https://docs.djangoproject.com/en/1.8/ref/templates/api/#invalid-template-variables
+
+Usage, e.g.:
+
+{{{
+from django.test import TestCase
+from django_tools.unittest_utils.template import TemplateInvalidMixin, TEMPLATE_INVALID_PREFIX
+class TestMyTemplate(TemplateInvalidMixin, TestCase):
+    def test_valid_tag(self):
+        response = self.client.get('/foo/bar/')
+        self.assertNotIn(TEMPLATE_INVALID_PREFIX, response.content)
+}}}
+
+
 === Speedup tests
 
 Speedup test run start by disable migrations, e.g.:
@@ -375,8 +392,9 @@ to:
 
 == history
 
-* v0.32.3 - 19.01.2017 - *dev*
+* v0.32.3 - ??? - *dev*
 ** Fix UnicodeDecodeError in BrowserDebug
+** NEW: TemplateInvalidMixin
 * v0.32.2 - 13.01.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.2...v0.32.2|compare v0.32.1...v0.32.2]]
 ** NEW: django_tools.utils.url.GetDict
 * v0.32.1 - 29.12.2016 - [[https://github.com/jedie/django-tools/compare/v0.32.0...v0.32.1|compare v0.32.0...v0.32.1]]
