@@ -1,17 +1,24 @@
+# coding: utf-8
+
+from __future__ import unicode_literals
+
+
 import os
 import unittest
 import sys
 
 import django
+
 from django.contrib.auth.models import User
+from django.test import SimpleTestCase
 from django.utils import six
 from django_tools.template.render import render_string_template
 from django_tools.unittest_utils.print_sql import PrintQueries
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 from django_tools.unittest_utils.tempdir import TempDir
-from django_tools.unittest_utils.template import TemplateInvalidMixin, \
-    TEMPLATE_INVALID_PREFIX
-from django_tools.unittest_utils.unittest_base import BaseUnittestCase, BaseTestCase
+from django_tools.unittest_utils.template import TEMPLATE_INVALID_PREFIX, set_string_if_invalid
+from django_tools.unittest_utils.unittest_base import BaseUnittestCase, \
+    BaseTestCase
 
 
 class TestBaseUnittestCase(BaseUnittestCase):
@@ -159,13 +166,23 @@ class TestPrintSQL(BaseTestCase):
         self.assertIn('FROM "auth_user"', output)
 
 
-class TestTemplateInvalidMixin(TemplateInvalidMixin, unittest.TestCase):
+
+@set_string_if_invalid()
+class TestSetStringIfInvalidDecorator(SimpleTestCase):
+
+    def assert_activation(self):
+        from django.conf import settings
+        string_if_invalid = settings.TEMPLATES[0]['OPTIONS']['string_if_invalid']
+        self.assertIn(TEMPLATE_INVALID_PREFIX, string_if_invalid)
+
     def test_valid_tag(self):
+        self.assert_activation()
         content = render_string_template("pre{{ tag }}post", {"tag": "FooBar!"})
         self.assertEqual(content, 'preFooBar!post')
         self.assertNotIn(TEMPLATE_INVALID_PREFIX, content)
 
     def test_invalid_tag(self):
+        self.assert_activation()
         content = render_string_template("pre{{ tag }}post", {})
         self.assertEqual(content, 'pre***invalid:tag***post')
         self.assertIn(TEMPLATE_INVALID_PREFIX, content)
