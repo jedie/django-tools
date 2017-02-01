@@ -15,8 +15,9 @@ import os
 import sys
 import textwrap
 
+from django.contrib import auth
 from django.test import TestCase
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core import management
 
@@ -106,6 +107,7 @@ class BaseTestCase(BaseUnittestCase):
         Create a user and return the instance.
         """
         defaults = {'password':password, 'email':email}
+        User = auth.get_user_model()
         user, created = User.objects.get_or_create(
             username=username, defaults=defaults
         )
@@ -134,6 +136,7 @@ class BaseTestCase(BaseUnittestCase):
         """
         test_user = self._get_userdata(usertype)
 
+        User = auth.get_user_model()
         count = User.objects.filter(username=test_user["username"]).count()
         self.failIfEqual(count, 0, "You have to call self.create_testusers() first!")
         self.failUnlessEqual(count, 1)
@@ -184,6 +187,7 @@ class BaseTestCase(BaseUnittestCase):
     def _get_user(self, usertype):
         """ return User model instance for the given usertype"""
         test_user = self._get_userdata(usertype)
+        User = auth.get_user_model()
         return User.objects.get(username=test_user["username"])
 
     def _create_testusers(self):
@@ -193,6 +197,7 @@ class BaseTestCase(BaseUnittestCase):
             Create a user and return the instance.
             """
             defaults = {'password':password, 'email':email}
+            User = auth.get_user_model()
             user, created = User.objects.get_or_create(
                 username=username, defaults=defaults
             )
