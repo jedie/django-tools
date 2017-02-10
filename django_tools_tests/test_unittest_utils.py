@@ -9,6 +9,7 @@ import sys
 import django
 from django.contrib import auth
 from django.contrib.auth.models import User
+from django.test import Client
 from django.test import SimpleTestCase
 from django.utils import six
 
@@ -227,10 +228,14 @@ class TestCeleryDecorator(SimpleTestCase):
 
 
 
-class BaseTestCaseToolsTest(BaseTestCase):
+class AssertResponseTest(BaseTestCase):
+    @classmethod
+    def setUpClass(cls):
+        super(AssertResponseTest, cls).setUpClass()
+        cls.response = Client().get("/admin/login/")
+
     def test_assert_response_ok(self):
-        response = self.client.get("/admin/login/")
-        self.assertResponse(response,
+        self.assertResponse(self.response,
             must_contain=(
                 "Django administration",
                 "Username:",
@@ -241,6 +246,36 @@ class BaseTestCaseToolsTest(BaseTestCase):
                 "error", "traceback",
             ),
             status_code=200,
+            template_name="admin/login.html",
             html=False,
             browser_traceback=True
+        )
+
+    def test_must_contain(self):
+        self.assertResponse(self.response,
+            must_contain=("Django administration",)
+        )
+        self.assertRaises(AssertionError, self.assertResponse, self.response,
+            must_contain=("Django X administration",), browser_traceback=False
+        )
+
+    def test_must_not_contain(self):
+        self.assertRaises(AssertionError, self.assertResponse, self.response,
+            must_not_contain=("Django administration",), browser_traceback=False
+        )
+
+    def test_wrong_template(self):
+        self.assertResponse(self.response,
+            template_name="admin/login.html"
+        )
+        self.assertRaises(AssertionError, self.assertResponse, self.response,
+            template_name="admin/loginXXX.html", browser_traceback=False
+        )
+
+    def test_wrong_status_code(self):
+        self.assertResponse(self.response,
+            status_code=200
+        )
+        self.assertRaises(AssertionError, self.assertResponse, self.response,
+            status_code=404, browser_traceback=False
         )

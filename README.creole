@@ -416,6 +416,8 @@ to:
 
 == history
 
+* v0.32.5 - 10.02.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.4...v0.32.5|compare v0.32.4...v0.32.5]]
+** NEW: Add {{{template_name}}} (optional) to {{{self.assertResponse()}}} (check with {{{assertTemplateUsed()}}})
 * v0.32.4 - 01.02.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.3...v0.32.4|compare v0.32.3...v0.32.4]]
 * Fix: Set "is_active" for created test users
 * v0.32.3 - 25.01.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.2...v0.32.3|compare v0.32.2...v0.32.3]]

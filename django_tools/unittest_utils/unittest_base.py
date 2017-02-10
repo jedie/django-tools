@@ -269,7 +269,9 @@ class BaseTestCase(BaseUnittestCase):
 
     def assertResponse(self, response,
             must_contain=None, must_not_contain=None,
-            status_code=200, html=False,
+            status_code=200,
+            template_name=None,
+            html=False,
             browser_traceback=True):
         """
         Check the content of the response
@@ -308,6 +310,26 @@ class BaseTestCase(BaseUnittestCase):
                         )
                     raise
 
+        try:
+            self.assertEqual(response.status_code, status_code)
+        except AssertionError as err:
+            if browser_traceback:
+                msg = 'Wrong status code: %s' % err
+                debug_response(
+                    response, self.browser_traceback, msg, display_tb=True
+                )
+            raise
+
+        if template_name is not None:
+            try:
+                self.assertTemplateUsed(response, template_name=template_name)
+            except AssertionError as err:
+                if browser_traceback:
+                    msg = 'Template not used: %s' % err
+                    debug_response(
+                        response, self.browser_traceback, msg, display_tb=True
+                    )
+                raise
 
 def direct_run(raw_filename):
     """
