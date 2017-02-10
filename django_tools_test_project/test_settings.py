@@ -30,6 +30,9 @@ CACHES = {
 }
 
 MIDDLEWARE_CLASSES = (
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     'django_tools.dynamic_site.middleware.DynamicSiteMiddleware',
     'django_tools.middlewares.ThreadLocal.ThreadLocalMiddleware',
     'django_tools.middlewares.TracebackLogMiddleware.TracebackLogMiddleware',

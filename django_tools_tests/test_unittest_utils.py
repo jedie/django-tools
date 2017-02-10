@@ -209,3 +209,23 @@ class TestCeleryDecorator(SimpleTestCase):
         from celery import current_app
         self.assertTrue(current_app.conf.CELERY_ALWAYS_EAGER)
         self.assertTrue(current_app.conf['CELERY_ALWAYS_EAGER'])
+
+
+
+class BaseTestCaseToolsTest(BaseTestCase):
+    def test_assert_response_ok(self):
+        response = self.client.get("/admin/login/")
+        self.assertResponse(response,
+            must_contain=(
+                "Django administration",
+                "Username:",
+                "Password:",
+                'value="Log in"',
+            ),
+            must_not_contain=(
+                "error", "traceback",
+            ),
+            status_code=200,
+            html=False,
+            browser_traceback=True
+        )
