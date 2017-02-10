@@ -7,10 +7,11 @@ import os
 import sys
 
 import django
-
+from django.contrib import auth
 from django.contrib.auth.models import User
 from django.test import SimpleTestCase
 from django.utils import six
+
 from django_tools.template.render import render_string_template
 from django_tools.unittest_utils.celery import task_always_eager
 from django_tools.unittest_utils.print_sql import PrintQueries
@@ -105,6 +106,7 @@ class TestBaseUnittestCase(BaseUnittestCase):
             )
 
 
+
 class TestTempDir(BaseUnittestCase):
 
     def testTempDir(self):
@@ -160,8 +162,8 @@ class TestStdoutStderrBuffer(BaseUnittestCase):
             self.fail()
 
 
-class TestPrintSQL(BaseTestCase):
-    def test(self):
+class TestBaseTestCase(BaseTestCase):
+    def test_print_sql(self):
         with StdoutStderrBuffer() as buffer:
             with PrintQueries("Create object"):
                 User.objects.all().count()
@@ -177,6 +179,19 @@ class TestPrintSQL(BaseTestCase):
             self.assertIn("1 - SELECT COUNT(", output)
         self.assertIn('FROM "auth_user"', output)
 
+    def test_create_users(self):
+        User = auth.get_user_model()
+        self.assertEqual(User.objects.all().count(), 0)
+
+        self.create_testusers()
+
+        usernames = User.objects.all().values_list("username", flat=True)
+        usernames = list(usernames)
+        usernames.sort()
+        self.assertEqual(usernames, ['normal test user', 'staff test user', 'superuser'])
+
+        # Are all users active?
+        self.assertEqual(User.objects.filter(is_active=True).count(), 3)
 
 
 @set_string_if_invalid()
