@@ -220,12 +220,17 @@ class TestCeleryDecorator(SimpleTestCase):
     def test_settings_set(self):
         from django.conf import settings
         self.assertTrue(settings.CELERY_ALWAYS_EAGER)
+        self.assertTrue(settings.CELERY_EAGER_PROPAGATES_EXCEPTIONS)
 
-    def test_disabled_celery(self):
+    def test_always_eager(self):
         from celery import current_app
         self.assertTrue(current_app.conf.CELERY_ALWAYS_EAGER)
         self.assertTrue(current_app.conf['CELERY_ALWAYS_EAGER'])
 
+    def test_eager_propagates_exceptions(self):
+        from celery import current_app
+        self.assertTrue(current_app.conf.CELERY_EAGER_PROPAGATES_EXCEPTIONS)
+        self.assertTrue(current_app.conf['CELERY_EAGER_PROPAGATES_EXCEPTIONS'])
 
 
 class AssertResponseTest(BaseTestCase):

@@ -160,10 +160,15 @@ class TestMyTemplate(SimpleTestCase):
 You can also decorate the test method ;)
 
 
-=== @task_always_eager() decorator
+=== @task_always_eager() celery decorator
 
-Decorator that set 'task_always_eager=True' in settings, so that all Celery tasks will be executed locally instead of being sent to the queue
-See: http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-task_always_eager
+Decorator activate celery:
+{{{
+CELERY_ALWAYS_EAGER=True # executed locally instead of being sent to the queue
+CELERY_EAGER_PROPAGATES_EXCEPTIONS=True # raise exceptions on errors
+}}}
+Is also set these two items in settings by using {{{override_settings}}}
+See also: http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-task_always_eager
 
 Usage, e.g.:
 
@@ -416,14 +421,16 @@ to:
 
 == history
 
+* v0.32.6 - 22.02.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.5...v0.32.6|compare v0.32.5...v0.32.6]]
+* {{{@task_always_eager()}}} decorator will set {{{CELERY_EAGER_PROPAGATES_EXCEPTIONS=True}}}, too.
 * v0.32.5 - 10.02.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.4...v0.32.5|compare v0.32.4...v0.32.5]]
 ** NEW: Add {{{template_name}}} (optional) to {{{self.assertResponse()}}} (check with {{{assertTemplateUsed()}}})
 * v0.32.4 - 01.02.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.3...v0.32.4|compare v0.32.3...v0.32.4]]
 * Fix: Set "is_active" for created test users
 * v0.32.3 - 25.01.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.2...v0.32.3|compare v0.32.2...v0.32.3]]
 ** Fix UnicodeDecodeError in BrowserDebug
-** NEW: @set_string_if_invalid() decorator
-** NEW: @task_always_eager() decorator
+** NEW: {{{@set_string_if_invalid()}}} decorator
+** NEW: {{{@task_always_eager()}}} decorator
 * v0.32.2 - 13.01.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.1...v0.32.2|compare v0.32.1...v0.32.2]]
 ** NEW: django_tools.utils.url.GetDict
 * v0.32.1 - 29.12.2016 - [[https://github.com/jedie/django-tools/compare/v0.32.0...v0.32.1|compare v0.32.0...v0.32.1]]
