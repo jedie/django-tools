@@ -89,6 +89,13 @@ usage/tests:
 
 * [[https://github.com/jedie/django-tools/blob/master/django_tools_tests/test_mockup.py|/django_tools_tests/test_mockup.py]]
 
+=== create users
+
+[[https://github.com/jedie/django-tools/blob/master/django_tools/unittest_utils/user.py|/unittest_utils/user.py]]:
+
+* {{{django_tools.unittest_utils.user.create_user()}}} - create users, get_super_user
+* {{{django_tools.unittest_utils.user.get_super_user()}}} - get the first existing superuser
+
 
 === BaseUnittestCase
 
@@ -421,6 +428,8 @@ to:
 
 == history
 
+* **dev**
+** NEW: {{{/unittest_utils/user.py}}} - helper for creating users (needfull in unittests)
 * v0.32.6 - 22.02.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.5...v0.32.6|compare v0.32.5...v0.32.6]]
 * {{{@task_always_eager()}}} decorator will set {{{CELERY_EAGER_PROPAGATES_EXCEPTIONS=True}}}, too.
 * v0.32.5 - 10.02.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.4...v0.32.5|compare v0.32.4...v0.32.5]]
