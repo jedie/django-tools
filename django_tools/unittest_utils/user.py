@@ -18,6 +18,7 @@ def create_user(username, password=None, email="", is_staff=False, is_superuser=
     :param password: Plain Text password
     :param encrypted_password: Hashed password (e.g. cloned vom other user)
     :param groups: List of user group names
+    :return: created user instance
     """
     User=get_user_model()
     user, created = User.objects.get_or_create(username=username)
@@ -53,6 +54,9 @@ def create_user(username, password=None, email="", is_staff=False, is_superuser=
 
 
 def get_super_user():
+    """
+    :return: the first 'superuser'
+    """
     User=get_user_model()
     try:
         super_user = User.objects.filter(is_superuser=True)[0]

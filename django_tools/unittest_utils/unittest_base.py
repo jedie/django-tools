@@ -14,6 +14,7 @@ from __future__ import absolute_import, division, print_function
 import os
 import sys
 import textwrap
+import warnings
 
 from django.contrib import auth
 from django.test import TestCase
@@ -21,6 +22,7 @@ from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core import management
 
+from django_tools.unittest_utils.user import create_user
 from .BrowserDebug import debug_response
 
 
@@ -102,32 +104,29 @@ class BaseTestCase(BaseUnittestCase):
     def _pre_setup(self):
         super(BaseTestCase, self)._pre_setup()
 
-    def create_user(self, verbosity, username, password, email, is_staff, is_superuser):
+    @classmethod
+    def setUpClass(cls):
+        super(BaseTestCase, cls).setUpClass()
+        cls.UserModel = auth.get_user_model()
+
+    def create_user(self, verbosity, **userdata):
         """
         Create a user and return the instance.
         """
-        defaults = {'password':password, 'email':email}
-        User = auth.get_user_model()
-        user, created = User.objects.get_or_create(
-            username=username, defaults=defaults
+        warnings.warn(
+            "Old API! This will be removed in the future!"
+            " Use: django_tools.unittest_utils.user.create_user()",
+            FutureWarning,
+            stacklevel=2
         )
-        if not created:
-            user.email = email
-        user.set_password(password)
-        user.is_staff = is_staff
-        user.is_superuser = is_superuser
-        user.is_active = True
-        user.save()
-        if verbosity >= 2:
-            print('Test user "%s" created.' % user)
-        return user
+        return create_user(**userdata)
 
     def create_testusers(self, verbosity=2):
         """
         Create all available testusers and UserProfiles
         """
         for userdata in list(self.TEST_USERS.values()):
-            self.create_user(verbosity, **userdata)
+            create_user(**userdata)
 
     def login(self, usertype):
         """
@@ -136,8 +135,7 @@ class BaseTestCase(BaseUnittestCase):
         """
         test_user = self._get_userdata(usertype)
 
-        User = auth.get_user_model()
-        count = User.objects.filter(username=test_user["username"]).count()
+        count = self.UserModel.objects.filter(username=test_user["username"]).count()
         self.failIfEqual(count, 0, "You have to call self.create_testusers() first!")
         self.failUnlessEqual(count, 1)
 
@@ -188,7 +186,7 @@ class BaseTestCase(BaseUnittestCase):
         """ return User model instance for the given usertype"""
         test_user = self._get_userdata(usertype)
         User = auth.get_user_model()
-        return User.objects.get(username=test_user["username"])
+        return self.UserModel.objects.get(username=test_user["username"])
 
     def _create_testusers(self):
         """ Create all available testusers. """
@@ -198,7 +196,7 @@ class BaseTestCase(BaseUnittestCase):
             """
             defaults = {'password':password, 'email':email}
             User = auth.get_user_model()
-            user, created = User.objects.get_or_create(
+            user, created = self.UserModel.objects.get_or_create(
                 username=username, defaults=defaults
             )
             if not created:

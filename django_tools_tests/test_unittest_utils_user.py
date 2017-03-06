@@ -6,18 +6,17 @@
 
 from __future__ import unicode_literals
 
+import warnings
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.contrib.auth.models import Group
 
+from django_tools.unittest_utils.unittest_base import BaseTestCase
 from django_tools.unittest_utils.user import create_user, get_super_user
 
 
-class TestUserUtils(TestCase):
-    @classmethod
-    def setUpClass(cls):
-        super(TestUserUtils, cls).setUpClass()
-        cls.UserModel = get_user_model()
+class TestUserUtils(BaseTestCase):
 
     def test_create_user(self):
         user1 = create_user(username="foo", password="bar")
@@ -66,3 +65,16 @@ class TestUserUtils(TestCase):
         self.assertEqual(user2.pk, user3.pk)
         self.assertEqual(user2, user3)
         self.assertTrue(user3.is_superuser)
+
+    def test_old_api(self):
+        self.assertEqual(self.UserModel.objects.count(), 0)
+
+        userdata = self.TEST_USERS["normal"]
+        with warnings.catch_warnings(record=True) as w:
+
+            self.create_user(verbosity=0, **userdata)
+
+            self.assertEqual(len(w), 1)
+            self.assertTrue(issubclass(w[-1].category, FutureWarning))
+
+        self.assertEqual(self.UserModel.objects.count(), 1)
