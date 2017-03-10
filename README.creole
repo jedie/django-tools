@@ -433,7 +433,7 @@ to:
 
 == history
 
-* **dev**
+* v0.32.7 - 10.03.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.6...v0.32.7|compare v0.32.6...v0.32.7]]
 ** NEW: {{{django_tools.permissions}}} - helper for setup permissions
 ** NEW: {{{/unittest_utils/user.py}}} - helper for creating users (needfull in unittests)
 * v0.32.6 - 22.02.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.5...v0.32.6|compare v0.32.5...v0.32.6]]
