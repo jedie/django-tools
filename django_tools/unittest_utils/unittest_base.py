@@ -164,7 +164,6 @@ class BaseTestCase(BaseUnittestCase):
                 ))
                 raise etype(evalue).with_traceback(etb)
 
-
             perm = Permission.objects.get(content_type=content_type, codename=permission_codename)
             user.user_permissions.add(perm)
             user.save()
