@@ -170,6 +170,14 @@ class BaseTestCase(BaseUnittestCase):
 
         self.assertTrue(user.has_perms(permissions))
 
+    def refresh_user(self, user):
+        """
+        Return a fresh User model instance from DB.
+        Note: Using "user.refresh_from_db()" will not help in every case!
+        e.g.: Add new permission on user group and check the added one.
+        """
+        return self.UserModel.objects.get(pk=user.pk)
+
     def _get_userdata(self, usertype):
         """ return userdata from self.TEST_USERS for the given usertype """
         try:
@@ -184,7 +192,6 @@ class BaseTestCase(BaseUnittestCase):
     def _get_user(self, usertype):
         """ return User model instance for the given usertype"""
         test_user = self._get_userdata(usertype)
-        User = auth.get_user_model()
         return self.UserModel.objects.get(username=test_user["username"])
 
     def _create_testusers(self):

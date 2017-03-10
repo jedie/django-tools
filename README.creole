@@ -67,6 +67,11 @@ Limit something with only one field, by selecting:
 
 More info, read DocString in [[https://github.com/jedie/django-tools/blob/master/django_tools/limit_to_usergroups.py|./limit_to_usergroups.py]]
 
+=== permission helpers
+
+See [[https://github.com/jedie/django-tools/blob/master/django_tools/permissions.py|django_tools.permissions]]
+and unittests: [[https://github.com/jedie/django-tools/blob/master/django_tools_tests/test_permissions.py|django_tools_tests.test_permissions]]
+
 === form/model fields
 
 * [[https://github.com/jedie/django-tools/blob/master/django_tools/fields/directory.py|Directory field]] - check if exist and if in a defined base path
@@ -429,6 +434,7 @@ to:
 == history
 
 * **dev**
+** NEW: {{{django_tools.permissions}}} - helper for setup permissions
 ** NEW: {{{/unittest_utils/user.py}}} - helper for creating users (needfull in unittests)
 * v0.32.6 - 22.02.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.5...v0.32.6|compare v0.32.5...v0.32.6]]
 * {{{@task_always_eager()}}} decorator will set {{{CELERY_EAGER_PROPAGATES_EXCEPTIONS=True}}}, too.
