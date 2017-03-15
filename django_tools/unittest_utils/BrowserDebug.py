@@ -17,7 +17,6 @@ import logging
 
 from pprint import pformat
 from xml.sax.saxutils import escape
-import os
 import tempfile
 import webbrowser
 
@@ -27,17 +26,18 @@ from django.views.debug import get_safe_settings
 
 from django_tools.utils.stack_info import get_stack_info
 
+
 log = logging.getLogger(__name__)
 
 
-# Variable to save if the browser is opend in the past.
+# Variable to save if the browser was opend in the past.
 BROWSER_TRACEBACK_OPENED = False
 
 RESPONSE_INFO_ATTR = (
     "content", "cookies", "request", "status_code", "_headers", "context",
 )
 
-
+TEMP_NAME_PREFIX="django_tools_browserdebug_"
 
 
 
@@ -58,8 +58,7 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
     stack_info = get_stack_info(filepath_filter="django_tools")
     stack_info.append(msg)
     if display_tb:
-        print()
-        print("debug_response:")
+        print("\ndebug_response:")
         print("-" * 80)
         print("\n".join(stack_info))
         print("-" * 80)
@@ -132,15 +131,16 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
         ) % (url, stack_info, response_info)
 
 
-    fd, file_path = tempfile.mkstemp(prefix="PyLucid_unittest_", suffix=".html")
-    os.write(fd, content.encode("utf-8"))
-    os.close(fd)
-    url = "file://%s" % file_path
-    print("\nDEBUG html page in Browser! (url: %s)" % url)
-    try:
-        webbrowser.open(url)
-    except:
-        pass
+    with tempfile.NamedTemporaryFile(prefix=TEMP_NAME_PREFIX, suffix=".html", delete=False) as f:
+        f.write(content.encode("utf-8"))
+
+        url = "file://%s" % f.name
+        print("\nDEBUG html page in Browser! (url: %s)" % url)
+        try:
+            webbrowser.open(url)
+        except Exception as err:
+            log.error("Can't open browser: %s", err)
+
     #time.sleep(0.5)
-    #os.remove(file_path)
+    #os.remove(f.name)
 
