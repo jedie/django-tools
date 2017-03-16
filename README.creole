@@ -9,6 +9,32 @@ Miscellaneous tools for django.
 
 == existing stuff
 
+=== django_tools.template.loader.DebugCacheLoader
+
+Insert template name as html comments, e.g.:
+
+{{{
+<!-- START 'foo/bar.html' -->
+...
+<!-- END 'foo/bar.html' -->
+}}}
+
+To use this, you must add **django_tools.template.loader.DebugCacheLoader** as template loader.
+
+e.g.: Activate it only in DEBUG mode:
+
+{{{
+if DEBUG:
+    TEMPLATES[0]["OPTIONS"]["loaders"] = [
+        (
+            "django_tools.template.loader.DebugCacheLoader", (
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+            )
+        )
+    ]
+}}}
+
 
 === Filemanager library
 
