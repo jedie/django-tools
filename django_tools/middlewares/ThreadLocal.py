@@ -4,11 +4,11 @@
     threadlocals middleware
     ~~~~~~~~~~~~~~~~~~~~~~~
 
-    make the request object everywhere available (e.g. in model instance). 
+    make the request object everywhere available (e.g. in model instance).
 
     based on: http://code.djangoproject.com/wiki/CookBookThreadlocalsAndUser
-    
-    Put this into your settings:   
+
+    Put this into your settings:
     --------------------------------------------------------------------------
         MIDDLEWARE_CLASSES = (
             ...
@@ -16,20 +16,20 @@
             ...
         )
     --------------------------------------------------------------------------
-    
-    
+
+
     Usage:
     --------------------------------------------------------------------------
     from django_tools.middlewares import ThreadLocal
-    
+
     # Get the current request object:
     request = ThreadLocal.get_current_request()
-    
+
     # You can get the current user directly with:
     user = ThreadLocal.get_current_user()
     --------------------------------------------------------------------------
 
-    :copyleft: 2009-2011 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2009-2017 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -67,3 +67,7 @@ class ThreadLocalMiddleware(object):
         if hasattr(_thread_locals, 'request'):
             del _thread_locals.request
         return response
+
+    def process_exception(self, request, exception):
+        if hasattr(_thread_locals, 'request'):
+            del _thread_locals.request
