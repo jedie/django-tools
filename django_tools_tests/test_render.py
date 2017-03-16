@@ -17,7 +17,14 @@ class TestRender(SimpleTestCase):
         context={"foo":"bar"}
         path = "test_template.html"
         x = render_template_file(path, context)
-        self.assertEqual(x, "Hello bar !\n")
+
+        # Note: START/END comments added by: django_tools.template.loader.DebugCacheLoader
+
+        self.assertEqual(x, (
+            "<!-- START 'test_template.html' -->\n"
+            "Hello bar !\n\n"
+            "<!-- END 'test_template.html' -->"
+        ))
 
     def test_render_string_template(self):
         x = render_string_template("Foo {{ bar }}!", {"bar": "BAR"})
