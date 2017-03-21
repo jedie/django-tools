@@ -1,3 +1,6 @@
+# coding: utf-8
+
+from __future__ import absolute_import, division, print_function
 
 import logging
 
@@ -12,19 +15,30 @@ class TestTracebackLogMiddleware(TestCase):
             with self.assertRaises(Exception):
                 self.client.get('/raise_exception/TestTracebackLogMiddleware/')
 
+        messages = log.get_messages()
+        print(messages)
+
         self.assertIn(
             "Exception on url: /raise_exception/TestTracebackLogMiddleware/",
-            log.get_messages()
+            messages
         )
         self.assertIn(
             "Traceback (most recent call last):",
-            log.get_messages()
+            messages
         )
         self.assertIn(
-            'django_tools_test_app/views.py", line 41, in raise_exception',
-            log.get_messages()
+            'django_tools_test_app/views.py", line ',
+            messages
+        )
+        self.assertIn(
+            'in raise_exception',
+            messages
+        )
+        self.assertIn(
+            'raise Exception(msg)',
+            messages
         )
         self.assertIn(
             "Exception: TestTracebackLogMiddleware",
-            log.get_messages()
+            messages
         )
