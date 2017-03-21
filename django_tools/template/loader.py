@@ -58,7 +58,9 @@ class DebugTemplateCache(BaseDebugTemplateCache):
 
 class GetDebugTemplateCache(BaseDebugTemplateCache):
     def __setitem__(self, key, template):
-        self.add_tags(template)
+        if hasattr(template, "nodelist"):
+            # e.g.: TemplateDoesNotExist class instance didn't has nodelist ;)
+            self.add_tags(template)
         dict.__setitem__(self, key, template)
 
 
