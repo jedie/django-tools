@@ -10,6 +10,7 @@
 
 from __future__ import absolute_import, division, print_function
 
+from django.template import TemplateDoesNotExist
 
 from django_tools.unittest_utils.unittest_base import BaseTestCase
 
@@ -37,3 +38,9 @@ class DebugCacheLoaderTest(BaseTestCase):
             browser_traceback=True
         )
 
+    def test_template_does_not_exists(self):
+        with self.assertRaises(TemplateDoesNotExist) as cm:
+            self.client.get("/raise_template_not_exists/")
+
+        output = "\n".join(cm.exception.args)
+        self.assertEqual("/template/does/not/exists.html", output)

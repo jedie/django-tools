@@ -4,7 +4,7 @@
     Dynamic SITE ID unittests
     ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    :copyleft: 2012 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2012-2017 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -15,6 +15,7 @@ import json
 from django.http import HttpResponse
 from django.conf import settings
 from django.contrib.sites.models import Site
+from django.views.generic import TemplateView
 
 from django_tools.middlewares.ThreadLocal import get_current_request
 
@@ -46,3 +47,7 @@ def get_current_get_parameters(request):
     Returns a JSON version of request.GET from the current request
     """
     return HttpResponse(json.dumps(get_current_request().GET))
+
+
+class TemplateDoesNotExists(TemplateView):
+    template_name = "/template/does/not/exists.html"
