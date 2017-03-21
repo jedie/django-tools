@@ -46,8 +46,13 @@ class BaseDebugTemplateCache(dict):
 
 class DebugTemplateCache(BaseDebugTemplateCache):
     def __setitem__(self, key, value):
-        template, origin = value
-        self.add_tags(template)
+        try:
+            template, origin = value
+        except TypeError:
+            # e.g.: value is TemplateDoesNotExist class instance ;)
+            pass
+        else:
+            self.add_tags(template)
         dict.__setitem__(self, key, value)
 
 
