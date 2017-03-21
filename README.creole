@@ -459,6 +459,8 @@ to:
 
 == history
 
+* v0.32.9 - 21.03.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.8...v0.32.9|compare v0.32.8...v0.32.9]]
+** Bugfix {{{DebugCacheLoader}}} if TemplateDoesNotExist was raised
 * v0.32.8 - 16.03.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.7...v0.32.8|compare v0.32.7...v0.32.8]]
 ** NEW: {{{django_tools.template.loader.DebugCacheLoader}}} to add template name as html comments
 ** Change temp filename in BrowserDebug and use {{{django_tools_browserdebug_}}} prefix
