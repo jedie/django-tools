@@ -60,7 +60,7 @@ def get_super_user():
     User=get_user_model()
     try:
         super_user = User.objects.filter(is_superuser=True)[0]
-    except User.DoesNotExist:
+    except (User.DoesNotExist, IndexError):
         log.error("Can't get a superuser. Please create first!")
         raise RuntimeError("No superuser")
     return super_user
