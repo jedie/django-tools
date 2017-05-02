@@ -1,3 +1,5 @@
 # coding: utf-8
 
-__version__ = "0.32.9"
+from __future__ import absolute_import
+
+from .version import __version__  # noqa
