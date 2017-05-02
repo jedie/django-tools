@@ -42,7 +42,11 @@ if DEBUG:
 
 A helper class to send text+html mails used the django template library.
 
-from django_tools.mail.send_mail import SendMail, SendMailCelery
+You need two template files, e.g.:
+* [[https://github.com/jedie/django-tools/blob/master/django_tools_test_project/django_tools_test_app/templates/mail_test.txt|mail_test.txt]]
+* [[https://github.com/jedie/django-tools/blob/master/django_tools_test_project/django_tools_test_app/templates/mail_test.html|mail_test.html]]
+
+You have to specify the template file like this: {{{template_base="mail_test.{ext}"}}}
 
 Send via Celery task:
 {{{
@@ -69,6 +73,8 @@ SendMail(
 ).send()
 }}}
 
+See also the existing unittests:
+* [[https://github.com/jedie/django-tools/blob/master/django_tools_tests/test_email.py|django_tools_tests/test_email.py]]
 
 === Filemanager library
 
