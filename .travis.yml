@@ -32,5 +32,4 @@ script:
     - pip freeze
     - travis_retry tox
 
-notifications:
-    irc: "irc.freenode.org#pylucid"
+
