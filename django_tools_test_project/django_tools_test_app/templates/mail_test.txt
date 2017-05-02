@@ -1,0 +1,2 @@
+This is is a test mail.
+It used the django template: {{ foo }}, {{ bar }}

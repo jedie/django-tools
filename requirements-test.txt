@@ -10,3 +10,4 @@ pytest-django
 pytest-cov
 mock
 celery
+django-celery-transactions

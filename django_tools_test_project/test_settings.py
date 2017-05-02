@@ -55,6 +55,10 @@ INSTALLED_APPS = (
     'django_tools.manage_commands.django_tools_nice_diffsettings',
 )
 
+
+from django_tools.mail.settings import *
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

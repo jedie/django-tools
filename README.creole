@@ -38,6 +38,38 @@ if DEBUG:
 }}}
 
 
+=== send text+html mails
+
+A helper class to send text+html mails used the django template library.
+
+from django_tools.mail.send_mail import SendMail, SendMailCelery
+
+Send via Celery task:
+{{{
+# settings.py
+SEND_MAIL_CELERY_TASK_NAME="mail:send_task"
+
+from django_tools.mail.send_mail import SendMailCelery
+SendMailCelery(
+    template_base="mail_test.{ext}",
+    mail_context={"foo": "first", "bar": "second"},
+    subject="Only a test",
+    recipient_list="foo@bar.tld"
+).send()
+}}}
+
+Send without Celery:
+{{{
+from django_tools.mail.send_mail import SendMail
+SendMail(
+    template_base="mail_test.{ext}",
+    mail_context={"foo": "first", "bar": "second"},
+    subject="Only a test",
+    recipient_list="foo@bar.tld"
+).send()
+}}}
+
+
 === Filemanager library
 
 Library for building django application like filemanager, gallery etc.
@@ -461,6 +493,8 @@ to:
 
 == history
 
+* v0.32.10 - 05.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.9...v0.32.10|compare v0.32.9...v0.32.10]]
+** NEW: {{{django_tools.mail}}} to send text+html mails (see above)
 * v0.32.9 - 21.03.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.8...v0.32.9|compare v0.32.8...v0.32.9]]
 ** Bugfix {{{DebugCacheLoader}}} if TemplateDoesNotExist was raised
 * v0.32.8 - 16.03.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.7...v0.32.8|compare v0.32.7...v0.32.8]]
