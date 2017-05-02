@@ -80,10 +80,24 @@ class DjangoCommandMixin(object):
 
         return output
 
-    def call_manage_py(self, cmd, manage_dir, **kwargs):
+    def call_manage_py(self, cmd, manage_dir, manage_py="manage.py", assert_executeable=True, **kwargs):
         """
-        call manage.py from pylucid_installer.page_instance_template.example_project
+        call manage.py from given >manage_dir<
         """
+        test_path = os.path.join(manage_dir, manage_py)
+        if not os.path.isfile(test_path):
+            msg = (
+                "File doesn't exists: %r"
+                " (given <manage_dir> path wrong?!?)"
+            ) % manage_dir
+            raise AssertionError(msg)
+
+        if assert_executeable and not os.access(test_path, os.X_OK):
+            msg = (
+                "Manage file %r is not executeable!"
+            ) % test_path
+            raise AssertionError(msg)
+
         cmd = [sys.executable, "manage.py"] + list(cmd)
         kwargs.update({
             "cwd": manage_dir,
