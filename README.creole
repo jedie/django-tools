@@ -499,7 +499,9 @@ to:
 
 == history
 
-* v0.32.10 - 05.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.9...v0.32.10|compare v0.32.9...v0.32.10]]
+* v0.32.11 - 02.05.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.10...v0.32.11|compare v0.32.10...v0.32.11]]
+** Fix PyPi package mistake ({{{.tar.gz}}} archive contains {{{.tox}}} ;)
+* v0.32.10 - 02.05.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.9...v0.32.10|compare v0.32.9...v0.32.10]]
 ** NEW: {{{django_tools.mail}}} to send text+html mails (see above)
 * v0.32.9 - 21.03.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.8...v0.32.9|compare v0.32.8...v0.32.9]]
 ** Bugfix {{{DebugCacheLoader}}} if TemplateDoesNotExist was raised
