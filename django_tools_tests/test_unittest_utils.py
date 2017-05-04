@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from django.test import Client
 from django.test import SimpleTestCase
 from django.utils import six
+from django.utils.six import PY2
 
 from django_tools.template.render import render_string_template
 from django_tools.unittest_utils.celery import task_always_eager
@@ -70,6 +71,8 @@ class TestBaseUnittestCase(BaseUnittestCase):
             self.assertEqual_dedent(first="foo bar", second="foo X bar")
 
         err_msg = "\n".join([line.strip() for line in cm.exception.args[0].splitlines()])
+        if PY2:
+            err_msg = err_msg.replace("u'", "'")
         print("***\n%s\n***" % err_msg)
         self.assertEqual(err_msg, self._dedent("""
             'foo bar' != 'foo X bar'
@@ -91,6 +94,8 @@ class TestBaseUnittestCase(BaseUnittestCase):
             self.assertIn_dedent(member="foo", container="only bar")
 
         err_msg = "\n".join([line.strip() for line in cm.exception.args[0].splitlines()])
+        if PY2:
+            err_msg = err_msg.replace("u'", "'")
         print("***\n%s\n***" % err_msg)
         self.assertEqual(err_msg, self._dedent("""
             'foo' not found in 'only bar'
