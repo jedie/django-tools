@@ -499,6 +499,8 @@ to:
 
 == history
 
+* v0.32.12 - 04.05.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.11...v0.32.12|compare v0.32.11...v0.32.12]]
+** NEW: {{{self.assertIn_dedent()}}} in {{{django_tools.unittest_utils.unittest_base.BaseUnittestCase}}}
 * v0.32.11 - 02.05.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.10...v0.32.11|compare v0.32.10...v0.32.11]]
 ** Fix PyPi package mistake ({{{.tar.gz}}} archive contains {{{.tox}}} ;)
 * v0.32.10 - 02.05.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.9...v0.32.10|compare v0.32.9...v0.32.10]]

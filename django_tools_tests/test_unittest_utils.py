@@ -63,6 +63,44 @@ class TestBaseUnittestCase(BaseUnittestCase):
         """)
         self.assertEqual(out5, "one line\n    line two\ndritte Zeile")
 
+    def test_assertEqual_dedent(self):
+        self.assertEqual_dedent(first="foo bar", second="foo bar")
+
+        with self.assertRaises(AssertionError) as cm:
+            self.assertEqual_dedent(first="foo bar", second="foo X bar")
+
+        err_msg = "\n".join([line.strip() for line in cm.exception.args[0].splitlines()])
+        print("***\n%s\n***" % err_msg)
+        self.assertEqual(err_msg, self._dedent("""
+            'foo bar' != 'foo X bar'
+            - foo bar
+            + foo X bar
+            ?    ++
+            
+            ------------- [first] -------------
+            foo bar
+            ------------- [second] ------------
+            foo X bar
+            -----------------------------------
+        """))
+
+    def test_assertIn_dedent(self):
+        self.assertIn_dedent(member="foo", container="The foo is here!")
+
+        with self.assertRaises(AssertionError) as cm:
+            self.assertIn_dedent(member="foo", container="only bar")
+
+        err_msg = "\n".join([line.strip() for line in cm.exception.args[0].splitlines()])
+        print("***\n%s\n***" % err_msg)
+        self.assertEqual(err_msg, self._dedent("""
+            'foo' not found in 'only bar'
+            ------------- [member] -------------
+            foo
+            ----------- [container] ------------
+            only bar
+            ------------------------------------
+        """))
+
     def test_assert_is_dir(self):
         existing_path = os.path.dirname(__file__)
         self.assert_is_dir(existing_path)

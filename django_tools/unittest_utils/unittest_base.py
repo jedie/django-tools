@@ -48,12 +48,29 @@ class BaseUnittestCase(TestCase):
             # Py2 has a bad error message
             msg = (
                 "%s\n"
-                " ------------- [first] -------------\n"
+                "------------- [first] -------------\n"
                 "%s\n"
-                " ------------- [second] ------------\n"
+                "------------- [second] ------------\n"
                 "%s\n"
-                " -----------------------------------\n"
+                "-----------------------------------\n"
             ) % (err, first, second)
+            raise AssertionError(msg)
+
+    def assertIn_dedent(self, member, container, msg=None):
+        member = self._dedent(member)
+        container = self._dedent(container)
+        try:
+            self.assertIn(member, container, msg)
+        except AssertionError as err:
+            # Py2 has a bad error message
+            msg = (
+                "%s\n"
+                "------------- [member] -------------\n"
+                "%s\n"
+                "----------- [container] ------------\n"
+                "%s\n"
+                "------------------------------------\n"
+            ) % (err, member, container)
             raise AssertionError(msg)
 
     def assert_is_dir(self, path):
