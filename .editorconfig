@@ -1,10 +1,23 @@
-# see http://editorconfig.org
+# http://editorconfig.org
+
 root = true
 
 [*]
 indent_style = space
 indent_size = 4
-end_of_line = lf
-charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
+charset = utf-8
+end_of_line = lf
+
+[*.{bat,cmd,ps1}]
+end_of_line = crlf
+
+[{Makefile,**.mk}]
+indent_style = tab
+
+[LICENSE]
+insert_final_newline = false
+
+[{Makefile,**.mk}]
+indent_style = tab
