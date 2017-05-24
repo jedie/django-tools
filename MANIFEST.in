@@ -13,7 +13,7 @@ recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
 recursive-exclude .tox *
 
-include requirements.txt
-recursive-include requirements *.txt
+include requirements-dev.txt
+include requirements-test.txt
 
 recursive-include docs *.rst conf.py Makefile make.bat *.jpg *.png *.gif
