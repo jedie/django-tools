@@ -153,12 +153,12 @@ class BaseTestCase(BaseUnittestCase):
         test_user = self._get_userdata(usertype)
 
         count = self.UserModel.objects.filter(username=test_user["username"]).count()
-        self.failIfEqual(count, 0, "You have to call self.create_testusers() first!")
-        self.failUnlessEqual(count, 1)
+        self.assertNotEqual(count, 0, "You have to call self.create_testusers() first!")
+        self.assertEqual(count, 1)
 
         ok = self.client.login(username=test_user["username"],
                                password=test_user["password"])
-        self.failUnless(ok, 'Can\'t login test user "%s"!' % usertype)
+        self.assertTrue(ok, 'Can\'t login test user "%s"!' % usertype)
         return self._get_user(usertype)
 
     def add_user_permissions(self, user, permissions):

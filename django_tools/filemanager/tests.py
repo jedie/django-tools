@@ -4,7 +4,7 @@
     unittests for filemanager
     ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    :copyleft: 2012 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2012-2017 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -14,12 +14,6 @@ from __future__ import absolute_import, division, print_function
 import os
 import unittest
 import tempfile
-
-if __name__ == "__main__":
-    # For doctest only
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
-    from django.conf import global_settings
-    global_settings.SITE_ID = 1
 
 from django.http import Http404
 
@@ -102,7 +96,7 @@ class FilemanagerBaseTestCase(unittest.TestCase):
         """ if this tests fails, all other may fail, too. """
         for file_info in self.FILES:
             path = os.path.join(*file_info)
-            self.failUnless(os.path.isfile(path))
+            self.assertTrue(os.path.isfile(path))
 
 
 class FilemanagerDirectoryTraversal(FilemanagerBaseTestCase):
@@ -151,5 +145,3 @@ class FilemanagerDirectoryTraversal(FilemanagerBaseTestCase):
         )
 
 
-if __name__ == '__main__':
-    unittest.main()
