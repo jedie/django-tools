@@ -499,6 +499,8 @@ to:
 
 == history
 
+* v0.32.14 - 14.06.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.13...v0.32.14|compare v0.32.13...v0.32.14]]
+** Bugfix for Python 2: {{{mock}}} backport package is needed and added to {{{setup.install_requires}}}
 * v0.32.13 - 24.05.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.12...v0.32.13|compare v0.32.12...v0.32.13]]
 ** remove some warnings
 * v0.32.12 - 04.05.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.11...v0.32.12|compare v0.32.11...v0.32.12]]
