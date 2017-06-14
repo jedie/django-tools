@@ -8,6 +8,5 @@ cmsplugin-filer
 django-filer>=1.2.6
 pytest-django
 pytest-cov
-mock
 celery
 django-celery-transactions
