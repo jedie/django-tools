@@ -22,6 +22,7 @@ from setuptools import setup, find_packages
 from django_tools import __version__
 
 
+PY2 = sys.version_info[0] == 2
 PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -195,6 +196,15 @@ if "test" in sys.argv:
     run_tests()
 
 
+install_requires=[
+    "Django>=1.8",
+]
+if PY2:
+    install_requires.append(
+        "mock" # https://pypi.python.org/pypi/mock
+    )
+
+
 setup(
     name='django-tools',
     version=__version__,
@@ -206,9 +216,7 @@ setup(
     url='http://github.com/jedie/django-tools/',
     packages=find_packages(),
     include_package_data=True,  # include package data under svn source control
-    install_requires=[
-        "Django>=1.8",
-    ],
+    install_requires=install_requires,
     zip_safe=False,
     classifiers=[
 #        "Development Status :: 4 - Beta",
