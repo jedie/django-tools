@@ -202,3 +202,27 @@ def has_perm(user, permission):
         return False
     return True
 
+
+class ModelPermissionMixin(object):
+    """
+    Helper for easy model permission checks.
+    """
+    def permission_name(self, action):
+        permission = "{app}.{action}_{model}".format(
+            app=self._meta.app_label,
+            action=action,
+            model=self._meta.model_name,
+        )
+        return permission
+
+    def has_add_permission(user, raise_exception=True):
+        permission = permission_name(action="add")
+        return check_permission(user, permission, raise_exception)
+
+    def has_change_permission(user, raise_exception=True):
+        permission = permission_name(action="change")
+        return check_permission(user, permission, raise_exception)
+
+    def has_delete_permission(user, raise_exception=True):
+        permission = permission_name(action="delete")
+        return check_permission(user, permission, raise_exception)
