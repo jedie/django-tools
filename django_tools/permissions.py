@@ -215,14 +215,14 @@ class ModelPermissionMixin(object):
         )
         return permission
 
-    def has_add_permission(user, raise_exception=True):
-        permission = permission_name(action="add")
+    def has_add_permission(self, user, raise_exception=True):
+        permission = self.permission_name(action="add")
         return check_permission(user, permission, raise_exception)
 
-    def has_change_permission(user, raise_exception=True):
-        permission = permission_name(action="change")
+    def has_change_permission(self, user, raise_exception=True):
+        permission = self.permission_name(action="change")
         return check_permission(user, permission, raise_exception)
 
-    def has_delete_permission(user, raise_exception=True):
-        permission = permission_name(action="delete")
+    def has_delete_permission(self, user, raise_exception=True):
+        permission = self.permission_name(action="delete")
         return check_permission(user, permission, raise_exception)
