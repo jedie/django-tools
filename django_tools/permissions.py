@@ -206,23 +206,35 @@ def has_perm(user, permission):
 class ModelPermissionMixin(object):
     """
     Helper for easy model permission checks.
+
+    e.g.:
+
+        class FooModel(ModelPermissionMixin, models.Model):
+            ...
+
+        def view(request):
+            FooModel.has_change_permission(request.user, raise_exception=True)
     """
-    def permission_name(self, action):
+    @classmethod
+    def permission_name(cls, action):
         permission = "{app}.{action}_{model}".format(
-            app=self._meta.app_label,
+            app=cls._meta.app_label,
             action=action,
-            model=self._meta.model_name,
+            model=cls._meta.model_name,
         )
         return permission
 
-    def has_add_permission(self, user, raise_exception=True):
-        permission = self.permission_name(action="add")
+    @classmethod
+    def has_add_permission(cls, user, raise_exception=True):
+        permission = cls.permission_name(action="add")
         return check_permission(user, permission, raise_exception)
 
-    def has_change_permission(self, user, raise_exception=True):
-        permission = self.permission_name(action="change")
+    @classmethod
+    def has_change_permission(cls, user, raise_exception=True):
+        permission = cls.permission_name(action="change")
         return check_permission(user, permission, raise_exception)
 
-    def has_delete_permission(self, user, raise_exception=True):
-        permission = self.permission_name(action="delete")
+    @classmethod
+    def has_delete_permission(cls, user, raise_exception=True):
+        permission = cls.permission_name(action="delete")
         return check_permission(user, permission, raise_exception)
