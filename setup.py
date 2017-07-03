@@ -198,6 +198,7 @@ if "test" in sys.argv:
 
 install_requires=[
     "Django>=1.8",
+    "lxml",
 ]
 if PY2:
     install_requires.append(
