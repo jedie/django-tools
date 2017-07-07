@@ -35,7 +35,13 @@ import warnings
 
 from django.conf import settings
 
-class SlowerDevServerMiddleware(object):
+try:
+    from django.utils.deprecation import MiddlewareMixin
+except ImportError:
+    MiddlewareMixin = object  # fallback for Django < 1.10
+
+
+class SlowerDevServerMiddleware(MiddlewareMixin):
     def __init__(self):
         warnings.warn("Slower developer server used!")
         

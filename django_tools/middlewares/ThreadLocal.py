@@ -35,12 +35,15 @@
 
 from __future__ import absolute_import, division, print_function
 
-
-
 try:
     from threading import local
 except ImportError:
     from django.utils._threading_local import local
+
+try:
+    from django.utils.deprecation import MiddlewareMixin
+except ImportError:
+    MiddlewareMixin = object  # fallback for Django < 1.10
 
 
 _thread_locals = local()
@@ -58,7 +61,7 @@ def get_current_user():
         return getattr(request, "user", None)
 
 
-class ThreadLocalMiddleware(object):
+class ThreadLocalMiddleware(MiddlewareMixin):
     """ Simple middleware that adds the request object in thread local storage."""
     def process_request(self, request):
         _thread_locals.request = request

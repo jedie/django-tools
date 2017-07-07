@@ -30,6 +30,11 @@ from django.core.exceptions import MiddlewareNotUsed, ImproperlyConfigured
 
 from django_tools.local_sync_cache.local_sync_cache import LocalSyncCache
 
+try:
+    from django.utils.deprecation import MiddlewareMixin
+except ImportError:
+    MiddlewareMixin = object  # fallback for Django < 1.10
+
 
 USE_DYNAMIC_SITE_MIDDLEWARE = getattr(settings, "USE_DYNAMIC_SITE_MIDDLEWARE", False)
 
@@ -103,7 +108,7 @@ if USE_DYNAMIC_SITE_MIDDLEWARE == True:
     sites_models.SiteManager.clear_cache = _clear_cache
 
 
-class DynamicSiteMiddleware(object):
+class DynamicSiteMiddleware(MiddlewareMixin):
     """ Set settings.SITE_ID based on request's domain. """
 
     def __init__(self):

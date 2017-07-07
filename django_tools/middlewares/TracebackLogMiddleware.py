@@ -18,8 +18,13 @@ from __future__ import unicode_literals
 
 import logging
 
+try:
+    from django.utils.deprecation import MiddlewareMixin
+except ImportError:
+    MiddlewareMixin = object  # fallback for Django < 1.10
 
-class TracebackLogMiddleware:
+
+class TracebackLogMiddleware(MiddlewareMixin):
 
     def process_exception(self, request, exception):
         logging.exception('Exception on url: %s' % request.path)
