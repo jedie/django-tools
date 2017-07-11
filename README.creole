@@ -488,7 +488,7 @@ to:
 == Django compatibility
 
 |= django-tools    |= django version |= python         |
-| >= v0.32.15      | 1.8, 1.11       | 2.7, 3.4, 3.5   |
+| >= v0.33.0       | 1.8, 1.11       | 2.7, 3.4, 3.5   |
 | v0.30.1-v0.32.14 | 1.8, 1.9, 1.10  | 2.7, 3.4, 3.5   |
 | v0.30            | 1.8, 1.9        | 2.7, 3.4        |
 | v0.29            | 1.6 - 1.8       | 2.7, 3.4        |
@@ -500,8 +500,8 @@ to:
 
 == history
 
-* v0.32.15 - *dev*
-** Run tests only against Django 1.8TLS and 1.11TLS
+* v0.33.0 - 11.07.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.14...v0.33.0|compare v0.32.14...v0.33.0]]
+** Run tests only against Django v1.8 TLS and v1.11 TLS
 ** For Django 1.11: Add support for new-style middleware - contributed by benkonrath
 ** NEW: {{{django_tools.utils.request.create_fake_request()}}} for easier create a faked request object with {{{RequestFactory}}}
 ** NEW: {{{django_tools.utils.html_utils.html2text()}}} - Strip HTML tags with lxml Cleaner + Django 'strip_tags'
