@@ -5,8 +5,13 @@ Useful for optimizing database calls.
 
 Inspired by the method at: <http://www.djangosnippets.org/snippets/344/>
 """
+try:
+    from django.utils.deprecation import MiddlewareMixin
+except ImportError:
+    MiddlewareMixin = object  # fallback for Django < 1.10
 
-class QueryLogMiddleware:
+
+class QueryLogMiddleware(MiddlewareMixin):
 
     def process_response(self, request, response):
         from django.conf import settings
