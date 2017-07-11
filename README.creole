@@ -500,6 +500,7 @@ to:
 == history
 
 * v0.32.15 - *dev*
+** For Django 1.11: Add support for new-style middleware - contributed by benkonrath
 ** NEW: {{{django_tools.utils.request.create_fake_request()}}} for easier create a faked request object with {{{RequestFactory}}}
 ** NEW: {{{django_tools.utils.html_utils.html2text()}}} - Strip HTML tags with lxml Cleaner + Django 'strip_tags'
 * v0.32.14 - 14.06.2017 - [[https://github.com/jedie/django-tools/compare/v0.32.13...v0.32.14|compare v0.32.13...v0.32.14]]
