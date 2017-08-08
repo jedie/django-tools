@@ -232,7 +232,7 @@ class TestBaseTestCase(BaseTestCase):
         usernames = User.objects.all().values_list("username", flat=True)
         usernames = list(usernames)
         usernames.sort()
-        self.assertEqual(usernames, ['normal test user', 'staff test user', 'superuser'])
+        self.assertEqual(usernames, ['normal_test_user', 'staff_test_user', 'superuser'])
 
         # Are all users active?
         self.assertEqual(User.objects.filter(is_active=True).count(), 3)

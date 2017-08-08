@@ -167,7 +167,7 @@ class TestPermissions(BaseTestCase):
         self.assertEqual(
             log.get_messages(),
             "DEBUG:django_tools.permissions:"
-            "User normal test user has not foo.bar1"
+            "User normal_test_user has not foo.bar1"
         )
 
     def test_check_permission(self):
@@ -179,6 +179,6 @@ class TestPermissions(BaseTestCase):
         print(log_messages)
         self.assertEqual(
             log_messages,
-            'ERROR:django_tools.permissions:User "normal test user"'
+            'ERROR:django_tools.permissions:User "normal_test_user"'
             ' has not permission "foo.bar2" -> raise PermissionDenied!'
         )

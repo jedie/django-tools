@@ -103,14 +103,14 @@ class BaseTestCase(BaseUnittestCase):
             "is_superuser": True,
         },
         "staff": {
-            "username": "staff test user",
+            "username": "staff_test_user",
             "email": "staff_test_user@example.org",
             "password": "staff_test_user_password",
             "is_staff": True,
             "is_superuser": False,
         },
         "normal": {
-            "username": "normal test user",
+            "username": "normal_test_user",
             "email": "normal_test_user@example.org",
             "password": "normal_test_user_password",
             "is_staff": False,
