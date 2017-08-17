@@ -5,8 +5,9 @@ from __future__ import unicode_literals
 import logging
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import Group
-
+from django.core.exceptions import ValidationError
 
 log = logging.getLogger(__name__)
 
@@ -20,6 +21,25 @@ def create_user(username, password=None, email="", is_staff=False, is_superuser=
     :param groups: List of user group names
     :return: created user instance
     """
+    if password is None and encrypted_password is None:
+        raise RuntimeError("'password' or 'encrypted_password' needed.")
+
+    # Validate username and password with origin Form:
+    createdata={
+        "username": username,
+        "password1": password,
+        "password2": password,
+    }
+
+    if password is None:
+        # encrypted_password set later!
+        # Set something, to run validation.
+        createdata["password1"] = createdata["password2"] = "A temp password!"
+
+    user_create_form = UserCreationForm(createdata)
+    if not user_create_form.is_valid():
+        raise ValidationError("%s" % user_create_form.errors)
+
     User=get_user_model()
     user, created = User.objects.get_or_create(username=username)
 
@@ -33,7 +53,7 @@ def create_user(username, password=None, email="", is_staff=False, is_superuser=
     elif password:
         user.set_password(password)
     else:
-        raise RuntimeError("'password' or 'encrypted_password' needed.")
+        raise RuntimeError # should never happen, see above ;)
 
     user.save()
 

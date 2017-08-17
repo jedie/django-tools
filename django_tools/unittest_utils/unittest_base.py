@@ -17,7 +17,6 @@ import textwrap
 import warnings
 
 from django.contrib import auth
-from django.contrib.auth.forms import UserCreationForm
 from django.test import TestCase
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
@@ -144,11 +143,7 @@ class BaseTestCase(BaseUnittestCase):
         Create all available testusers and UserProfiles
         """
         for userdata in list(self.TEST_USERS.values()):
-            userdata = userdata.copy()
-            userdata["password1"] = userdata.pop("password")
-            userdata["password2"] = userdata["password1"]
-            user_create_form = UserCreationForm(**userdata)
-            user_create_form.save()
+            create_user(**userdata)
 
     def login(self, usertype):
         """
