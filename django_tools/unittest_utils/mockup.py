@@ -66,8 +66,8 @@ def create_pil_image(width, height):
     pixels = img.load() # create the pixel map
 
     # Fill image
-    for i in range(img.size[0]):
-        for j in range(img.size[1]):
+    for i in range(width):
+        for j in range(height):
             pixels[i,j] = (i, j, 1)
 
     return img
