@@ -440,6 +440,16 @@ Run specific tests, e.g.:
 
 == Backwards-incompatible changes
 
+== v0.35
+
+Dummy image generation function in {{{django_tools.unittest_utils.mockup}}} has a new API.
+The new API makes it possible to better adjust the generated dummy images.
+
+The functions {{{create_pil_image}}}, {{{create_info_image}}} and {{{create_temp_filer_info_image}}} was refactored to the class {{{django_tools.unittest_utils.mockup.ImageDummy}}}
+
+The old API will be removed in the future.
+
+
 == v0.32
 
 remove outdated stuff:
@@ -447,6 +457,7 @@ remove outdated stuff:
 * django-tagging addon
 * upgrade_virtualenv.py (Alternative: [[https://github.com/jedie/python-code-snippets/blob/master/CodeSnippets/update_virtualenv_git_repos.py|update_virtualenv_git_repos.py]])
 * utils.http
+
 
 == v0.29
 
@@ -456,15 +467,18 @@ import e.g.:
 from django_tools.utils.client_storage import SignedCookieStorage
 }}}
 
+
 == v0.25.0
 
 SmoothCacheBackends API changed:
 The **cache.clear()** method will really clear the cache, as the origin backend API.
 You must call {{{cache.smooth_update()}}} to set the "last change" timestamp.
 
+
 === v0.24.10
 
 AutoUpdateFileBasedCache is deprecated, use new SmoothCacheBackends.
+
 
 === v0.9
 
@@ -485,6 +499,7 @@ change and rename:
 to:
 **from django_tools.fields.media_path import MediaPathWidget**
 
+
 == Django compatibility
 
 |= django-tools    |= django version |= python         |
@@ -500,6 +515,8 @@ to:
 
 == history
 
+* v0.35.0 - 26.09.2017 - [[https://github.com/jedie/django-tools/compare/v0.34.0...v0.35.0|compare v0.34.0...v0.35.0]]
+** CHANGE: The dummy image generation function in {{{django_tools.unittest_utils.mockup}}} has a new API.
 * v0.34.0 - 18.09.2017 - [[https://github.com/jedie/django-tools/compare/v0.33.0...v0.34.0|compare v0.33.0...v0.34.0]]
 ** CHANGE: The test usernames changed and spaces was replace with underscores e.g.: "staff test user" -> "staff_test_user"
 ** Bugfix in mockup.create_pil_image: Created images has wrong sizes
