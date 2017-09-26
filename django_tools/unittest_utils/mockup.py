@@ -5,39 +5,15 @@
     ~~~~~~~
 """
 
-from __future__ import unicode_literals, print_function
+from __future__ import print_function, unicode_literals
 
 import tempfile
+import warnings
 
-from PIL import Image, ImageDraw
-
-from django.contrib.auth import get_user_model
-from django.core.management.base import BaseCommand, CommandError
 from django.core.files import File as DjangoFile
 
-#==============================================================================
-# TODO: Remove after django-filer v1.2.6 is released!
-# Problem: AttributeError: 'Manager' object has no attribute '_inherited'
-# with Django v1.10 and django-filer v1.2.5
-# see also:
-# https://github.com/divio/django-filer/issues/899
-
-from pip._vendor.packaging.version import parse as _parse_version
-from filer import __version__ as _filer_version
-from django import __version__ as _django_version
-
-_filer_version=_parse_version(_filer_version)
-_django_version=_parse_version(_django_version)
-
-if _django_version < _parse_version("1.10") or _filer_version >= _parse_version("1.2.6"):
-    NOT_SUPPORTED = False
-    from filer.models import Image as FilerImage
-else:
-    NOT_SUPPORTED = True
-
-#==============================================================================
-
-
+from filer.models import Image as FilerImage
+from PIL import Image, ImageDraw, ImageFont
 
 DUMMY_TEXT = """Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula
 eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient
@@ -61,26 +37,10 @@ amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum
 sodales, augue velit cursus nunc"""
 
 
-def create_pil_image(width, height):
-    img = Image.new('RGB', (width, height), 'black') # create a new black image
-    pixels = img.load() # create the pixel map
-
-    # Fill image
-    for i in range(width):
-        for j in range(height):
-            pixels[i,j] = (i, j, 1)
-
-    return img
-
-
-def create_info_image(width, height, text, fill='#ffffff', align='center'):
-    im = create_pil_image(width, height)
-    draw = ImageDraw.Draw(im)
-    draw.multiline_text((10, 10), text, fill=fill, align=align)
-    return im
-
-
 def create_filer_image(pil_image, user):
+    """
+    Create from a PIL image a filer.models.Image() instance
+    """
     file_obj = DjangoFile(pil_image, name=pil_image.name)
     image = FilerImage.objects.create(
         owner=user,
@@ -91,13 +51,123 @@ def create_filer_image(pil_image, user):
     return image
 
 
+class ImageDummy:
+    new_image_color="black"
+    text_color="#ffffff"
+    text_align="center"
+    temp_prefix="dummy_"
+    format="png"
+
+    def __init__(self, width, height):
+        self.width=width
+        self.height=height
+
+    def fill_image(self, image):
+        """
+        Fill a PIL image with a colorful gradient.
+
+        Overwrite with e.g.:
+            self.draw_centered_text(
+                image,
+                text="(dummy picture)",
+                font_size_factor=16,
+                truetype_font="DejaVuSansMono.ttf"
+            )
+        """
+        pixel_map = image.load()
+        for i in range(self.width):
+            for j in range(self.height):
+                pixel_map[i,j] = (i, j, 1)
+
+    def draw_centered_text(self, image, text, color="#000000", size_factor=16, truetype=None):
+        """
+        Draw the given >text< centered on the given >image<
+        Maybe useful for self.fill_image()
+
+        :param image: PIL instance, e.g.: Image.new()
+        :param text: The text to draw
+        :param color: Text color (font fill color)
+        :param size_factor: used to calc the font size by image size
+        :param truetype: for ImageFont.truetype.font, e.g.: "DejaVuSansMono.ttf"
+        :return: None
+        """
+        draw = ImageDraw.Draw(image)
+
+        font_size=min([self.width, self.height])
+        font_size=int(font_size / size_factor)
+
+        if truetype is not None:
+            font = ImageFont.truetype(
+                font=truetype,
+                size=font_size
+            )
+            line_width, line_height = font.getsize(text)
+            left=int((self.width-line_width)/2)
+            top=int((self.height-line_height)/2)
+        else:
+            font = None
+            left=int((self.width)/2)
+            top=int((self.height)/2)
+
+        draw.text(
+            xy=(left, top),
+            text=text,
+            fill=color,
+            font=font,
+        )
+
+    def create_pil_image(self):
+        """
+        return a 'filled' PIL image
+        """
+        image = Image.new('RGB', (self.width, self.height), self.new_image_color)
+        self.fill_image(image)
+        return image
+
+    def create_info_image(self, text):
+        """
+        return a 'filled' PIL image with >text<
+        """
+        image = self.create_pil_image()
+        draw = ImageDraw.Draw(image)
+        draw.multiline_text((10, 10), text, fill=self.text_color, align=self.text_align)
+        return image
+
+    def create_temp_filer_info_image(self, text, user):
+        """
+        Fill a PIL image with a colorful gradient,
+        draw the given >text< on it
+        and return a filer.models.Image() instance.
+        """
+        f = tempfile.NamedTemporaryFile(prefix=self.temp_prefix, suffix=".%s" % self.format)
+        image = self.create_info_image(text)
+        image.save(f, format=self.format)
+        filer_image = create_filer_image(f, user)
+        return filer_image
+
+
+def create_pil_image(width, height):
+    warnings.warn(
+        "This is a old API, please use django_tools.unittest_utils.mockup.ImageDummy",
+        category=DeprecationWarning
+    )
+    return ImageDummy(width, height).create_pil_image()
+
+
+def create_info_image(width, height, text, fill='#ffffff', align='center'):
+    warnings.warn(
+        "This is a old API, please use django_tools.unittest_utils.mockup.ImageDummy",
+        category=DeprecationWarning
+    )
+    image_dummy=ImageDummy(width, height)
+    image_dummy.text_color=fill
+    image_dummy.text_align=align
+    return image_dummy.create_info_image(text)
+
+
 def create_temp_filer_info_image(width, height, text, user):
-    if NOT_SUPPORTED:
-        raise RuntimeError("Combination Django v1.10 and django-filer v1.2.5 is not supported")
-
-    f = tempfile.NamedTemporaryFile(prefix='dummy_', suffix='.png')
-    im = create_info_image(width, height, text)
-    im.save(f, format='png')
-    filer_image = create_filer_image(f, user)
-    return filer_image
-
+    warnings.warn(
+        "This is a old API, please use django_tools.unittest_utils.mockup.ImageDummy",
+        category=DeprecationWarning
+    )
+    return ImageDummy(width, height).create_temp_filer_info_image(text, user)
