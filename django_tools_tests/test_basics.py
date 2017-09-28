@@ -55,7 +55,7 @@ class ManageCommandTests(DjangoCommandMixin, TestCase):
         self.assertIn('Type \'manage.py help <subcommand>\' for help on a specific subcommand.', output)
 
     def test_unapplied_migrations(self):
-        output = self.call_manage_py(["migrate", "--list"], manage_dir=MANAGE_DIR)
+        output = self.call_manage_py(["showmigrations"], manage_dir=MANAGE_DIR)
         print(output)
 
         # We didn't habe any migrations, yet:
