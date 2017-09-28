@@ -107,6 +107,12 @@ if _django_version < _parse_version("1.10") or _filer_version >= _parse_version(
 
 #==============================================================================
 
+CELERY_ALWAYS_EAGER = True
+BROKER_TRANSPORT = "memory"
+EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend'
+
+#==============================================================================
+
 
 SITE_ID = 1
 
