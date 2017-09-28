@@ -19,3 +19,20 @@ indent_style = tab
 [LICENSE]
 insert_final_newline = false
 
+[*.py]
+# Configuring isort
+# https://github.com/timothycrosley/isort/wiki/isort-Settings
+atomic = true
+line_length = 120
+# 5 - Hanging Grid Grouped
+multi_line_output = 5
+
+known_external=pytest
+known_django=django
+known_cms=cms
+
+import_heading_djangotools=https://github.com/jedie/django-tools
+known_djangotools=django_tools
+
+default_section=THIRDPARTY
+sections=FUTURE,STDLIB,EXTERNAL,DJANGO,CMS,THIRDPARTY,DJANGOTOOLS,FIRSTPARTY,LOCALFOLDER
