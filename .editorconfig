@@ -19,5 +19,3 @@ indent_style = tab
 [LICENSE]
 insert_final_newline = false
 
-[{Makefile,**.mk}]
-indent_style = tab
