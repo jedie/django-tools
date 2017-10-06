@@ -11,18 +11,24 @@
 from __future__ import absolute_import, division, print_function
 
 import json
+import logging
 
-from django.http import HttpResponse
 from django.conf import settings
 from django.contrib.sites.models import Site
+from django.http import HttpResponse
+from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView
 
+# https://github.com/jedie/django-tools
 from django_tools.middlewares.ThreadLocal import get_current_request
 
 
+log = logging.getLogger(__name__)
 
+
+
+@never_cache
 def display_site(request):
-
     settings_id = settings.SITE_ID
     current_site = Site.objects.get_current()
     current_id = current_site.id
@@ -30,6 +36,7 @@ def display_site(request):
     txt = "ID from settings: %r - id from get_current(): %r" % (
         settings_id, current_id
     )
+    log.debug("display_site(): %s", txt)
     return HttpResponse(txt)
 
 
