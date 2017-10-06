@@ -84,6 +84,8 @@ class ImageDummy:
         Draw the given >text< centered on the given >image<
         Maybe useful for self.fill_image()
 
+        FIXME: Why in hell is it so complicated to draw a centered text with pillow?!?
+
         :param image: PIL instance, e.g.: Image.new()
         :param text: The text to draw
         :param color: Text color (font fill color)
@@ -101,19 +103,29 @@ class ImageDummy:
                 font=truetype,
                 size=font_size
             )
+            split_character = "\n" if isinstance(text, str) else b"\n"
+            lines = text.split(split_character)
+            max_width=0
+            widths=[]
+            for line in lines:
+                line_width, line_height = font.getsize(line)
+                widths.append(line_width)
+                max_width = max(max_width, line_width)
+
             line_width, line_height = font.getsize(text)
-            left=int((self.width-line_width)/2)
+            left=int((self.width-max_width)/2)
             top=int((self.height-line_height)/2)
         else:
             font = None
             left=int((self.width)/2)
             top=int((self.height)/2)
 
-        draw.text(
+        draw.multiline_text(
             xy=(left, top),
             text=text,
             fill=color,
             font=font,
+            align="center"
         )
 
     def create_pil_image(self):
