@@ -1,27 +1,27 @@
 # coding: utf-8
 
 
-from __future__ import unicode_literals, print_function
+from __future__ import print_function, unicode_literals
 
 import logging
 import pprint
 
 import pytest
-from django.contrib import auth
 
 from django.contrib.auth.models import Group, Permission
 from django.core.exceptions import PermissionDenied
 from django.test import TestCase
 
-from django_tools.permissions import check_permission, create_permission, \
-    add_permissions, log_group_permissions, log_user_permissions, \
-    get_admin_permissions, permissions2list, add_app_permissions, has_perm
+from django_tools_test_project.django_tools_test_app.models import LimitToUsergroupsTestModel
+
+# https://github.com/jedie/django-tools
+from django_tools.permissions import (
+    add_app_permissions, add_permissions, check_permission, create_permission, get_admin_permissions, has_perm,
+    permissions2list
+)
 from django_tools.unittest_utils.logging_utils import LoggingBuffer
 from django_tools.unittest_utils.unittest_base import BaseTestCase
-from django_tools.unittest_utils.user import create_user
-
-from django_tools_test_project.django_tools_test_app.models import \
-    LimitToUsergroupsTestModel
+from django_tools.unittest_utils.user import create_user, user_fixtures
 
 log = logging.getLogger(__name__)
 
@@ -41,12 +41,6 @@ class TestCreatePermissions(TestCase):
 
 
 @pytest.fixture(scope="module")
-def user_fixtures():
-    create_user(username="normal_user", password="foobar")
-    create_user(username="super_user", password="foobar", is_superuser=True)
-
-
-@pytest.fixture(scope="module")
 def permission_fixtures():
     create_permission(
         permission=PERMISSION_NAME,
@@ -62,7 +56,14 @@ def permission_fixtures():
 class TestPermissions(BaseTestCase):
     def setUp(self):
         super(TestPermissions, self).setUp()
-        self.create_testusers()
+
+        user_fixtures()
+
+        users = self.UserModel.objects.all()
+        usernames = users.values_list("username", flat=True).order_by("username")
+        reference = ['normal_test_user', 'staff_test_user', 'superuser']
+        self.assertEqual(repr(usernames), repr(reference))
+
         self.normal_user = self._get_user(usertype="normal")
         self.superuser = self._get_user(usertype="superuser")
         self.permission = Permission.objects.get(codename="publish")

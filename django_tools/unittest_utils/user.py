@@ -4,15 +4,22 @@ from __future__ import unicode_literals
 
 import logging
 
+import pytest
+
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
 
 log = logging.getLogger(__name__)
 
 
-def create_user(username, password=None, email="", is_staff=False, is_superuser=False, encrypted_password=None, groups=None):
+def create_user(
+    username, password=None, email="",
+    is_staff=False, is_superuser=False,
+    encrypted_password=None, groups=None,
+    update_existing=False
+    ):
     """
     Create a user and return the instance.
 
@@ -24,24 +31,36 @@ def create_user(username, password=None, email="", is_staff=False, is_superuser=
     if password is None and encrypted_password is None:
         raise RuntimeError("'password' or 'encrypted_password' needed.")
 
-    # Validate username and password with origin Form:
-    createdata={
-        "username": username,
-        "password1": password,
-        "password2": password,
-    }
-
-    if password is None:
-        # encrypted_password set later!
-        # Set something, to run validation.
-        createdata["password1"] = createdata["password2"] = "A temp password!"
-
-    user_create_form = UserCreationForm(createdata)
-    if not user_create_form.is_valid():
-        raise ValidationError("%s" % user_create_form.errors)
-
     User=get_user_model()
-    user, created = User.objects.get_or_create(username=username)
+
+    user = None
+    if update_existing:
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            user = None
+        else:
+            created=False
+
+    if user is None:
+        # Create user with origin form to validate username:
+        user_form_data={
+            "username": username,
+            "password1": password,
+            "password2": password,
+        }
+
+        if password is None:
+            # encrypted_password set later!
+            # Set something, to run validation.
+            user_form_data["password1"] = user_form_data["password2"] = "A temp password!"
+
+        user_form = UserCreationForm(user_form_data)
+        if user_form.is_valid():
+            user = user_form.save(commit=False)
+            created = True
+        else:
+            raise ValidationError("%s" % user_form.errors)
 
     user.email = email
     user.is_staff = is_staff
@@ -84,3 +103,33 @@ def get_super_user():
         log.error("Can't get a superuser. Please create first!")
         raise RuntimeError("No superuser")
     return super_user
+
+
+TEST_USERS = {
+    "superuser": {
+        "username": "superuser",
+        "email": "superuser@example.org",
+        "password": "superuser_password",
+        "is_staff": True,
+        "is_superuser": True,
+    },
+    "staff": {
+        "username": "staff_test_user",
+        "email": "staff_test_user@example.org",
+        "password": "staff_test_user_password",
+        "is_staff": True,
+        "is_superuser": False,
+    },
+    "normal": {
+        "username": "normal_test_user",
+        "email": "normal_test_user@example.org",
+        "password": "normal_test_user_password",
+        "is_staff": False,
+        "is_superuser": False,
+    },
+}
+
+@pytest.fixture(scope="session")
+def user_fixtures():
+    for user_data in TEST_USERS.values():
+        create_user(**user_data, update_existing=True)

@@ -8,12 +8,15 @@ from __future__ import unicode_literals
 
 import warnings
 
-from django.contrib.auth import get_user_model
-from django.test import TestCase
-from django.contrib.auth.models import Group
+import pytest
 
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
+from django.test import TestCase
+
+# https://github.com/jedie/django-tools
 from django_tools.unittest_utils.unittest_base import BaseTestCase
-from django_tools.unittest_utils.user import create_user, get_super_user
+from django_tools.unittest_utils.user import create_user, get_super_user, user_fixtures
 
 
 class TestUserUtils(BaseTestCase):
@@ -78,3 +81,19 @@ class TestUserUtils(BaseTestCase):
             self.assertTrue(issubclass(w[-1].category, FutureWarning))
 
         self.assertEqual(self.UserModel.objects.count(), 1)
+
+
+@pytest.mark.usefixtures(
+    user_fixtures.__name__,
+)
+class TestUserFixtures(BaseTestCase):
+    def assert_user_fixtures(self):
+        users = self.UserModel.objects.all()
+        usernames = users.values_list("username", flat=True).order_by("username")
+        reference = ['normal_test_user', 'staff_test_user', 'superuser']
+        self.assertEqual(repr(usernames), repr(reference))
+
+    def test_double_creation(self):
+        self.assert_user_fixtures()
+        user_fixtures() # create user a second time
+        self.assert_user_fixtures()
