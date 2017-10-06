@@ -129,19 +129,22 @@ PASSWORD_HASHERS = ( # Speedup tests
 # cut 'pathname' in log output
 
 import logging
-old_factory = logging.getLogRecordFactory()
+try:
+    old_factory = logging.getLogRecordFactory()
+except AttributeError: # e.g.: Python < v3.2
+    pass
+else:
+    def cut_path(pathname, max_length):
+        if len(pathname)<=max_length:
+            return pathname
+        return "...%s" % pathname[-(max_length-3):]
 
-def cut_path(pathname, max_length):
-    if len(pathname)<=max_length:
-        return pathname
-    return "...%s" % pathname[-(max_length-3):]
+    def record_factory(*args, **kwargs):
+        record = old_factory(*args, **kwargs)
+        record.pathname = cut_path(record.pathname, 30)
+        return record
 
-def record_factory(*args, **kwargs):
-    record = old_factory(*args, **kwargs)
-    record.pathname = cut_path(record.pathname, 30)
-    return record
-
-logging.setLogRecordFactory(record_factory)
+    logging.setLogRecordFactory(record_factory)
 
 
 #-----------------------------------------------------------------------------
