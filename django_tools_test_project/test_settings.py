@@ -124,12 +124,35 @@ PASSWORD_HASHERS = ( # Speedup tests
     'django.contrib.auth.hashers.MD5PasswordHasher',
 )
 
+
+#_____________________________________________________________________________
+# cut 'pathname' in log output
+
+import logging
+old_factory = logging.getLogRecordFactory()
+
+def cut_path(pathname, max_length):
+    if len(pathname)<=max_length:
+        return pathname
+    return "...%s" % pathname[-(max_length-3):]
+
+def record_factory(*args, **kwargs):
+    record = old_factory(*args, **kwargs)
+    record.pathname = cut_path(record.pathname, 30)
+    return record
+
+logging.setLogRecordFactory(record_factory)
+
+
+#-----------------------------------------------------------------------------
+
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(msecs)d %(module)s.%(funcName)s line %(lineno)d: %(message)s'
+            'format': '%(levelname)8s %(pathname)s:%(lineno)-3s %(message)s'
         },
         'simple': {
             'format': '%(levelname)s %(message)s'
