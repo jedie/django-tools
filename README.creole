@@ -148,6 +148,23 @@ and unittests: [[https://github.com/jedie/django-tools/blob/master/django_tools_
 * [[https://github.com/jedie/django-tools/blob/master/django_tools/fields/url.py|url field]] A flexible version of the original django form URLField
 
 
+=== ./manage.py database_info
+
+Just display some information about the used database and connections.
+
+setup:
+
+{{{
+INSTALLED_APPS = [
+    ...
+    'django_tools',
+    ...
+]
+}}}
+
+usage, e.g.:: {{{$ ./manage.py database_info}}}
+
+
 == unittests helpers
 
 === Mockup utils
@@ -192,7 +209,7 @@ usage/tests:
 
 === DjangoCommandMixin
 
-Helper to run shell commands. e.g.: "./manage.py cms check"
+Helper to run shell commands. e.g.: "./manage.py cms check" in unittests.
 
 usage/tests:
 
@@ -515,6 +532,8 @@ to:
 
 == history
 
+* **dev**
+** NEW: {{{./manage.py database_info}}}
 * v0.35.0 - 26.09.2017 - [[https://github.com/jedie/django-tools/compare/v0.34.0...v0.35.0|compare v0.34.0...v0.35.0]]
 ** CHANGE: The dummy image generation function in {{{django_tools.unittest_utils.mockup}}} has a new API.
 * v0.34.0 - 18.09.2017 - [[https://github.com/jedie/django-tools/compare/v0.33.0...v0.34.0|compare v0.33.0...v0.34.0]]
