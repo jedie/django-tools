@@ -4,6 +4,11 @@ from logging.handlers import MemoryHandler
 
 class LoggingBuffer():
     def __init__(self, name=None, level=logging.DEBUG, formatter = None):
+        """
+        To get the logger name, execute this in `./manage.py shell` e.g.:
+
+        import logging;print("\n".join(sorted(logging.Logger.manager.loggerDict.keys())))
+        """
         self.buffer = []
         self.level=level
         if formatter is None:
