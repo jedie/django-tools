@@ -11,8 +11,10 @@
 from __future__ import print_function, unicode_literals
 
 import os
+import sys
 from unittest import TestCase
 
+import django
 from django.core.management import call_command
 from django.test import SimpleTestCase
 
@@ -35,13 +37,15 @@ class DatabaseInfoCallCommandTests(SimpleTestCase):
             call_command("database_info")
         output = buff.get_output()
         print(output)
-        import sqlite3
+
         self.assertIn("engine...............: 'sqlite3'", output)
 
         self.assertIn("'NAME': ':memory:',", output) # from settings dict
 
-        self.assertIn("name.................: ':memory:'", output)
-        self.assertIn("name.................: 'file:memorydb_default?mode=memory&cache=shared'", output)
+        if sys.version_info[:2] == (2,7) and django.VERSION[:2] == (1.8):
+            self.assertIn("name.................: ':memory:'", output)
+        else:
+            self.assertIn("name.................: 'file:memorydb_default?mode=memory&cache=shared'", output)
 
         self.assertIn("There are 1 connections.", output)
 
