@@ -65,12 +65,10 @@ class TestMockupImageNewApi(BaseTestCase):
             self.assertEqual(filer_info_image.size, 1791)
             self.assertIn(".png", filer_info_image.path)
 
-            if django.VERSION < (1, 10):
-                self.assertIn("django-tools/filer_public/", filer_info_image.path)
-                #--------------------^
-            else:
-                self.assertIn("django_tools/filer_public/", filer_info_image.path)
-                #--------------------^
+            path = filer_info_image.path
+            path = path.replace("-", "_") # e.g.: /django-tools/ -> /django_tools/
+
+            self.assertIn("django_tools/filer_public/", path)
 
             self.assertEqual(len(w), 0) # No warnings created
 
@@ -125,11 +123,9 @@ class TestMockupImageOldApi(BaseTestCase):
             self.assertEqual(filer_info_image.size, 1791)
             self.assertIn(".png", filer_info_image.path)
 
-            if django.VERSION < (1, 10):
-                self.assertIn("django-tools/filer_public/", filer_info_image.path)
-                #--------------------^
-            else:
-                self.assertIn("django_tools/filer_public/", filer_info_image.path)
-                #--------------------^
+            path = filer_info_image.path
+            path = path.replace("-", "_") # e.g.: /django-tools/ -> /django_tools/
+
+            self.assertIn("django_tools/filer_public/", path)
 
             self.assert_warning(w)
