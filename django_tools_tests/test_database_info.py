@@ -40,12 +40,11 @@ class DatabaseInfoCallCommandTests(SimpleTestCase):
 
         self.assertIn("engine...............: 'sqlite3'", output)
 
-        self.assertIn("'NAME': ':memory:',", output) # from settings dict
-
-        if sys.version_info[:2] == (2,7) and django.VERSION[:2] == (1.8):
-            self.assertIn("name.................: ':memory:'", output)
-        else:
-            self.assertIn("name.................: 'file:memorydb_default?mode=memory&cache=shared'", output)
+        self.assertTrue(
+            "name.................: ':memory:'" in output
+            or
+            "name.................: 'file:memorydb_default?mode=memory&cache=shared'" in output
+        )
 
         self.assertIn("There are 1 connections.", output)
 
