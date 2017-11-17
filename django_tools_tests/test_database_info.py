@@ -35,9 +35,13 @@ class DatabaseInfoCallCommandTests(SimpleTestCase):
             call_command("database_info")
         output = buff.get_output()
         print(output)
+        import sqlite3
+        self.assertIn("engine...............: 'sqlite3'", output)
 
-        self.assertIn("engine..: 'sqlite3'", output)
-        self.assertIn("name....: 'file:memorydb_default?mode=memory&cache=shared'", output)
+        self.assertIn("'NAME': ':memory:',", output) # from settings dict
+
+        self.assertIn("name.................: ':memory:'", output)
+        self.assertIn("name.................: 'file:memorydb_default?mode=memory&cache=shared'", output)
 
         self.assertIn("There are 1 connections.", output)
 
@@ -53,8 +57,8 @@ class DatabaseInfoSubprocessTests(DjangoCommandMixin, TestCase):
     def test_database_info(self):
         output = self.call_manage_py(["database_info"], manage_dir=MANAGE_DIR)
         print(output)
-        self.assertIn("engine..: 'sqlite3'", output)
-        self.assertIn("name....: ':memory:'", output)
+        self.assertIn("engine...............: 'sqlite3'", output)
+        self.assertIn("name.................: ':memory:'", output)
 
         self.assertIn("There are 1 connections.", output)
 

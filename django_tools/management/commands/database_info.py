@@ -48,11 +48,17 @@ class Command(BaseCommand):
             self.stdout.write("")
             engine = settings_dict["ENGINE"]
             engine = engine.rsplit(".",1)[-1]
-            self.stdout.write("engine..: %r" % engine)
-            self.stdout.write("name....: %r" % settings_dict["NAME"])
-            self.stdout.write("user....: %r" % settings_dict["USER"])
-            self.stdout.write("host....: %r" % settings_dict["HOST"])
-            self.stdout.write("port....: %r" % settings_dict["PORT"])
+            self.stdout.write("engine...............: %r" % engine)
+            if engine == "sqlite3":
+                # https://docs.python.org/3/library/sqlite3.html#module-functions-and-constants
+                import sqlite3
+                self.stdout.write("sqlite lib version...: %r" % sqlite3.sqlite_version)
+                self.stdout.write("sqlite module version: %r" % sqlite3.version)
+
+            self.stdout.write("name.................: %r" % settings_dict["NAME"])
+            self.stdout.write("user.................: %r" % settings_dict["USER"])
+            self.stdout.write("host.................: %r" % settings_dict["HOST"])
+            self.stdout.write("port.................: %r" % settings_dict["PORT"])
 
         connection_list = connections.all()
 
