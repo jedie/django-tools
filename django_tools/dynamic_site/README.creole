@@ -1,5 +1,7 @@
 == Dynamic SITE ID ==
 
+Note: Currently not maintained! TODO: Fix unittests for all python/django version
+
 Set the SITE_ID dynamic by the current Domain Name.
 You can also specify domain name alias as a simple string or as a regular expression.
 
@@ -28,7 +30,7 @@ INSTALLED_APPS = (
     'django_tools.dynamic_site',
     ...
 )
-    
+
 # activate django-tools DynamicSiteMiddleware:
 USE_DYNAMIC_SITE_MIDDLEWARE = True
 }}}
@@ -57,7 +59,7 @@ if "runserver" in sys.argv or "tests" in sys.argv:
 ==== defaults ====
 
 You can't set the default ID in model fields with {{{default=settings.SITE_ID}}} becuase this will be evalutated at startup.
-So it won't change dynamically. Work-a-round: Set it in {{{__init__()}}} 
+So it won't change dynamically. Work-a-round: Set it in {{{__init__()}}}
 
 ==== unittests ====
 
@@ -69,5 +71,5 @@ from django.conf import settings
 # Disable dynamic site, if used:
 if getattr(settings, "USE_DYNAMIC_SITE_MIDDLEWARE", False):
     settings.USE_DYNAMIC_SITE_MIDDLEWARE = False
-    settings.SITE_ID = 1 
+    settings.SITE_ID = 1
 }}}

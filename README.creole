@@ -105,6 +105,8 @@ For getting request object anywhere, use [[https://github.com/jedie/django-tools
 
 === Dynamic SITE_ID middleware
 
+Note: Currently not maintained! TODO: Fix unittests for all python/django version
+
 Set settings.SITE_ID dynamically with a middleware base on the current request domain name.
 Domain name alias can be specify as a simple string or as a regular expression.
 
