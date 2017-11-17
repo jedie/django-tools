@@ -90,8 +90,8 @@ class TestUserFixtures(BaseTestCase):
     def assert_user_fixtures(self):
         users = self.UserModel.objects.all()
         usernames = users.values_list("username", flat=True).order_by("username")
-        reference = ['normal_test_user', 'staff_test_user', 'superuser']
-        self.assertEqual(repr(usernames), repr(reference))
+        reference = ('normal_test_user', 'staff_test_user', 'superuser')
+        self.assertEqual(tuple(usernames), reference)
 
     def test_double_creation(self):
         self.assert_user_fixtures()
