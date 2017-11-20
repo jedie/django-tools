@@ -232,6 +232,7 @@ setup(
     description='miscellaneous tools for django',
     long_description=long_description,
     author=get_authors(),
+    author_email="django-tools@jensdiemer.de",
     maintainer="Jens Diemer",
     maintainer_email="django-tools@jensdiemer.de",
     url='http://github.com/jedie/django-tools/',
