@@ -144,6 +144,14 @@ if "publish" in sys.argv:
         sys.exit(-1)
     verbose_check_call("git", "push")
 
+    print("\nRun './setup.py check':")
+    call_info, output = verbose_check_output("./setup.py", "check")
+    if "warning" in output:
+        print(output)
+        confirm("Warning found!")
+    else:
+        print("OK")
+
     print("\nCleanup old builds:")
     def rmtree(path):
         path = os.path.abspath(path)
