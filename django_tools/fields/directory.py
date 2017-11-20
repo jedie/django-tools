@@ -46,6 +46,7 @@ class DirectoryFormField(forms.CharField):
 
 class DirectoryModelField(models.CharField):#, with_metaclass(models.SubfieldBase)):
     """
+    >>> settings.DEBUG=False # Don't add path to error messages
     >>> dir = DirectoryModelField()
     >>> dir.run_validators(settings.MEDIA_ROOT)
     >>> try:
