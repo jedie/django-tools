@@ -217,10 +217,9 @@ class ModelPermissionMixin(object):
     """
     @classmethod
     def permission_name(cls, action):
-        permission = "{app}.{action}_{model}".format(
+        permission = "{app}.{action}".format(
             app=cls._meta.app_label,
             action=action,
-            model=cls._meta.model_name,
         )
         return permission
 

@@ -38,13 +38,11 @@ class TestListModelsCommand(DjangoCommandMixin, TestCase):
         self.assertIn("02 - auth.Group", output)
 
         self.assertIn("06 - django_tools_test_app.LimitToUsergroupsTestModel", output)
-        self.assertIn("07 - dynamic_site.SiteAlias", output)
+        self.assertIn("07 - django_tools_test_app.PermissionTestModel", output)
+        self.assertIn("08 - dynamic_site.SiteAlias", output)
 
-        # TODO: Add numbers after django-filer v1.2.6 is released!
-        # see:
-        # https://github.com/jedie/django-tools/commit/b427e148c2decd3410239152550bf509854b78be
-        self.assertIn("INSTALLED_APPS....:", output)
-        self.assertIn("Apps with models..:", output)
+        self.assertIn("INSTALLED_APPS....: 13", output)
+        self.assertIn("Apps with models..: 13", output)
 
 class TestNiceDiffSettingsCommand(DjangoCommandMixin, TestCase):
     def test_help(self):

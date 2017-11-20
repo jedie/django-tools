@@ -9,10 +9,11 @@ import pprint
 import pytest
 
 from django.contrib.auth.models import Group, Permission
+from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
 from django.test import TestCase
 
-from django_tools_test_project.django_tools_test_app.models import LimitToUsergroupsTestModel
+from django_tools_test_project.django_tools_test_app.models import LimitToUsergroupsTestModel, PermissionTestModel
 
 # https://github.com/jedie/django-tools
 from django_tools.permissions import (
@@ -183,3 +184,78 @@ class TestPermissions(BaseTestCase):
             'ERROR:django_tools.permissions:User "normal_test_user"'
             ' has not permission "foo.bar2" -> raise PermissionDenied!'
         )
+
+
+
+
+class PermissionMixinTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        super(PermissionMixinTestCase, cls).setUpTestData()
+
+        cls.superuser = create_user(username="superuser", password="unittest", is_superuser=True)
+
+        cls.user_no_permissions = create_user(username="user_with_no_permissions", password="unittest")
+        cls.instance = PermissionTestModel.objects.create(foo="bar")
+
+        content_type = ContentType.objects.get_for_model(PermissionTestModel)
+        ask_publisher_request_permission = Permission.objects.get(
+            content_type=content_type,
+            codename="extra_permission1"
+        )
+        cls.extra_permission1_group = Group.objects.create(name="extra_permission1_users")
+        cls.extra_permission1_group.permissions.add(ask_publisher_request_permission)
+
+        cls.extra_permission1_user = create_user(
+            username="extra_permission1_user",
+            password="unittest",
+            groups=(cls.extra_permission1_group,),
+        )
+
+    def test_permission_created(self):
+        all_permissions = [
+            "%s.%s" % (entry.content_type, entry.codename)
+            for entry in Permission.objects.all()
+        ]
+        pprint.pprint(all_permissions)
+
+        # Default mode permissions:
+        self.assertIn("permission test model.add_permissiontestmodel", all_permissions)
+        self.assertIn("permission test model.change_permissiontestmodel", all_permissions)
+        self.assertIn("permission test model.delete_permissiontestmodel", all_permissions)
+
+        # Own permissions defined via Meta.permissions:
+        self.assertIn("permission test model.extra_permission1", all_permissions)
+        self.assertIn("permission test model.extra_permission2", all_permissions)
+
+    def test_has_no_extra_permission(self):
+        self.assertFalse(
+            self.instance.has_extra_permission1_permission(
+                user=self.user_no_permissions,
+                raise_exception=False
+            )
+        )
+        self.assertRaises(PermissionDenied,
+            self.instance.has_extra_permission1_permission,
+            user=self.user_no_permissions,
+            raise_exception=True
+        )
+
+    def test_has_extra_permission(self):
+        self.assertTrue(
+            self.instance.has_extra_permission1_permission(
+                user=self.extra_permission1_user,
+                raise_exception=False
+            )
+        )
+        self.assertTrue(
+            self.instance.has_extra_permission1_permission(
+                user=self.extra_permission1_user,
+                raise_exception=True
+            )
+        )
+
+    def test_has_default_permissions(self):
+        self.assertTrue(self.instance.has_add_permission(user=self.superuser))
+        self.assertTrue(self.instance.has_change_permission(user=self.superuser))
+        self.assertTrue(self.instance.has_delete_permission(user=self.superuser))
