@@ -187,10 +187,15 @@ def check_permission(user, permission, raise_exception=True):
         app_label, codename = permission.split(".")
         content_types = ContentType.objects.all().filter(app_label = app_label)
         if content_types.count() == 0:
-            app_lables = ContentType.objects.all().values_list("app_label", flat=True).order_by("app_label").distinct("app_label")
+            qs = ContentType.objects.all().values_list("app_label", flat=True).order_by("app_label")
+            try:
+                app_lables = ", ".join(qs.distinct("app_label"))
+            except NotImplementedError:
+                # e.g.: sqlite has no distinct
+                app_lables = ", ".join(set(qs))
             raise AssertionError(
                 "ERROR: app label %r from permission %r doesn't exists! All existing labels are: %s" % (
-                    app_label, permission, ", ".join(app_lables)
+                    app_label, permission, app_lables
                 )
             )
         qs = Permission.objects.all().filter(content_type__in=content_types)
