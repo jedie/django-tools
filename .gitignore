@@ -43,6 +43,7 @@ nosetests.xml
 coverage.xml
 *,cover
 coverage_html/
+coverage_report/
 
 # Translations
 *.mo
