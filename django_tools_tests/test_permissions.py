@@ -8,18 +8,18 @@ import pprint
 
 import pytest
 
-from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.models import User, Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from django_tools_test_project.django_tools_test_app.models import LimitToUsergroupsTestModel, PermissionTestModel
 
 # https://github.com/jedie/django-tools
 from django_tools.permissions import (
-    add_app_permissions, add_permissions, check_permission, create_permission, get_admin_permissions, has_perm,
-    permissions2list
-)
+    add_app_permissions, add_permissions, check_permission, get_admin_permissions, get_permission_by_string,
+    has_perm, permissions2list,
+    log_user_permissions, log_group_permissions)
 from django_tools.unittest_utils.logging_utils import LoggingBuffer
 from django_tools.unittest_utils.unittest_base import BaseTestCase
 from django_tools.unittest_utils.user import create_user, user_fixtures
@@ -27,102 +27,205 @@ from django_tools.unittest_utils.user import create_user, user_fixtures
 log = logging.getLogger(__name__)
 
 
-PERMISSION_NAME="limittousergroupstestmodel.publish"
-
-
-class TestCreatePermissions(TestCase):
-    def test_create(self):
-        permission = create_permission(
-            permission=PERMISSION_NAME,
-            name="Can Publish",
-            model=LimitToUsergroupsTestModel
-        )
-        self.assertIsInstance(permission, Permission)
-        self.assertEqual(permission.codename, "publish")
-
-
-@pytest.fixture(scope="module")
-def permission_fixtures():
-    create_permission(
-        permission=PERMISSION_NAME,
-        name="Can Publish",
-        model=LimitToUsergroupsTestModel
-    )
-
-
+@override_settings(DEBUG = True)
 @pytest.mark.usefixtures(
     user_fixtures.__name__,
-    permission_fixtures.__name__
 )
 class TestPermissions(BaseTestCase):
+    @classmethod
+    def setUpTestData(cls):
+        super(TestPermissions, cls).setUpTestData()
+
+        cls.extra_permission = get_permission_by_string(
+            permission="django_tools_test_app.extra_permission"
+        )
+
+        cls.instance = PermissionTestModel.objects.create(foo="bar")
+
     def setUp(self):
         super(TestPermissions, self).setUp()
 
-        user_fixtures()
-
-        users = self.UserModel.objects.all()
+        users = User.objects.all()
         usernames = users.values_list("username", flat=True).order_by("username")
-        reference = ('normal_test_user', 'staff_test_user', 'superuser')
-        self.assertEqual(tuple(usernames), reference)
+        assert tuple(usernames) == ('normal_test_user', 'staff_test_user', 'superuser')
 
-        self.normal_user = self._get_user(usertype="normal")
         self.superuser = self._get_user(usertype="superuser")
-        self.permission = Permission.objects.get(codename="publish")
-        self.group = Group.objects.create(name="Test User Group")
-        self.normal_user.groups.add(self.group)
+
+        # The "staff user" has some permissions:
+        self.staff_user = self._get_user(usertype="staff")
+        self.staff_group = Group.objects.create(name="Staff User Group")
+        self.staff_group.permissions.add(self.extra_permission)
+        self.staff_group.permissions.add(get_permission_by_string("django_tools_test_app.add_permissiontestmodel"))
+        self.staff_group.permissions.add(get_permission_by_string("django_tools_test_app.change_permissiontestmodel"))
+        self.staff_group.permissions.add(get_permission_by_string("django_tools_test_app.delete_permissiontestmodel"))
+        self.staff_user.groups.add(self.staff_group)
+        self.staff_user.save()
+
+        # The "normal user" has no permissions:
+        self.normal_user = self._get_user(usertype="normal")
+        self.normal_group = Group.objects.create(name="Normal User Group")
+        self.normal_user.groups.add(self.normal_group)
         self.normal_user.save()
 
+    #-------------------------------------------------------------------------
+
+    def assert_permissiontestmodel(self, permission):
+        self.assertIsInstance(permission, Permission)
+        self.assertIsInstance(permission.content_type, ContentType)
+
+        self.assertEqual(permission.content_type.app_label, "django_tools_test_app")
+        self.assertEqual(permission.content_type.model, "permissiontestmodel")
+
+    def assert_extra_permission(self, permission):
+        self.assert_permissiontestmodel(permission)
+        self.assertEqual(permission.codename, "extra_permission")
+
+    def assert_exception_startswith(self, context_manager, text):
+        exception_text = context_manager.exception.args[0]
+        if not exception_text.startswith(text):
+            msg="%r doesn't starts with %r" % (exception_text, text)
+            raise self.failureException(msg)
+
+    #-------------------------------------------------------------------------
+
     def test_setup(self):
+        self.assert_extra_permission(self.extra_permission)
+
+        # The "normal user" has no permissions
         self.assertEqual(self.normal_user.get_all_permissions(), set())
 
+        # The "staff user" has some permissions
+        self.assertEqual(self.staff_user.get_all_permissions(),
+            {
+                "django_tools_test_app.extra_permission",
+                "django_tools_test_app.add_permissiontestmodel",
+                "django_tools_test_app.change_permissiontestmodel",
+                "django_tools_test_app.delete_permissiontestmodel",
+            }
+        )
+
+        all_permissions = [
+            "%s.%s" % (entry.content_type, entry.codename)
+            for entry in Permission.objects.all()
+        ]
+        pprint.pprint(all_permissions)
+
+        # Default mode permissions:
+        self.assertIn("permission test model.add_permissiontestmodel", all_permissions)
+        self.assertIn("permission test model.change_permissiontestmodel", all_permissions)
+        self.assertIn("permission test model.delete_permissiontestmodel", all_permissions)
+
+        # Own permission defined via Meta.permissions:
+        self.assertIn("permission test model.extra_permission", all_permissions)
+
+    #-------------------------------------------------------------------------
+
+    def test_get_default_permissions(self):
+        # https://docs.djangoproject.com/en/1.8/ref/models/options/#default-permissions
+        permission = get_permission_by_string("django_tools_test_app.add_permissiontestmodel")
+        self.assert_permissiontestmodel(permission)
+        self.assertEqual(permission.codename, "add_permissiontestmodel")
+
+        permission = get_permission_by_string("django_tools_test_app.change_permissiontestmodel")
+        self.assert_permissiontestmodel(permission)
+        self.assertEqual(permission.codename, "change_permissiontestmodel")
+
+        permission = get_permission_by_string("django_tools_test_app.delete_permissiontestmodel")
+        self.assert_permissiontestmodel(permission)
+        self.assertEqual(permission.codename, "delete_permissiontestmodel")
+
+    def test_get_extra_permission(self):
+        # https://docs.djangoproject.com/en/1.8/ref/models/options/#permissions
+        permission = get_permission_by_string("django_tools_test_app.extra_permission")
+        self.assert_extra_permission(permission)
+
+    #-------------------------------------------------------------------------
+
+    def test_get_permission_wrong_format(self):
+        with self.assertRaises(PermissionDenied) as cm:
+            get_permission_by_string("no_dot_in_string")
+
+        self.assert_exception_startswith(cm, "Wrong permission string format")
+
+    def test_get_permission_wrong_app_label(self):
+        with self.assertRaises(PermissionDenied) as cm:
+            get_permission_by_string("wrong.foobar")
+
+        self.assert_exception_startswith(cm,
+            "App label 'wrong' from permission 'wrong.foobar' doesn't exists!"
+        )
+
+    def test_get_permission_wrong_codename(self):
+        with self.assertRaises(PermissionDenied) as cm:
+            get_permission_by_string("auth.wrong")
+
+        self.assert_exception_startswith(cm,
+            "Codename 'wrong' from permission 'auth.wrong' doesn't exists!"
+        )
+
+    #-------------------------------------------------------------------------
+
     def test_add_permissions(self):
-        self.assertEqual(
-            check_permission(self.normal_user, PERMISSION_NAME, raise_exception=False),
-            False
+        permissions = (
+            (LimitToUsergroupsTestModel, "extra_permission"),
         )
-        # permissions = self.get_all_permissions(self.normal_user)
-        # self.assertEqual(permissions, "X")
-
-        permissions=(
-            (LimitToUsergroupsTestModel, "publish"),
-        )
-        add_permissions(permission_obj=self.group, permissions=permissions)
-
-        # log_group_permissions(self.group)
-        # log_user_permissions(self.normal_user)
+        add_permissions(permission_obj=self.normal_group, permissions=permissions)
 
         user = self.refresh_user(self.normal_user)
-        # log_user_permissions(user)
+        self.assertEqual(user.get_all_permissions(), {'django_tools_test_app.extra_permission'})
 
-        self.assertEqual(
-            check_permission(user, "django_tools_test_app.publish", raise_exception=False),
-            True
+    def test_check_permission_error_without_exception(self):
+        self.assertFalse(
+            check_permission(
+                self.normal_user,
+                "django_tools_test_app.extra_permission",
+                raise_exception=False
+            )
         )
 
-        self.assertEqual(user.get_all_permissions(), {'django_tools_test_app.publish'})
+    def test_check_permission_error_with_exception(self):
+        with self.assertRaises(PermissionDenied) as cm:
+            check_permission(self.normal_user, "django_tools_test_app.extra_permission")
 
-    def test_superuser_check(self):
-        self.assertEqual(
-            check_permission(self.normal_user, "foo.bar", raise_exception=False),
-            False
-        )
-        self.assertEqual(has_perm(self.normal_user, "foo.bar"), False)
-        self.assertEqual(
-            check_permission(self.superuser, "foo.bar", raise_exception=False),
-            True
-        )
-        self.assertEqual(has_perm(self.superuser, "foo.bar"), True)
+        self.assertFalse(hasattr(cm, "args")) # No error message
 
-    def test_add_app_permissions(self):
-        add_app_permissions(permission_obj=self.group, app_label="dynamic_site")
-        permissions = self.group.permissions.all()
-        permissions = permissions2list(permissions)
-        pprint.pprint(permissions)
-        self.assertEqual(permissions, [
-            'dynamic_site.sitealias.add_sitealias',
-            'dynamic_site.sitealias.change_sitealias',
-            'dynamic_site.sitealias.delete_sitealias'
-        ])
+    def test_check_permission_existing(self):
+        self.assertTrue(
+            check_permission(
+                self.staff_user,
+                "django_tools_test_app.extra_permission",
+            )
+        )
+
+    #-------------------------------------------------------------------------
+
+    def test_check_permission_wrong_format(self):
+        check_permission(self.superuser, "no_dot_in_string") # superuser can do everything ;)
+
+        with self.assertRaises(PermissionDenied) as cm:
+            check_permission(self.staff_user, "no_dot_in_string")
+
+        self.assert_exception_startswith(cm, "Wrong permission string format")
+
+    def test_check_permission_wrong_app_label(self):
+        check_permission(self.superuser, "wrong.foobar") # superuser can do everything ;)
+
+        with self.assertRaises(PermissionDenied) as cm:
+            check_permission(self.staff_user, "wrong.foobar")
+
+        self.assert_exception_startswith(cm,
+            "App label 'wrong' from permission 'wrong.foobar' doesn't exists!"
+        )
+
+    def test_check_permission_wrong_codename(self):
+        check_permission(self.superuser, "auth.wrong") # superuser can do everything ;)
+
+        with self.assertRaises(PermissionDenied) as cm:
+            check_permission(self.staff_user, "auth.wrong")
+
+        self.assert_exception_startswith(cm,
+            "Codename 'wrong' from permission 'auth.wrong' doesn't exists!"
+        )
 
     def test_get_admin_permissions(self):
         permissions = get_admin_permissions()
@@ -162,6 +265,9 @@ class TestPermissions(BaseTestCase):
             'sites.site.delete_site'
         ])
 
+    def test_has_perm(self):
+        self.assertTrue(has_perm(self.staff_user, "django_tools_test_app.change_permissiontestmodel"))
+
     def test_has_perm_log(self):
         with LoggingBuffer(name=None, level=logging.ERROR) as log:
             self.assertEqual(has_perm(self.normal_user, "foo.bar1"), False)
@@ -172,90 +278,112 @@ class TestPermissions(BaseTestCase):
             "User normal_test_user has not foo.bar1"
         )
 
-    def test_check_permission(self):
+    def test_log_user_permissions1(self):
         with LoggingBuffer(name=None, level=logging.ERROR) as log:
-            with self.assertRaises(PermissionDenied):
-                check_permission(self.normal_user, "foo.bar2", raise_exception=True)
+            log_user_permissions(self.normal_user)
 
-        log_messages = log.get_messages()
-        print(log_messages)
         self.assertEqual(
-            log_messages,
-            'ERROR:django_tools.permissions:User "normal_test_user"'
-            ' has not permission "foo.bar2" -> raise PermissionDenied!'
+            log.get_messages(),
+            "DEBUG:django_tools.permissions:User 'normal_test_user' has no permission!"
         )
 
+    def test_log_user_permissions2(self):
+        with LoggingBuffer(name=None, level=logging.ERROR) as log:
+            log_user_permissions(self.staff_user)
 
+        messages = [line.strip() for line in log.get_messages().splitlines()]
+        pprint.pprint(messages)
 
-
-class PermissionMixinTestCase(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        super(PermissionMixinTestCase, cls).setUpTestData()
-
-        cls.superuser = create_user(username="superuser", password="unittest", is_superuser=True)
-
-        cls.user_no_permissions = create_user(username="user_with_no_permissions", password="unittest")
-        cls.instance = PermissionTestModel.objects.create(foo="bar")
-
-        content_type = ContentType.objects.get_for_model(PermissionTestModel)
-        ask_publisher_request_permission = Permission.objects.get(
-            content_type=content_type,
-            codename="extra_permission1"
-        )
-        cls.extra_permission1_group = Group.objects.create(name="extra_permission1_users")
-        cls.extra_permission1_group.permissions.add(ask_publisher_request_permission)
-
-        cls.extra_permission1_user = create_user(
-            username="extra_permission1_user",
-            password="unittest",
-            groups=(cls.extra_permission1_group,),
+        self.assertEqual(
+            messages,
+            [
+                "DEBUG:django_tools.permissions:User 'staff_test_user' has permissions:",
+                "* django_tools_test_app.add_permissiontestmodel",
+                "* django_tools_test_app.change_permissiontestmodel",
+                "* django_tools_test_app.delete_permissiontestmodel",
+                "* django_tools_test_app.extra_permission"
+            ]
         )
 
-    def test_permission_created(self):
-        all_permissions = [
-            "%s.%s" % (entry.content_type, entry.codename)
-            for entry in Permission.objects.all()
-        ]
-        pprint.pprint(all_permissions)
+    def test_log_group_permissions1(self):
+        with LoggingBuffer(name=None, level=logging.ERROR) as log:
+            log_group_permissions(self.normal_group)
 
-        # Default mode permissions:
-        self.assertIn("permission test model.add_permissiontestmodel", all_permissions)
-        self.assertIn("permission test model.change_permissiontestmodel", all_permissions)
-        self.assertIn("permission test model.delete_permissiontestmodel", all_permissions)
+        self.assertEqual(
+            log.get_messages(),
+            "DEBUG:django_tools.permissions:User group 'Normal User Group' has no permission!"
+        )
 
-        # Own permissions defined via Meta.permissions:
-        self.assertIn("permission test model.extra_permission1", all_permissions)
-        self.assertIn("permission test model.extra_permission2", all_permissions)
+    def test_log_group_permissions2(self):
+        with LoggingBuffer(name=None, level=logging.ERROR) as log:
+            log_group_permissions(self.staff_group)
+
+        messages = [line.strip() for line in log.get_messages().splitlines()]
+        pprint.pprint(messages)
+
+        self.assertEqual(
+            messages,
+            [
+                "DEBUG:django_tools.permissions:User group 'Staff User Group' has permissions:",
+                "* django_tools_test_app.add_permissiontestmodel",
+                "* django_tools_test_app.change_permissiontestmodel",
+                "* django_tools_test_app.delete_permissiontestmodel",
+                "* django_tools_test_app.extra_permission"
+            ]
+        )
+
+    def test_superuser_check(self):
+        self.assertTrue(
+            check_permission(
+                self.superuser,
+                permission="superuser check ignores this completely!",
+            )
+        )
 
     def test_has_no_extra_permission(self):
         self.assertFalse(
-            self.instance.has_extra_permission1_permission(
-                user=self.user_no_permissions,
+            self.instance.has_extra_permission_permission(
+                user=self.normal_user,
                 raise_exception=False
             )
-        )
-        self.assertRaises(PermissionDenied,
-            self.instance.has_extra_permission1_permission,
-            user=self.user_no_permissions,
-            raise_exception=True
         )
 
     def test_has_extra_permission(self):
         self.assertTrue(
-            self.instance.has_extra_permission1_permission(
-                user=self.extra_permission1_user,
+            self.instance.has_extra_permission_permission(
+                user=self.staff_user,
                 raise_exception=False
-            )
-        )
-        self.assertTrue(
-            self.instance.has_extra_permission1_permission(
-                user=self.extra_permission1_user,
-                raise_exception=True
             )
         )
 
     def test_has_default_permissions(self):
-        self.assertTrue(self.instance.has_add_permission(user=self.superuser))
-        self.assertTrue(self.instance.has_change_permission(user=self.superuser))
-        self.assertTrue(self.instance.has_delete_permission(user=self.superuser))
+        self.assertTrue(self.instance.has_add_permission(user=self.staff_user))
+        self.assertTrue(self.instance.has_change_permission(user=self.staff_user))
+        self.assertTrue(self.instance.has_delete_permission(user=self.staff_user))
+
+    #-------------------------------------------------------------------------
+
+    def test_add_app_permissions(self):
+        with LoggingBuffer(name=None, level=logging.ERROR) as log:
+            add_app_permissions(
+                permission_obj=self.normal_group,
+                app_label="django_tools_test_app"
+            )
+
+        self.assertEqual(
+            log.get_messages(),
+            "DEBUG:django_tools.permissions:Add 7 permissions from app 'django_tools_test_app'"
+        )
+
+        permissions = self.normal_group.permissions.all()
+        permissions = permissions2list(permissions)
+        pprint.pprint(permissions)
+        self.assertEqual(permissions, [
+            'django_tools_test_app.limittousergroupstestmodel.add_limittousergroupstestmodel',
+            'django_tools_test_app.limittousergroupstestmodel.change_limittousergroupstestmodel',
+            'django_tools_test_app.limittousergroupstestmodel.delete_limittousergroupstestmodel',
+            'django_tools_test_app.permissiontestmodel.add_permissiontestmodel',
+            'django_tools_test_app.permissiontestmodel.change_permissiontestmodel',
+            'django_tools_test_app.permissiontestmodel.delete_permissiontestmodel',
+            'django_tools_test_app.permissiontestmodel.extra_permission'
+        ])

@@ -13,13 +13,57 @@ from __future__ import absolute_import, print_function, unicode_literals
 import logging
 
 from django.conf import settings
-from django.contrib import auth
 from django.contrib.admin.sites import site
-from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
 
 log = logging.getLogger(__name__)
+
+def get_permission(app_label, codename):
+    try:
+        perm_obj = Permission.objects.all().get(
+            content_type__app_label=app_label,
+            codename=codename
+        )
+    except Permission.DoesNotExist as err:
+        log.error("Error get permission '%s.%s':%s", app_label, codename, err)
+
+        content_types = ContentType.objects.all().filter(app_label = app_label)
+        if content_types.count() == 0:
+            qs = ContentType.objects.all().values_list("app_label", flat=True).order_by("app_label")
+            try:
+                app_lables = ", ".join(qs.distinct("app_label"))
+            except NotImplementedError:
+                # e.g.: sqlite has no distinct
+                app_lables = ", ".join(set(qs))
+            raise PermissionDenied(
+                (
+                    "App label %r from permission '%s.%s' doesn't exists!"
+                    " All existing labels are: %s"
+                ) % (app_label, app_label, codename, app_lables)
+            )
+        qs = Permission.objects.all().filter(content_type__in=content_types)
+        if qs.filter(codename=codename).count() == 0:
+            codenames = qs.values_list("codename", flat=True).order_by("codename")
+            raise PermissionDenied(
+                (
+                    "Codename %r from permission '%s.%s' doesn't exists!"
+                    " All existing codenames are: %s"
+                ) % (codename, app_label, codename, ", ".join(codenames))
+            )
+    else:
+        return perm_obj
+
+
+def get_permission_by_string(permission):
+    try:
+        app_label, codename = permission.split(".")
+    except ValueError as err:
+        raise PermissionDenied(
+            "Wrong permission string format %r: %s" % (permission, err)
+        )
+    return get_permission(app_label, codename)
 
 
 def add_permissions(permission_obj, permissions):
@@ -35,50 +79,9 @@ def add_permissions(permission_obj, permissions):
     """
     for model_class, codename in permissions:
         content_type = ContentType.objects.get_for_model(model_class)
-        try:
-            permission = Permission.objects.get(
-                content_type=content_type, codename=codename
-            )
-        except Permission.DoesNotExist:
-            raise Permission.DoesNotExist(
-                "Permission '%s.%s' doesn't exists!" % (content_type,codename)
-            )
+        app_label = content_type.app_label
+        permission = get_permission(app_label, codename)
         permission_obj.permissions.add(permission)
-
-
-def create_permission(permission, name, model):
-    """
-    Create Premission.
-
-    :param permission: String
-    :param name: verbose permission name as String
-    :param model: model class
-    :return: created permission instance
-
-    e.g.:
-        create_permission(
-            permission="BlogModel.publish",
-            name="Can publish blog article",
-            model=BlogModel
-        )
-    """
-    model_name, codename = permission.split(".")
-    if model_name != model.__name__.lower():
-        raise AssertionError(
-            "Given permission %r doesn't start with model name %r!" % (
-                permission, model.__name__
-        ))
-
-    content_type = ContentType.objects.get_for_model(model)
-
-    permission, created = Permission.objects.get_or_create(
-        codename=codename, name=name, content_type=content_type
-    )
-    if created:
-        log.debug('\t* Permission "%s" created.\n' % permission.codename)
-    else:
-        log.debug('\t* Permission "%s" already exists, ok.\n' % permission.codename)
-    return permission
 
 
 def permissions2list(permissions):
@@ -113,8 +116,13 @@ def log_user_permissions(user, log_callable=None):
     if log_callable is None:
         log_callable = log.debug
 
-    permissions = "\n".join(["* %-75s" % p for p in user.get_all_permissions()])
-    log_callable('%s has permissions:\n%s', user.username, permissions)
+    permissions = sorted(user.get_all_permissions())
+
+    if not permissions:
+        log_callable("User '%s' has no permission!", user.username)
+    else:
+        permissions = "\n".join(["* %s" % p for p in permissions])
+        log_callable("User '%s' has permissions:\n%s", user.username, permissions)
 
 
 def log_group_permissions(group, log_callable=None):
@@ -130,8 +138,15 @@ def log_group_permissions(group, log_callable=None):
     if log_callable is None:
         log_callable = log.debug
 
-    permissions = "\n".join(["* %-75s %s" % (p, p.codename) for p in group.permissions.all()])
-    log_callable('%s group permissions:\n%s', group.name, permissions)
+    permissions = group.permissions.all().order_by("content_type", "codename")
+    if not permissions:
+        log_callable("User group '%s' has no permission!", group.name)
+    else:
+        permissions = "\n".join([
+            "* %s.%s" % (permission.content_type.app_label, permission.codename)
+            for permission in permissions
+        ])
+        log_callable("User group '%s' has permissions:\n%s", group.name, permissions)
 
 
 def get_admin_permissions():
@@ -157,10 +172,8 @@ def add_app_permissions(permission_obj, app_label):
         add_app_permissions(permission_obj=user_group_instance, app_label="filer")
     """
     content_types = ContentType.objects.filter(app_label = app_label)
-
-    log.debug("Add %i permissions from app %r" % (content_types.count(), app_label))
-
     permissions = Permission.objects.filter(content_type__in=content_types)
+    log.debug("Add %i permissions from app %r" % (permissions.count(), app_label))
     for permission in permissions:
         permission_obj.permissions.add(permission)
 
@@ -183,27 +196,10 @@ def check_permission(user, permission, raise_exception=True):
         return True
 
     if settings.DEBUG:
-        assert permission.count(".") == 1, "Wrong permission format: %r" % permission
-        app_label, codename = permission.split(".")
-        content_types = ContentType.objects.all().filter(app_label = app_label)
-        if content_types.count() == 0:
-            qs = ContentType.objects.all().values_list("app_label", flat=True).order_by("app_label")
-            try:
-                app_lables = ", ".join(qs.distinct("app_label"))
-            except NotImplementedError:
-                # e.g.: sqlite has no distinct
-                app_lables = ", ".join(set(qs))
-            raise AssertionError(
-                "ERROR: app label %r from permission %r doesn't exists! All existing labels are: %s" % (
-                    app_label, permission, app_lables
-                )
-            )
-        qs = Permission.objects.all().filter(content_type__in=content_types)
-        if qs.filter(codename=codename).count() == 0:
-            codenames = qs.values_list("codename", flat=True).order_by("codename")
-            raise AssertionError("ERROR: codename %r from permission %r doesn't exists! All existing codenames are: %s" % (
-                codename, permission, ", ".join(codenames)
-            ))
+        # 'validate' permission string
+        # get_permission() will raise helpfull errors if format is wrong
+        # or if the permission doesn't exists
+        get_permission_by_string(permission)
 
     if raise_exception:
         log.error(
@@ -230,17 +226,61 @@ def has_perm(user, permission):
 class ModelPermissionMixin(object):
     """
     Helper for easy model permission checks.
-
     e.g.:
-
         class FooModel(ModelPermissionMixin, models.Model):
             ...
+            @classmethod
+            def has_extra_permission_permission(cls, user, raise_exception=True):
+                permission = cls.extra_permission_name(action="extra_permission")
+                return check_permission(user, permission, raise_exception)
+
+            class Meta:
+                permissions = (
+                    ("extra_permission", "Extra permission"),
+                )
 
         def view(request):
             FooModel.has_change_permission(request.user, raise_exception=True)
+            FooModel.has_extra_permission_permission(request.user, raise_exception=True)
+
+    See also model used in our tests:
+        django_tools_test_project.django_tools_test_app.models.PermissionTestModel
     """
     @classmethod
-    def permission_name(cls, action):
+    def default_permission_name(cls, action):
+        """
+        Built the permission name for the default add/change/delete permissions.
+
+        Note: Django will add "model name" to these permissions!
+        e.g.:
+            applabel.add_modelname
+            applabel.change_modelname
+            applabel.delete_modelname
+
+        https://docs.djangoproject.com/en/1.8/ref/models/options/#default-permissions
+        """
+        assert action in cls._meta.default_permissions, "%r not in Meta.default_permissions !" % action
+        permission = "{app}.{action}_{model}".format(
+            app=cls._meta.app_label,
+            action=action,
+            model=cls._meta.model_name,
+        )
+        return permission
+
+    @classmethod
+    def extra_permission_name(cls, action):
+        """
+        Built permission name for own/extra permissions defined by "ModelClass.Meta.permissions"
+
+        Note: Django will create these permissions without "model name"!
+        e.g.:
+            applabel.permission_name_modelname
+        """
+        if settings.DEBUG:
+            all_permissions = [p[0] for p in cls._meta.permissions]
+            assert action in all_permissions, "%r not in Meta.permissions! Existing keys are: %s" % (
+                action, ", ".join(all_permissions)
+            )
         permission = "{app}.{action}".format(
             app=cls._meta.app_label,
             action=action,
@@ -249,15 +289,15 @@ class ModelPermissionMixin(object):
 
     @classmethod
     def has_add_permission(cls, user, raise_exception=True):
-        permission = cls.permission_name(action="add")
+        permission = cls.default_permission_name(action="add")
         return check_permission(user, permission, raise_exception)
 
     @classmethod
     def has_change_permission(cls, user, raise_exception=True):
-        permission = cls.permission_name(action="change")
+        permission = cls.default_permission_name(action="change")
         return check_permission(user, permission, raise_exception)
 
     @classmethod
     def has_delete_permission(cls, user, raise_exception=True):
-        permission = cls.permission_name(action="delete")
+        permission = cls.default_permission_name(action="delete")
         return check_permission(user, permission, raise_exception)

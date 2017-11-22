@@ -25,12 +25,12 @@ class PermissionTestModel(ModelPermissionMixin, models.Model):
     foo = models.CharField(max_length=127)
 
     @classmethod
-    def has_extra_permission1_permission(cls, user, raise_exception=True):
-        permission = cls.permission_name(action="extra_permission1")
+    def has_extra_permission_permission(cls, user, raise_exception=True):
+        permission = cls.extra_permission_name(action="extra_permission")
         return check_permission(user, permission, raise_exception)
 
     class Meta:
+        # https://docs.djangoproject.com/en/1.8/ref/models/options/#permissions
         permissions = (
-            ("extra_permission1", "Extra permission 1"),
-            ("extra_permission2", "Extra permission 2"),
+            ("extra_permission", "Extra permission"),
         )
