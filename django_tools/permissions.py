@@ -8,15 +8,16 @@
 """
 
 
-from __future__ import unicode_literals, absolute_import, print_function
+from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
-from django.contrib.auth.models import Permission, Group
+from django.conf import settings
+from django.contrib import auth
 from django.contrib.admin.sites import site
+from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
-
 
 log = logging.getLogger(__name__)
 
@@ -180,6 +181,24 @@ def check_permission(user, permission, raise_exception=True):
     if user.has_perm(permission):
         log.debug('User "%s" has permission "%s"', user, permission)
         return True
+
+    if settings.DEBUG:
+        assert permission.count(".") == 1, "Wrong permission format: %r" % permission
+        app_label, codename = permission.split(".")
+        content_types = ContentType.objects.all().filter(app_label = app_label)
+        if content_types.count() == 0:
+            app_lables = ContentType.objects.all().values_list("app_label", flat=True).order_by("app_label").distinct("app_label")
+            raise AssertionError(
+                "ERROR: app label %r from permission %r doesn't exists! All existing labels are: %s" % (
+                    app_label, permission, ", ".join(app_lables)
+                )
+            )
+        qs = Permission.objects.all().filter(content_type__in=content_types)
+        if qs.filter(codename=codename).count() == 0:
+            codenames = qs.values_list("codename", flat=True).order_by("codename")
+            raise AssertionError("ERROR: codename %r from permission %r doesn't exists! All existing codenames are: %s" % (
+                codename, permission, ", ".join(codenames)
+            ))
 
     if raise_exception:
         log.error(
