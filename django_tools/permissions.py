@@ -20,6 +20,7 @@ from django.core.exceptions import PermissionDenied
 
 log = logging.getLogger(__name__)
 
+
 def get_permission(app_label, codename):
     try:
         perm_obj = Permission.objects.all().get(
@@ -39,7 +40,7 @@ def get_permission(app_label, codename):
                 app_lables = ", ".join(set(qs))
             raise PermissionDenied(
                 (
-                    "App label %r from permission '%s.%s' doesn't exists!"
+                    "App label '%s' from permission '%s.%s' doesn't exists!"
                     " All existing labels are: %s"
                 ) % (app_label, app_label, codename, app_lables)
             )
@@ -48,7 +49,7 @@ def get_permission(app_label, codename):
             codenames = qs.values_list("codename", flat=True).order_by("codename")
             raise PermissionDenied(
                 (
-                    "Codename %r from permission '%s.%s' doesn't exists!"
+                    "Codename '%s' from permission '%s.%s' doesn't exists!"
                     " All existing codenames are: %s"
                 ) % (codename, app_label, codename, ", ".join(codenames))
             )
@@ -61,7 +62,7 @@ def get_permission_by_string(permission):
         app_label, codename = permission.split(".")
     except ValueError as err:
         raise PermissionDenied(
-            "Wrong permission string format %r: %s" % (permission, err)
+            "Wrong permission string format '%s': %s" % (permission, err)
         )
     return get_permission(app_label, codename)
 
@@ -173,7 +174,7 @@ def add_app_permissions(permission_obj, app_label):
     """
     content_types = ContentType.objects.filter(app_label = app_label)
     permissions = Permission.objects.filter(content_type__in=content_types)
-    log.debug("Add %i permissions from app %r" % (permissions.count(), app_label))
+    log.debug("Add %i permissions from app '%s'" % (permissions.count(), app_label))
     for permission in permissions:
         permission_obj.permissions.add(permission)
 
@@ -259,7 +260,7 @@ class ModelPermissionMixin(object):
 
         https://docs.djangoproject.com/en/1.8/ref/models/options/#default-permissions
         """
-        assert action in cls._meta.default_permissions, "%r not in Meta.default_permissions !" % action
+        assert action in cls._meta.default_permissions, "'%s' not in Meta.default_permissions !" % action
         permission = "{app}.{action}_{model}".format(
             app=cls._meta.app_label,
             action=action,
@@ -278,7 +279,7 @@ class ModelPermissionMixin(object):
         """
         if settings.DEBUG:
             all_permissions = [p[0] for p in cls._meta.permissions]
-            assert action in all_permissions, "%r not in Meta.permissions! Existing keys are: %s" % (
+            assert action in all_permissions, "'%s' not in Meta.permissions! Existing keys are: %s" % (
                 action, ", ".join(all_permissions)
             )
         permission = "{app}.{action}".format(
