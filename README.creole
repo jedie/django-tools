@@ -151,23 +151,6 @@ and unittests: [[https://github.com/jedie/django-tools/blob/master/django_tools_
 * [[https://github.com/jedie/django-tools/blob/master/django_tools/fields/url.py|url field]] A flexible version of the original django form URLField
 
 
-=== ./manage.py database_info
-
-Just display some information about the used database and connections.
-
-setup:
-
-{{{
-INSTALLED_APPS = [
-    ...
-    'django_tools',
-    ...
-]
-}}}
-
-usage, e.g.:: {{{$ ./manage.py database_info}}}
-
-
 == unittests helpers
 
 === Mockup utils
@@ -413,6 +396,36 @@ output = buffer.get_output() # contains "foo\n"
 
 === Management commands
 
+
+==== permission_info
+
+List all permissions for one django user.
+(Needs {{{'django_tools'}}} in INSTALLED_APPS)
+
+e.g.:
+
+{{{
+$ ./manage.py permission_info
+No username given!
+
+All existing users are:
+foo, bar, john, doe
+
+$ ./manage.py permission_info foo
+All permissions for user 'test_editor':
+	is_active    : yes
+	is_staff     : yes
+	is_superuser : no
+[*] admin.add_logentry
+[*] admin.change_logentry
+[*] admin.delete_logentry
+[ ] auth.add_group
+[ ] auth.add_permission
+[ ] auth.add_user
+...
+}}}
+
+
 ==== nice_diffsettings
 
 Similar to django 'diffsettings', but used pretty-printed representation.
@@ -421,6 +434,19 @@ To use it, add {{{'django_tools.manage_commands.django_tools_nice_diffsettings'}
 {{{
 $ ./manage.py nice_diffsettings
 }}}
+
+
+==== database_info
+
+Just display some information about the used database and connections.
+(Needs {{{'django_tools'}}} in INSTALLED_APPS)
+
+e.g.:
+
+{{{
+$ ./manage.py database_info
+}}}
+
 
 ==== list_models
 
@@ -536,6 +562,7 @@ to:
 == history
 
 * **dev**
+** NEW: {{{./manage.py permission_info}}}: Display a list of all permissions for one django user
 ** Bugfix/Enhance permission helpers
 * v0.36.0 - 20.11.2017 - [[https://github.com/jedie/django-tools/compare/v0.35.0...v0.36.0|compare v0.35.0...v0.36.0]]
 ** NEW: {{{./manage.py database_info}}}

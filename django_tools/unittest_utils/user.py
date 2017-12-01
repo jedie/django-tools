@@ -129,7 +129,7 @@ TEST_USERS = {
     },
 }
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 def user_fixtures():
     for user_data in TEST_USERS.values():
         create_user(update_existing=True, **user_data)
