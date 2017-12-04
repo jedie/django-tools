@@ -5,7 +5,7 @@ python-creole
 docutils
 Pillow
 cmsplugin-filer
-django-filer>=1.2.6
+django-filer
 pytest-django
 pytest-cov
 celery

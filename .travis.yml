@@ -12,8 +12,6 @@ cache:
 
 env:
   matrix:
-    - TOXENV=py27-django18
-    - TOXENV=py27-django111
     - TOXENV=py34-django18
     - TOXENV=py34-django111
     - TOXENV=py35-django18

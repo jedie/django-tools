@@ -144,9 +144,6 @@ class TestUserMixin:
     @classmethod
     def setUpTestData(cls):
         super(TestUserMixin, cls).setUpTestData()
-
-        print("django_tools.unittest_utils.user.TestUserMixin#setUpTestData")
-
         cls.create_testusers(cls)
 
     def create_testusers(self):

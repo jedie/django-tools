@@ -256,8 +256,6 @@ setup(
         "Topic :: Internet :: WWW/HTTP :: Site Management",
         "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
         "Operating System :: OS Independent",
-        "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
