@@ -91,7 +91,7 @@ class SiteAliasManager(models.Manager):
 
 
 class SiteAlias(UpdateInfoBaseModel):
-    site = models.ForeignKey(Site)
+    site = models.ForeignKey(Site, on_delete=models.CASCADE)
     alias = models.CharField(max_length=256,
         help_text=_("A domain name alias for the site.")
     )
