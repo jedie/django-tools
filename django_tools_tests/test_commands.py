@@ -7,19 +7,19 @@
 from __future__ import print_function, unicode_literals
 
 import os
-from unittest import TestCase
 
 import pytest
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
+from django.test import TestCase
 
 # https://github.com/jedie/django-tools
 import django_tools
 from django_tools.unittest_utils.django_command import DjangoCommandMixin
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
-from django_tools.unittest_utils.user import user_fixtures
+from django_tools.unittest_utils.user import TestUserMixin
 
 MANAGE_DIR = os.path.abspath(os.path.join(os.path.dirname(django_tools.__file__), ".."))
 
@@ -77,14 +77,10 @@ class TestNiceDiffSettingsCommand(DjangoCommandMixin, TestCase):
 
 
 @pytest.mark.django_db
-@pytest.mark.usefixtures(
-    user_fixtures.__name__,
-)
-class TestPermissionInfoCommand(DjangoCommandMixin, TestCase):
-    def test_envirionment(self):
-        UserModel = get_user_model()
+class TestPermissionInfoCommand(TestUserMixin, DjangoCommandMixin, TestCase):
+    def test_environment(self):
         usernames = ",".join(
-            UserModel.objects.values_list("username", flat=True).order_by("username")
+            self.UserModel.objects.values_list("username", flat=True).order_by("username")
         )
         self.assertEqual(usernames, "normal_test_user,staff_test_user,superuser")
 

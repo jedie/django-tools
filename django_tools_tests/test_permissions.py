@@ -8,7 +8,7 @@ import pprint
 
 import pytest
 
-from django.contrib.auth.models import User, Group, Permission
+from django.contrib.auth.models import Group, Permission, User
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
 from django.test import TestCase, override_settings
@@ -17,21 +17,18 @@ from django_tools_test_project.django_tools_test_app.models import LimitToUsergr
 
 # https://github.com/jedie/django-tools
 from django_tools.permissions import (
-    add_app_permissions, add_permissions, check_permission, get_admin_permissions, get_permission_by_string,
-    has_perm, permissions2list,
-    log_user_permissions, log_group_permissions)
+    add_app_permissions, add_permissions, check_permission, get_admin_permissions, get_permission_by_string, has_perm,
+    log_group_permissions, log_user_permissions, permissions2list
+)
 from django_tools.unittest_utils.logging_utils import LoggingBuffer
 from django_tools.unittest_utils.unittest_base import BaseTestCase
-from django_tools.unittest_utils.user import create_user, user_fixtures
+from django_tools.unittest_utils.user import TestUserMixin
 
 log = logging.getLogger(__name__)
 
 
 @override_settings(DEBUG = True)
-@pytest.mark.usefixtures(
-    user_fixtures.__name__,
-)
-class TestPermissions(BaseTestCase):
+class TestPermissions(TestUserMixin, BaseTestCase):
     @classmethod
     def setUpTestData(cls):
         super(TestPermissions, cls).setUpTestData()

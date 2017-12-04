@@ -4,11 +4,15 @@ from __future__ import unicode_literals
 
 import logging
 
+import sys
+
 import pytest
+from django.contrib import auth
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission
+from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 
 log = logging.getLogger(__name__)
@@ -105,31 +109,116 @@ def get_super_user():
     return super_user
 
 
-TEST_USERS = {
-    "superuser": {
-        "username": "superuser",
-        "email": "superuser@example.org",
-        "password": "superuser_password",
-        "is_staff": True,
-        "is_superuser": True,
-    },
-    "staff": {
-        "username": "staff_test_user",
-        "email": "staff_test_user@example.org",
-        "password": "staff_test_user_password",
-        "is_staff": True,
-        "is_superuser": False,
-    },
-    "normal": {
-        "username": "normal_test_user",
-        "email": "normal_test_user@example.org",
-        "password": "normal_test_user_password",
-        "is_staff": False,
-        "is_superuser": False,
-    },
-}
 
-@pytest.fixture
-def user_fixtures():
-    for user_data in TEST_USERS.values():
-        create_user(update_existing=True, **user_data)
+class TestUserMixin:
+    TEST_USERS = {
+        "superuser": {
+            "username": "superuser",
+            "email": "superuser@example.org",
+            "password": "superuser_password",
+            "is_staff": True,
+            "is_superuser": True,
+        },
+        "staff": {
+            "username": "staff_test_user",
+            "email": "staff_test_user@example.org",
+            "password": "staff_test_user_password",
+            "is_staff": True,
+            "is_superuser": False,
+        },
+        "normal": {
+            "username": "normal_test_user",
+            "email": "normal_test_user@example.org",
+            "password": "normal_test_user_password",
+            "is_staff": False,
+            "is_superuser": False,
+        },
+    }
+
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestUserMixin, cls).setUpClass()
+        cls.UserModel = auth.get_user_model()
+
+    @classmethod
+    def setUpTestData(cls):
+        super(TestUserMixin, cls).setUpTestData()
+
+        print("django_tools.unittest_utils.user.TestUserMixin#setUpTestData")
+
+        cls.create_testusers(cls)
+
+    def create_testusers(self):
+        """
+        Create all available testusers and UserProfiles
+        """
+        for user_data in self.TEST_USERS.values():
+            user = create_user(update_existing=True, **user_data)
+            log.debug("Test user %s created." % user)
+
+    def get_userdata(self, usertype):
+        """ return userdata from self.TEST_USERS for the given usertype """
+        try:
+            return self.TEST_USERS[usertype]
+        except KeyError as err:
+            etype, evalue, etb = sys.exc_info()
+            evalue = etype(
+                'Wrong usetype %s! Existing usertypes are: %s' % (err, ", ".join(list(self.TEST_USERS.keys())))
+            )
+            raise etype(evalue).with_traceback(etb)
+
+    def _get_user(self, usertype):
+        """ return User model instance for the given usertype"""
+        test_user = self.get_userdata(usertype)
+        return self.UserModel.objects.get(username=test_user["username"])
+
+    def login(self, usertype):
+        """
+        Login the user defined in self.TEST_USERS
+        return User model instance
+        """
+        test_user = self.get_userdata(usertype)
+
+        count = self.UserModel.objects.filter(username=test_user["username"]).count()
+        self.assertNotEqual(count, 0, "You have to call self.create_testusers() first!")
+        self.assertEqual(count, 1)
+
+        ok = self.client.login(username=test_user["username"],
+                               password=test_user["password"])
+        self.assertTrue(ok, 'Can\'t login test user "%s"!' % usertype)
+        return self._get_user(usertype)
+
+    def add_user_permissions(self, user, permissions):
+        """
+        add permissions to the given user instance.
+        permissions e.g.: ("AppLabel.add_Modelname", "auth.change_user")
+        """
+        assert isinstance(permissions, (list, tuple))
+        for permission in permissions:
+            # permission, e.g: blog.add_blogentry
+            app_label, permission_codename = permission.split(".", 1)
+            model_name = permission_codename.split("_", 1)[1]
+
+            try:
+                content_type = ContentType.objects.get(app_label=app_label, model=model_name)
+            except ContentType.DoesNotExist:
+                etype, evalue, etb = sys.exc_info()
+                evalue = etype('Can\'t get ContentType for app "%s" and model "%s": %s' % (
+                    app_label, model_name, evalue
+                ))
+                raise etype(evalue).with_traceback(etb)
+
+            perm = Permission.objects.get(content_type=content_type, codename=permission_codename)
+            user.user_permissions.add(perm)
+            user.save()
+
+        self.assertTrue(user.has_perms(permissions))
+
+    def refresh_user(self, user):
+        """
+        Return a fresh User model instance from DB.
+        Note: Using "user.refresh_from_db()" will not help in every case!
+        e.g.: Add new permission on user group and check the added one.
+        """
+        return self.UserModel.objects.get(pk=user.pk)

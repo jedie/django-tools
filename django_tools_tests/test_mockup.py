@@ -5,18 +5,19 @@
     ~~~~~~~~~~~~
 """
 
-from __future__ import unicode_literals, print_function, absolute_import
+from __future__ import absolute_import, print_function, unicode_literals
 
 import warnings
 
-import django
-
-from django_tools.unittest_utils.mockup import create_pil_image, create_info_image, \
-    create_temp_filer_info_image, ImageDummy
+# https://github.com/jedie/django-tools
+from django_tools.unittest_utils.mockup import (
+    ImageDummy, create_info_image, create_pil_image, create_temp_filer_info_image
+)
 from django_tools.unittest_utils.unittest_base import BaseTestCase
+from django_tools.unittest_utils.user import TestUserMixin
 
 
-class TestMockupImageNewApi(BaseTestCase):
+class TestMockupImageNewApi(TestUserMixin, BaseTestCase):
     def test_create_pil_image(self):
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always") # trigger all warnings
@@ -47,8 +48,6 @@ class TestMockupImageNewApi(BaseTestCase):
             self.assertEqual(len(w), 0) # No warnings created
 
     def test_create_temp_filer_info_image(self):
-        self.create_testusers(verbosity=1)
-
         user = self.login(usertype="normal")
 
         with warnings.catch_warnings(record=True) as w:
@@ -73,7 +72,7 @@ class TestMockupImageNewApi(BaseTestCase):
             self.assertEqual(len(w), 0) # No warnings created
 
 
-class TestMockupImageOldApi(BaseTestCase):
+class TestMockupImageOldApi(TestUserMixin, BaseTestCase):
     def assert_warning(self, w):
         self.assertEqual(len(w), 1)
         self.assertEqual(
@@ -109,8 +108,6 @@ class TestMockupImageOldApi(BaseTestCase):
             self.assert_warning(w)
 
     def test_create_temp_filer_info_image(self):
-        self.create_testusers(verbosity=1)
-
         user = self.login(usertype="normal")
 
         with warnings.catch_warnings(record=True) as w:

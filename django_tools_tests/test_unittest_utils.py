@@ -2,26 +2,23 @@
 
 from __future__ import unicode_literals
 
-
 import os
 import sys
 
 import django
-from django.contrib import auth
-from django.contrib.auth.models import User
-from django.test import Client
-from django.test import SimpleTestCase
+from django.test import Client, SimpleTestCase
 from django.utils import six
 from django.utils.six import PY2
 
+# https://github.com/jedie/django-tools
 from django_tools.template.render import render_string_template
 from django_tools.unittest_utils.celery import task_always_eager
 from django_tools.unittest_utils.print_sql import PrintQueries
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 from django_tools.unittest_utils.tempdir import TempDir
 from django_tools.unittest_utils.template import TEMPLATE_INVALID_PREFIX, set_string_if_invalid
-from django_tools.unittest_utils.unittest_base import BaseUnittestCase, \
-    BaseTestCase
+from django_tools.unittest_utils.unittest_base import BaseTestCase, BaseUnittestCase
+from django_tools.unittest_utils.user import TestUserMixin
 
 
 class TestBaseUnittestCase(BaseUnittestCase):
@@ -206,11 +203,11 @@ class TestStdoutStderrBuffer(BaseUnittestCase):
             self.fail()
 
 
-class TestBaseTestCase(BaseTestCase):
+class TestBaseTestCase(TestUserMixin, BaseTestCase):
     def test_print_sql(self):
         with StdoutStderrBuffer() as buffer:
             with PrintQueries("Create object"):
-                User.objects.all().count()
+                self.UserModel.objects.all().count()
 
         output = buffer.get_output()
         # print(output)
@@ -224,18 +221,17 @@ class TestBaseTestCase(BaseTestCase):
         self.assertIn('FROM "auth_user"', output)
 
     def test_create_users(self):
-        User = auth.get_user_model()
-        self.assertEqual(User.objects.all().count(), 0)
+        self.UserModel.objects.all().delete()
 
         self.create_testusers()
 
-        usernames = User.objects.all().values_list("username", flat=True)
+        usernames = self.UserModel.objects.all().values_list("username", flat=True)
         usernames = list(usernames)
         usernames.sort()
         self.assertEqual(usernames, ['normal_test_user', 'staff_test_user', 'superuser'])
 
         # Are all users active?
-        self.assertEqual(User.objects.filter(is_active=True).count(), 3)
+        self.assertEqual(self.UserModel.objects.filter(is_active=True).count(), 3)
 
 
 @set_string_if_invalid()

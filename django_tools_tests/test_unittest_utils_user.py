@@ -16,10 +16,10 @@ from django.test import TestCase
 
 # https://github.com/jedie/django-tools
 from django_tools.unittest_utils.unittest_base import BaseTestCase
-from django_tools.unittest_utils.user import create_user, get_super_user, user_fixtures
+from django_tools.unittest_utils.user import create_user, get_super_user, TestUserMixin
 
 
-class TestUserUtils(BaseTestCase):
+class TestUserUtils(TestUserMixin, BaseTestCase):
 
     def test_create_user(self):
         user1 = create_user(username="foo", password="bar")
@@ -61,6 +61,8 @@ class TestUserUtils(BaseTestCase):
         self.assertEqual(user2.password, encrypted_password)
 
     def test_get_super_user(self):
+        self.UserModel.objects.all().delete()
+
         create_user(username="foo", password="foo")
         user2 = create_user(username="bar", password="bar", is_superuser=True)
         user3 = get_super_user()
@@ -69,24 +71,8 @@ class TestUserUtils(BaseTestCase):
         self.assertEqual(user2, user3)
         self.assertTrue(user3.is_superuser)
 
-    def test_old_api(self):
-        self.assertEqual(self.UserModel.objects.count(), 0)
 
-        userdata = self.TEST_USERS["normal"]
-        with warnings.catch_warnings(record=True) as w:
-
-            self.create_user(verbosity=0, **userdata)
-
-            self.assertEqual(len(w), 1)
-            self.assertTrue(issubclass(w[-1].category, FutureWarning))
-
-        self.assertEqual(self.UserModel.objects.count(), 1)
-
-
-@pytest.mark.usefixtures(
-    user_fixtures.__name__,
-)
-class TestUserFixtures(BaseTestCase):
+class TestUserFixtures(TestUserMixin, BaseTestCase):
     def assert_user_fixtures(self):
         users = self.UserModel.objects.all()
         usernames = users.values_list("username", flat=True).order_by("username")
@@ -95,5 +81,5 @@ class TestUserFixtures(BaseTestCase):
 
     def test_double_creation(self):
         self.assert_user_fixtures()
-        user_fixtures() # create user a second time
+        self.create_testusers() # create user a second time
         self.assert_user_fixtures()
