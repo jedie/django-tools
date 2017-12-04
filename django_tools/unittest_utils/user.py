@@ -111,6 +111,16 @@ def get_super_user():
 
 
 class TestUserMixin:
+    """
+    Important: Test user will only be created, if django TestCase is used!
+    e.g:
+
+    from django.test.testcases import TestCase
+
+    class FooBarTestCase(TestUserMixin, TestCase):
+        def test...
+
+    """
     TEST_USERS = {
         "superuser": {
             "username": "superuser",
