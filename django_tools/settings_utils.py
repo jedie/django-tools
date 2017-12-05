@@ -14,7 +14,7 @@ from __future__ import absolute_import, division, print_function
 from fnmatch import fnmatch
 
 
-class IpPattern:
+class IpPattern(str):
     def __init__(self, pattern):
         self.pattern = pattern
 
@@ -30,6 +30,9 @@ class IpPattern:
 
     def startswith(self, *args):
         return False
+
+    def __str__(self):
+        return self.pattern
 
 
 class FnMatchIps(list):

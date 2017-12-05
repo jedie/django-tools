@@ -7,7 +7,7 @@
 
 import unittest
 
-from django.http.request import validate_host
+from django.http.request import validate_host, split_domain_port, host_validation_re
 
 # https://github.com/jedie/django-tools
 from django_tools.settings_utils import FnMatchIps
@@ -37,3 +37,21 @@ class TestSettingsUtils(unittest.TestCase):
         self.assertFalse(
             validate_host("10.0.1.2", self.fnmatch_ips)
         )
+
+    def test_str(self):
+        self.assertEqual(
+            "127.0.0.1", str(self.fnmatch_ips[0])
+        )
+
+    def test_re_usage(self):
+        """
+        e.g.: django.http.request.split_domain_port used RE in test environment
+        :return:
+        """
+        host = self.fnmatch_ips[0]
+
+        self.assertTrue(host_validation_re.match(host))
+
+        domain, port = split_domain_port(host)
+        self.assertEqual(domain, "127.0.0.1")
+        self.assertEqual(port, "")
