@@ -14,6 +14,24 @@ from __future__ import absolute_import, division, print_function
 from fnmatch import fnmatch
 
 
+class IpPattern:
+    def __init__(self, pattern):
+        self.pattern = pattern
+
+    def __eq__(self, pat):
+        """
+        ALLOWED_HOSTS compares via "<ip> == ALLOWED_HOSTS"
+        see: django.http.request.validate_host
+        """
+        return fnmatch(pat, self.pattern)
+
+    def lower(self):
+        return IpPattern(self.pattern.lower())
+
+    def startswith(self, *args):
+        return False
+
+
 class FnMatchIps(list):
     """
     Allows you to use Unix shell-style wildcards of IP addresses
@@ -30,13 +48,15 @@ class FnMatchIps(list):
 
     borrowed from https://djangosnippets.org/snippets/1380/
     """
-    def _fnmatch(self, pat):
-        for ip in self:
-            if fnmatch(pat, ip): return True
-        return False
+    def __init__(self, pattern_list):
+        super(FnMatchIps, self).__init__([IpPattern(pat) for pat in pattern_list])
 
-    __eq__ = _fnmatch # ALLOWED_HOSTS compares, see: django.http.request.validate_host
-    __contains__ = _fnmatch # INTERNAL_IPS
+    def __contains__(self, pat):
+        # INTERNAL_IPS checks via "<ip> in INTERNAL_IPS"
+        for ip in self:
+            if pat == ip:
+                return True
+        return False
 
 
 InternalIps = FnMatchIps # for compatibility
