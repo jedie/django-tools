@@ -374,12 +374,13 @@ MIDDLEWARE_CLASSES = (
 )
 }}}
 
-=== InternalIps() - Unix shell-style wildcards in INTERNAL_IPS
+=== FnMatchIps() - Unix shell-style wildcards in INTERNAL_IPS / ALLOWED_HOSTS
 settings.py e.g.:
 {{{
-from django_tools.settings_utils import InternalIps
+from django_tools.settings_utils import FnMatchIps
 
-INTERNAL_IPS = InternalIps(["127.0.0.1", "::1", "192.168.*.*", "10.0.*.*"])
+INTERNAL_IPS = FnMatchIps(["127.0.0.1", "::1", "192.168.*.*", "10.0.*.*"])
+ALLOWED_HOSTS = FnMatchIps(["127.0.0.1", "::1", "192.168.*.*", "10.0.*.*"])
 }}}
 
 
@@ -565,6 +566,7 @@ to:
 * **dev**
 ** Skip official support for python v2 (remove from text matrix)
 ** NEW: {{{./manage.py permission_info}}}: Display a list of all permissions for one django user
+** {{{django_tools.settings_utils.InternalIps}}} was renamed to {{{FnMatchIps}}} and can be also used for **ALLOWED_HOSTS**
 ** Bugfix/Enhance permission helpers
 * v0.36.0 - 20.11.2017 - [[https://github.com/jedie/django-tools/compare/v0.35.0...v0.36.0|compare v0.35.0...v0.36.0]]
 ** NEW: {{{./manage.py database_info}}}
