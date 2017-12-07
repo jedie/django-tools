@@ -98,7 +98,7 @@ class Command(BaseCommand):
 
         seen_permissions = set()
 
-        qs = Permission.objects.all().order_by("content_type__app_label","codename")
+        qs = Permission.objects.all().order_by("content_type__app_label", "content_type__model", "codename")
         for permission in qs.iterator():
             perm_name = pformat_permission(permission)
             seen_permissions.add(perm_name)

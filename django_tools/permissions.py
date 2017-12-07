@@ -378,7 +378,7 @@ def pprint_filtered_permissions(permissions):
     for permission in permissions:
         assert isinstance(permission, Permission), "List must contain auth.models.Permission instances!"
 
-    qs = Permission.objects.all().order_by("content_type__app_label", "codename")
+    qs = Permission.objects.all().order_by("content_type__app_label", "content_type__model", "codename")
     for permission in qs:
         contains = "[*]" if permission in permissions else "[ ]"
         print("%s %s" % (contains, pformat_permission(permission)))

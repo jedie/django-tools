@@ -458,57 +458,57 @@ class TestPermissions(TestUserMixin, BaseTestCase):
             [*] admin.change_logentry
             [*] admin.delete_logentry
             [*] auth.add_group
-            [*] auth.add_permission
-            [*] auth.add_user
             [*] auth.change_group
-            [*] auth.change_permission
-            [*] auth.change_user
             [ ] auth.delete_group
+            [*] auth.add_permission
+            [*] auth.change_permission
             [*] auth.delete_permission
+            [*] auth.add_user
+            [*] auth.change_user
             [ ] auth.delete_user
             [ ] contenttypes.add_contenttype
             [*] contenttypes.change_contenttype
             [ ] contenttypes.delete_contenttype
             [ ] django_tools_test_app.add_limittousergroupstestmodel
-            [ ] django_tools_test_app.add_permissiontestmodel
             [ ] django_tools_test_app.change_limittousergroupstestmodel
-            [ ] django_tools_test_app.change_permissiontestmodel
             [ ] django_tools_test_app.delete_limittousergroupstestmodel
+            [ ] django_tools_test_app.add_permissiontestmodel
+            [ ] django_tools_test_app.change_permissiontestmodel
             [ ] django_tools_test_app.delete_permissiontestmodel
             [ ] django_tools_test_app.extra_permission
             [*] dynamic_site.add_sitealias
             [*] dynamic_site.change_sitealias
             [*] dynamic_site.delete_sitealias
             [ ] easy_thumbnails.add_source
-            [ ] easy_thumbnails.add_thumbnail
-            [ ] easy_thumbnails.add_thumbnaildimensions
             [ ] easy_thumbnails.change_source
-            [ ] easy_thumbnails.change_thumbnail
-            [ ] easy_thumbnails.change_thumbnaildimensions
             [ ] easy_thumbnails.delete_source
+            [ ] easy_thumbnails.add_thumbnail
+            [ ] easy_thumbnails.change_thumbnail
             [ ] easy_thumbnails.delete_thumbnail
+            [ ] easy_thumbnails.add_thumbnaildimensions
+            [ ] easy_thumbnails.change_thumbnaildimensions
             [ ] easy_thumbnails.delete_thumbnaildimensions
             [ ] filer.add_clipboard
-            [ ] filer.add_clipboarditem
-            [ ] filer.add_file
-            [ ] filer.add_folder
-            [ ] filer.add_folderpermission
-            [ ] filer.add_image
-            [ ] filer.add_thumbnailoption
-            [ ] filer.can_use_directory_listing
             [ ] filer.change_clipboard
-            [ ] filer.change_clipboarditem
-            [ ] filer.change_file
-            [ ] filer.change_folder
-            [ ] filer.change_folderpermission
-            [ ] filer.change_image
-            [ ] filer.change_thumbnailoption
             [ ] filer.delete_clipboard
+            [ ] filer.add_clipboarditem
+            [ ] filer.change_clipboarditem
             [ ] filer.delete_clipboarditem
+            [ ] filer.add_file
+            [ ] filer.change_file
             [ ] filer.delete_file
+            [ ] filer.add_folder
+            [ ] filer.can_use_directory_listing
+            [ ] filer.change_folder
             [ ] filer.delete_folder
+            [ ] filer.add_folderpermission
+            [ ] filer.change_folderpermission
             [ ] filer.delete_folderpermission
+            [ ] filer.add_image
+            [ ] filer.change_image
             [ ] filer.delete_image
+            [ ] filer.add_thumbnailoption
+            [ ] filer.change_thumbnailoption
             [ ] filer.delete_thumbnailoption
             [*] sessions.add_session
             [*] sessions.change_session
