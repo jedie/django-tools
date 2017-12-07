@@ -24,17 +24,20 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from pprint import pprint
-
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.core.management.base import BaseCommand
-from django.db import connections
+
+# https://github.com/jedie/django-tools
+from django_tools.permissions import pformat_permission
 
 
 class Command(BaseCommand):
-    help = "Display effective user permissions"
+    help = (
+        "Display effective user permissions"
+        " in the same format as user.has_perm() argument:"
+        " <appname>.<codename>"
+    )
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -95,14 +98,9 @@ class Command(BaseCommand):
 
         seen_permissions = set()
 
-        qs = Permission.objects.all().order_by(
-            "content_type__app_label",
-            # "content_type__model",
-            "codename"
-        )
-        for entry in qs.iterator():
-            perm_name = "%s.%s" % (entry.content_type.app_label, entry.codename)
-            perm_name = perm_name.lower()
+        qs = Permission.objects.all().order_by("content_type__app_label","codename")
+        for permission in qs.iterator():
+            perm_name = pformat_permission(permission)
             seen_permissions.add(perm_name)
 
             contains = "[*]" if user.has_perm(perm_name) else "[ ]"

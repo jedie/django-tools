@@ -6,22 +6,21 @@ from __future__ import print_function, unicode_literals
 import logging
 import pprint
 
-import pytest
-
 from django.contrib.auth.models import Group, Permission, User
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
-from django.test import TestCase, override_settings
-from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
+from django.test import override_settings
 
 from django_tools_test_project.django_tools_test_app.models import LimitToUsergroupsTestModel, PermissionTestModel
 
 # https://github.com/jedie/django-tools
 from django_tools.permissions import (
     add_app_permissions, add_permissions, check_permission, get_admin_permissions, get_filtered_permissions,
-    get_permission_by_string, has_perm, log_group_permissions, log_user_permissions, permissions2list, pprint_filtered_permissions
+    get_permission_by_string, has_perm, log_group_permissions, log_user_permissions, permissions2list,
+    pprint_filtered_permissions
 )
 from django_tools.unittest_utils.logging_utils import LoggingBuffer
+from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 from django_tools.unittest_utils.unittest_base import BaseTestCase
 from django_tools.unittest_utils.user import TestUserMixin
 
@@ -230,37 +229,37 @@ class TestPermissions(TestUserMixin, BaseTestCase):
         permissions = permissions2list(permissions)
         pprint.pprint(permissions)
         self.assertEqual(permissions, [
-            'auth.group.add_group',
-            'auth.group.change_group',
-            'auth.group.delete_group',
-            'auth.user.add_user',
-            'auth.user.change_user',
-            'auth.user.delete_user',
-            'dynamic_site.sitealias.add_sitealias',
-            'dynamic_site.sitealias.change_sitealias',
-            'dynamic_site.sitealias.delete_sitealias',
-            'filer.clipboard.add_clipboard',
-            'filer.clipboard.change_clipboard',
-            'filer.clipboard.delete_clipboard',
-            'filer.file.add_file',
-            'filer.file.change_file',
-            'filer.file.delete_file',
-            'filer.folder.add_folder',
-            'filer.folder.can_use_directory_listing',
-            'filer.folder.change_folder',
-            'filer.folder.delete_folder',
-            'filer.folderpermission.add_folderpermission',
-            'filer.folderpermission.change_folderpermission',
-            'filer.folderpermission.delete_folderpermission',
-            'filer.image.add_image',
-            'filer.image.change_image',
-            'filer.image.delete_image',
-            'filer.thumbnailoption.add_thumbnailoption',
-            'filer.thumbnailoption.change_thumbnailoption',
-            'filer.thumbnailoption.delete_thumbnailoption',
-            'sites.site.add_site',
-            'sites.site.change_site',
-            'sites.site.delete_site'
+            'auth.add_group',
+            'auth.change_group',
+            'auth.delete_group',
+            'auth.add_user',
+            'auth.change_user',
+            'auth.delete_user',
+            'dynamic_site.add_sitealias',
+            'dynamic_site.change_sitealias',
+            'dynamic_site.delete_sitealias',
+            'filer.add_clipboard',
+            'filer.change_clipboard',
+            'filer.delete_clipboard',
+            'filer.add_file',
+            'filer.change_file',
+            'filer.delete_file',
+            'filer.add_folder',
+            'filer.can_use_directory_listing',
+            'filer.change_folder',
+            'filer.delete_folder',
+            'filer.add_folderpermission',
+            'filer.change_folderpermission',
+            'filer.delete_folderpermission',
+            'filer.add_image',
+            'filer.change_image',
+            'filer.delete_image',
+            'filer.add_thumbnailoption',
+            'filer.change_thumbnailoption',
+            'filer.delete_thumbnailoption',
+            'sites.add_site',
+            'sites.change_site',
+            'sites.delete_site'
         ])
 
     def test_has_perm(self):
@@ -377,85 +376,28 @@ class TestPermissions(TestUserMixin, BaseTestCase):
         permissions = permissions2list(permissions)
         pprint.pprint(permissions)
         self.assertEqual(permissions, [
-            'django_tools_test_app.limittousergroupstestmodel.add_limittousergroupstestmodel',
-            'django_tools_test_app.limittousergroupstestmodel.change_limittousergroupstestmodel',
-            'django_tools_test_app.limittousergroupstestmodel.delete_limittousergroupstestmodel',
-            'django_tools_test_app.permissiontestmodel.add_permissiontestmodel',
-            'django_tools_test_app.permissiontestmodel.change_permissiontestmodel',
-            'django_tools_test_app.permissiontestmodel.delete_permissiontestmodel',
-            'django_tools_test_app.permissiontestmodel.extra_permission'
+            'django_tools_test_app.add_limittousergroupstestmodel',
+            'django_tools_test_app.change_limittousergroupstestmodel',
+            'django_tools_test_app.delete_limittousergroupstestmodel',
+            'django_tools_test_app.add_permissiontestmodel',
+            'django_tools_test_app.change_permissiontestmodel',
+            'django_tools_test_app.delete_permissiontestmodel',
+            'django_tools_test_app.extra_permission'
         ])
 
     #-------------------------------------------------------------------------
 
     def test_get_filtered_permissions_without_any_filter(self):
-        permissions = get_filtered_permissions()
-        permissions = permissions2list(permissions)
+        permissions = permissions2list(
+            get_filtered_permissions() # without any filter -> we get all existing permissions
+        )
+        permissions.sort()
         pprint.pprint(permissions)
-        self.assertEqual(permissions, [
-            'admin.logentry.add_logentry',
-            'admin.logentry.change_logentry',
-            'admin.logentry.delete_logentry',
-            'auth.group.add_group',
-            'auth.group.change_group',
-            'auth.group.delete_group',
-            'auth.permission.add_permission',
-            'auth.permission.change_permission',
-            'auth.permission.delete_permission',
-            'auth.user.add_user',
-            'auth.user.change_user',
-            'auth.user.delete_user',
-            'contenttypes.contenttype.add_contenttype',
-            'contenttypes.contenttype.change_contenttype',
-            'contenttypes.contenttype.delete_contenttype',
-            'django_tools_test_app.limittousergroupstestmodel.add_limittousergroupstestmodel',
-            'django_tools_test_app.limittousergroupstestmodel.change_limittousergroupstestmodel',
-            'django_tools_test_app.limittousergroupstestmodel.delete_limittousergroupstestmodel',
-            'django_tools_test_app.permissiontestmodel.add_permissiontestmodel',
-            'django_tools_test_app.permissiontestmodel.change_permissiontestmodel',
-            'django_tools_test_app.permissiontestmodel.delete_permissiontestmodel',
-            'django_tools_test_app.permissiontestmodel.extra_permission',
-            'dynamic_site.sitealias.add_sitealias',
-            'dynamic_site.sitealias.change_sitealias',
-            'dynamic_site.sitealias.delete_sitealias',
-            'easy_thumbnails.source.add_source',
-            'easy_thumbnails.source.change_source',
-            'easy_thumbnails.source.delete_source',
-            'easy_thumbnails.thumbnail.add_thumbnail',
-            'easy_thumbnails.thumbnail.change_thumbnail',
-            'easy_thumbnails.thumbnail.delete_thumbnail',
-            'easy_thumbnails.thumbnaildimensions.add_thumbnaildimensions',
-            'easy_thumbnails.thumbnaildimensions.change_thumbnaildimensions',
-            'easy_thumbnails.thumbnaildimensions.delete_thumbnaildimensions',
-            'filer.clipboard.add_clipboard',
-            'filer.clipboard.change_clipboard',
-            'filer.clipboard.delete_clipboard',
-            'filer.clipboarditem.add_clipboarditem',
-            'filer.clipboarditem.change_clipboarditem',
-            'filer.clipboarditem.delete_clipboarditem',
-            'filer.file.add_file',
-            'filer.file.change_file',
-            'filer.file.delete_file',
-            'filer.folder.add_folder',
-            'filer.folder.can_use_directory_listing',
-            'filer.folder.change_folder',
-            'filer.folder.delete_folder',
-            'filer.folderpermission.add_folderpermission',
-            'filer.folderpermission.change_folderpermission',
-            'filer.folderpermission.delete_folderpermission',
-            'filer.image.add_image',
-            'filer.image.change_image',
-            'filer.image.delete_image',
-            'filer.thumbnailoption.add_thumbnailoption',
-            'filer.thumbnailoption.change_thumbnailoption',
-            'filer.thumbnailoption.delete_thumbnailoption',
-            'sessions.session.add_session',
-            'sessions.session.change_session',
-            'sessions.session.delete_session',
-            'sites.site.add_site',
-            'sites.site.change_site',
-            'sites.site.delete_site'
-        ])
+
+        all_permissions = permissions2list(Permission.objects.all())
+        all_permissions.sort()
+
+        self.assertEqual(permissions, all_permissions)
 
     def test_get_filtered_permissions(self):
         permissions = get_filtered_permissions(
@@ -470,26 +412,26 @@ class TestPermissions(TestUserMixin, BaseTestCase):
         permissions = permissions2list(permissions)
         pprint.pprint(permissions)
         self.assertEqual(permissions, [
-            'admin.logentry.add_logentry',
-            'admin.logentry.change_logentry',
-            'admin.logentry.delete_logentry',
-            'auth.group.add_group',
-            'auth.group.change_group',
-            'auth.permission.add_permission',
-            'auth.permission.change_permission',
-            'auth.permission.delete_permission',
-            'auth.user.add_user',
-            'auth.user.change_user',
-            'contenttypes.contenttype.change_contenttype',
-            'dynamic_site.sitealias.add_sitealias',
-            'dynamic_site.sitealias.change_sitealias',
-            'dynamic_site.sitealias.delete_sitealias',
-            'sessions.session.add_session',
-            'sessions.session.change_session',
-            'sessions.session.delete_session',
-            'sites.site.add_site',
-            'sites.site.change_site',
-            'sites.site.delete_site'
+            'admin.add_logentry',
+            'admin.change_logentry',
+            'admin.delete_logentry',
+            'auth.add_group',
+            'auth.change_group',
+            'auth.add_permission',
+            'auth.change_permission',
+            'auth.delete_permission',
+            'auth.add_user',
+            'auth.change_user',
+            'contenttypes.change_contenttype',
+            'dynamic_site.add_sitealias',
+            'dynamic_site.change_sitealias',
+            'dynamic_site.delete_sitealias',
+            'sessions.add_session',
+            'sessions.change_session',
+            'sessions.delete_session',
+            'sites.add_site',
+            'sites.change_site',
+            'sites.delete_site'
         ])
 
     def test_pprint_filtered_permissions_wrong_arguments(self):
@@ -512,66 +454,66 @@ class TestPermissions(TestUserMixin, BaseTestCase):
             pprint_filtered_permissions(permissions)
 
         self.assertEqual_dedent(buffer.get_output(), """
-            [*] admin.logentry.add_logentry
-            [*] admin.logentry.change_logentry
-            [*] admin.logentry.delete_logentry
-            [*] auth.group.add_group
-            [*] auth.group.change_group
-            [ ] auth.group.delete_group
-            [*] auth.permission.add_permission
-            [*] auth.permission.change_permission
-            [*] auth.permission.delete_permission
-            [*] auth.user.add_user
-            [*] auth.user.change_user
-            [ ] auth.user.delete_user
-            [ ] contenttypes.contenttype.add_contenttype
-            [*] contenttypes.contenttype.change_contenttype
-            [ ] contenttypes.contenttype.delete_contenttype
-            [ ] django_tools_test_app.limittousergroupstestmodel.add_limittousergroupstestmodel
-            [ ] django_tools_test_app.limittousergroupstestmodel.change_limittousergroupstestmodel
-            [ ] django_tools_test_app.limittousergroupstestmodel.delete_limittousergroupstestmodel
-            [ ] django_tools_test_app.permissiontestmodel.add_permissiontestmodel
-            [ ] django_tools_test_app.permissiontestmodel.change_permissiontestmodel
-            [ ] django_tools_test_app.permissiontestmodel.delete_permissiontestmodel
-            [ ] django_tools_test_app.permissiontestmodel.extra_permission
-            [*] dynamic_site.sitealias.add_sitealias
-            [*] dynamic_site.sitealias.change_sitealias
-            [*] dynamic_site.sitealias.delete_sitealias
-            [ ] easy_thumbnails.source.add_source
-            [ ] easy_thumbnails.source.change_source
-            [ ] easy_thumbnails.source.delete_source
-            [ ] easy_thumbnails.thumbnail.add_thumbnail
-            [ ] easy_thumbnails.thumbnail.change_thumbnail
-            [ ] easy_thumbnails.thumbnail.delete_thumbnail
-            [ ] easy_thumbnails.thumbnaildimensions.add_thumbnaildimensions
-            [ ] easy_thumbnails.thumbnaildimensions.change_thumbnaildimensions
-            [ ] easy_thumbnails.thumbnaildimensions.delete_thumbnaildimensions
-            [ ] filer.clipboard.add_clipboard
-            [ ] filer.clipboard.change_clipboard
-            [ ] filer.clipboard.delete_clipboard
-            [ ] filer.clipboarditem.add_clipboarditem
-            [ ] filer.clipboarditem.change_clipboarditem
-            [ ] filer.clipboarditem.delete_clipboarditem
-            [ ] filer.file.add_file
-            [ ] filer.file.change_file
-            [ ] filer.file.delete_file
-            [ ] filer.folder.add_folder
-            [ ] filer.folder.can_use_directory_listing
-            [ ] filer.folder.change_folder
-            [ ] filer.folder.delete_folder
-            [ ] filer.folderpermission.add_folderpermission
-            [ ] filer.folderpermission.change_folderpermission
-            [ ] filer.folderpermission.delete_folderpermission
-            [ ] filer.image.add_image
-            [ ] filer.image.change_image
-            [ ] filer.image.delete_image
-            [ ] filer.thumbnailoption.add_thumbnailoption
-            [ ] filer.thumbnailoption.change_thumbnailoption
-            [ ] filer.thumbnailoption.delete_thumbnailoption
-            [*] sessions.session.add_session
-            [*] sessions.session.change_session
-            [*] sessions.session.delete_session
-            [*] sites.site.add_site
-            [*] sites.site.change_site
-            [*] sites.site.delete_site
+            [*] admin.add_logentry
+            [*] admin.change_logentry
+            [*] admin.delete_logentry
+            [*] auth.add_group
+            [*] auth.add_permission
+            [*] auth.add_user
+            [*] auth.change_group
+            [*] auth.change_permission
+            [*] auth.change_user
+            [ ] auth.delete_group
+            [*] auth.delete_permission
+            [ ] auth.delete_user
+            [ ] contenttypes.add_contenttype
+            [*] contenttypes.change_contenttype
+            [ ] contenttypes.delete_contenttype
+            [ ] django_tools_test_app.add_limittousergroupstestmodel
+            [ ] django_tools_test_app.add_permissiontestmodel
+            [ ] django_tools_test_app.change_limittousergroupstestmodel
+            [ ] django_tools_test_app.change_permissiontestmodel
+            [ ] django_tools_test_app.delete_limittousergroupstestmodel
+            [ ] django_tools_test_app.delete_permissiontestmodel
+            [ ] django_tools_test_app.extra_permission
+            [*] dynamic_site.add_sitealias
+            [*] dynamic_site.change_sitealias
+            [*] dynamic_site.delete_sitealias
+            [ ] easy_thumbnails.add_source
+            [ ] easy_thumbnails.add_thumbnail
+            [ ] easy_thumbnails.add_thumbnaildimensions
+            [ ] easy_thumbnails.change_source
+            [ ] easy_thumbnails.change_thumbnail
+            [ ] easy_thumbnails.change_thumbnaildimensions
+            [ ] easy_thumbnails.delete_source
+            [ ] easy_thumbnails.delete_thumbnail
+            [ ] easy_thumbnails.delete_thumbnaildimensions
+            [ ] filer.add_clipboard
+            [ ] filer.add_clipboarditem
+            [ ] filer.add_file
+            [ ] filer.add_folder
+            [ ] filer.add_folderpermission
+            [ ] filer.add_image
+            [ ] filer.add_thumbnailoption
+            [ ] filer.can_use_directory_listing
+            [ ] filer.change_clipboard
+            [ ] filer.change_clipboarditem
+            [ ] filer.change_file
+            [ ] filer.change_folder
+            [ ] filer.change_folderpermission
+            [ ] filer.change_image
+            [ ] filer.change_thumbnailoption
+            [ ] filer.delete_clipboard
+            [ ] filer.delete_clipboarditem
+            [ ] filer.delete_file
+            [ ] filer.delete_folder
+            [ ] filer.delete_folderpermission
+            [ ] filer.delete_image
+            [ ] filer.delete_thumbnailoption
+            [*] sessions.add_session
+            [*] sessions.change_session
+            [*] sessions.delete_session
+            [*] sites.add_site
+            [*] sites.change_site
+            [*] sites.delete_site
         """)

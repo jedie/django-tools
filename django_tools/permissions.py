@@ -21,6 +21,15 @@ from django.core.exceptions import PermissionDenied
 log = logging.getLogger(__name__)
 
 
+def pformat_permission(permission):
+    """
+    Generate the permission string in the same format as user.has_perm() argument:
+        "<appname>.<codename>"
+    """
+    assert isinstance(permission, Permission), "No auth.models.Permission instance!"
+    return "%s.%s" % (permission.content_type.app_label, permission.codename)
+
+
 def get_permission(app_label, codename):
     try:
         perm_obj = Permission.objects.all().get(
@@ -96,11 +105,7 @@ def permissions2list(permissions):
          'auth.user.change_user',
          'auth.user.delete_user']
     """
-    permissions = [
-        ".".join([p.content_type.app_label, p.content_type.model, p.codename])
-        for p in permissions
-    ]
-    permissions.sort()
+    permissions = [pformat_permission(permission) for permission in permissions]
     return permissions
 
 
@@ -117,7 +122,7 @@ def log_user_permissions(user, log_callable=None):
     if log_callable is None:
         log_callable = log.debug
 
-    permissions = sorted(user.get_all_permissions())
+    permissions = sorted(user.get_all_permissions()) # A string list!
 
     if not permissions:
         log_callable("User '%s' has no permission!", user.username)
@@ -144,7 +149,7 @@ def log_group_permissions(group, log_callable=None):
         log_callable("User group '%s' has no permission!", group.name)
     else:
         permissions = "\n".join([
-            "* %s.%s" % (permission.content_type.app_label, permission.codename)
+            "* %s" % pformat_permission(permission)
             for permission in permissions
         ])
         log_callable("User group '%s' has permissions:\n%s", group.name, permissions)
@@ -373,12 +378,7 @@ def pprint_filtered_permissions(permissions):
     for permission in permissions:
         assert isinstance(permission, Permission), "List must contain auth.models.Permission instances!"
 
-    qs = Permission.objects.all().order_by("content_type__app_label", "content_type__model", "codename")
+    qs = Permission.objects.all().order_by("content_type__app_label", "codename")
     for permission in qs:
         contains = "[*]" if permission in permissions else "[ ]"
-        print("%s %s.%s.%s" % (
-            contains,
-            permission.content_type.app_label,
-            permission.content_type.model,
-            permission.codename
-        ))
+        print("%s %s" % (contains, pformat_permission(permission)))
