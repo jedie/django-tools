@@ -30,7 +30,7 @@ def get_permission(app_label, codename):
     except Permission.DoesNotExist as err:
         log.error("Error get permission '%s.%s':%s", app_label, codename, err)
 
-        content_types = ContentType.objects.all().filter(app_label = app_label)
+        content_types = ContentType.objects.all().filter(app_label=app_label)
         if content_types.count() == 0:
             qs = ContentType.objects.all().values_list("app_label", flat=True).order_by("app_label")
             try:
@@ -302,3 +302,83 @@ class ModelPermissionMixin(object):
     def has_delete_permission(cls, user, raise_exception=True):
         permission = cls.default_permission_name(action="delete")
         return check_permission(user, permission, raise_exception)
+
+
+def get_filtered_permissions(exclude_app_labels=None, exclude_models=None, exclude_codenames=None, exclude_permissions=None):
+    """
+    Generate a Permission instance list and exclude parts of it.
+
+    usage, e.g.:
+        permissions = get_filtered_permissions(
+            exclude_app_labels=("easy_thumbnails", "filer"),
+            exclude_models=(LimitToUsergroupsTestModel, PermissionTestModel),
+            exclude_codenames=("delete_group", "delete_user"),
+            exclude_permissions=(
+                (ContentType, "add_contenttype"),
+                (ContentType, "delete_contenttype"),
+            )
+        )
+    """
+    qs = Permission.objects.all().order_by("content_type__app_label", "content_type__model", "codename")
+
+    if exclude_codenames is not None:
+        qs = qs.exclude(codename__in=exclude_codenames)
+
+    if exclude_app_labels is not None:
+        # SQLite doesn't support .distinct, so we can't do this:
+        # app_lables = ContentType.objects.all().values_list("app_label", flat=True).order_by("app_label").distinct("app_label")
+        # This isn't perfomance criticle code, isn't it? So just do this:
+        app_lables = set(ContentType.objects.all().values_list("app_label", flat=True))
+
+        exclude_content_types = []
+        for app_label in exclude_app_labels:
+            if app_label not in app_lables:
+                print("app label %r not found!" % app_label)
+                print("Existing labels are:\n\t%s" % "\n\t".join(app_lables))
+                raise AssertionError
+            print("Check %r" % app_label)
+            content_types = ContentType.objects.all().filter(app_label = app_label)
+            assert content_types.count()>0
+            exclude_content_types += content_types
+
+        qs = qs.exclude(content_type__in=exclude_content_types)
+
+    if exclude_models is not None:
+        for model in exclude_models:
+            content_type = ContentType.objects.get_for_model(model)
+            qs = qs.exclude(content_type=content_type)
+
+    if exclude_permissions is not None:
+        for model, codename in exclude_permissions:
+            content_type = ContentType.objects.get_for_model(model)
+            qs = qs.exclude(content_type=content_type, codename=codename)
+
+    return qs
+
+
+def pprint_filtered_permissions(permissions):
+    """
+    print a list like this:
+        [*] auth.group.add_group
+        [*] auth.group.change_group
+        [ ] auth.group.delete_group
+        [*] auth.permission.add_permission
+        [ ] auth.permission.change_permission
+        [*] auth.permission.delete_permission
+        [*] auth.user.add_user
+        [*] auth.user.change_user
+        [ ] auth.user.delete_user
+        ...
+    """
+    for permission in permissions:
+        assert isinstance(permission, Permission), "List must contain auth.models.Permission instances!"
+
+    qs = Permission.objects.all().order_by("content_type__app_label", "content_type__model", "codename")
+    for permission in qs:
+        contains = "[*]" if permission in permissions else "[ ]"
+        print("%s %s.%s.%s" % (
+            contains,
+            permission.content_type.app_label,
+            permission.content_type.model,
+            permission.codename
+        ))

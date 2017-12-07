@@ -136,6 +136,7 @@ class SignSeparatedModelField(models.TextField):
     >>> class TestModel(models.Model):
     ...     test = SignSeparatedModelField(separator=";")
     ...     class Meta:
+    ...         default_permissions = () # Don't create permissions, see below
     ...         app_label = "django_tools"
 
     >>> class TestForm(ModelForm):
@@ -154,6 +155,10 @@ class SignSeparatedModelField(models.TextField):
     True
     >>> f.cleaned_data
     {'test': ('one', 'two', 'three')}
+
+    Note: TestModel.Meta.default_permissions is only set, because otherwise other unittests will failed!
+    Django will automatically create new entries in auth.models.Permission and this is not
+    atomic in doc test run :(
     """
 
     def __init__(self, separator=",", strip_items=True, skip_empty=True, *args, **kwargs):
