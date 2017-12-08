@@ -20,9 +20,11 @@ import webbrowser
 from pprint import pformat
 from xml.sax.saxutils import escape
 
+import re
 
 from django.contrib import messages
 from django.utils.encoding import force_text
+from django.utils.html import strip_tags
 from django.views.debug import get_safe_settings
 
 # https://github.com/jedie/django-tools
@@ -41,7 +43,34 @@ RESPONSE_INFO_ATTR = (
 TEMP_NAME_PREFIX="django_tools_browserdebug_"
 TEMP_DATETIME_FORMAT="%Y%m%d-%H%M%S_"
 
-def debug_response(response, browser_traceback=True, msg="", display_tb=True, dir=None):
+
+def filter_html(content):
+    content = re.sub(r"(.*?<body>)", "", content) # strip head
+    content = re.sub(r"(</body>.*?)", "", content) # strip footer
+
+    # remove style/script blocks:
+    content = re.sub(
+        r"(<style.*?>.*?</style>)", "", content,
+        flags=re.IGNORECASE|re.DOTALL
+    )
+    content = re.sub(
+        r"(<script.*?>.*?</script>)", "", content,
+        flags=re.IGNORECASE|re.DOTALL
+    )
+
+    content = strip_tags(content)
+
+    # Strip empty lines:
+    content = "\n".join([
+        line.rstrip()
+        for line in content.splitlines()
+        if line.strip()
+    ])
+
+    return content
+
+
+def debug_response(response, browser_traceback=True, msg="", display_tb=True, dir=None, print_filtered_html=False):
     """
     Display the response content with a error traceback in a webbrowser.
     TODO: We should delete the temp files after viewing!
@@ -54,7 +83,10 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True, di
 
     content = response.content.decode("utf-8")
 
-    print()
+    if print_filtered_html:
+        print("="*79)
+        print(filter_html(content))
+        print("="*79)
 
     url = response.request["PATH_INFO"]
 
