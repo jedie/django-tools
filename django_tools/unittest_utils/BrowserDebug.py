@@ -11,21 +11,22 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import unicode_literals, absolute_import, division, print_function
+from __future__ import absolute_import, division, print_function, unicode_literals
 
+import datetime
 import logging
-
-from pprint import pformat
-from xml.sax.saxutils import escape
 import tempfile
 import webbrowser
+from pprint import pformat
+from xml.sax.saxutils import escape
+
 
 from django.contrib import messages
 from django.utils.encoding import force_text
 from django.views.debug import get_safe_settings
 
+# https://github.com/jedie/django-tools
 from django_tools.utils.stack_info import get_stack_info
-
 
 log = logging.getLogger(__name__)
 
@@ -38,10 +39,9 @@ RESPONSE_INFO_ATTR = (
 )
 
 TEMP_NAME_PREFIX="django_tools_browserdebug_"
+TEMP_DATETIME_FORMAT="%Y%m%d-%H%M%S_"
 
-
-
-def debug_response(response, browser_traceback=True, msg="", display_tb=True):
+def debug_response(response, browser_traceback=True, msg="", display_tb=True, dir=None):
     """
     Display the response content with a error traceback in a webbrowser.
     TODO: We should delete the temp files after viewing!
@@ -53,6 +53,9 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
     BROWSER_TRACEBACK_OPENED = True
 
     content = response.content.decode("utf-8")
+
+    print()
+
     url = response.request["PATH_INFO"]
 
     stack_info = get_stack_info(filepath_filter="django_tools")
@@ -131,8 +134,13 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
         ) % (url, stack_info, response_info)
 
 
-    with tempfile.NamedTemporaryFile(prefix=TEMP_NAME_PREFIX, suffix=".html", delete=False) as f:
+    prefix = TEMP_NAME_PREFIX
+    dt = datetime.datetime.now()
+    prefix += dt.strftime(TEMP_DATETIME_FORMAT)
+    with tempfile.NamedTemporaryFile(dir=dir, prefix=prefix, suffix=".html", delete=False) as f:
         f.write(content.encode("utf-8"))
+
+        print("\nWrite time file '%s'" % f.name)
 
         url = "file://%s" % f.name
         print("\nDEBUG html page in Browser! (url: %s)" % url)
@@ -141,6 +149,4 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True):
         except Exception as err:
             log.error("Can't open browser: %s", err)
 
-    #time.sleep(0.5)
-    #os.remove(f.name)
-
+        return f.name
