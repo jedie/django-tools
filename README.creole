@@ -550,7 +550,7 @@ to:
 == Django compatibility
 
 |= django-tools    |= django version |= python         |
-| *dev*            | 1.8, 1.11       | 3.4, 3.5        |
+| >= v0.37.0       | 1.8, 1.11       | 3.4, 3.5        |
 | >= v0.33.0       | 1.8, 1.11       | 2.7, 3.4, 3.5   |
 | v0.30.1-v0.32.14 | 1.8, 1.9, 1.10  | 2.7, 3.4, 3.5   |
 | v0.30            | 1.8, 1.9        | 2.7, 3.4        |
@@ -563,7 +563,7 @@ to:
 
 == history
 
-* **dev**
+* v0.37.0 - 11.12.2017 - [[https://github.com/jedie/django-tools/compare/v0.36.0...v0.37.0|compare v0.36.0...v0.37.0]]
 ** Skip official support for python v2 (remove from text matrix)
 ** NEW: {{{./manage.py permission_info}}}: Display a list of all permissions for one django user
 ** NEW: {{{django_tools.permissions.get_filtered_permissions()}}} and {{{django_tools.permissions.pprint_filtered_permissions()}}}
