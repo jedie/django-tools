@@ -83,6 +83,15 @@ class BaseUnittestCase(TestCase):
         if os.path.isfile(path):
             self.fail('File "%s" exists, but should not exists!' % path)
 
+    def assert_startswith(self, text, prefix):
+        if not text.startswith(prefix):
+            self.fail("String %r doesn't starts with %r" % (text, prefix))
+
+    def assert_endswith(self, text, prefix):
+        if not text.endswith(prefix):
+            self.fail("String %r doesn't ends with %r" % (text, prefix))
+
+
 
 class BaseTestCase(BaseUnittestCase):
     # Should we open a browser traceback?

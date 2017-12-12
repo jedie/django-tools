@@ -146,6 +146,19 @@ class TestBaseUnittestCase(BaseUnittestCase):
                 six.text_type('File "%s" exists, but should not exists!' % __file__)
             )
 
+    def test_assert_startswith(self):
+        self.assert_startswith("foobar", "foo")
+        with self.assertRaises(self.failureException) as cm:
+            self.assert_startswith("foobar", "bar")
+
+        self.assertEqual(cm.exception.args[0], "String 'foobar' doesn't starts with 'bar'")
+
+    def test_assert_endswith(self):
+        self.assert_endswith("foobar", "bar")
+        with self.assertRaises(self.failureException) as cm:
+            self.assert_endswith("foobar", "foo")
+
+        self.assertEqual(cm.exception.args[0], "String 'foobar' doesn't ends with 'foo'")
 
 
 class TestTempDir(BaseUnittestCase):
