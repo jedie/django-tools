@@ -164,7 +164,10 @@ class TestBaseUnittestCase(BaseUnittestCase):
     def test_get_admin_change_url(self):
         obj = PermissionTestModel.objects.create()
         url = self.get_admin_change_url(obj)
-        self.assertEqual(url, "/admin/django_tools_test_app/permissiontestmodel/%i/" % obj.pk)
+        if django.VERSION < (1, 11):
+            self.assertEqual(url, "/admin/django_tools_test_app/permissiontestmodel/%i/" % obj.pk)
+        else:
+            self.assertEqual(url, "/admin/django_tools_test_app/permissiontestmodel/%i/change/" % obj.pk)
 
 
 class TestTempDir(BaseUnittestCase):
