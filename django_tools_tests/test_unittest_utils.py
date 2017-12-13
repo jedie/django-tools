@@ -19,6 +19,7 @@ from django_tools.unittest_utils.tempdir import TempDir
 from django_tools.unittest_utils.template import TEMPLATE_INVALID_PREFIX, set_string_if_invalid
 from django_tools.unittest_utils.unittest_base import BaseTestCase, BaseUnittestCase
 from django_tools.unittest_utils.user import TestUserMixin
+from django_tools_test_project.django_tools_test_app.models import PermissionTestModel
 
 
 class TestBaseUnittestCase(BaseUnittestCase):
@@ -159,6 +160,11 @@ class TestBaseUnittestCase(BaseUnittestCase):
             self.assert_endswith("foobar", "foo")
 
         self.assertEqual(cm.exception.args[0], "String 'foobar' doesn't ends with 'foo'")
+
+    def test_get_admin_change_url(self):
+        obj = PermissionTestModel.objects.create()
+        url = self.get_admin_change_url(obj)
+        self.assertEqual(url, "/admin/django_tools_test_app/permissiontestmodel/%i/" % obj.pk)
 
 
 class TestTempDir(BaseUnittestCase):
