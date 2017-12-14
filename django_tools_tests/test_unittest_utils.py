@@ -169,6 +169,11 @@ class TestBaseUnittestCase(BaseUnittestCase):
         else:
             self.assertEqual(url, "/admin/django_tools_test_app/permissiontestmodel/%i/change/" % obj.pk)
 
+    def test_get_admin_add_url(self):
+        url = self.get_admin_add_url(obj = PermissionTestModel)
+        self.assertEqual(url, "/admin/django_tools_test_app/permissiontestmodel/add/")
+
+
 
 class TestTempDir(BaseUnittestCase):
 

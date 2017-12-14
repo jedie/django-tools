@@ -108,6 +108,18 @@ class BaseUnittestCase(TestCase):
         """
         return self.get_admin_url(obj, suffix="change")
 
+    def get_admin_add_url(self, obj):
+        """
+        Get the admin add url for the given model.
+        e.g.:
+            "/admin/<app_name>/<model_name>/add/"
+        """
+        opts = obj._meta
+        change_url = urlresolvers.reverse(
+            'admin:%s_%s_add' % (opts.app_label, opts.model_name),
+        )
+        return change_url
+
 
 class BaseTestCase(BaseUnittestCase):
     # Should we open a browser traceback?
