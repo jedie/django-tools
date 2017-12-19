@@ -564,7 +564,7 @@ to:
 
 == history
 
-* **dev** - [[https://github.com/jedie/django-tools/compare/v0.37.0...master|compare v0.37.0...master]]
+* v0.38.0 - 19.12.2017 - [[https://github.com/jedie/django-tools/compare/v0.37.0...v0.38.0|compare v0.37.0...v0.38.0]]
 ** NEW: {{{django_tools.unittest_utils.user.get_or_create_group}}}
 ** NEW: {{{django_tools.unittest_utils.user.get_or_create_user}}}
 ** NEW: {{{django_tools.unittest_utils.user.get_or_create_user_and_group}}}
