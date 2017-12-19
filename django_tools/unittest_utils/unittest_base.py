@@ -13,6 +13,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import os
 import textwrap
 
+from django.core import urlresolvers
 from django.test import TestCase
 
 from .BrowserDebug import debug_response
@@ -82,6 +83,42 @@ class BaseUnittestCase(TestCase):
     def assert_not_is_File(self, path):
         if os.path.isfile(path):
             self.fail('File "%s" exists, but should not exists!' % path)
+
+    def assert_startswith(self, text, prefix):
+        if not text.startswith(prefix):
+            self.fail("String %r doesn't starts with %r" % (text, prefix))
+
+    def assert_endswith(self, text, prefix):
+        if not text.endswith(prefix):
+            self.fail("String %r doesn't ends with %r" % (text, prefix))
+
+    def get_admin_url(self, obj, suffix):
+        opts = obj._meta
+        change_url = urlresolvers.reverse(
+            'admin:%s_%s_%s' % (opts.app_label, opts.model_name, suffix),
+            args=(obj.pk,),
+        )
+        return change_url
+
+    def get_admin_change_url(self, obj):
+        """
+        Get the admin change url for the given model instance.
+        e.g.:
+            "/admin/<app_name>/<model_name>/<pk>/"
+        """
+        return self.get_admin_url(obj, suffix="change")
+
+    def get_admin_add_url(self, obj):
+        """
+        Get the admin add url for the given model.
+        e.g.:
+            "/admin/<app_name>/<model_name>/add/"
+        """
+        opts = obj._meta
+        change_url = urlresolvers.reverse(
+            'admin:%s_%s_add' % (opts.app_label, opts.model_name),
+        )
+        return change_url
 
 
 class BaseTestCase(BaseUnittestCase):

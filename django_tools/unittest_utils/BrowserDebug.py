@@ -108,6 +108,9 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True, di
             templates = pformat([template.name for template in response.templates])
         except AttributeError:
             templates = "---"
+        else:
+            if print_filtered_html:
+                print("Used template: %s" % response.templates[0].name)
     else:
         templates = "---"
     response_info += "\t<dd><pre>%s</pre></dd>\n" % templates

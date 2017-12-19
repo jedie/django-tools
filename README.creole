@@ -563,6 +563,9 @@ to:
 
 == history
 
+* **dev**
+** NEW: {{{BaseUnittestCase.get_admin_change_url()}}} and {{{BaseUnittestCase.get_admin_add_url()}}}
+** NEW: {{{BaseUnittestCase.assert_startswith()}}} and {{{BaseUnittestCase.assert_endswith()}}}
 * v0.37.0 - 11.12.2017 - [[https://github.com/jedie/django-tools/compare/v0.36.0...v0.37.0|compare v0.36.0...v0.37.0]]
 ** Skip official support for python v2 (remove from text matrix)
 ** NEW: {{{./manage.py permission_info}}}: Display a list of all permissions for one django user

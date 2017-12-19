@@ -19,6 +19,7 @@ from django_tools.unittest_utils.tempdir import TempDir
 from django_tools.unittest_utils.template import TEMPLATE_INVALID_PREFIX, set_string_if_invalid
 from django_tools.unittest_utils.unittest_base import BaseTestCase, BaseUnittestCase
 from django_tools.unittest_utils.user import TestUserMixin
+from django_tools_test_project.django_tools_test_app.models import PermissionTestModel
 
 
 class TestBaseUnittestCase(BaseUnittestCase):
@@ -145,6 +146,32 @@ class TestBaseUnittestCase(BaseUnittestCase):
                 six.text_type(err),
                 six.text_type('File "%s" exists, but should not exists!' % __file__)
             )
+
+    def test_assert_startswith(self):
+        self.assert_startswith("foobar", "foo")
+        with self.assertRaises(self.failureException) as cm:
+            self.assert_startswith("foobar", "bar")
+
+        self.assertEqual(cm.exception.args[0], "String 'foobar' doesn't starts with 'bar'")
+
+    def test_assert_endswith(self):
+        self.assert_endswith("foobar", "bar")
+        with self.assertRaises(self.failureException) as cm:
+            self.assert_endswith("foobar", "foo")
+
+        self.assertEqual(cm.exception.args[0], "String 'foobar' doesn't ends with 'foo'")
+
+    def test_get_admin_change_url(self):
+        obj = PermissionTestModel.objects.create()
+        url = self.get_admin_change_url(obj)
+        if django.VERSION < (1, 11):
+            self.assertEqual(url, "/admin/django_tools_test_app/permissiontestmodel/%i/" % obj.pk)
+        else:
+            self.assertEqual(url, "/admin/django_tools_test_app/permissiontestmodel/%i/change/" % obj.pk)
+
+    def test_get_admin_add_url(self):
+        url = self.get_admin_add_url(obj = PermissionTestModel)
+        self.assertEqual(url, "/admin/django_tools_test_app/permissiontestmodel/add/")
 
 
 
