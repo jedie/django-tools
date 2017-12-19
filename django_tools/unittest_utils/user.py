@@ -109,6 +109,35 @@ def get_super_user():
     return super_user
 
 
+def get_or_create_user(username, group, encrypted_password):
+    User = get_user_model()
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        user = create_user(
+            username=username,
+            groups=(group,),
+            is_staff=True,
+            is_superuser=False,
+            encrypted_password=encrypted_password,
+        )
+        created = True
+    else:
+        created = False
+
+    return user, created
+
+
+def get_or_create_group(groupname, permissions):
+    group, created = Group.objects.get_or_create(name=groupname)
+
+    for permission in permissions:
+        # print("Add permission '%s'" % permission)
+        group.permissions.add(permission)
+
+    return group, created
+
+
 def get_or_create_user_and_group(username, groupname, permissions, encrypted_password):
     """
     * Creates a user group if not exists
@@ -134,34 +163,19 @@ def get_or_create_user_and_group(username, groupname, permissions, encrypted_pas
             encrypted_password=encrypted_password
         )
     """
-    User = get_user_model()
-
-    log.info("Create test user '%s'...", username)
-
-    group, created = Group.objects.get_or_create(name=groupname)
+    log.info("Create user group %s and add %i permissions...", groupname, len(permissions))
+    group, created = get_or_create_group(groupname, permissions)
     if created:
-        log.info("User group '%s' created.", groupname)
+        log.debug("User group '%s' created.", groupname)
     else:
-        log.info("Use existing user group '%s', ok.", groupname)
+        log.debug("Use existing user group '%s', ok.", groupname)
 
-    log.info("Add %i permissions to user group", len(permissions))
-    for permission in permissions:
-        # print("Add permission '%s'" % permission)
-        group.permissions.add(permission)
-
-    try:
-        user = User.objects.get(username=username)
-    except User.DoesNotExist:
-        user = create_user(
-            username=username,
-            groups=(group,),
-            is_staff=True,
-            is_superuser=False,
-            encrypted_password=encrypted_password,
-        )
-        log.info("Test user '%s' created.", username)
+    log.info("Create user '%s'...", username)
+    user, created = get_or_create_user(username, group, encrypted_password)
+    if created:
+        log.debug("User '%s' created.", username)
     else:
-        log.info("Test user '%s' already exists, ok.", username)
+        log.debug("User '%s' already exists, ok.", username)
 
     return user
 
