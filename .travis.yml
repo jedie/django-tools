@@ -20,11 +20,11 @@ matrix:
   fast_finish: true
 
 install:
-    - pip install -r$TRAVIS_BUILD_DIR/requirements-test.txt
+    - travis_retry pip install -r$TRAVIS_BUILD_DIR/requirements-test.txt
 
 script:
     - pip freeze
-    - travis_retry tox
+    - tox
 
 after_success:
     # https://github.com/codecov/codecov-bash
