@@ -12,10 +12,9 @@ cache:
 
 env:
   matrix:
-    - TOXENV=py34-django18
-    - TOXENV=py34-django111
     - TOXENV=py35-django18
     - TOXENV=py35-django111
+    - TOXENV=py36-django111
 
 matrix:
   fast_finish: true
