@@ -109,6 +109,62 @@ def get_super_user():
     return super_user
 
 
+def get_or_create_user_and_group(username, groupname, permissions, encrypted_password):
+    """
+    * Creates a user group if not exists
+    * add given permissions to user group
+    * create user if not exists
+    * adds user into user group
+
+    e.g.:
+        from django_tools.permissions import get_filtered_permissions
+        from django_tools.unittest_utils.user import get_or_create_user_and_group
+
+        superuser = User.objects.filter(is_superuser=True, is_active=True)[0]
+        encrypted_password = superuser.password
+
+        test_user = get_or_create_user_and_group(
+            username="testuser",
+            groupname="testgroup",
+            permissions=get_filtered_permissions(
+                exclude_app_labels=("auth", "sites"),
+                exclude_models=(),
+                exclude_permissions=(),
+            ),
+            encrypted_password=encrypted_password
+        )
+    """
+    User = get_user_model()
+
+    log.info("Create test user '%s'...", username)
+
+    group, created = Group.objects.get_or_create(name=groupname)
+    if created:
+        log.info("User group '%s' created.", groupname)
+    else:
+        log.info("Use existing user group '%s', ok.", groupname)
+
+    log.info("Add %i permissions to user group", len(permissions))
+    for permission in permissions:
+        # print("Add permission '%s'" % permission)
+        group.permissions.add(permission)
+
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        user = create_user(
+            username=username,
+            groups=(group,),
+            is_staff=True,
+            is_superuser=False,
+            encrypted_password=encrypted_password,
+        )
+        log.info("Test user '%s' created.", username)
+    else:
+        log.info("Test user '%s' already exists, ok.", username)
+
+    return user
+
 
 class TestUserMixin:
     """
