@@ -4,18 +4,15 @@
     Test django_tools.unittest_utils.django_command
 """
 
-from __future__ import unicode_literals, print_function
-
-
 import os
-
+import sys
 from unittest import TestCase
 
-from django.utils.six import PY2
-
+# https://github.com/jedie/django-tools
 import django_tools
 from django_tools.unittest_utils.django_command import DjangoCommandMixin
 
+PY35 = sys.version_info[0:2] == (3, 5)
 
 MANAGE_DIR = os.path.abspath(os.path.join(os.path.dirname(django_tools.__file__), ".."))
 
@@ -48,8 +45,9 @@ class TestDjangoCommand(DjangoCommandMixin, TestCase):
 
         self.assertIn("subprocess exist status == 1", output)
 
-        if PY2:
-            member = "ImportError: No module named does-not-exist"
-        else:
+        if PY35:
             member = "ImportError: No module named 'does-not-exist'"
+        else:
+            member = "ModuleNotFoundError: No module named 'does-not-exist'"
+
         self.assertIn(member, output)
