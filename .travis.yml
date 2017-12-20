@@ -1,8 +1,9 @@
 # Config file for automatic testing at travis-ci.org
 
+dist: trusty
 language: python
 python:
-    - 3.5
+    - 3.6
 sudo: false
 
 cache:
@@ -14,6 +15,7 @@ env:
   matrix:
     - TOXENV=py35-django18
     - TOXENV=py35-django111
+    - TOXENV=py36-django18
     - TOXENV=py36-django111
 
 matrix:
