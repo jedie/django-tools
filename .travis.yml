@@ -30,21 +30,19 @@ matrix:
         -   env: TOXENV=pypy-django111
             python: pypy
 
+before_install:
+    - travis_retry pip install --upgrade pip
+
 install:
-    - travis_retry pip install -r$TRAVIS_BUILD_DIR/requirements-test.txt
+    # install only the needed package to run tox
+    # tox will install all needed packages
+    - travis_retry pip install tox tox-travis python-creole docutils
 
 script:
-    - pip freeze
-    - tox
+    - ./setup.py tox
 
 after_success:
     # https://github.com/codecov/codecov-bash
     - bash <(curl -s https://codecov.io/bash)
 
-# work-around for https://github.com/travis-ci/travis-ci/issues/4794
-addons:
-  apt:
-    sources:
-      - deadsnakes
-    packages:
-      - python3.5
+

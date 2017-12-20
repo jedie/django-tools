@@ -15,11 +15,38 @@ from __future__ import absolute_import, division, print_function
 import os
 import subprocess
 import sys
+import distutils
 import shutil
 
 from setuptools import setup, find_packages
 
 from django_tools import __version__
+
+
+class BaseCommand(distutils.cmd.Command):
+    user_options = []
+    def initialize_options(self): pass
+    def finalize_options(self): pass
+
+
+class ToxTestCommand(BaseCommand):
+    """Distutils command to run tests via tox: 'python setup.py tox'."""
+    description = "Run tests via 'tox'."
+
+    def run(self):
+        self.announce("Running tests with 'tox'...", level=distutils.log.INFO)
+        returncode = subprocess.call(['tox'])
+        sys.exit(returncode)
+
+
+class TestCommand(BaseCommand):
+    """Distutils command to run tests via py.test: 'python setup.py test'."""
+    description = "Run tests via 'py.test'."
+
+    def run(self):
+        self.announce("Running tests...", level=distutils.log.INFO)
+        returncode = subprocess.call(['pytest', 'django_tools_tests'])
+        sys.exit(returncode)
 
 
 PY2 = sys.version_info[0] == 2
@@ -209,13 +236,6 @@ def get_authors():
     return authors
 
 
-if "test" in sys.argv:
-    # for e.g.:
-    #   ./setup.py test django_tools_tests.test_unittest_utils.TestPrintSQL
-    from manage import run_tests
-    run_tests()
-
-
 install_requires=[
     "Django>=1.8",
     "lxml",
@@ -260,5 +280,8 @@ setup(
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
     ],
-    test_suite="manage.setup_run",
+    cmdclass={
+        'test': TestCommand,
+        'tox': ToxTestCommand,
+    }
 )

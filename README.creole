@@ -465,22 +465,16 @@ There exist many miscellaneous stuff. Look in the source, luke!
 
 == running django-tools unittests
 
-Run all tests in all environment combinations:
+Run all tests in all environment combinations via tox:
 
 {{{
-.../django-tools $ tox
+.../django-tools $ python3 setup.py tox
 }}}
 
-Run all tests in current environment:
+Run all tests in current environment via pytest:
 
 {{{
-.../django-tools $ pytest
-}}}
-
-Run specific tests, e.g.:
-
-{{{
-.../django-tools $ pytest django_tools_tests/test_unittest_utils.py
+.../django-tools $ python3 setup.py test
 }}}
 
 
