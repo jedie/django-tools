@@ -1,25 +1,48 @@
 # Config file for automatic testing at travis-ci.org
 
+sudo: required
 dist: trusty
+# https://blog.travis-ci.com/2017-12-12-new-trusty-images-q4-launch
+group: deprecated-2017Q4
 language: python
-python:
-    - 3.6
-sudo: false
 
 cache:
-  directories:
-    - $HOME/.pip-accel
-    - $HOME/.cache/pip
-
-env:
-  matrix:
-    - TOXENV=py35-django18
-    - TOXENV=py35-django111
-    - TOXENV=py36-django18
-    - TOXENV=py36-django111
+    directories:
+        - $HOME/.pip-accel
+        - $HOME/.cache/pip
 
 matrix:
-  fast_finish: true
+    fast_finish: true
+    include:
+        # see output from: `tox -l`
+        -   env: TOXENV=py35-django18
+            python: 3.5
+        -   env: TOXENV=py35-django19
+            python: 3.5
+        -   env: TOXENV=py35-django110
+            python: 3.5
+        -   env: TOXENV=py35-django111
+            python: 3.5
+
+        -   env: TOXENV=py36-django18
+            python: 3.6
+        -   env: TOXENV=py36-django19
+            python: 3.6
+        -   env: TOXENV=py36-django110
+            python: 3.6
+        -   env: TOXENV=py36-django111
+            python: 3.6
+        -   env: TOXENV=py36-django111
+            python: 3.6
+
+        -   env: TOXENV=pypy-django18
+            python: pypy
+        -   env: TOXENV=pypy-django19
+            python: pypy
+        -   env: TOXENV=pypy-django110
+            python: pypy
+        -   env: TOXENV=pypy-django111
+            python: pypy
 
 install:
     - travis_retry pip install -r$TRAVIS_BUILD_DIR/requirements-test.txt
