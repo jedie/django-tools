@@ -45,7 +45,7 @@ class TestCommand(BaseCommand):
 
     def run(self):
         self.announce("Running tests...", level=distutils.log.INFO)
-        returncode = subprocess.call(['pytest', 'django_tools_tests'])
+        returncode = subprocess.call(['pytest'])
         sys.exit(returncode)
 
 
