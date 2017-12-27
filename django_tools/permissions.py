@@ -37,7 +37,7 @@ def get_permission(app_label, codename):
             codename=codename
         )
     except Permission.DoesNotExist as err:
-        log.error("Error get permission '%s.%s':%s", app_label, codename, err)
+        log.exception("Error get permission '%s.%s':%s", app_label, codename, err)
 
         content_types = ContentType.objects.all().filter(app_label=app_label)
         if content_types.count() == 0:
