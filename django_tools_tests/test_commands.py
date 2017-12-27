@@ -136,3 +136,31 @@ class TestPermissionInfoCommand(TestUserMixin, DjangoCommandMixin, TestCase):
 
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
+
+
+class TestUpdatePermissionCommand(TestUserMixin, DjangoCommandMixin, TestCase):
+    """
+    Test for:
+    django_tools.management.commands.update_permissions.Command
+    """
+    def test_help(self):
+        output = self.call_manage_py(["--help"], manage_dir=MANAGE_DIR)
+
+        self.assertIn("[django]", output)
+        self.assertIn("update_permissions", output)
+
+        self.assertNotIn("Traceback", output)
+        self.assertNotIn("ERROR", output)
+
+    def test_update_permissions(self):
+        with StdoutStderrBuffer() as buff:
+            call_command("update_permissions")
+        output = buff.get_output()
+        print(output)
+
+        self.assertIn("Create permissions for:", output)
+        self.assertIn(" * auth", output)
+        self.assertIn(" * django_tools_test_app", output)
+
+        self.assertNotIn("Traceback", output)
+        self.assertNotIn("ERROR", output)
