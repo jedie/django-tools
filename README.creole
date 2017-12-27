@@ -559,6 +559,8 @@ to:
 
 == history
 
+* v0.38.2 - 27.12.2017 - [[https://github.com/jedie/django-tools/compare/v0.38.1...v0.38.2|compare v0.38.1...v0.38.2]]
+** NEW: {{{./manage.py update_permissions}}}
 * v0.38.1 - 21.12.2017 - [[https://github.com/jedie/django-tools/compare/v0.38.0...v0.38.1|compare v0.38.0...v0.38.1]]
 ** refactor travis/tox/pytest/coverage stuff
 ** Tests can be run via {{{python3 setup.py tox}}} and/or {{{python3 setup.py test}}}
