@@ -131,9 +131,20 @@ def get_or_create_user(username, group, encrypted_password):
 def get_or_create_group(groupname, permissions):
     group, created = Group.objects.get_or_create(name=groupname)
 
+    for permission in group.permissions.all():
+        if permission not in permissions:
+            print("remove permission:", permission)
+            group.permissions.remove(permission)
+
+    print("Add %i permissions to %r" % (len(permissions), groupname))
     for permission in permissions:
-        # print("Add permission '%s'" % permission)
         group.permissions.add(permission)
+
+    existing_permission_count = group.permissions.all().count()
+    print("Group %s has %i permissions" % (groupname, existing_permission_count))
+    assert len(permissions) == existing_permission_count, "Wrong permission count: %i != %i" % (
+        existing_permission_count, len(permissions)
+    )
 
     return group, created
 

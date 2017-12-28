@@ -559,6 +559,8 @@ to:
 
 == history
 
+* v0.38.3 - 28.12.2017 - [[https://github.com/jedie/django-tools/compare/v0.38.2...v0.38.3|compare v0.38.2...v0.38.3]]
+** Bugfix: {{{unittest_utils.user.get_or_create_group}}} also removes obsolete permissions, too.
 * v0.38.2 - 27.12.2017 - [[https://github.com/jedie/django-tools/compare/v0.38.1...v0.38.2|compare v0.38.1...v0.38.2]]
 ** NEW: {{{./manage.py update_permissions}}}
 * v0.38.1 - 21.12.2017 - [[https://github.com/jedie/django-tools/compare/v0.38.0...v0.38.1|compare v0.38.0...v0.38.1]]

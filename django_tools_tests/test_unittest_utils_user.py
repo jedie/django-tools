@@ -193,3 +193,57 @@ class TestUserFixtures(TestUserMixin, BaseTestCase):
         """)
 
         self.assertEqual(test_user.password, encrypted_password)
+
+    def test_remove_obsolete_permissions(self):
+        superuser = self.UserModel.objects.filter(is_superuser=True, is_active=True)[0]
+        encrypted_password = superuser.password
+
+        # Create with more permissions:
+        get_or_create_user_and_group(
+            username="testuser",
+            groupname="testgroup",
+            permissions=get_filtered_permissions(
+                exclude_app_labels=("admin",),
+                exclude_codenames=("delete_group",),
+                exclude_permissions=(
+                    (ContentType, "delete_contenttype"),
+                )
+            ),
+            encrypted_password=encrypted_password
+        )
+
+        with StdoutStderrBuffer() as buff:
+            get_or_create_user_and_group(
+                username="testuser",
+                groupname="testgroup",
+                permissions=get_filtered_permissions(
+                    exclude_app_labels=("admin", "sites"),
+                    exclude_models=(
+                        Session,
+                    ),
+                    exclude_codenames=(
+                        "delete_user",
+                        "delete_group",
+                    ),
+                    exclude_permissions=(
+                        (ContentType, "add_contenttype"),
+                        (ContentType, "delete_contenttype"),
+                    )
+                ),
+                encrypted_password=encrypted_password
+            )
+        output = buff.get_output()
+        self.assertEqual_dedent(output, """
+            Check 'admin'
+            Check 'sites'
+            remove permission: auth | user | Can delete user
+            remove permission: contenttypes | content type | Can add content type
+            remove permission: sessions | session | Can add session
+            remove permission: sessions | session | Can change session
+            remove permission: sessions | session | Can delete session
+            remove permission: sites | site | Can add site
+            remove permission: sites | site | Can change site
+            remove permission: sites | site | Can delete site
+            Add 49 permissions to 'testgroup'
+            Group testgroup has 49 permissions
+        """)
