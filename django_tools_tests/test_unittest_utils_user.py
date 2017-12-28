@@ -21,7 +21,9 @@ from django.test import TestCase
 from django_tools.permissions import get_filtered_permissions
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 from django_tools.unittest_utils.unittest_base import BaseTestCase
-from django_tools.unittest_utils.user import TestUserMixin, create_user, get_or_create_user_and_group, get_super_user
+from django_tools.unittest_utils.user import (
+    TestUserMixin, create_user, get_or_create_group, get_or_create_user, get_or_create_user_and_group, get_super_user
+)
 
 
 class TestUserUtils(TestUserMixin, BaseTestCase):
@@ -247,3 +249,39 @@ class TestUserFixtures(TestUserMixin, BaseTestCase):
             Add 49 permissions to 'testgroup'
             Group testgroup has 49 permissions
         """)
+
+    def test_update_existing_user(self):
+        superuser = self.UserModel.objects.filter(is_superuser=True, is_active=True)[0]
+        encrypted_password = superuser.password
+
+        group1, created = get_or_create_group(groupname="group1", permissions=())
+        self.assertTrue(created)
+
+        user, created = get_or_create_user(
+            username="foo",
+            group=group1,
+            encrypted_password=encrypted_password
+        )
+        self.assertTrue(created)
+
+        self.assertEqual(
+            list(self.UserModel.objects.get(username="foo").groups.all()),
+            [group1]
+        )
+
+        # Update user and attach group2:
+
+        group2, created = get_or_create_group(groupname="group2", permissions=())
+        self.assertTrue(created)
+
+        user, created = get_or_create_user(
+            username="foo",
+            group=group2,
+            encrypted_password=encrypted_password
+        )
+        self.assertFalse(created)
+
+        self.assertEqual(
+            list(self.UserModel.objects.get(username="foo").groups.all()),
+            [group2]
+        )

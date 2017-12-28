@@ -125,6 +125,11 @@ def get_or_create_user(username, group, encrypted_password):
     else:
         created = False
 
+    user.groups=(group,)
+    user.is_staff=True
+    user.is_superuser=False
+    user.save()
+
     return user, created
 
 
