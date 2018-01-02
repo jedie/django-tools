@@ -92,6 +92,20 @@ class BaseUnittestCase(TestCase):
         if not text.endswith(prefix):
             self.fail("String %r doesn't ends with %r" % (text, prefix))
 
+    def assert_exception_startswith(self, context_manager, text):
+        """
+        e.g.:
+
+        with self.assertRaises(AssertionError) as cm:
+            do_something()
+
+        self.assert_exception_startswith(cm, "First part of the error message")
+        """
+        exception_text = context_manager.exception.args[0]
+        if not exception_text.startswith(text):
+            msg="%r doesn't starts with %r" % (exception_text, text)
+            raise self.failureException(msg)
+
     def get_admin_url(self, obj, suffix):
         opts = obj._meta
         change_url = urlresolvers.reverse(

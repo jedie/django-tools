@@ -377,3 +377,17 @@ class AssertResponseTest(BaseTestCase):
             status_code=302,
             messages = ['redirect-response-message'],
         )
+
+    def test_wrong_messages(self):
+        response = self.client.get("/create_message_normal_response/this-is-it/")
+        self.assertMessages(response, ['this-is-it'])
+
+        with self.assertRaises(AssertionError) as cm:
+            self.assertResponse(response,
+                messages=['this-is-not-it'],
+                browser_traceback=False,
+            )
+
+        self.assert_exception_startswith(cm,
+            "Lists differ: ['this-is-it'] != ['this-is-not-it']"
+        )

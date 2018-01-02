@@ -77,12 +77,6 @@ class TestPermissions(TestUserMixin, BaseTestCase):
         self.assert_permissiontestmodel(permission)
         self.assertEqual(permission.codename, "extra_permission")
 
-    def assert_exception_startswith(self, context_manager, text):
-        exception_text = context_manager.exception.args[0]
-        if not exception_text.startswith(text):
-            msg="%r doesn't starts with %r" % (exception_text, text)
-            raise self.failureException(msg)
-
     #-------------------------------------------------------------------------
 
     def test_setup(self):
