@@ -559,6 +559,13 @@ to:
 
 == history
 
+
+* v0.38.5 - 02.01.2018 - [[https://github.com/jedie/django-tools/compare/v0.38.4...v0.38.5|compare v0.38.4...v0.38.5]]
+** NEW: Helper to assert django message framework output in unittests:
+*** {{{BaseUnittestCase.get_messages()}}}: return a list of all messages
+*** {{{BaseTestCase.assertMessages()}}}: compare messages
+*** {{{BaseTestCase.assertResponse()}}}: has new keyword argument {{{messages}}}
+** NEW: {{{BaseUnittestCase.assert_exception_startswith()}}}
 * v0.38.4 - 28.12.2017 - [[https://github.com/jedie/django-tools/compare/v0.38.3...v0.38.4|compare v0.38.3...v0.38.4]]
 ** Bugfix attach user group on existing user in: {{{django_tools.unittest_utils.user.get_or_create_user}}}
 * v0.38.3 - 28.12.2017 - [[https://github.com/jedie/django-tools/compare/v0.38.2...v0.38.3|compare v0.38.2...v0.38.3]]
