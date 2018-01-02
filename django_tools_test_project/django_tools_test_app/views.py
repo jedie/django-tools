@@ -4,18 +4,17 @@
     Dynamic SITE ID unittests
     ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    :copyleft: 2012-2017 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2012-2018 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
-from __future__ import absolute_import, division, print_function
 
 import json
 import logging
 
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.sites.models import Site
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView
 
@@ -58,3 +57,13 @@ def get_current_get_parameters(request):
 
 class TemplateDoesNotExists(TemplateView):
     template_name = "/template/does/not/exists.html"
+
+
+def create_message_normal_response(request, msg):
+    messages.info(request, msg)
+    return HttpResponse("django_tools_test_project.django_tools_test_app.views.create_message_normal_response")
+
+
+def create_message_redirect_response(request, msg):
+    messages.info(request, msg)
+    return HttpResponseRedirect("/create_message_redirect_response/")

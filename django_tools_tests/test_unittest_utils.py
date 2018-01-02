@@ -174,7 +174,6 @@ class TestBaseUnittestCase(BaseUnittestCase):
         self.assertEqual(url, "/admin/django_tools_test_app/permissiontestmodel/add/")
 
 
-
 class TestTempDir(BaseUnittestCase):
 
     def testTempDir(self):
@@ -349,4 +348,32 @@ class AssertResponseTest(BaseTestCase):
         )
         self.assertRaises(AssertionError, self.assertResponse, self.response,
             status_code=404, browser_traceback=False
+        )
+
+    def test_get_messages_normal_response(self):
+        response = self.client.get("/create_message_normal_response/normal-response-message/")
+
+        self.assertEqual(self.get_messages(response), ['normal-response-message'])
+
+        self.assertMessages(response, ['normal-response-message'])
+
+        self.assertResponse(response,
+            must_contain=("django_tools_test_app.views.create_message_normal_response",),
+            must_not_contain=("error", "traceback"),
+            status_code=200,
+            messages = ['normal-response-message'],
+            html=False,
+            browser_traceback=True
+        )
+
+    def test_get_messages_without_context(self):
+        response = self.client.get("/create_message_redirect_response/redirect-response-message/")
+
+        self.assertEqual(self.get_messages(response), ['redirect-response-message'])
+
+        self.assertMessages(response, ['redirect-response-message'])
+
+        self.assertResponse(response,
+            status_code=302,
+            messages = ['redirect-response-message'],
         )

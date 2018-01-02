@@ -120,6 +120,15 @@ class BaseUnittestCase(TestCase):
         )
         return change_url
 
+    def get_messages(self, response):
+        """
+        Return all django message framwork entry as a normal list
+        """
+        return [
+            str(message)
+            for message in response.wsgi_request._messages
+        ]
+
 
 class BaseTestCase(BaseUnittestCase):
     # Should we open a browser traceback?
@@ -182,10 +191,14 @@ class BaseTestCase(BaseUnittestCase):
                     self.raise_browser_traceback(response, err)
                 raise
 
+    def assertMessages(self, response, messages):
+        self.assertEqual(self.get_messages(response), messages)
+
     def assertResponse(self, response,
             must_contain=None, must_not_contain=None,
             status_code=200,
             template_name=None,
+            messages=None,
             html=False,
             browser_traceback=True):
         """
@@ -241,6 +254,17 @@ class BaseTestCase(BaseUnittestCase):
             except AssertionError as err:
                 if browser_traceback:
                     msg = 'Template not used: %s' % err
+                    debug_response(
+                        response, self.browser_traceback, msg, display_tb=True
+                    )
+                raise
+
+        if messages is not None:
+            try:
+                self.assertMessages(response, messages)
+            except AssertionError as err:
+                if browser_traceback:
+                    msg = 'Wrong messages: %s' % err
                     debug_response(
                         response, self.browser_traceback, msg, display_tb=True
                     )
