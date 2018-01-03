@@ -12,6 +12,7 @@ import pytest
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 from django.core.management import call_command
 from django.test import TestCase
 
@@ -164,3 +165,39 @@ class TestUpdatePermissionCommand(TestUserMixin, DjangoCommandMixin, TestCase):
 
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
+
+
+class TestClearCacheCommand(DjangoCommandMixin, TestCase):
+    """
+    Test for:
+    django_tools.management.commands.clear_cache.Command
+    """
+    def test_help(self):
+        output = self.call_manage_py(["--help"], manage_dir=MANAGE_DIR)
+
+        self.assertIn("[django]", output)
+        self.assertIn("clear_cache", output)
+
+        self.assertNotIn("Traceback", output)
+        self.assertNotIn("ERROR", output)
+
+    def test_clear_cache(self):
+
+        cache.set("key_foo", "bar", 30)
+        self.assertEqual(cache.get("key_foo"), "bar")
+
+        with StdoutStderrBuffer() as buff:
+            call_command("clear_cache")
+        output = buff.get_output()
+        print(output)
+
+        self.assertEqual(cache.get("key_foo"), None)
+
+        self.assertIn("Clear caches:", output)
+        self.assertIn("Clear 'LocMemCache'", output)
+        self.assertIn("done.", output)
+
+        self.assertNotIn("Traceback", output)
+        self.assertNotIn("ERROR", output)
+
+

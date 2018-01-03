@@ -559,7 +559,8 @@ to:
 
 == history
 
-
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.38.5...master|compare v0.38.5...master]]
+** NEW: {{{./manage.py clear_cache}}}
 * v0.38.5 - 02.01.2018 - [[https://github.com/jedie/django-tools/compare/v0.38.4...v0.38.5|compare v0.38.4...v0.38.5]]
 ** NEW: Helper to assert django message framework output in unittests:
 *** {{{BaseUnittestCase.get_messages()}}}: return a list of all messages
