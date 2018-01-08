@@ -13,6 +13,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import cgi
 import datetime
 import logging
 import re
@@ -102,6 +103,8 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True, di
 
     response_info = "<dl>\n"
 
+    #-------------------------------------------------------------------------
+
     response_info += "\t<dt><h3>template</h3> (Without duplicate entries)</dt>\n"
     if hasattr(response, "templates") and response.templates:
         try:
@@ -117,6 +120,8 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True, di
         templates = "---"
     response_info += "\t<dd><pre>%s</pre></dd>\n" % templates
 
+    #-------------------------------------------------------------------------
+
     response_info += "\t<dt><h3>messages</h3></dt>\n"
     msg = messages.get_messages(response.request)
     if msg:
@@ -124,6 +129,31 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True, di
     else:
         msg = "---"
     response_info += "\t<dd><pre>%s</pre></dd>\n" % msg
+
+    #-------------------------------------------------------------------------
+
+    # FIXME: Is there a easier way to collect POST data?!?
+
+    response_info += "\t<dt><h3>request.POST</h3></dt>\n"
+    try:
+        pake_payload = response.request["wsgi.input"] # django.test.client.FakePayload instance
+        payload = pake_payload._FakePayload__content
+        payload.seek(0)
+
+        pdict = {'boundary':b'BoUnDaRyStRiNg'}
+        post_data = cgi.parse_multipart(payload, pdict)
+
+        for k,v in post_data.items():
+            post_data[k] = [v.decode("UTF-8") for v in v]
+
+        post_data = pformat(post_data)
+    except Exception as err:
+        log.error("Can't collect POST data: %s", err)
+        post_data = "(Error: %s)" % err
+
+    response_info += "\t<dd><pre>%s</pre></dd>\n" % post_data
+
+    #-------------------------------------------------------------------------
 
     for attr in RESPONSE_INFO_ATTR:
         # FIXME: There must be exist a easier way to display the info
@@ -140,11 +170,14 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True, di
         value = escape(value)
         response_info += "\t<dd><pre>%s</pre></dd>\n" % value
 
+    #-------------------------------------------------------------------------
+
     response_info += "\t<dt><h3>settings</h3></dt>\n"
     response_info += "\t<dd><pre>%s</pre></dd>\n" % pformat(get_safe_settings())
 
     response_info += "</dl>\n"
 
+    #-------------------------------------------------------------------------
 
     if "</body>" in content:
         info = (
