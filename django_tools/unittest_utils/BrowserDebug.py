@@ -37,7 +37,7 @@ log = logging.getLogger(__name__)
 BROWSER_TRACEBACK_OPENED = False
 
 RESPONSE_INFO_ATTR = (
-    "content", "cookies", "request", "status_code", "_headers", "context",
+    "request", "cookies", "status_code", "_headers", "context", "content",
 )
 
 TEMP_NAME_PREFIX="django_tools_browserdebug_"
