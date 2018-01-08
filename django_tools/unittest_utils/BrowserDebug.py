@@ -7,7 +7,7 @@
 
     Helper functions for displaying test responses in webbrowser.
 
-    :copyleft: 2009-2017 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2009-2018 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -15,12 +15,12 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import datetime
 import logging
+import re
 import tempfile
 import webbrowser
+from collections import OrderedDict
 from pprint import pformat
 from xml.sax.saxutils import escape
-
-import re
 
 from django.contrib import messages
 from django.utils.encoding import force_text
@@ -102,13 +102,15 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True, di
 
     response_info = "<dl>\n"
 
-    response_info += "\t<dt><h3>template</h3></dt>\n"
+    response_info += "\t<dt><h3>template</h3> (Without duplicate entries)</dt>\n"
     if hasattr(response, "templates") and response.templates:
         try:
-            templates = pformat([template.name for template in response.templates])
+            templates = response.templates
         except AttributeError:
             templates = "---"
         else:
+            templates = [template.name for template in OrderedDict.fromkeys(templates)]
+            templates = pformat(templates)
             if print_filtered_html:
                 print("Used template: %s" % response.templates[0].name)
     else:
