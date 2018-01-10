@@ -559,7 +559,8 @@ to:
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.38.5...master|compare v0.38.5...master]]
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.38.6...master|compare v0.38.6...master]]
+* v0.38.6 - 10.01.2018 - [[https://github.com/jedie/django-tools/compare/v0.38.4...v0.38.5|compare v0.38.4...v0.38.5]]
 ** NEW: {{{./manage.py clear_cache}}}
 ** Display POST data in browser debug ({{{django_tools.unittest_utils.BrowserDebug.debug_response}}})
 * v0.38.5 - 02.01.2018 - [[https://github.com/jedie/django-tools/compare/v0.38.4...v0.38.5|compare v0.38.4...v0.38.5]]
