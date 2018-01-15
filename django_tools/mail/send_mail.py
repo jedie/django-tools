@@ -4,7 +4,7 @@
     mail util
     ~~~~~~~~~
 
-    :copyleft: 2017 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2017-2018 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -25,11 +25,19 @@ log = logging.getLogger(__name__)
 class SendMail(object):
     fail_silently=False
 
-    def __init__(self, template_base, mail_context, subject, recipient_list, from_email=None):
+    def __init__(self, template_base, mail_context, subject, recipient_list, from_email=None,
+            bcc=None,
+            connection=None,
+            attachments=None,
+            headers=None,
+            alternatives=None,
+            cc=None,
+            reply_to=None
+        ):
         """
         Send a mail in txt and html format
-        
-        :param template_base: e.g.: /foo/bar.{ext} 
+
+        :param template_base: e.g.: /foo/bar.{ext}
         :param mail_context: django template context used to render the mail
         :param subject: email subject
         :param recipient_list: email recipient
@@ -49,6 +57,14 @@ class SendMail(object):
             self.from_email = settings.DEFAULT_FROM_EMAIL
         else:
             self.from_email = from_email
+
+        self.bcc=bcc
+        self.connection=connection
+        self.attachments=attachments
+        self.headers=headers
+        self.alternatives=alternatives
+        self.cc=cc
+        self.reply_to=reply_to
 
     def send(self):
         html_message, text_message = self.render_mail()
@@ -78,7 +94,20 @@ class SendMail(object):
         return html, text
 
     def create_text_and_html_mail(self, html_message, text_message):
-        msg = EmailMultiAlternatives(self.subject, text_message, self.from_email, self.recipient_list)
+        msg = EmailMultiAlternatives(
+            subject=self.subject,
+            body=text_message,
+            from_email=self.from_email,
+            to=self.recipient_list,
+
+            bcc=self.bcc,
+            connection=self.connection,
+            attachments=self.attachments,
+            headers=self.headers,
+            alternatives=self.alternatives,
+            cc=self.cc,
+            reply_to=self.reply_to
+        )
         msg.attach_alternative(html_message, 'text/html')
         return msg
 
@@ -88,5 +117,4 @@ class SendMailCelery(SendMail):
     Create text+html mail and send it via Celery Task Job.
     """
     def send_mail(self, msg):
-
         send_mail_celery_task(msg)

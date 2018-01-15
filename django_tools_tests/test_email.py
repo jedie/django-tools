@@ -88,13 +88,28 @@ class TestEMail(BaseUnittestCase, SimpleTestCase):
             template_base="mail_test.{ext}",
             mail_context={"foo": "first", "bar": "second"},
             subject="Only a test",
-            recipient_list="foo@bar.tld"
+            recipient_list="foo@bar.tld",
+
+            from_email="from_foo@bar.tld",
+            bcc=["bcc_foo@bar.tld"],
+            connection=None,
+            attachments=[('test.txt', "test content", "text/plain")],
+            headers={"foo": "bar"},
+            alternatives=None,
+            cc=["cc_foo@bar.tld"],
+            reply_to=["reply_to_foo@bar.tld"],
         ).send()
 
         self.assertEqual(len(mail.outbox), 1)
         email = mail.outbox[0]
+
+        print("*"*79)
+        for attr_name in dir(email):
+            if not attr_name.startswith("_"):
+                print(attr_name, getattr(email, attr_name, "-"))
+        print("*"*79)
+
         self.assertEqual(email.subject, 'Only a test')
-        print(email.body)
         self.assertEqual_dedent(email.body, """
             <!-- START 'mail_test.txt' -->
             This is is a test mail.
@@ -102,8 +117,13 @@ class TestEMail(BaseUnittestCase, SimpleTestCase):
             
             <!-- END 'mail_test.txt' -->
         """)
-        self.assertEqual(email.from_email, 'webmaster@localhost')
+        self.assertEqual(email.from_email, 'from_foo@bar.tld')
         self.assertEqual(email.to, ['foo@bar.tld'])
+        self.assertEqual(email.bcc, ["bcc_foo@bar.tld"])
+        self.assertEqual(email.extra_headers, {"foo": "bar"})
+        self.assertEqual(email.cc, ["cc_foo@bar.tld"])
+        self.assertEqual(email.reply_to, ["reply_to_foo@bar.tld"])
+        self.assertEqual(email.attachments, [('test.txt', 'test content', 'text/plain')])
 
         self.assertIsInstance(email, EmailMultiAlternatives)
 
