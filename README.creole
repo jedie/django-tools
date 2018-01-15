@@ -560,6 +560,8 @@ to:
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.38.6...master|compare v0.38.6...master]]
+** (no changes yet)
+* v0.38.7 - 15.01.2018 - [[https://github.com/jedie/django-tools/compare/v0.38.5...v0.38.6|compare v0.38.5...v0.38.6]]
 ** Add missing arguments (like "attachments", "cc" etc.) to {{{django_tools.mail.send_mail.SendMailCelery}}}
 * v0.38.6 - 10.01.2018 - [[https://github.com/jedie/django-tools/compare/v0.38.4...v0.38.5|compare v0.38.4...v0.38.5]]
 ** NEW: {{{./manage.py clear_cache}}}
