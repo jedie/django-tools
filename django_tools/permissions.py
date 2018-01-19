@@ -338,9 +338,11 @@ def get_filtered_permissions(exclude_app_labels=None, exclude_models=None, exclu
         exclude_content_types = []
         for app_label in exclude_app_labels:
             if app_label not in app_lables:
-                print("app label %r not found!" % app_label)
-                print("Existing labels are:\n\t%s" % "\n\t".join(app_lables))
-                raise AssertionError
+                raise AssertionError(
+                    "app label %r not found! Existing labels: %s" % (
+                        app_label, ",".join(app_lables)
+                    )
+                )
             print("Check %r" % app_label)
             content_types = ContentType.objects.all().filter(app_label = app_label)
             assert content_types.count()>0
