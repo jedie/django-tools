@@ -559,7 +559,9 @@ to:
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.38.6...master|compare v0.38.6...master]]
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.38.8...master|compare v0.38.8...master]]
+** no changes, yet...
+* v0.38.8 - 05.02.2018 - [[https://github.com/jedie/django-tools/compare/v0.38.7...v0.38.8|compare v0.38.7...v0.38.8]]
 ** send mail: use from celery import shared_task instead of djcelery_transactions
 * v0.38.7 - 15.01.2018 - [[https://github.com/jedie/django-tools/compare/v0.38.6...v0.38.7|compare v0.38.6...v0.38.7]]
 ** Add missing arguments (like "attachments", "cc" etc.) to {{{django_tools.mail.send_mail.SendMailCelery}}}
