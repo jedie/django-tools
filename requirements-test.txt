@@ -9,4 +9,3 @@ django-filer
 pytest-django
 pytest-cov
 celery
-django-celery-transactions
