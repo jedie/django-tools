@@ -214,7 +214,7 @@ def check_permission(user, permission, raise_exception=True):
         )
         raise PermissionDenied
     else:
-        log.error('User "%s" has not permission "%s"', user, permission)
+        log.debug('User "%s" has not permission "%s"', user, permission)
         return False
 
 
