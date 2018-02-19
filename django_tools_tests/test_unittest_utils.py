@@ -77,12 +77,6 @@ class TestBaseUnittestCase(BaseUnittestCase):
             - foo bar
             + foo X bar
             ?    ++
-            
-            ------------- [first] -------------
-            foo bar
-            ------------- [second] ------------
-            foo X bar
-            -----------------------------------
         """))
 
     def test_assertIn_dedent(self):
@@ -97,11 +91,6 @@ class TestBaseUnittestCase(BaseUnittestCase):
         print("***\n%s\n***" % err_msg)
         self.assertEqual(err_msg, self._dedent("""
             'foo' not found in 'only bar'
-            ------------- [member] -------------
-            foo
-            ----------- [container] ------------
-            only bar
-            ------------------------------------
         """))
 
     def test_assert_is_dir(self):
