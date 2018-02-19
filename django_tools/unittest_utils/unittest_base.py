@@ -4,7 +4,7 @@
     unittest base
     ~~~~~~~~~~~~~
 
-    :copyleft: 2009-2017 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2009-2018 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -37,36 +37,12 @@ class BaseUnittestCase(TestCase):
     def assertEqual_dedent(self, first, second, msg=None):
         first = self._dedent(first)
         second = self._dedent(second)
-        try:
-            self.assertEqual(first, second, msg)
-        except AssertionError as err:
-            # Py2 has a bad error message
-            msg = (
-                "%s\n"
-                "------------- [first] -------------\n"
-                "%s\n"
-                "------------- [second] ------------\n"
-                "%s\n"
-                "-----------------------------------\n"
-            ) % (err, first, second)
-            raise AssertionError(msg)
+        self.assertEqual(first, second, msg)
 
     def assertIn_dedent(self, member, container, msg=None):
         member = self._dedent(member)
         container = self._dedent(container)
-        try:
-            self.assertIn(member, container, msg)
-        except AssertionError as err:
-            # Py2 has a bad error message
-            msg = (
-                "%s\n"
-                "------------- [member] -------------\n"
-                "%s\n"
-                "----------- [container] ------------\n"
-                "%s\n"
-                "------------------------------------\n"
-            ) % (err, member, container)
-            raise AssertionError(msg)
+        self.assertIn(member, container, msg)
 
     def assert_is_dir(self, path):
         if not os.path.isdir(path):
