@@ -46,7 +46,7 @@ class isolated_filesystem(TestContextDecorator):
         os.chdir(self.temp_path)
 
     def disable(self):
-        os.chdir(self.cwd)
+        os.chdir(str(self.cwd)) # str() needed for older python <=3.5
         try:
             shutil.rmtree(self.temp_path)
         except (OSError, IOError):
