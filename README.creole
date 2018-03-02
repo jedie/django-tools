@@ -558,11 +558,15 @@ change and rename:
 to:
 **from django_tools.fields.media_path import MediaPathWidget**
 
+=== v0.39
+
+File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
+
 
 == Django compatibility
 
 |= django-tools    |= django version |= python         |
-| >= v0.39         | 1.11, (2.0)     | 3.5, 3.6, pypy3 |
+| >= v0.39         | 1.11, 2.0       | 3.5, 3.6, pypy3 |
 | >= v0.38.1       | 1.8, 1.11       | 3.5, 3.6, pypy3 |
 | >= v0.38.0       | 1.8, 1.11       | 3.5, 3.6        |
 | >= v0.37.0       | 1.8, 1.11       | 3.4, 3.5        |
@@ -578,10 +582,12 @@ to:
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.38.9...master|compare v0.38.9...master]]
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.39.0...master|compare v0.39.0...master]]
+** no changes yet
+* v0.39.0 - [[https://github.com/jedie/django-tools/compare/v0.38.9...v0.39.0|compare v0.38.9...v0.39.0]]
 ** NEW: Isolated Filesystem decorator / context manager
-** Bugfix: rename {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
-** Skip run test with django 1.8
+** Backwards-incompatible change: file renamed {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
+** Skip run test with Django 1.8 and run tests with Django 1.11 and 2.0
 * v0.38.9 - 05.02.2018 - [[https://github.com/jedie/django-tools/compare/v0.38.8...v0.38.9|compare v0.38.8...v0.38.9]]
 **  lowering log level on missing permissions from "error" to "debug"
 * v0.38.8 - 05.02.2018 - [[https://github.com/jedie/django-tools/compare/v0.38.7...v0.38.8|compare v0.38.7...v0.38.8]]
