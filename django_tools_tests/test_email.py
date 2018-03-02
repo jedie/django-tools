@@ -13,7 +13,7 @@ from django.test import SimpleTestCase
 
 from django_tools.mail.send_mail import SendMail, SendMailCelery
 from django_tools.unittest_utils.unittest_base import BaseUnittestCase
-from django_tools.unittest_utils.celery import task_always_eager
+from django_tools.unittest_utils.celery_utils import task_always_eager
 
 
 class TestEMail(BaseUnittestCase, SimpleTestCase):

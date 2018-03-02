@@ -12,7 +12,7 @@ from django.utils.six import PY2
 
 # https://github.com/jedie/django-tools
 from django_tools.template.render import render_string_template
-from django_tools.unittest_utils.celery import task_always_eager
+from django_tools.unittest_utils.celery_utils import task_always_eager
 from django_tools.unittest_utils.print_sql import PrintQueries
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 from django_tools.unittest_utils.tempdir import TempDir

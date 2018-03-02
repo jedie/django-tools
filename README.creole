@@ -274,7 +274,7 @@ Usage, e.g.:
 {{{
 from django.core import mail
 from django.test import SimpleTestCase
-from django_tools.unittest_utils.celery import task_always_eager
+from django_tools.unittest_utils.celery_utils import task_always_eager
 
 @task_always_eager()
 class TestMyCeleryJobs(SimpleTestCase):
@@ -579,6 +579,7 @@ to:
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.38.9...master|compare v0.38.9...master]]
 ** NEW: Isolated Filesystem decorator / context manager
+** Bugfix: rename {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 * v0.38.9 - 05.02.2018 - [[https://github.com/jedie/django-tools/compare/v0.38.8...v0.38.9|compare v0.38.8...v0.38.9]]
 **  lowering log level on missing permissions from "error" to "debug"
 * v0.38.8 - 05.02.2018 - [[https://github.com/jedie/django-tools/compare/v0.38.7...v0.38.8|compare v0.38.7...v0.38.8]]
