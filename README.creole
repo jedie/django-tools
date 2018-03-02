@@ -171,6 +171,24 @@ usage/tests:
 * {{{django_tools.unittest_utils.user.get_super_user()}}} - get the first existing superuser
 
 
+=== Isolated Filesystem decorator / context manager
+
+[[https://github.com/jedie/django-tools/blob/master/django_tools/unittest_utils/isolated_filesystem.py|django_tools.unittest_utils.isolated_filesystem.isolated_filesystem]] acts as either a decorator or a context manager.
+Useful to for tests that will create files/directories in current work dir, it does this:
+
+* create a new temp directory
+* change the current working directory to the temp directory
+* after exit:
+* Delete an entire temp directory tree
+
+usage e.g.:
+{{{
+from django_tools.unittest_utils.isolated_filesystem import isolated_filesystem
+
+with isolated_filesystem(prefix="temp_dir_prefix"):
+    open("foo.txt", "w").write("bar")
+}}}
+
 === BaseUnittestCase
 
 **django_tools.unittest_utils.unittest_base.BaseUnittestCase** contains some low-level assert methods:
