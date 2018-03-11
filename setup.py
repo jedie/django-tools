@@ -236,16 +236,6 @@ def get_authors():
     return authors
 
 
-install_requires=[
-    "Django>=1.8",
-    "lxml",
-]
-if PY2:
-    install_requires.append(
-        "mock" # https://pypi.python.org/pypi/mock
-    )
-
-
 setup(
     name='django-tools',
     version=__version__,
@@ -258,7 +248,11 @@ setup(
     url='http://github.com/jedie/django-tools/',
     packages=find_packages(),
     include_package_data=True,  # include package data under svn source control
-    install_requires=install_requires,
+    python_requires='>=3.5',
+    install_requires=[
+        "Django>=1.8",
+        "lxml",
+    ],
     zip_safe=False,
     classifiers=[
 #        "Development Status :: 4 - Beta",
