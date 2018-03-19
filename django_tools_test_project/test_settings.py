@@ -45,6 +45,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
 
+    'easy_thumbnails', 'filer', # for django_tools.unittest_utils.mockup
+
     'django_tools',
     'django_tools.local_sync_cache',
     'django_tools.dynamic_site',
@@ -85,25 +87,6 @@ TEMPLATES = [
         },
     },
 ]
-
-#==============================================================================
-# TODO: Remove after django-filer v1.2.6 is released!
-# Problem: AttributeError: 'Manager' object has no attribute '_inherited'
-# with Django v1.10 and django-filer v1.2.5
-# see also:
-# https://github.com/divio/django-filer/issues/899
-
-from pip._vendor.packaging.version import parse as _parse_version
-from filer import __version__ as _filer_version
-from django import __version__ as _django_version
-
-_filer_version=_parse_version(_filer_version)
-_django_version=_parse_version(_django_version)
-
-if _django_version < _parse_version("1.10") or _filer_version >= _parse_version("1.2.6"):
-    INSTALLED_APPS += (
-        'easy_thumbnails', 'filer', # for django_tools.unittest_utils.mockup
-    )
 
 #==============================================================================
 
