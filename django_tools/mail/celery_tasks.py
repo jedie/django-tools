@@ -46,4 +46,4 @@ def send_mail(subject, message, from_email, recipient_list):
 
 @shared_task(name=settings.SEND_MAIL_CELERY_TASK_NAME)
 def send_mail_celery_task(msg):
-    msg.send()
+    return msg.send()

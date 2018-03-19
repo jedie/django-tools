@@ -153,7 +153,7 @@ class TestEMail(BaseUnittestCase, SimpleTestCase):
         for no in range(1,4):
             subject="test_SendMailCelery_more_mails() - no. %i" % no
             print("Send mail %r" % subject)
-            SendMailCelery(
+            ok = SendMailCelery(
                 template_base="mail_test.{ext}",
                 mail_context={
                     "foo": "first %i" % no,
@@ -162,6 +162,7 @@ class TestEMail(BaseUnittestCase, SimpleTestCase):
                 subject=subject,
                 recipient_list="foo@bar.tld",
             ).send()
+            self.assertTrue(ok)
 
         with StdoutStderrBuffer() as buff:
             print_mailbox(mail.outbox)

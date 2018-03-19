@@ -117,4 +117,4 @@ class SendMailCelery(SendMail):
     Create text+html mail and send it via Celery Task Job.
     """
     def send_mail(self, msg):
-        send_mail_celery_task(msg)
+        return send_mail_celery_task(msg)
