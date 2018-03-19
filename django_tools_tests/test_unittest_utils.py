@@ -1,25 +1,32 @@
-# coding: utf-8
 
-from __future__ import unicode_literals
+"""
+    :copyleft: 2017-2018 by the django-tools team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
+"""
+
 
 import os
 import sys
 
 import django
+from django.core import mail
 from django.test import Client, SimpleTestCase
 from django.utils import six
 from django.utils.six import PY2
 
+from django_tools_test_project.django_tools_test_app.models import PermissionTestModel
+
 # https://github.com/jedie/django-tools
+from django_tools.mail.send_mail import SendMail
 from django_tools.template.render import render_string_template
 from django_tools.unittest_utils.celery_utils import task_always_eager
+from django_tools.unittest_utils.email import print_mailbox
 from django_tools.unittest_utils.print_sql import PrintQueries
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 from django_tools.unittest_utils.tempdir import TempDir
 from django_tools.unittest_utils.template import TEMPLATE_INVALID_PREFIX, set_string_if_invalid
 from django_tools.unittest_utils.unittest_base import BaseTestCase, BaseUnittestCase
 from django_tools.unittest_utils.user import TestUserMixin
-from django_tools_test_project.django_tools_test_app.models import PermissionTestModel
 
 
 class TestBaseUnittestCase(BaseUnittestCase):
@@ -380,3 +387,29 @@ class AssertResponseTest(BaseTestCase):
         self.assert_exception_startswith(cm,
             "Lists differ: ['this-is-it'] != ['this-is-not-it']"
         )
+
+    def test_print_mailbox(self):
+        self.assertEqual(len(mail.outbox), 0)
+
+        ok = SendMail(
+            template_base="mail_test.{ext}",
+            mail_context={"foo": "first", "bar": "second"},
+            subject="test test_print_mailbox()",
+            recipient_list="foo@bar.tld"
+        ).send()
+
+        self.assertEqual(ok, True)
+
+        self.assertEqual(len(mail.outbox), 1)
+
+        with StdoutStderrBuffer() as buff:
+            print_mailbox(mail.outbox)
+        output = buff.get_output()
+        print(output)
+
+        self.assertIn("*** Mail No. 1: ***", output)
+        self.assertIn("subject: test test_print_mailbox()", output)
+        self.assertIn("<!-- START 'mail_test.txt' -->", output)
+        self.assertIn("<!-- END 'mail_test.txt' -->", output)
+        self.assertIn("from_email: webmaster@localhost", output)
+        self.assertIn("to: ['foo@bar.tld']", output)

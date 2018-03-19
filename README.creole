@@ -583,7 +583,7 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.39.0...master|compare v0.39.0...master]]
-** no changes yet
+** NEW: {{{django_tools.unittest_utils.email.print_mailbox()}}}
 * v0.39.0 - [[https://github.com/jedie/django-tools/compare/v0.38.9...v0.39.0|compare v0.38.9...v0.39.0]]
 ** NEW: Isolated Filesystem decorator / context manager
 ** Backwards-incompatible change: file renamed {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
