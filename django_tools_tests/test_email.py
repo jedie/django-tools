@@ -1,19 +1,19 @@
-# coding: utf-8
 
 """
-    :copyleft: 2017 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2017-2018 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
-from __future__ import unicode_literals, absolute_import, print_function
 
 from django.core import mail
 from django.core.mail import EmailMultiAlternatives
 from django.test import SimpleTestCase
 
+# https://github.com/jedie/django-tools
 from django_tools.mail.send_mail import SendMail, SendMailCelery
-from django_tools.unittest_utils.unittest_base import BaseUnittestCase
 from django_tools.unittest_utils.celery_utils import task_always_eager
+from django_tools.unittest_utils.email import print_mailbox
+from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
+from django_tools.unittest_utils.unittest_base import BaseUnittestCase
 
 
 class TestEMail(BaseUnittestCase, SimpleTestCase):
@@ -145,3 +145,38 @@ class TestEMail(BaseUnittestCase, SimpleTestCase):
             """
         )
         self.assertEqual(html_email[1], 'text/html')
+
+    @task_always_eager()
+    def test_SendMailCelery_more_mails(self):
+        self.assertEqual(len(mail.outbox), 0)
+
+        for no in range(1,4):
+            subject="test_SendMailCelery_more_mails() - no. %i" % no
+            print("Send mail %r" % subject)
+            SendMailCelery(
+                template_base="mail_test.{ext}",
+                mail_context={
+                    "foo": "first %i" % no,
+                    "bar": "second %i" % no,
+                },
+                subject=subject,
+                recipient_list="foo@bar.tld",
+            ).send()
+
+        with StdoutStderrBuffer() as buff:
+            print_mailbox(mail.outbox)
+        output = buff.get_output()
+        print(output)
+
+        self.assertEqual(len(mail.outbox), 3)
+        self.assertIn("*** Mail No. 1: ***", output)
+        self.assertIn("subject: test_SendMailCelery_more_mails() - no. 1", output)
+        self.assertIn("It used the django template: first 1, second 1", output)
+
+        self.assertIn("*** Mail No. 2: ***", output)
+        self.assertIn("subject: test_SendMailCelery_more_mails() - no. 2", output)
+        self.assertIn("It used the django template: first 2, second 2", output)
+
+        self.assertIn("*** Mail No. 3: ***", output)
+        self.assertIn("subject: test_SendMailCelery_more_mails() - no. 3", output)
+        self.assertIn("It used the django template: first 3, second 3", output)
