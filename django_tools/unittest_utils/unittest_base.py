@@ -23,7 +23,7 @@ class BaseUnittestCase(TestCase):
     """
     Extensions to plain Unittest TestCase
     """
-    maxDiff = 2500
+    maxDiff = 3000
 
     def _dedent(self, txt):
         # Remove any common leading whitespace from every line

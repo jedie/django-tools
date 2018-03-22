@@ -309,15 +309,26 @@ class ModelPermissionMixin(object):
         return check_permission(user, permission, raise_exception)
 
 
-def get_filtered_permissions(exclude_app_labels=None, exclude_models=None, exclude_codenames=None, exclude_permissions=None):
+def get_filtered_permissions(
+        exclude_app_labels=None,
+        exclude_actions=None,
+        exclude_models=None,
+        exclude_codenames=None,
+        exclude_permissions=None
+    ):
     """
     Generate a Permission instance list and exclude parts of it.
+
+    Filters:
+        <app_label>.<action>_<modelname>
+                    `-----codename-----'
 
     usage, e.g.:
         permissions = get_filtered_permissions(
             exclude_app_labels=("easy_thumbnails", "filer"),
+            exclude_actions=("delete",)
             exclude_models=(LimitToUsergroupsTestModel, PermissionTestModel),
-            exclude_codenames=("delete_group", "delete_user"),
+            exclude_codenames=("add_group", "add_user"),
             exclude_permissions=(
                 (ContentType, "add_contenttype"),
                 (ContentType, "delete_contenttype"),
@@ -328,6 +339,11 @@ def get_filtered_permissions(exclude_app_labels=None, exclude_models=None, exclu
 
     if exclude_codenames is not None:
         qs = qs.exclude(codename__in=exclude_codenames)
+
+    if exclude_actions is not None:
+        for action in exclude_actions:
+            codename_prefix = "%s_" % action
+            qs = qs.exclude(codename__startswith=codename_prefix)
 
     if exclude_app_labels is not None:
         # SQLite doesn't support .distinct, so we can't do this:

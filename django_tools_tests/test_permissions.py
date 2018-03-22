@@ -447,8 +447,9 @@ class TestPermissions(TestUserMixin, BaseTestCase):
     def test_pprint_filtered_permissions(self):
         permissions = get_filtered_permissions(
             exclude_app_labels=("easy_thumbnails", "filer"),
+            exclude_actions=("delete",),
             exclude_models=(LimitToUsergroupsTestModel, PermissionTestModel),
-            exclude_codenames=("delete_group", "delete_user"),
+            exclude_codenames=("change_group", "change_user"),
             exclude_permissions=(
                 (ContentType, "add_contenttype"),
                 (ContentType, "delete_contenttype"),
@@ -457,18 +458,20 @@ class TestPermissions(TestUserMixin, BaseTestCase):
         with StdoutStderrBuffer() as buffer:
             pprint_filtered_permissions(permissions)
 
-        self.assertEqual_dedent(buffer.get_output(), """
+        output = buffer.get_output()
+        print(output)
+        self.assertEqual_dedent(output, """
             [*] admin.add_logentry
             [*] admin.change_logentry
-            [*] admin.delete_logentry
+            [ ] admin.delete_logentry
             [*] auth.add_group
-            [*] auth.change_group
+            [ ] auth.change_group
             [ ] auth.delete_group
             [*] auth.add_permission
             [*] auth.change_permission
-            [*] auth.delete_permission
+            [ ] auth.delete_permission
             [*] auth.add_user
-            [*] auth.change_user
+            [ ] auth.change_user
             [ ] auth.delete_user
             [ ] contenttypes.add_contenttype
             [*] contenttypes.change_contenttype
@@ -482,10 +485,10 @@ class TestPermissions(TestUserMixin, BaseTestCase):
             [ ] django_tools_test_app.extra_permission
             [*] django_tools_test_app.add_simpleparlermodel
             [*] django_tools_test_app.change_simpleparlermodel
-            [*] django_tools_test_app.delete_simpleparlermodel
+            [ ] django_tools_test_app.delete_simpleparlermodel
             [*] dynamic_site.add_sitealias
             [*] dynamic_site.change_sitealias
-            [*] dynamic_site.delete_sitealias
+            [ ] dynamic_site.delete_sitealias
             [ ] easy_thumbnails.add_source
             [ ] easy_thumbnails.change_source
             [ ] easy_thumbnails.delete_source
@@ -519,8 +522,8 @@ class TestPermissions(TestUserMixin, BaseTestCase):
             [ ] filer.delete_thumbnailoption
             [*] sessions.add_session
             [*] sessions.change_session
-            [*] sessions.delete_session
+            [ ] sessions.delete_session
             [*] sites.add_site
             [*] sites.change_site
-            [*] sites.delete_site
+            [ ] sites.delete_site
         """)
