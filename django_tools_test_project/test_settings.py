@@ -1,10 +1,12 @@
 # coding: utf-8
 
+import logging
 
-from __future__ import print_function
+from django.utils.translation import ugettext_lazy as _
 
+# https://github.com/jedie/django-tools
+from django_tools.mail.settings import *
 from django_tools.unittest_utils.disable_migrations import DisableMigrations
-
 
 print("Use settings:", __file__)
 
@@ -47,6 +49,13 @@ INSTALLED_APPS = (
 
     'easy_thumbnails', 'filer', # for django_tools.unittest_utils.mockup
 
+    # TODO:
+    # # https://pypi.org/project/django-parler
+    # 'parler',
+    #
+    # # https://pypi.org/project/django-ya-model-publisher/
+    # 'publisher',
+
     'django_tools',
     'django_tools.local_sync_cache',
     'django_tools.dynamic_site',
@@ -58,7 +67,6 @@ INSTALLED_APPS = (
 )
 
 
-from django_tools.mail.settings import *
 
 
 TEMPLATES = [
@@ -88,6 +96,49 @@ TEMPLATES = [
     },
 ]
 
+# Internationalization
+# https://docs.djangoproject.com/en/1.11/topics/i18n/
+
+# Default and fallback language:
+# https://docs.djangoproject.com/en/1.11/ref/settings/#language-code
+LANGUAGE_CODE = "en"
+
+# http://django-parler.readthedocs.org/en/latest/quickstart.html#configuration
+PARLER_LANGUAGES = {
+    1: [
+        {
+            "name": _("German"),
+            "code": "de",
+            "fallbacks": [LANGUAGE_CODE],
+            "hide_untranslated": False,
+        },
+        {
+            "name": _("English"),
+            "code": "en",
+            "fallbacks": ["de"],
+            "hide_untranslated": False,
+        },
+    ],
+    "default": { # all SITE_ID"s
+        "fallbacks": [LANGUAGE_CODE],
+        "redirect_on_fallback": False,
+    },
+}
+
+
+# https://docs.djangoproject.com/en/1.8/ref/settings/#languages
+# http://www.i18nguy.com/unicode/language-identifiers.html
+LANGUAGES = tuple([(d["code"], d["name"]) for d in PARLER_LANGUAGES[1]])
+
+LANGUAGE_DICT = dict(LANGUAGES) # useful to get translated name by language code
+
+# http://docs.django-cms.org/en/latest/reference/configuration.html#std:setting-CMS_LANGUAGES
+# CMS_LANGUAGES = PARLER_LANGUAGES
+
+# http://django-parler.readthedocs.org/en/latest/quickstart.html#configuration
+PARLER_DEFAULT_LANGUAGE_CODE = LANGUAGE_CODE
+
+
 #==============================================================================
 
 CELERY_ALWAYS_EAGER = True
@@ -111,7 +162,6 @@ PASSWORD_HASHERS = ( # Speedup tests
 #_____________________________________________________________________________
 # cut 'pathname' in log output
 
-import logging
 try:
     old_factory = logging.getLogRecordFactory()
 except AttributeError: # e.g.: Python < v3.2

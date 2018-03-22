@@ -1,18 +1,19 @@
-# coding: utf-8
 
 """
     django-tools test models
     ~~~~~~~~~~~~~~~~~~~~~~~~
 
-    :copyleft: 2012-2017 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2012-2018 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
-
-
 from django.db import models
+
+from parler.models import TranslatableModel, TranslatedFields
+
+# https://github.com/jedie/django-tools
 from django_tools import limit_to_usergroups
+from django_tools.parler_utils.parler_fixtures import ParlerDummyGenerator
 from django_tools.permissions import ModelPermissionMixin, check_permission
 
 
@@ -34,3 +35,50 @@ class PermissionTestModel(ModelPermissionMixin, models.Model):
         permissions = (
             ("extra_permission", "Extra permission"),
         )
+
+
+#_____________________________________________________________________________
+# for django_tools.parler_utils.parler_fixtures.ParlerDummyGenerator
+
+
+class SimpleParlerModel(TranslatableModel):
+    translations = TranslatedFields(
+        slug=models.SlugField()
+    )
+
+
+def generate_simple_parler_dummies():
+    ParlerDummyGenerator(
+        ParlerModelClass=SimpleParlerModel,
+        publisher_model=False,
+        unique_translation_field="slug"
+    ).get_or_create(count=5)
+
+
+
+#-----------------------------------------------------------------------------
+
+
+# TODO:
+# class ParlerPublisherModel(PublisherParlerModel):
+#     shared = models.CharField(max_length=127)
+#     translations = TranslatedFields(
+#         foo=models.CharField(max_length=127)
+#     )
+#
+#
+# class ParlerPublisherModelFixtures(ParlerDummyGenerator):
+#     def get_unique_translation_field_value(self, no, language_code):
+#         return "%s %s no.%i" % (self.class_name, language_code, no)
+#
+#     def add_instance_values(self, instance, language_code, lang_name, no):
+#         instance.shared="This is No.%i" % no
+#         return instance
+#
+#
+# def generate_parler_publisher_dummies():
+#     ParlerPublisherModelFixtures(
+#         ParlerModelClass=ParlerPublisherModel,
+#         publisher_model=True,
+#         unique_translation_field="foo"
+#     ).get_or_create(count=3)

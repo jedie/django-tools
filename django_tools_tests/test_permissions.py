@@ -367,7 +367,7 @@ class TestPermissions(TestUserMixin, BaseTestCase):
 
         self.assertEqual(
             log.get_messages(),
-            "DEBUG:django_tools.permissions:Add 7 permissions from app 'django_tools_test_app'"
+            "DEBUG:django_tools.permissions:Add 10 permissions from app 'django_tools_test_app'"
         )
 
         permissions = self.normal_group.permissions.all()
@@ -380,7 +380,10 @@ class TestPermissions(TestUserMixin, BaseTestCase):
             'django_tools_test_app.add_permissiontestmodel',
             'django_tools_test_app.change_permissiontestmodel',
             'django_tools_test_app.delete_permissiontestmodel',
-            'django_tools_test_app.extra_permission'
+            'django_tools_test_app.extra_permission',
+            'django_tools_test_app.add_simpleparlermodel',
+            'django_tools_test_app.change_simpleparlermodel',
+            'django_tools_test_app.delete_simpleparlermodel'
         ])
 
     #-------------------------------------------------------------------------
@@ -421,6 +424,9 @@ class TestPermissions(TestUserMixin, BaseTestCase):
             'auth.add_user',
             'auth.change_user',
             'contenttypes.change_contenttype',
+            'django_tools_test_app.add_simpleparlermodel',
+            'django_tools_test_app.change_simpleparlermodel',
+            'django_tools_test_app.delete_simpleparlermodel',
             'dynamic_site.add_sitealias',
             'dynamic_site.change_sitealias',
             'dynamic_site.delete_sitealias',
@@ -474,6 +480,9 @@ class TestPermissions(TestUserMixin, BaseTestCase):
             [ ] django_tools_test_app.change_permissiontestmodel
             [ ] django_tools_test_app.delete_permissiontestmodel
             [ ] django_tools_test_app.extra_permission
+            [*] django_tools_test_app.add_simpleparlermodel
+            [*] django_tools_test_app.change_simpleparlermodel
+            [*] django_tools_test_app.delete_simpleparlermodel
             [*] dynamic_site.add_sitealias
             [*] dynamic_site.change_sitealias
             [*] dynamic_site.delete_sitealias

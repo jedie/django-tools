@@ -584,6 +584,9 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.39.1...master|compare v0.39.1...master]]
 ** no changes yet
+* v0.39.2 - [[https://github.com/jedie/django-tools/compare/v0.39.1...v0.39.2|compare v0.39.1...v0.39.2]]
+** NEW: {{{django_tools.parler_utils.parler_fixtures.ParlerDummyGenerator}}}
+** NEW: {{{django_tools.fixture_tools.languages.iter_languages}}}
 * v0.39.1 - [[https://github.com/jedie/django-tools/compare/v0.39.0...v0.39.1|compare v0.39.0...v0.39.1]]
 ** NEW: {{{django_tools.unittest_utils.email.print_mailbox()}}}
 ** minor updates
