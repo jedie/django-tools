@@ -20,12 +20,22 @@ Put this into your settings, e.g.:
 {{{
 from django_tools.unittest_utils.logging_utils import CutPathnameLogRecordFactory, FilterAndLogWarnings
 
-# cut 'pathname' in log output:
-logging.setLogRecordFactory(CutPathnameLogRecordFactory(max_length=50))
-
 # Filter warnings and pipe them to logging system
 # Warnings of external packages are displayed only once and only the file path.
 warnings.showwarning = FilterAndLogWarnings()
+
+# Adds 'cut_path' attribute on log record. So '%(cut_path)s' can be used in log formatter.
+logging.setLogRecordFactory(CutPathnameLogRecordFactory(max_length=50))
+
+LOGGING = {
+    # ...
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)8s %(cut_path)s:%(lineno)-3s %(message)s'
+        },
+    },
+    # ...
+}
 }}}
 (Activate warnings by, e.g.: {{{export PYTHONWARNINGS=all}}})
 

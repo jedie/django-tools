@@ -49,7 +49,7 @@ class LoggingBuffer:
 
 class CutPathnameLogRecordFactory:
     """
-    cut 'pathname' in log output.
+    Adds 'cut_path' attribute on log record. So '%(cut_path)s' can be used in log formatter.
 
     Add this to you settings.py, e.g.:
 
@@ -57,6 +57,16 @@ class CutPathnameLogRecordFactory:
         from django_tools.unittest_utils.logging_utils import CutPathnameLogRecordFactory
 
         logging.setLogRecordFactory(CutPathnameLogRecordFactory(max_length=50))
+
+        LOGGING = {
+            # ...
+            'formatters': {
+                'verbose': {
+                    'format': '%(levelname)8s %(cut_path)s:%(lineno)-3s %(message)s'
+                },
+            },
+            # ...
+        }
     """
     def __init__(self, max_length=40):
         self.max_length = max_length

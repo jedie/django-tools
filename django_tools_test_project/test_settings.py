@@ -163,7 +163,7 @@ PASSWORD_HASHERS = ( # Speedup tests
 
 #_____________________________________________________________________________
 
-# cut 'pathname' in log output:
+# Adds 'cut_path' attribute on log record. So '%(cut_path)s' can be used in log formatter.
 # django_tools.unittest_utils.logging_utils.CutPathnameLogRecordFactory
 logging.setLogRecordFactory(CutPathnameLogRecordFactory(max_length=50))
 
