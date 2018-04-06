@@ -1,12 +1,14 @@
 # coding: utf-8
 
 import logging
+import warnings
 
 from django.utils.translation import ugettext_lazy as _
 
 # https://github.com/jedie/django-tools
 from django_tools.mail.settings import *
 from django_tools.unittest_utils.disable_migrations import DisableMigrations
+from django_tools.unittest_utils.logging_utils import CutPathnameLogRecordFactory, FilterAndLogWarnings
 
 print("Use settings:", __file__)
 
@@ -160,25 +162,14 @@ PASSWORD_HASHERS = ( # Speedup tests
 
 
 #_____________________________________________________________________________
-# cut 'pathname' in log output
 
-try:
-    old_factory = logging.getLogRecordFactory()
-except AttributeError: # e.g.: Python < v3.2
-    pass
-else:
-    def cut_path(pathname, max_length):
-        if len(pathname)<=max_length:
-            return pathname
-        return "...%s" % pathname[-(max_length-3):]
+# cut 'pathname' in log output:
+# django_tools.unittest_utils.logging_utils.CutPathnameLogRecordFactory
+logging.setLogRecordFactory(CutPathnameLogRecordFactory(max_length=50))
 
-    def record_factory(*args, **kwargs):
-        record = old_factory(*args, **kwargs)
-        record.pathname = cut_path(record.pathname, 30)
-        return record
-
-    logging.setLogRecordFactory(record_factory)
-
+# Filter warnings and pipe them to logging system:
+# django_tools.unittest_utils.logging_utils.FilterAndLogWarnings
+warnings.showwarning = FilterAndLogWarnings()
 
 #-----------------------------------------------------------------------------
 
@@ -205,15 +196,15 @@ LOGGING = {
     'loggers': {
         "django_tools": {
             'handlers': [
-                'null',
-                # 'console'
+                # 'null',
+                'console'
             ],
             'level': 'DEBUG',
         },
         "django_tools.DynamicSite": {
             'handlers': [
-                'null',
-                # 'console'
+                # 'null',
+                'console'
             ],
             'level': 'DEBUG',
         },

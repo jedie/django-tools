@@ -583,7 +583,7 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.39.1...master|compare v0.39.1...master]]
-** no changes yet
+** NEW: {{{django_tools.unittest_utils.logging_utils.FilterAndLogWarnings}}} and {{{django_tools.unittest_utils.logging_utils.CutPathnameLogRecordFactory}}}
 * v0.39.3 - [[https://github.com/jedie/django-tools/compare/v0.39.2...v0.39.3|compare v0.39.2...v0.39.3]]
 ** {{{django_tools.permissions.get_filtered_permissions}}} has new keyword argument: {{{exclude_actions}}}
 * v0.39.2 - [[https://github.com/jedie/django-tools/compare/v0.39.1...v0.39.2|compare v0.39.1...v0.39.2]]
