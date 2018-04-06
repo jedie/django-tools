@@ -12,6 +12,24 @@ Look also at the siblings project: [[https://github.com/jedie/django-cms-tools|d
 
 == existing stuff
 
+
+=== Django Logging utils
+
+Put this into your settings, e.g.:
+
+{{{
+from django_tools.unittest_utils.logging_utils import CutPathnameLogRecordFactory, FilterAndLogWarnings
+
+# cut 'pathname' in log output:
+logging.setLogRecordFactory(CutPathnameLogRecordFactory(max_length=50))
+
+# Filter warnings and pipe them to logging system
+# Warnings of external packages are displayed only once and only the file path.
+warnings.showwarning = FilterAndLogWarnings()
+}}}
+(Activate warnings by, e.g.: {{{export PYTHONWARNINGS=all}}})
+
+
 === django_tools.template.loader.DebugCacheLoader
 
 Insert template name as html comments, e.g.:
@@ -582,17 +600,18 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.39.1...master|compare v0.39.1...master]]
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.39.4...master|compare v0.39.1...master]]
+* v0.39.4 - 06.04.2018 - [[https://github.com/jedie/django-tools/compare/v0.39.3...v0.39.4|compare v0.39.3...v0.39.4]]
 ** NEW: {{{django_tools.unittest_utils.logging_utils.FilterAndLogWarnings}}} and {{{django_tools.unittest_utils.logging_utils.CutPathnameLogRecordFactory}}}
-* v0.39.3 - [[https://github.com/jedie/django-tools/compare/v0.39.2...v0.39.3|compare v0.39.2...v0.39.3]]
+* v0.39.3 - 22.03.2018 - [[https://github.com/jedie/django-tools/compare/v0.39.2...v0.39.3|compare v0.39.2...v0.39.3]]
 ** {{{django_tools.permissions.get_filtered_permissions}}} has new keyword argument: {{{exclude_actions}}}
-* v0.39.2 - [[https://github.com/jedie/django-tools/compare/v0.39.1...v0.39.2|compare v0.39.1...v0.39.2]]
+* v0.39.2 - 22.03.2018 - [[https://github.com/jedie/django-tools/compare/v0.39.1...v0.39.2|compare v0.39.1...v0.39.2]]
 ** NEW: {{{django_tools.parler_utils.parler_fixtures.ParlerDummyGenerator}}}
 ** NEW: {{{django_tools.fixture_tools.languages.iter_languages}}}
-* v0.39.1 - [[https://github.com/jedie/django-tools/compare/v0.39.0...v0.39.1|compare v0.39.0...v0.39.1]]
+* v0.39.1 - 19.03.2018 - [[https://github.com/jedie/django-tools/compare/v0.39.0...v0.39.1|compare v0.39.0...v0.39.1]]
 ** NEW: {{{django_tools.unittest_utils.email.print_mailbox()}}}
 ** minor updates
-* v0.39.0 - [[https://github.com/jedie/django-tools/compare/v0.38.9...v0.39.0|compare v0.38.9...v0.39.0]]
+* v0.39.0 - 02.03.2018 - [[https://github.com/jedie/django-tools/compare/v0.38.9...v0.39.0|compare v0.38.9...v0.39.0]]
 ** NEW: Isolated Filesystem decorator / context manager
 ** Backwards-incompatible change: file renamed {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 ** Skip run test with Django 1.8 and run tests with Django 1.11 and 2.0
