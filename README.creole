@@ -610,7 +610,7 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.39.4...master|compare v0.39.1...master]]
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.39.4...master|compare v0.39.4...master]]
 * v0.39.4 - 06.04.2018 - [[https://github.com/jedie/django-tools/compare/v0.39.3...v0.39.4|compare v0.39.3...v0.39.4]]
 ** NEW: {{{django_tools.unittest_utils.logging_utils.FilterAndLogWarnings}}} and {{{django_tools.unittest_utils.logging_utils.CutPathnameLogRecordFactory}}}
 * v0.39.3 - 22.03.2018 - [[https://github.com/jedie/django-tools/compare/v0.39.2...v0.39.3|compare v0.39.2...v0.39.3]]
