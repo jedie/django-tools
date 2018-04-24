@@ -12,10 +12,16 @@ from django.db import models
 class ModelTestGenerator:
     def _iter_model_label(self):
         app_configs = apps.get_app_configs()
+
+        data = []
         for app_config in app_configs:
             models = app_config.get_models()
             for model in models:
-                yield (model._meta.label, model)
+                data.append(
+                    (model._meta.label, model)
+                )
+
+        yield from sorted(data)
 
     def get_model_by_label(self, model_label):
         for label, model in self._iter_model_label():
