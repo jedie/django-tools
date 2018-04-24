@@ -26,7 +26,9 @@ class Command(BaseCommand):
     help = "Generate unittest code for a model"
 
     def add_arguments(self, parser):
-        parser.add_argument('model_label', help='Name of the Django model (can only be the first characters! We use "startwith"')
+        parser.add_argument('model_label', nargs="?",
+            help='Name of the Django model (can only be the first characters! We use "startwith"'
+        )
         parser.add_argument('--translation', help='Language code that will be activated', default="en")
         parser.add_argument('--count', help='Number of data records to be generated.', type=int, default=2)
 
