@@ -638,7 +638,8 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.39.4...master|compare v0.39.4...master]]
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.39.5...master|compare v0.39.5...master]]
+* v0.39.5 - 24.04.2018 - [[https://github.com/jedie/django-tools/compare/v0.39.4...v0.39.5|compare v0.39.4...v0.39.5]]
 ** NEW: Model instance unittest code generator (see above)
 * v0.39.4 - 06.04.2018 - [[https://github.com/jedie/django-tools/compare/v0.39.3...v0.39.4|compare v0.39.3...v0.39.4]]
 ** NEW: {{{django_tools.unittest_utils.logging_utils.FilterAndLogWarnings}}} and {{{django_tools.unittest_utils.logging_utils.CutPathnameLogRecordFactory}}}
