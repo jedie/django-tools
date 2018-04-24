@@ -65,7 +65,7 @@ class StaticPathWidget(forms.Select):
     >>> import os, django_tools
     >>> settings.STATIC_ROOT = os.path.dirname(os.path.abspath(django_tools.__file__))
     >>> StaticPathWidget().choices[:2]
-    [('__pycache__', '__pycache__'), ('auto_update_cache', 'auto_update_cache')]
+    [('__pycache__', '__pycache__'), ('admin_tools', 'admin_tools')]
     """
     def __init__(self, attrs=None):
         super(StaticPathWidget, self).__init__(attrs)
