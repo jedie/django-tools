@@ -191,6 +191,34 @@ usage/tests:
 
 * [[https://github.com/jedie/django-tools/blob/master/django_tools_tests/test_mockup.py|/django_tools_tests/test_mockup.py]]
 
+
+=== Model instance unittest code generator
+
+Generate unittest code skeletons from existing model instance. You can use this feature as django manage command or as admin action.
+
+Usage as management command, e.g.:
+{{{
+$ ./manage.py generate_model_test_code auth.
+...
+#
+# pk:1 from auth.User <class 'django.contrib.auth.models.User'>
+#
+user = User.objects.create(
+    password='pbkdf2_sha256$36000$ybRfVQDOPQ9F$jwmgc5UsqRQSXxJs/NrZeTLguieUSSZfaSZbMmC+L5w=', # CharField, String (up to 128)
+    last_login=datetime.datetime(2018, 4, 24, 8, 27, 49, 578107, tzinfo=<UTC>), # DateTimeField, Date (with time)
+    is_superuser=True, # BooleanField, Boolean (Either True or False)
+    username='test', # CharField, String (up to 150)
+    first_name='', # CharField, String (up to 30)
+    last_name='', # CharField, String (up to 30)
+    email='', # CharField, Email address
+    is_staff=True, # BooleanField, Boolean (Either True or False)
+    is_active=True, # BooleanField, Boolean (Either True or False)
+    date_joined=datetime.datetime(2018, 3, 6, 17, 15, 50, 93136, tzinfo=<UTC>), # DateTimeField, Date (with time)
+)
+...
+}}}
+
+
 === create users
 
 [[https://github.com/jedie/django-tools/blob/master/django_tools/unittest_utils/user.py|/unittest_utils/user.py]]:
@@ -611,6 +639,7 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.39.4...master|compare v0.39.4...master]]
+** NEW: Model instance unittest code generator (see above)
 * v0.39.4 - 06.04.2018 - [[https://github.com/jedie/django-tools/compare/v0.39.3...v0.39.4|compare v0.39.3...v0.39.4]]
 ** NEW: {{{django_tools.unittest_utils.logging_utils.FilterAndLogWarnings}}} and {{{django_tools.unittest_utils.logging_utils.CutPathnameLogRecordFactory}}}
 * v0.39.3 - 22.03.2018 - [[https://github.com/jedie/django-tools/compare/v0.39.2...v0.39.3|compare v0.39.2...v0.39.3]]
