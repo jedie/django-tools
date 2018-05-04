@@ -56,20 +56,17 @@ class ModelTestGenerator:
             )
         ]
         for field in instance._meta.fields:
-            # django.db.models.fields.Field
+            # field == django.db.models.fields.Field
 
-            if field.hidden:
+            if field.hidden or field.auto_created:
                 continue
+
+            comment_post_line = False
 
             if not field.editable:
-                continue
+                comment_post_line = True
 
             internal_type = field.get_internal_type()
-            if internal_type == "AutoField":
-                continue
-
-            if field.name == "cmsplugin_ptr":
-                continue
 
             value = getattr(instance, field.name)
             if isinstance(value, models.Model):
@@ -88,14 +85,13 @@ class ModelTestGenerator:
                 "max_length": field.max_length,
             }
 
-            line = "    {name}={value!r}, # {internal_type}, {comment}".format(
-                name = field.name,
-                value = value,
-                internal_type = internal_type,
-                comment = comment
-
+            line = "{name}={value!r}, # {internal_type}, {comment}".format(
+                name=field.name, value=value, internal_type=internal_type, comment=comment
             )
-            lines.append(line)
+            if comment_post_line:
+                line = "# %s" % line
+
+            lines.append("    %s" % line)
 
         lines.append(")")
         lines.append("")
