@@ -1,4 +1,3 @@
-
 """
     :created: 24.04.2018 by Jens Diemer
     :copyleft: 2018 by the django-tools team, see AUTHORS for more details.
@@ -10,6 +9,7 @@ from django.db import models
 
 
 class ModelTestGenerator:
+
     def _iter_model_label(self):
         app_configs = apps.get_app_configs()
 
@@ -17,9 +17,7 @@ class ModelTestGenerator:
         for app_config in app_configs:
             models = app_config.get_models()
             for model in models:
-                data.append(
-                    (model._meta.label, model)
-                )
+                data.append((model._meta.label, model))
 
         yield from sorted(data)
 
@@ -48,16 +46,13 @@ class ModelTestGenerator:
     def test_code_for_instance(self, instance):
         prefix_lines = []
         lines = [
-            "#",
-            "# pk:{pk} from {label} {type}".format(
-                pk = instance.pk,
-                label = instance._meta.label,
-                type = type(instance),
-            ),
-            "#",
-            "{name} = {ClassName}.objects.create(".format(
-                name = instance._meta.model_name,
-                ClassName = instance._meta.object_name,
+            "#", "# pk:{pk} from {label} {type}".format(
+                pk=instance.pk,
+                label=instance._meta.label,
+                type=type(instance),
+            ), "#", "{name} = {ClassName}.objects.create(".format(
+                name=instance._meta.model_name,
+                ClassName=instance._meta.object_name,
             )
         ]
         for field in instance._meta.fields:
@@ -81,11 +76,10 @@ class ModelTestGenerator:
                 prefix_lines += self.test_code_for_instance(instance=value)
                 lines.append(
                     "    {name}={obj_name}.pk, # {internal_type} to {label}".format(
-                        name = field.name,
-                        obj_name = value._meta.model_name,
-                        internal_type = internal_type,
-                        label = value._meta.label
-
+                        name=field.name,
+                        obj_name=value._meta.model_name,
+                        internal_type=internal_type,
+                        label=value._meta.label
                     )
                 )
                 continue
@@ -115,7 +109,7 @@ class ModelTestGenerator:
         lines = []
         for instance in queryset:
             lines += self.test_code_for_instance(instance)
-            lines.append("#"*79)
+            lines.append("#" * 79)
 
         content = "\n".join(lines)
         return content
