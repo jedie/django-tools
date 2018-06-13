@@ -49,8 +49,8 @@ class TestListModelsCommand(DjangoCommandMixin, TestCase):
         self.assertIn("07 - django_tools_test_app.PermissionTestModel", output)
         self.assertIn("10 - dynamic_site.SiteAlias", output)
 
-        self.assertIn("INSTALLED_APPS....: 13", output)
-        self.assertIn("Apps with models..: 13", output)
+        self.assertIn("INSTALLED_APPS....: 15", output)
+        self.assertIn("Apps with models..: 15", output)
 
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)

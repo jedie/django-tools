@@ -255,6 +255,9 @@ class TestPermissions(TestUserMixin, BaseTestCase):
             'filer.add_thumbnailoption',
             'filer.change_thumbnailoption',
             'filer.delete_thumbnailoption',
+            'flatpages.add_flatpage',
+            'flatpages.change_flatpage',
+            'flatpages.delete_flatpage',
             'sites.add_site',
             'sites.change_site',
             'sites.delete_site'
@@ -430,6 +433,9 @@ class TestPermissions(TestUserMixin, BaseTestCase):
             'dynamic_site.add_sitealias',
             'dynamic_site.change_sitealias',
             'dynamic_site.delete_sitealias',
+            'flatpages.add_flatpage',
+            'flatpages.change_flatpage',
+            'flatpages.delete_flatpage',
             'sessions.add_session',
             'sessions.change_session',
             'sessions.delete_session',
@@ -520,6 +526,9 @@ class TestPermissions(TestUserMixin, BaseTestCase):
             [ ] filer.add_thumbnailoption
             [ ] filer.change_thumbnailoption
             [ ] filer.delete_thumbnailoption
+            [*] flatpages.add_flatpage
+            [*] flatpages.change_flatpage
+            [ ] flatpages.delete_flatpage
             [*] sessions.add_session
             [*] sessions.change_session
             [ ] sessions.delete_session

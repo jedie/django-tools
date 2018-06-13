@@ -189,6 +189,9 @@ class TestUserFixtures(TestUserMixin, BaseTestCase):
             [*] filer.add_thumbnailoption
             [*] filer.change_thumbnailoption
             [*] filer.delete_thumbnailoption
+            [*] flatpages.add_flatpage
+            [*] flatpages.change_flatpage
+            [*] flatpages.delete_flatpage
             [ ] sessions.add_session
             [ ] sessions.change_session
             [ ] sessions.delete_session
@@ -250,8 +253,8 @@ class TestUserFixtures(TestUserMixin, BaseTestCase):
             remove permission: sites | site | Can add site
             remove permission: sites | site | Can change site
             remove permission: sites | site | Can delete site
-            Add 52 permissions to 'testgroup'
-            Group testgroup has 52 permissions
+            Add 55 permissions to 'testgroup'
+            Group testgroup has 55 permissions
         """)
 
     def test_update_existing_user(self):
