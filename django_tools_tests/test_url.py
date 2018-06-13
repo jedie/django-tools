@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -26,7 +27,8 @@ class TestExistingDirValidator(SimpleTestCase):
 
     @override_settings(DEBUG=True)
     def test_debug_message(self):
-        path = os.path.abspath("does/not/exist")
+        path = str(Path(settings.MEDIA_ROOT, "does/not/exist"))
+        print(path)
         try:
             self.media_root_validator(path)
         except ValidationError as err:

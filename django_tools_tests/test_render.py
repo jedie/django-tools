@@ -17,6 +17,7 @@ class TestRender(SimpleTestCase):
         context={"foo":"bar"}
         path = "test_template.html"
         x = render_template_file(path, context)
+        print(x)
 
         # Note: START/END comments added by: django_tools.template.loader.DebugCacheLoader
 

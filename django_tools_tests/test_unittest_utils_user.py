@@ -155,9 +155,6 @@ class TestUserFixtures(TestUserMixin, BaseTestCase):
             [*] django_tools_test_app.add_simpleparlermodel
             [*] django_tools_test_app.change_simpleparlermodel
             [*] django_tools_test_app.delete_simpleparlermodel
-            [*] dynamic_site.add_sitealias
-            [*] dynamic_site.change_sitealias
-            [*] dynamic_site.delete_sitealias
             [*] easy_thumbnails.add_source
             [*] easy_thumbnails.change_source
             [*] easy_thumbnails.delete_source
@@ -253,8 +250,8 @@ class TestUserFixtures(TestUserMixin, BaseTestCase):
             remove permission: sites | site | Can add site
             remove permission: sites | site | Can change site
             remove permission: sites | site | Can delete site
-            Add 55 permissions to 'testgroup'
-            Group testgroup has 55 permissions
+            Add 52 permissions to 'testgroup'
+            Group testgroup has 52 permissions
         """)
 
     def test_update_existing_user(self):

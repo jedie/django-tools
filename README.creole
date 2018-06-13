@@ -181,6 +181,17 @@ and unittests: [[https://github.com/jedie/django-tools/blob/master/django_tools_
 
 == unittests helpers
 
+
+=== Selenium Test Cases
+
+A ready to use chromium test case is here: {{{django_tools.unittest_utils.selenium_utils.SeleniumChromiumTestCase}}}
+A base class with some nice helper is here: {{{django_tools.unittest_utils.selenium_utils.SeleniumBaseTestCase}}}
+
+A example usage are the tests here:
+
+* [[https://github.com/jedie/django-tools/blob/master/django_tools/django_tools_tests/test_unittest_selenium.py|/django_tools/django_tools_tests/test_unittest_selenium.py]]
+
+
 === Mockup utils
 
 Create dummy PIL/django-filer images with Text, see:
@@ -639,6 +650,9 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.39.6...master|compare v0.39.6...master]]
+** NEW: selenium test cases in {{{django_tools.unittest_utils.selenium_utils}}}
+** Fix test project and add {{{run_test_project_dev_server.sh}}} for easy test
+** Fixing tests
 * v0.39.6 - 04.05.2018 - [[https://github.com/jedie/django-tools/compare/v0.39.5...v0.39.6|compare v0.39.5...v0.39.6]]
 ** Enhance model instance unittest code generator
 * v0.39.5 - 24.04.2018 - [[https://github.com/jedie/django-tools/compare/v0.39.4...v0.39.5|compare v0.39.4...v0.39.5]]

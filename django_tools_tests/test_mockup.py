@@ -67,7 +67,7 @@ class TestMockupImageNewApi(TestUserMixin, BaseTestCase):
             path = filer_info_image.path
             path = path.replace("-", "_") # e.g.: /django-tools/ -> /django_tools/
 
-            self.assertIn("django_tools/filer_public/", path)
+            self.assertIn("/django_tools/django_tools_test_project/media/filer_public/", path)
 
             self.assertEqual(len(w), 0) # No warnings created
 
@@ -123,6 +123,6 @@ class TestMockupImageOldApi(TestUserMixin, BaseTestCase):
             path = filer_info_image.path
             path = path.replace("-", "_") # e.g.: /django-tools/ -> /django_tools/
 
-            self.assertIn("django_tools/filer_public/", path)
+            self.assertIn("/django_tools/django_tools_test_project/media/filer_public/", path)
 
             self.assert_warning(w)

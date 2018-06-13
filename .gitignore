@@ -69,5 +69,8 @@ target/
 .project
 .pydevproject
 
-# django-filer (created by unittest run)
+# Test project:
+test_project_db.sqlite3
 filer_public/
+django_tools_test_project/media/
+django_tools_test_project/static/

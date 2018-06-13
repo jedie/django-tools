@@ -1,4 +1,7 @@
 # coding: utf-8
+import os
+
+print("Use settings:", __file__)
 
 import logging
 import warnings
@@ -7,24 +10,27 @@ from django.utils.translation import ugettext_lazy as _
 
 # https://github.com/jedie/django-tools
 from django_tools.mail.settings import *
-from django_tools.unittest_utils.disable_migrations import DisableMigrations
 from django_tools.unittest_utils.logging_utils import CutPathnameLogRecordFactory, FilterAndLogWarnings
 
-print("Use settings:", __file__)
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 DEBUG = True
 
 SECRET_KEY = "Unittests"
 ALLOWED_HOSTS = ["*"] # Allow any domain/subdomain
 
+
+# Database
+# https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': ":memory:"
+        'NAME': os.path.join(BASE_DIR, "..", "test_project_db.sqlite3"),
+        # 'NAME': ":memory:"
     }
 }
 
-MIGRATION_MODULES = DisableMigrations()
 
 CACHES = {
     'default': {
@@ -34,10 +40,20 @@ CACHES = {
 }
 
 MIDDLEWARE_CLASSES = (
+    # https://github.com/jazzband/django-debug-toolbar/
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django_tools.dynamic_site.middleware.DynamicSiteMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+
+    # 'django_tools.dynamic_site.middleware.DynamicSiteMiddleware',
     'django_tools.middlewares.ThreadLocal.ThreadLocalMiddleware',
     'django_tools.middlewares.TracebackLogMiddleware.TracebackLogMiddleware',
 )
@@ -48,6 +64,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admin',
+    'django.contrib.staticfiles',
     'django.contrib.admindocs',
     'django.contrib.flatpages',
 
@@ -62,7 +79,7 @@ INSTALLED_APPS = (
 
     'django_tools',
     'django_tools.local_sync_cache',
-    'django_tools.dynamic_site',
+    # 'django_tools.dynamic_site',
     'django_tools_test_project.django_tools_test_app',
 
     'django_tools.manage_commands.django_tools_list_models',
@@ -76,26 +93,27 @@ INSTALLED_APPS = (
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, "templates/"),
+        ],
         'OPTIONS': {
             'loaders': [
-                (
-                    "django_tools.template.loader.DebugCacheLoader",
-                    (
-                        'django.template.loaders.filesystem.Loader',
-                        'django.template.loaders.app_directories.Loader',
-                    ),
-                ),
+                ("django_tools.template.loader.DebugCacheLoader", (
+                    'django.template.loaders.filesystem.Loader',
+                    'django.template.loaders.app_directories.Loader',
+                )),
             ],
             'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
                 'django.template.context_processors.media',
+                'django.template.context_processors.csrf',
+                'django.template.context_processors.tz',
                 'django.template.context_processors.static',
-            ]
+            ],
         },
     },
 ]
@@ -148,6 +166,17 @@ PARLER_DEFAULT_LANGUAGE_CODE = LANGUAGE_CODE
 CELERY_ALWAYS_EAGER = True
 BROKER_TRANSPORT = "memory"
 EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend'
+
+#==============================================================================
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.8/howto/static-files/
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 #==============================================================================
 

@@ -54,14 +54,14 @@ class ManageCommandTests(DjangoCommandMixin, TestCase):
         self.assertIn('[django]', output)
         self.assertIn('Type \'manage.py help <subcommand>\' for help on a specific subcommand.', output)
 
-    def test_unapplied_migrations(self):
-        output = self.call_manage_py(["showmigrations"], manage_dir=MANAGE_DIR)
-        print(output)
-
-        # We didn't habe any migrations, yet:
-        # self.assertIn('[X]', output) # applied migration
-
-        self.assertNotIn("[ ]", output) # unapplied migration
+    # def test_unapplied_migrations(self):
+    #     output = self.call_manage_py(["showmigrations"], manage_dir=MANAGE_DIR)
+    #     print(output)
+    #
+    #     # We didn't have any migrations, yet:
+    #     # self.assertIn('[X]', output) # applied migration
+    #
+    #     self.assertNotIn("[ ]", output) # unapplied migration
 
     def test_missing_migrations(self):
         output = self.call_manage_py(["makemigrations", "--dry-run"], manage_dir=MANAGE_DIR)

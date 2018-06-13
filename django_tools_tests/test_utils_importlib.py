@@ -6,7 +6,7 @@
 """
 
 from django.conf import settings
-from django.test import SimpleTestCase
+from django.test import SimpleTestCase, override_settings
 from django.core.mail.backends.locmem import EmailBackend
 from django.utils import six
 
@@ -51,6 +51,7 @@ class TestImportlib(SimpleTestCase):
         )
 
     @mock.patch('django_tools.utils.importlib.logger')
+    @override_settings(STATIC_URL=None)
     def test_get_setting_empty(self, mock_logger):
         self.assertEqual(settings.STATIC_URL, None)
         get_setting("STATIC_URL")
@@ -70,6 +71,7 @@ class TestImportlib(SimpleTestCase):
         )
 
     @mock.patch('django_tools.utils.importlib.logger')
+    @override_settings(STATIC_URL=None)
     def test_get_attr_from_settings_empty(self, mock_logger):
         self.assertEqual(settings.STATIC_URL, None)
         get_attr_from_settings("STATIC_URL", "a test")
@@ -89,6 +91,7 @@ class TestImportlib(SimpleTestCase):
         )
 
     @mock.patch('django_tools.utils.importlib.logger')
+    @override_settings(STATIC_URL=None)
     def test_get_class_instance_from_settings_empty(self, mock_logger):
         self.assertEqual(settings.STATIC_URL, None)
         get_class_instance_from_settings("STATIC_URL", "a test")

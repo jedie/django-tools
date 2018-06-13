@@ -233,9 +233,6 @@ class TestPermissions(TestUserMixin, BaseTestCase):
             'django_tools_test_app.change_permissiontestmodel',
             'django_tools_test_app.delete_permissiontestmodel',
             'django_tools_test_app.extra_permission',
-            'dynamic_site.add_sitealias',
-            'dynamic_site.change_sitealias',
-            'dynamic_site.delete_sitealias',
             'filer.add_clipboard',
             'filer.change_clipboard',
             'filer.delete_clipboard',
@@ -430,9 +427,6 @@ class TestPermissions(TestUserMixin, BaseTestCase):
             'django_tools_test_app.add_simpleparlermodel',
             'django_tools_test_app.change_simpleparlermodel',
             'django_tools_test_app.delete_simpleparlermodel',
-            'dynamic_site.add_sitealias',
-            'dynamic_site.change_sitealias',
-            'dynamic_site.delete_sitealias',
             'flatpages.add_flatpage',
             'flatpages.change_flatpage',
             'flatpages.delete_flatpage',
@@ -492,9 +486,6 @@ class TestPermissions(TestUserMixin, BaseTestCase):
             [*] django_tools_test_app.add_simpleparlermodel
             [*] django_tools_test_app.change_simpleparlermodel
             [ ] django_tools_test_app.delete_simpleparlermodel
-            [*] dynamic_site.add_sitealias
-            [*] dynamic_site.change_sitealias
-            [ ] dynamic_site.delete_sitealias
             [ ] easy_thumbnails.add_source
             [ ] easy_thumbnails.change_source
             [ ] easy_thumbnails.delete_source

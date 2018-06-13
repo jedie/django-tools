@@ -61,7 +61,8 @@ class DatabaseInfoSubprocessTests(DjangoCommandMixin, TestCase):
         output = self.call_manage_py(["database_info"], manage_dir=MANAGE_DIR)
         print(output)
         self.assertIn("engine...............: 'sqlite3'", output)
-        self.assertIn("name.................: ':memory:'", output)
+        self.assertIn("name.................:", output)
+        self.assertIn("test_project_db.sqlite3", output)
 
         self.assertIn("There are 1 connections.", output)
 
