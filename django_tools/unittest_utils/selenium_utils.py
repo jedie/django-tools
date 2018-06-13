@@ -258,6 +258,6 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
 
         cls.driver = webdriver.Chrome(
             chrome_options=chrome_options,
-            executable_path=executable
+            executable_path=str(executable) # Path() instance -> str()
         )
         cls.driver.implicitly_wait(10)
