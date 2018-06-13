@@ -22,7 +22,7 @@ class task_always_eager(override_settings):
     """
     def __init__(self):
         if celery is None:
-            raise ImportError(celery_import_error)
+            raise ImportError("Celery is needed to running tests! Origin error: %s" % celery_import_error)
 
         super(task_always_eager, self).__init__(
             CELERY_ALWAYS_EAGER=True,
