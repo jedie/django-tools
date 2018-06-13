@@ -4,7 +4,7 @@
     :copyleft: 2015-2018 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
+import os
 import sys
 import time
 import traceback
@@ -209,14 +209,42 @@ class SeleniumBaseTestCase(TestCase, LiveServerTestCase):
             self._verbose_assertion_error(err)
 
 
+def find_executeable(filename, extra_search_paths=None):
+    """
+    >>> find_executeable("not existsing file", ["/foo", "/bar"])
+    Traceback (most recent call last):
+        ...
+    FileNotFoundError: Can't find 'not existsing file' in PATH or ['/foo', '/bar']!
+
+    >>> path = find_executeable("python")
+    >>> path.is_file()
+    True
+    """
+    path = os.environ['PATH']
+    paths = path.split(os.pathsep)
+
+    if extra_search_paths:
+        paths += list(extra_search_paths)
+
+    for path in paths:
+        path = Path(path, filename)
+        if path.is_file():
+            return path
+
+    raise FileNotFoundError("Can't find %r in PATH or %s!" % (filename, extra_search_paths))
+
 
 class SeleniumChromiumTestCase(SeleniumBaseTestCase):
     """
     setup self.driver with webdriver.Chrome
     """
 
-    # Overwrite path in sub class, if needed:
-    executable_path='/usr/lib/chromium-browser/chromedriver'
+    filename = "chromedriver"
+
+    # Overwrite this in sub class, if needed:
+    extra_search_paths = (
+        '/usr/lib/chromium-browser',
+    )
 
     @classmethod
     def setUpClass(cls):
@@ -225,8 +253,11 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--headless')
         chrome_options.add_argument('--disable-gpu')
+
+        executable = find_executeable(cls.filename, cls.extra_search_paths)
+
         cls.driver = webdriver.Chrome(
             chrome_options=chrome_options,
-            executable_path=cls.executable_path
+            executable_path=executable
         )
         cls.driver.implicitly_wait(10)
