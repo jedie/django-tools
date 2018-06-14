@@ -36,6 +36,10 @@ matrix:
         - env: TOXENV=pypy3-django20
           python: pypy3
 
+before_install:
+    - sudo apt-get update
+    - sudo apt-get install chromium-chromedriver
+
 install:
     # install only the needed package to run tox
     # tox will install all needed packages
