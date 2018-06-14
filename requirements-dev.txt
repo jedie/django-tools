@@ -1,4 +1,5 @@
 -r requirements-test.txt
+django<2.0
 wheel
 twine
 python-creole

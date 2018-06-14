@@ -250,7 +250,7 @@ setup(
     include_package_data=True,  # include package data under svn source control
     python_requires='>=3.5',
     install_requires=[
-        "Django>=1.8",
+        "Django>=1.11",
         "lxml",
     ],
     zip_safe=False,
