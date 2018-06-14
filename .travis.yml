@@ -8,12 +8,6 @@ language: python
 #addons:
 #    # https://docs.travis-ci.com/user/chrome
 #    chrome: stable
-addons:
-    apt:
-        sources:
-            - google-chrome
-        packages:
-            - google-chrome-stable
 
 cache:
     directories:
@@ -44,7 +38,7 @@ matrix:
 
 before_install:
     - sudo apt-get update
-    - sudo apt-get install chromium-chromedriver
+    - sudo apt-get install chromium chromium-chromedriver
 
 install:
     # install only the needed package to run tox
