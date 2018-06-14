@@ -49,27 +49,24 @@ class DirectoryModelField(models.CharField):#, with_metaclass(models.SubfieldBas
     >>> settings.DEBUG=False # Don't add path to error messages
     >>> dir = DirectoryModelField()
     >>> dir.run_validators(settings.MEDIA_ROOT)
-    >>> try:
-    ...     dir.run_validators("does/not/exist")
-    ... except Exception as err:
-    ...     print(err.__class__.__name__, err)
-    ValidationError ["Directory doesn't exist!"]
+    >>> dir.run_validators("does/not/exist")
+    Traceback (most recent call last):
+    ...
+    django.core.exceptions.ValidationError: ["Directory doesn't exist!"]
 
-    >>> try:
-    ...     dir.run_validators("../")
-    ... except Exception as err:
-    ...     print(err.__class__.__name__, err)
-    ValidationError ['Directory is not in base path!']
+    >>> dir.run_validators("../")
+    Traceback (most recent call last):
+    ...
+    django.core.exceptions.ValidationError: ['Directory is not in base path!']
 
     >>> dir = DirectoryModelField(base_path="/")
     >>> dir.run_validators("/etc/default/")
     >>> dir.run_validators("var/log")
 
-    >>> try:
-    ...     dir.run_validators("../bullshit")
-    ... except Exception as err:
-    ...     print(err.__class__.__name__, err)
-    ValidationError ["Directory doesn't exist!"]
+    >>> dir.run_validators("../bullshit")
+    Traceback (most recent call last):
+    ...
+    django.core.exceptions.ValidationError: ["Directory doesn't exist!"]
     """
     default_validators = []
     description = _("A existing/accessible directory")
