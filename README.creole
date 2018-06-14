@@ -189,10 +189,6 @@ A ready to use **Chromium test case** is here: {{{django_tools.unittest_utils.se
 
 A base class with some nice helper is here: {{{django_tools.unittest_utils.selenium_utils.SeleniumBaseTestCase}}}
 
-A example usage are the tests here:
-
-* [[https://github.com/jedie/django-tools/blob/master/django_tools/django_tools_tests/test_unittest_selenium.py|/django_tools/django_tools_tests/test_unittest_selenium.py]]
-
 **Note:**
 
 To use {{{SeleniumChromiumTestCase}}} you need the **Chromium Browser WebDriver** e.g.: {{{apt install chromium-chromedriver}}}
@@ -210,6 +206,40 @@ e.g.:
 geckodriver 0.20.1
 ...
 }}}
+
+==== usage
+
+e.g.:
+{{{
+from django_tools.unittest_utils.selenium_utils import (
+    SeleniumChromiumTestCase, SeleniumFirefoxTestCase, chromium_available, firefox_available
+)
+
+
+@unittest.skipUnless(chromium_available(), "Skip because Chromium is not available!")
+class ExampleChromiumTests(SeleniumChromiumTestCase):
+
+    def test_admin_login_page(self):
+        self.driver.get(self.live_server_url + "/admin/login/")
+        self.assert_equal_page_title("Log in | Django site admin")
+        self.assert_in_page_source('<form action="/admin/login/" method="post" id="login-form">')
+        self.assert_no_javascript_alert()
+
+
+@unittest.skipUnless(firefox_available(), "Skip because Firefox is not available!")
+class ExampleFirefoxTests(SeleniumFirefoxTestCase):
+
+    def test_admin_login_page(self):
+        self.driver.get(self.live_server_url + "/admin/login/")
+        self.assert_equal_page_title("Log in | Django site admin")
+        self.assert_in_page_source('<form action="/admin/login/" method="post" id="login-form">')
+        self.assert_no_javascript_alert()
+}}}
+
+See also here:
+
+* [[https://github.com/jedie/django-tools/blob/master/django_tools/django_tools_tests/test_unittest_selenium.py|/django_tools/django_tools_tests/test_unittest_selenium.py]]
+
 
 === Mockup utils
 
