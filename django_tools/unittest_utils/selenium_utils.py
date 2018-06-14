@@ -207,14 +207,14 @@ class SeleniumBaseTestCase(TestCase, StaticLiveServerTestCase):
             self._verbose_assertion_error(err)
 
 
-def find_executeable(filename, extra_search_paths=None):
+def find_executable(filename, extra_search_paths=None):
     """
-    >>> find_executeable("not existsing file", ["/foo", "/bar"])
+    >>> find_executable("not existsing file", ["/foo", "/bar"])
     Traceback (most recent call last):
         ...
     FileNotFoundError: Can't find 'not existsing file' in PATH or ['/foo', '/bar']!
 
-    >>> path = find_executeable("python")
+    >>> path = find_executable("python")
     >>> path.is_file()
     True
     """
@@ -236,7 +236,7 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
     """
     TestCase with Selenium and the Chromium WebDriver
     Note:
-        Needs 'chromium-chromedriver' executeable!
+        Needs 'chromium-chromedriver' executable!
         See README.creole for more info
 
     usage e.g.:
@@ -273,7 +273,7 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
         for argument in cls.options:
             chrome_options.add_argument(argument)
 
-        executable = find_executeable(cls.filename, cls.extra_search_paths)
+        executable = find_executable(cls.filename, cls.extra_search_paths)
 
         cls.driver = webdriver.Chrome(
             chrome_options=chrome_options,
@@ -286,7 +286,7 @@ class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
     """
     TestCase with Selenium and the Firefox WebDriver
     Note:
-        Needs 'geckodriver' executeable!
+        Needs 'geckodriver' executable!
         See README.creole for more info
 
     usage e.g.:
