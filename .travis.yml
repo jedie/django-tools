@@ -7,8 +7,6 @@ group: deprecated-2017Q4
 language: python
 
 addons:
-    env:
-        - MOZ_HEADLESS=1
     addons:
         firefox: latest
 
