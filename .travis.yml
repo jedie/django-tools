@@ -43,7 +43,7 @@ matrix:
 
 before_install:
     - sudo apt-get update
-    - sudo apt-get install chromium chromium-chromedriver
+    - sudo apt-get install chromium-browser chromium-chromedriver
 
 install:
     # install only the needed package to run tox
