@@ -5,15 +5,13 @@ dist: trusty
 # https://blog.travis-ci.com/2017-12-12-new-trusty-images-q4-launch
 group: deprecated-2017Q4
 language: python
-#addons:
-#    # https://docs.travis-ci.com/user/chrome
-#    chrome: stable
 
 addons:
     env:
         - MOZ_HEADLESS=1
     addons:
         firefox: latest
+
 cache:
     directories:
         - $HOME/.pip-accel
@@ -44,6 +42,11 @@ matrix:
 before_install:
     - sudo apt-get update
     - sudo apt-get install chromium-browser chromium-chromedriver
+    - wget https://github.com/mozilla/geckodriver/releases/download/v0.20.1/geckodriver-v0.20.1-linux64.tar.gz -O geckodriver.tar.gz
+    - mkdir $PWD/geckodriver
+    - tar -x geckodriver -zf geckodriver.tar.gz -O > $PWD/geckodriver
+    - ls -la $PWD/geckodriver
+    - export PATH=$PATH:$PWD/geckodriver
 
 install:
     # install only the needed package to run tox
