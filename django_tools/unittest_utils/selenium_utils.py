@@ -3,6 +3,7 @@
     :copyleft: 2015-2018 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
+import logging
 import os
 import sys
 import time
@@ -10,6 +11,7 @@ import traceback
 import warnings
 from pathlib import Path
 
+from django.conf import settings
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.http import HttpResponse, SimpleCookie
 from django.test import RequestFactory, TestCase
@@ -18,6 +20,8 @@ from selenium import webdriver
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
+
+log = logging.getLogger(__name__)
 
 
 class FakedHttpResponse(HttpResponse):
@@ -227,6 +231,8 @@ def find_executable(filename, extra_search_paths=None):
     for path in paths:
         path = Path(path, filename)
         if path.is_file():
+            if not os.access(str(path), os.X_OK):
+                raise FileNotFoundError("%s exists, but it's not executable!" % path)
             return path
 
     raise FileNotFoundError("Can't find %r in PATH or %s!" % (filename, extra_search_paths))
@@ -241,8 +247,9 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
 
     usage e.g.:
 
-        from django_tools.unittest_utils.selenium_utils import SeleniumChromiumTestCase
+        from django_tools.unittest_utils.selenium_utils import SeleniumChromiumTestCase, chromium_available
 
+        @unittest.skipUnless(chromium_available(), "Skip because Chromium is not available!")
         class ChromiumTests(SeleniumChromiumTestCase):
 
             def test_admin_login_page(self):
@@ -282,6 +289,30 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
         cls.driver.implicitly_wait(10)
 
 
+
+
+def chromium_available(filename=None):
+    """
+    :return: True/False if 'chromium-chromedriver' executable can be found
+
+    >>> chromium_available()
+    True
+    >>> chromium_available("doesn't exists")
+    False
+    """
+    if filename is None:
+        filename = SeleniumChromiumTestCase.filename
+
+    try:
+        executable = find_executable(filename, SeleniumChromiumTestCase.extra_search_paths)
+    except FileNotFoundError as err:
+        log.error("Chromium is no available: %s")
+        return False
+
+    log.debug("Chromium found here: %s" % executable)
+    return True
+
+
 class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
     """
     TestCase with Selenium and the Firefox WebDriver
@@ -291,8 +322,9 @@ class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
 
     usage e.g.:
 
-        from django_tools.unittest_utils.selenium_utils import SeleniumFirefoxTestCase
+        from django_tools.unittest_utils.selenium_utils import SeleniumFirefoxTestCase, firefox_available
 
+        @unittest.skipUnless(firefox_available(), "Skip because Firefox is not available!")
         class FirefoxTests(SeleniumFirefoxTestCase):
 
             def test_admin_login_page(self):
@@ -303,6 +335,11 @@ class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
 
     see also: django_tools_tests/test_unittest_selenium.py
     """
+    filename = "geckodriver"
+
+    # Overwrite this in sub class, if needed:
+    extra_search_paths = ()
+
     options = ('-headless',)
 
     @classmethod
@@ -313,5 +350,32 @@ class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
         for argument in cls.options:
             options.add_argument(argument)
 
-        cls.driver = webdriver.Firefox(firefox_options=options)
+        executable = find_executable(cls.filename, cls.extra_search_paths)
+
+        cls.driver = webdriver.Firefox(
+            firefox_options=options,
+            executable_path=str(executable)  # Path() instance -> str()
+        )
         cls.driver.implicitly_wait(10)
+
+
+def firefox_available(filename=None):
+    """
+    :return: True/False if 'firefox-chromedriver' executable can be found
+
+    >>> firefox_available()
+    True
+    >>> firefox_available("doesn't exists")
+    False
+    """
+    if filename is None:
+        filename = SeleniumFirefoxTestCase.filename
+
+    try:
+        executable = find_executable(filename, SeleniumFirefoxTestCase.extra_search_paths)
+    except FileNotFoundError as err:
+        log.error("Firefox is no available: %s")
+        return False
+
+    log.debug("Firefox found here: %s" % executable)
+    return True

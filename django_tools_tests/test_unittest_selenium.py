@@ -3,6 +3,11 @@
     :copyleft: 2018 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
+import os
+import tempfile
+import unittest
+from pathlib import Path
+
 from django.conf import settings
 from django.contrib import auth
 from django.test import override_settings
@@ -10,10 +15,13 @@ from django.test import override_settings
 from selenium.common.exceptions import NoSuchElementException
 
 # https://github.com/jedie/django-tools
-from django_tools.unittest_utils.selenium_utils import SeleniumChromiumTestCase, SeleniumFirefoxTestCase
+from django_tools.unittest_utils.selenium_utils import (
+    SeleniumChromiumTestCase, SeleniumFirefoxTestCase, chromium_available, find_executable, firefox_available
+)
 from django_tools.unittest_utils.user import TestUserMixin
 
 
+@unittest.skipUnless(chromium_available(), "Skip because Chromium is not available!")
 class ExampleChromiumTests(SeleniumChromiumTestCase):
 
     def test_admin_login_page(self):
@@ -23,6 +31,7 @@ class ExampleChromiumTests(SeleniumChromiumTestCase):
         self.assert_no_javascript_alert()
 
 
+@unittest.skipUnless(firefox_available(), "Skip because Firefox is not available!")
 class ExampleFirefoxTests(SeleniumFirefoxTestCase):
 
     def test_admin_login_page(self):
@@ -30,6 +39,46 @@ class ExampleFirefoxTests(SeleniumFirefoxTestCase):
         self.assert_equal_page_title("Log in | Django site admin")
         self.assert_in_page_source('<form action="/admin/login/" method="post" id="login-form">')
         self.assert_no_javascript_alert()
+
+
+class SeleniumHelperTests(unittest.TestCase):
+
+    def test_find_executable(self):
+        with tempfile.NamedTemporaryFile(prefix="test_not_executable_", delete=False) as f:
+            filepath = Path(f.name).resolve()
+            self.assertTrue(filepath.is_file())
+            name = filepath.name
+            path = filepath.parent
+
+            # File is not in PATH:
+            with self.assertRaises(FileNotFoundError) as context_manager:
+                find_executable(name)
+
+            self.assertEqual(
+                context_manager.exception.args, ("Can't find '%s' in PATH or None!" % name,)
+            )
+
+            old_path = os.environ['PATH']
+            try:
+                # File is in PATH, but not executable:
+                os.environ['PATH'] += "%s%s" % (os.pathsep, path)
+                with self.assertRaises(FileNotFoundError) as context_manager:
+                    find_executable(name)
+
+                self.assertEqual(
+                    context_manager.exception.args, ("%s exists, but it's not executable!" % filepath,)
+                )
+
+                # File is in PATH and executable:
+                filepath.chmod(0x777)
+                result = find_executable(name)
+                self.assertEqual(result, filepath)
+            finally:
+                os.environ['PATH'] = old_path
+
+            # Executable file is not in PATH, but can be found via extra_search_paths:
+            result = find_executable(name, extra_search_paths=(path,))
+            self.assertEqual(result, filepath)
 
 
 class SeleniumTestsMixin:
