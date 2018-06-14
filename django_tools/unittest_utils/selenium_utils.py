@@ -1,4 +1,3 @@
-
 """
     :created: 2015 by Jens Diemer
     :copyleft: 2015-2018 by the django-tools team, see AUTHORS for more details.
@@ -11,8 +10,9 @@ import traceback
 import warnings
 from pathlib import Path
 
-from django.http import HttpRequest, HttpResponse, SimpleCookie
-from django.test import LiveServerTestCase, RequestFactory, TestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.http import HttpResponse, SimpleCookie
+from django.test import RequestFactory, TestCase
 
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException, WebDriverException
@@ -62,7 +62,7 @@ def selenium2faked_response(driver, client, client_class):
                 self.assertNotContains(response, "<h1>foobar</h1>", html=True)
     """
     response = FakedHttpResponse(content=driver.page_source)
-    response.client = client_class() # Fresh Client() instance
+    response.client = client_class()  # Fresh Client() instance
 
     # Add 'response.client.cookies':
     # driver.get_cookies() is a simple list of dict items, e.g.:
@@ -87,7 +87,7 @@ def selenium2faked_response(driver, client, client_class):
 
     help(driver)
 
-    response.request=RequestFactory()
+    response.request = RequestFactory()
     response.request.path = driver.current_url
 
     return response
@@ -95,19 +95,19 @@ def selenium2faked_response(driver, client, client_class):
 
 def selenium2fakes_response(*args, **kwargs):
     warnings.warn(
-        "selenium2fakes_response() is deprecated, use selenium2faked_response() !",
-        category=DeprecationWarning
+        "selenium2fakes_response() is deprecated, use selenium2faked_response() !", category=DeprecationWarning
     )
     return selenium2faked_response(*args, **kwargs)
 
 
-class SeleniumBaseTestCase(TestCase, LiveServerTestCase):
+class SeleniumBaseTestCase(TestCase, StaticLiveServerTestCase):
     """
     inherit only from 'LiveServerTestCase' will result in
     a empty database after test run. See:
 
     https://github.com/pytest-dev/pytest-django/issues/613
     """
+
     @classmethod
     def tearDownClass(cls):
         cls.driver.quit()
@@ -123,9 +123,7 @@ class SeleniumBaseTestCase(TestCase, LiveServerTestCase):
         Display page_source on error.
         """
         try:
-            check = WebDriverWait(self.driver, timeout).until(
-                conditions
-            )
+            check = WebDriverWait(self.driver, timeout).until(conditions)
         except TimeoutException as err:
             print("\nError: %s\n%s\npage source:\n%s\n" % (msg, err, self.driver.page_source))
             raise
@@ -184,7 +182,7 @@ class SeleniumBaseTestCase(TestCase, LiveServerTestCase):
         alert = expected_conditions.alert_is_present()(self.driver)
         if alert != False:
             alert_text = alert.text
-            alert.accept() # Confirm a alert dialog, otherwise access to driver.page_source will failed!
+            alert.accept()  # Confirm a alert dialog, otherwise access to driver.page_source will failed!
             try:
                 raise self.failureException("Alert is preset: %s" % alert_text)
             except AssertionError as err:
@@ -236,28 +234,84 @@ def find_executeable(filename, extra_search_paths=None):
 
 class SeleniumChromiumTestCase(SeleniumBaseTestCase):
     """
-    setup self.driver with webdriver.Chrome
+    TestCase with Selenium and the Chromium WebDriver
+    Note:
+        Needs 'chromium-chromedriver' executeable!
+        See README.creole for more info
+
+    usage e.g.:
+
+        from django_tools.unittest_utils.selenium_utils import SeleniumChromiumTestCase
+
+        class ChromiumTests(SeleniumChromiumTestCase):
+
+            def test_admin_login_page(self):
+                self.driver.get(self.live_server_url + "/admin/login/")
+                self.assert_equal_page_title("Log in | Django site admin")
+                self.assert_in_page_source('<form action="/admin/login/" method="post" id="login-form">')
+                self.assert_no_javascript_alert()
+
+    see also: django_tools_tests/test_unittest_selenium.py
     """
 
     filename = "chromedriver"
 
     # Overwrite this in sub class, if needed:
-    extra_search_paths = (
-        '/usr/lib/chromium-browser',
+    extra_search_paths = ('/usr/lib/chromium-browser',)
+
+    options = (
+        '--no-sandbox',
+        '--headless',
+        '--disable-gpu',
     )
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
         chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument('--no-sandbox')
-        chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--disable-gpu')
+        for argument in cls.options:
+            chrome_options.add_argument(argument)
 
         executable = find_executeable(cls.filename, cls.extra_search_paths)
 
         cls.driver = webdriver.Chrome(
             chrome_options=chrome_options,
-            executable_path=str(executable) # Path() instance -> str()
+            executable_path=str(executable)  # Path() instance -> str()
         )
+        cls.driver.implicitly_wait(10)
+
+
+class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
+    """
+    TestCase with Selenium and the Firefox WebDriver
+    Note:
+        Needs 'geckodriver' executeable!
+        See README.creole for more info
+
+    usage e.g.:
+
+        from django_tools.unittest_utils.selenium_utils import SeleniumFirefoxTestCase
+
+        class FirefoxTests(SeleniumFirefoxTestCase):
+
+            def test_admin_login_page(self):
+                self.driver.get(self.live_server_url + "/admin/login/")
+                self.assert_equal_page_title("Log in | Django site admin")
+                self.assert_in_page_source('<form action="/admin/login/" method="post" id="login-form">')
+                self.assert_no_javascript_alert()
+
+    see also: django_tools_tests/test_unittest_selenium.py
+    """
+    options = ('-headless',)
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        options = webdriver.FirefoxOptions()
+        for argument in cls.options:
+            options.add_argument(argument)
+
+        cls.driver = webdriver.Firefox(firefox_options=options)
         cls.driver.implicitly_wait(10)

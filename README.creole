@@ -184,13 +184,32 @@ and unittests: [[https://github.com/jedie/django-tools/blob/master/django_tools_
 
 === Selenium Test Cases
 
-A ready to use chromium test case is here: {{{django_tools.unittest_utils.selenium_utils.SeleniumChromiumTestCase}}}
+A ready to use **Firefox test case** is here: {{{django_tools.unittest_utils.selenium_utils.SeleniumFirefoxTestCase}}}
+A ready to use **Chromium test case** is here: {{{django_tools.unittest_utils.selenium_utils.SeleniumChromiumTestCase}}}
+
 A base class with some nice helper is here: {{{django_tools.unittest_utils.selenium_utils.SeleniumBaseTestCase}}}
 
 A example usage are the tests here:
 
 * [[https://github.com/jedie/django-tools/blob/master/django_tools/django_tools_tests/test_unittest_selenium.py|/django_tools/django_tools_tests/test_unittest_selenium.py]]
 
+**Note:**
+
+To use {{{SeleniumChromiumTestCase}}} you need the **Chromium Browser WebDriver** e.g.: {{{apt install chromium-chromedriver}}}
+
+To use {{{SeleniumFirefoxTestCase}}} you need the **Firefox Browser WebDriver** aka **geckodriver**
+
+e.g.:
+{{{
+~$ cd /tmp
+/tmp$ wget https://github.com/mozilla/geckodriver/releases/download/v0.20.1/geckodriver-v0.20.1-linux64.tar.gz -O geckodriver.tar.gz
+/tmp$ sudo sh -c 'tar -x geckodriver -zf geckodriver.tar.gz -O > /usr/bin/geckodriver'
+/tmp$ sudo chmod +x /usr/bin/geckodriver
+/tmp$ rm geckodriver.tar.gz
+/tmp$ geckodriver --version
+geckodriver 0.20.1
+...
+}}}
 
 === Mockup utils
 
@@ -650,7 +669,7 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.39.6...master|compare v0.39.6...master]]
-** NEW: selenium test cases in {{{django_tools.unittest_utils.selenium_utils}}}
+** NEW: selenium chrome and firefox test cases in {{{django_tools.unittest_utils.selenium_utils}}}
 ** Fix test project and add {{{run_test_project_dev_server.sh}}} for easy test
 ** Fixing tests
 * v0.39.6 - 04.05.2018 - [[https://github.com/jedie/django-tools/compare/v0.39.5...v0.39.6|compare v0.39.5...v0.39.6]]

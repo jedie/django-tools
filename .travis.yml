@@ -9,6 +9,11 @@ language: python
 #    # https://docs.travis-ci.com/user/chrome
 #    chrome: stable
 
+addons:
+    env:
+        - MOZ_HEADLESS=1
+    addons:
+        firefox: latest
 cache:
     directories:
         - $HOME/.pip-accel
