@@ -40,14 +40,17 @@ matrix:
           python: pypy3
 
 before_install:
+    #
+    # install Chromium Browser + Selenium WebDriver for it:
     - sudo apt-get update
     - sudo apt-get install chromium-browser chromium-chromedriver
+    #
+    # install Selenium Firefox WebDriver 'geckodriver':
     - wget https://github.com/mozilla/geckodriver/releases/download/v0.20.1/geckodriver-v0.20.1-linux64.tar.gz -O geckodriver.tar.gz
     - mkdir $PWD/geckodriver
     - tar -xvf geckodriver.tar.gz -C $PWD/geckodriver
     - ls -la $PWD/geckodriver
     - export PATH=$PATH:$PWD/geckodriver
-    - whereis geckodriver
     - geckodriver --version
 
 install:
