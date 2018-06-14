@@ -10,6 +10,34 @@ Look also at the siblings project: [[https://github.com/jedie/django-cms-tools|d
 | {{https://landscape.io/github/jedie/django-tools/master/landscape.svg|Status on landscape.io}} | [[https://landscape.io/github/jedie/django-tools/master|landscape.io/github/jedie/django-tools/master]] |
 
 
+== try-out
+
+e.g.:
+{{{
+# create a python virtualenv:
+~$ python3 -Im venv DjangoToolsEnv
+
+# activate the created virtualenv:
+~$ cd DjangoToolsEnv/
+~/DjangoToolsEnv$ source bin/activate
+
+# Upgrate pip:
+(DjangoToolsEnv) ~/DjangoToolsEnv$ pip3 install --upgrade pip
+
+# install django-tools:
+(DjangoToolsEnv) ~/DjangoToolsEnv$ pip3 install -e git+https://github.com/jedie/django-tools.git@master#egg=django_tools
+
+# install dependencies:
+(DjangoToolsEnv) ~/DjangoToolsEnv$ cd src/django-tools/
+(DjangoToolsEnv) ~/DjangoToolsEnv/src/django-tools$ pip install -r requirements-dev.txt
+
+# run tests:
+(DjangoToolsEnv) ~/DjangoToolsEnv/src/django-tools$ ./setup.py test
+
+# start test project:
+(DjangoToolsEnv) ~/DjangoToolsEnv/src/django-tools$ ./run_test_project_dev_server.sh 
+}}}
+
 == existing stuff
 
 
