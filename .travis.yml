@@ -8,6 +8,12 @@ language: python
 #addons:
 #    # https://docs.travis-ci.com/user/chrome
 #    chrome: stable
+addons:
+    apt:
+        sources:
+            - google-chrome
+        packages:
+            - google-chrome-stable
 
 cache:
     directories:
