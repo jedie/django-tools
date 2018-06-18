@@ -107,9 +107,13 @@ def selenium2fakes_response(*args, **kwargs):
 class SeleniumBaseTestCase(TestCase, StaticLiveServerTestCase):
     """
     inherit only from 'LiveServerTestCase' will result in
-    a empty database after test run. See:
+    a empty database after test run.
+
+    See:
 
     https://github.com/pytest-dev/pytest-django/issues/613
+    https://code.djangoproject.com/ticket/25251
+    https://github.com/django/django/pull/7528
     """
 
     @classmethod
