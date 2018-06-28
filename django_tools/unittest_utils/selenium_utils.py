@@ -118,7 +118,8 @@ class SeleniumBaseTestCase(TestCase, StaticLiveServerTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        cls.driver.quit()
+        if cls.driver is not None:
+            cls.driver.quit()
         super().tearDownClass()
 
     def setUp(self):
@@ -284,13 +285,16 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
         for argument in cls.options:
             chrome_options.add_argument(argument)
 
-        executable = find_executable(cls.filename, cls.extra_search_paths)
-
-        cls.driver = webdriver.Chrome(
-            chrome_options=chrome_options,
-            executable_path=str(executable)  # Path() instance -> str()
-        )
-        cls.driver.implicitly_wait(10)
+        try:
+            executable = find_executable(cls.filename, cls.extra_search_paths)
+        except FileNotFoundError:
+            cls.driver = None
+        else:
+            cls.driver = webdriver.Chrome(
+                chrome_options=chrome_options,
+                executable_path=str(executable)  # Path() instance -> str()
+            )
+            cls.driver.implicitly_wait(10)
 
 
 
@@ -354,13 +358,16 @@ class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
         for argument in cls.options:
             options.add_argument(argument)
 
-        executable = find_executable(cls.filename, cls.extra_search_paths)
-
-        cls.driver = webdriver.Firefox(
-            firefox_options=options,
-            executable_path=str(executable)  # Path() instance -> str()
-        )
-        cls.driver.implicitly_wait(10)
+        try:
+            executable = find_executable(cls.filename, cls.extra_search_paths)
+        except FileNotFoundError:
+            cls.driver = None
+        else:
+            cls.driver = webdriver.Firefox(
+                firefox_options=options,
+                executable_path=str(executable)  # Path() instance -> str()
+            )
+            cls.driver.implicitly_wait(10)
 
 
 def firefox_available(filename=None):

@@ -727,6 +727,8 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.40.0...master|compare v0.40.0...master]]
+* v0.40.1 - 28.06.2018 - [[https://github.com/jedie/django-tools/compare/v0.40.0...v0.40.1|compare v0.40.0...v0.40.1]]
+** Bugfix selenium test case if executable can't be found.
 * v0.40.0 - 15.06.2018 - [[https://github.com/jedie/django-tools/compare/v0.39.6...v0.40.0|compare v0.39.6...v0.40.0]]
 ** NEW: selenium chrome and firefox test cases in {{{django_tools.unittest_utils.selenium_utils}}}
 ** Fix test project and add {{{run_test_project_dev_server.sh}}} for easy test
