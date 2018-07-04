@@ -141,10 +141,12 @@ class SeleniumTestsMixin:
 
 
 @override_settings(DEBUG=True)
+@unittest.skipUnless(chromium_available(), "Skip because Chromium is not available!")
 class SeleniumChromiumAdminTests(TestUserMixin, SeleniumChromiumTestCase, SeleniumTestsMixin):
     pass
 
 
 @override_settings(DEBUG=True)
+@unittest.skipUnless(firefox_available(), "Skip because Firefox is not available!")
 class SeleniumFirefoxAdminTests(TestUserMixin, SeleniumFirefoxTestCase, SeleniumTestsMixin):
     pass

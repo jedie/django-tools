@@ -304,8 +304,6 @@ def chromium_available(filename=None):
     """
     :return: True/False if 'chromium-chromedriver' executable can be found
 
-    >>> chromium_available()
-    True
     >>> chromium_available("doesn't exists")
     False
     """
@@ -375,8 +373,6 @@ def firefox_available(filename=None):
     """
     :return: True/False if 'firefox-chromedriver' executable can be found
 
-    >>> firefox_available()
-    True
     >>> firefox_available("doesn't exists")
     False
     """
