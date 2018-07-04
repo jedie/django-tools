@@ -726,7 +726,10 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.40.0...master|compare v0.40.0...master]]
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.40.2...master|compare v0.40.2...master]]
+* v0.40.2 - 04.07.2018 - [[https://github.com/jedie/django-tools/compare/v0.40.1...v0.40.2|compare v0.40.1...v0.40.2]]
+** Bugfix selenium Test Case if driver is None
+** Bugfix django compatibility
 * v0.40.1 - 28.06.2018 - [[https://github.com/jedie/django-tools/compare/v0.40.0...v0.40.1|compare v0.40.0...v0.40.1]]
 ** Bugfix selenium test case if executable can't be found.
 * v0.40.0 - 15.06.2018 - [[https://github.com/jedie/django-tools/compare/v0.39.6...v0.40.0|compare v0.39.6...v0.40.0]]
