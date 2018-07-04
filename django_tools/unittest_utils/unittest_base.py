@@ -8,8 +8,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
-
 import os
 import textwrap
 
@@ -79,7 +77,7 @@ class BaseUnittestCase(TestCase):
         """
         exception_text = context_manager.exception.args[0]
         if not exception_text.startswith(text):
-            msg="%r doesn't starts with %r" % (exception_text, text)
+            msg = "%r doesn't starts with %r" % (exception_text, text)
             raise self.failureException(msg)
 
     def get_admin_url(self, obj, suffix):
@@ -112,10 +110,7 @@ class BaseUnittestCase(TestCase):
         """
         Return all django message framwork entry as a normal list
         """
-        return [
-            str(message)
-            for message in response.wsgi_request._messages
-        ]
+        return [str(message) for message in response.wsgi_request._messages]
 
 
 class BaseTestCase(BaseUnittestCase):
@@ -123,9 +118,7 @@ class BaseTestCase(BaseUnittestCase):
     browser_traceback = True
 
     def raise_browser_traceback(self, response, msg):
-        debug_response(
-            response, self.browser_traceback, msg, display_tb=False
-        )
+        debug_response(response, self.browser_traceback, msg, display_tb=False)
         msg += ' (url: "%s")' % response.request.get("PATH_INFO", "???")
         raise self.failureException(msg)
 
@@ -134,7 +127,7 @@ class BaseTestCase(BaseUnittestCase):
         assert response status code, if wrong, do a browser traceback.
         """
         if response.status_code == excepted_code:
-            return # Status code is ok.
+            return  # Status code is ok.
         msg = 'assertStatusCode error: "%s" != "%s"' % (response.status_code, excepted_code)
         self.raise_browser_traceback(response, msg)
 
@@ -182,13 +175,17 @@ class BaseTestCase(BaseUnittestCase):
     def assertMessages(self, response, messages):
         self.assertEqual(self.get_messages(response), messages)
 
-    def assertResponse(self, response,
-            must_contain=None, must_not_contain=None,
-            status_code=200,
-            template_name=None,
-            messages=None,
-            html=False,
-            browser_traceback=True):
+    def assertResponse(
+        self,
+        response,
+        must_contain=None,
+        must_not_contain=None,
+        status_code=200,
+        template_name=None,
+        messages=None,
+        html=False,
+        browser_traceback=True
+    ):
         """
         Check the content of the response
         must_contain - a list with string how must be exists in the response.
@@ -197,33 +194,21 @@ class BaseTestCase(BaseUnittestCase):
         if must_contain is not None:
             for must_contain_snippet in must_contain:
                 try:
-                    self.assertContains(response, must_contain_snippet,
-                        status_code=status_code, html=html
-                    )
+                    self.assertContains(response, must_contain_snippet, status_code=status_code, html=html)
                 except AssertionError as err:
                     if browser_traceback:
-                        msg = 'Text not in response: "%s": %s' % (
-                            must_contain_snippet, err
-                        )
-                        debug_response(
-                            response, self.browser_traceback, msg, display_tb=True
-                        )
+                        msg = 'Text not in response: "%s": %s' % (must_contain_snippet, err)
+                        debug_response(response, self.browser_traceback, msg, display_tb=True)
                     raise
 
         if must_not_contain is not None:
             for must_not_contain_snippet in must_not_contain:
                 try:
-                    self.assertNotContains(response, must_not_contain_snippet,
-                        status_code=status_code, html=html
-                    )
+                    self.assertNotContains(response, must_not_contain_snippet, status_code=status_code, html=html)
                 except AssertionError as err:
                     if browser_traceback:
-                        msg = 'Text should not be in response: "%s": %s' % (
-                            must_not_contain_snippet, err
-                        )
-                        debug_response(
-                            response, self.browser_traceback, msg, display_tb=True
-                        )
+                        msg = 'Text should not be in response: "%s": %s' % (must_not_contain_snippet, err)
+                        debug_response(response, self.browser_traceback, msg, display_tb=True)
                     raise
 
         try:
@@ -231,9 +216,7 @@ class BaseTestCase(BaseUnittestCase):
         except AssertionError as err:
             if browser_traceback:
                 msg = 'Wrong status code: %s' % err
-                debug_response(
-                    response, self.browser_traceback, msg, display_tb=True
-                )
+                debug_response(response, self.browser_traceback, msg, display_tb=True)
             raise
 
         if template_name is not None:
@@ -242,9 +225,7 @@ class BaseTestCase(BaseUnittestCase):
             except AssertionError as err:
                 if browser_traceback:
                     msg = 'Template not used: %s' % err
-                    debug_response(
-                        response, self.browser_traceback, msg, display_tb=True
-                    )
+                    debug_response(response, self.browser_traceback, msg, display_tb=True)
                 raise
 
         if messages is not None:
@@ -253,7 +234,5 @@ class BaseTestCase(BaseUnittestCase):
             except AssertionError as err:
                 if browser_traceback:
                     msg = 'Wrong messages: %s' % err
-                    debug_response(
-                        response, self.browser_traceback, msg, display_tb=True
-                    )
+                    debug_response(response, self.browser_traceback, msg, display_tb=True)
                 raise
