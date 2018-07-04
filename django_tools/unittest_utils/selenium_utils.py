@@ -124,7 +124,8 @@ class SeleniumBaseTestCase(TestCase, StaticLiveServerTestCase):
 
     def setUp(self):
         super().setUp()
-        self.driver.delete_all_cookies()
+        if self.driver is not None:
+            self.driver.delete_all_cookies()
 
     def _wait(self, conditions, timeout=5, msg="wait timeout"):
         """
