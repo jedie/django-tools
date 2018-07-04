@@ -72,5 +72,7 @@ target/
 # Test project:
 test_project_db.sqlite3
 filer_public/
-django_tools_test_project/media/
-django_tools_test_project/static/
+django_tools_test_project/media/*
+!django_tools_test_project/media/.gitkeep
+django_tools_test_project/static/*
+!django_tools_test_project/static/.gitkeep
