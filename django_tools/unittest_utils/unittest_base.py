@@ -13,8 +13,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import os
 import textwrap
 
-from django.core import urlresolvers
 from django.test import TestCase
+from django.urls import reverse
 
 from .BrowserDebug import debug_response
 
@@ -84,7 +84,7 @@ class BaseUnittestCase(TestCase):
 
     def get_admin_url(self, obj, suffix):
         opts = obj._meta
-        change_url = urlresolvers.reverse(
+        change_url = reverse(
             'admin:%s_%s_%s' % (opts.app_label, opts.model_name, suffix),
             args=(obj.pk,),
         )
@@ -105,9 +105,7 @@ class BaseUnittestCase(TestCase):
             "/admin/<app_name>/<model_name>/add/"
         """
         opts = obj._meta
-        change_url = urlresolvers.reverse(
-            'admin:%s_%s_add' % (opts.app_label, opts.model_name),
-        )
+        change_url = reverse('admin:%s_%s_add' % (opts.app_label, opts.model_name),)
         return change_url
 
     def get_messages(self, response):
