@@ -726,7 +726,8 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.40.2...master|compare v0.40.2...master]]
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.40.3...master|compare v0.40.3...master]]
+* v0.40.3 - 18.07.2018 - [[https://github.com/jedie/django-tools/compare/v0.40.2...v0.40.3|compare v0.40.2...v0.40.3]]
 ** Enhance selenium test cases:
 *** NEW: {{{assert_visible_by_id()}}}
 *** NEW: {{{assert_clickable_by_id()}}}
