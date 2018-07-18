@@ -727,6 +727,13 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.40.2...master|compare v0.40.2...master]]
+** Enhance selenium test cases:
+*** NEW: {{{assert_visible_by_id()}}}
+*** NEW: {{{assert_clickable_by_id()}}}
+*** NEW: {{{assert_clickable_by_xpath()}}}
+*** add {{{desired_capabilities}}} to firefox and chrome test cases
+*** enable logging in chrome test case
+*** NEW: {{{assert_in_browser_log()}}} in chrome test case
 * v0.40.2 - 04.07.2018 - [[https://github.com/jedie/django-tools/compare/v0.40.1...v0.40.2|compare v0.40.1...v0.40.2]]
 ** Bugfix selenium Test Case if driver is None
 ** Bugfix django compatibility
