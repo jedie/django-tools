@@ -17,7 +17,9 @@ from django.http import HttpResponse, SimpleCookie
 from django.test import RequestFactory, TestCase
 
 from selenium import webdriver
-from selenium.common.exceptions import TimeoutException, WebDriverException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException, WebDriverException
+from selenium.webdriver import DesiredCapabilities
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -216,6 +218,39 @@ class SeleniumBaseTestCase(TestCase, StaticLiveServerTestCase):
         except AssertionError as err:
             self._verbose_assertion_error(err)
 
+    def assert_visible_by_id(self, id, timeout=10):
+        """
+        Test that an element by ID is present on the DOM of a page and visible.
+        """
+        locator = (By.ID, id)
+        self._wait(
+            conditions=expected_conditions.visibility_of_element_located(locator),
+            timeout=timeout,
+            msg="Wait for '#%s' to be visible. (timeout: %i)" % (id, timeout)
+        )
+
+    def assert_clickable_by_id(self, id, timeout=10):
+        """
+        Test that an element by ID is visible and enabled such that you can click it
+        """
+        locator = (By.ID, id)
+        self._wait(
+            conditions=expected_conditions.element_to_be_clickable(locator),
+            timeout=timeout,
+            msg="Wait for '#%s' to be clickable. (timeout: %i)" % (id, timeout)
+        )
+
+    def assert_clickable_by_xpath(self, xpath, timeout=10):
+        """
+        Test that an element by ID is visible and enabled such that you can click it
+        """
+        locator = (By.XPATH, xpath)
+        self._wait(
+            conditions=expected_conditions.element_to_be_clickable(locator),
+            timeout=timeout,
+            msg="Wait for '%s' to be clickable. (timeout: %i)" % (xpath, timeout)
+        )
+
 
 def find_executable(filename, extra_search_paths=None):
     """
@@ -277,6 +312,15 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
         '--headless',
         '--disable-gpu',
     )
+    desired_capabilities = {
+        'loggingPrefs': {
+            'browser': 'ALL',
+            'client': 'ALL',
+            'driver': 'ALL',
+            'performance': 'ALL',
+            'server': 'ALL'
+        },
+    }
 
     @classmethod
     def setUpClass(cls):
@@ -291,13 +335,29 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
         except FileNotFoundError:
             cls.driver = None
         else:
+            desired = DesiredCapabilities.CHROME
+            for key, value in cls.desired_capabilities.items():
+                desired[key] = value
+
             cls.driver = webdriver.Chrome(
                 chrome_options=chrome_options,
-                executable_path=str(executable)  # Path() instance -> str()
+                executable_path=str(executable),  # Path() instance -> str()
+                desired_capabilities=desired,
             )
             cls.driver.implicitly_wait(10)
 
+    def get_browser_log(self):
+        assert "browser" in self.driver.log_types
+        browser_log = self.driver.get_log("browser")
+        lines = []
+        for entry in browser_log:
+            lines.append(("{timestamp} {level} {source} {message}").format(**entry))
+        return "\n".join(lines)
 
+    def assert_in_browser_log(self, text):
+        log = self.get_browser_log()
+        print(log)
+        self.assertIn(text, log)
 
 
 def chromium_available(filename=None):
@@ -348,6 +408,15 @@ class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
     extra_search_paths = ()
 
     options = ('-headless',)
+    desired_capabilities = {
+        'loggingPrefs': {
+            'browser': 'ALL',
+            'client': 'ALL',
+            'driver': 'ALL',
+            'performance': 'ALL',
+            'server': 'ALL'
+        },
+    }
 
     @classmethod
     def setUpClass(cls):
@@ -362,9 +431,14 @@ class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
         except FileNotFoundError:
             cls.driver = None
         else:
+            desired = DesiredCapabilities.FIREFOX
+            for key, value in cls.desired_capabilities.items():
+                desired[key] = value
+
             cls.driver = webdriver.Firefox(
                 firefox_options=options,
-                executable_path=str(executable)  # Path() instance -> str()
+                executable_path=str(executable),  # Path() instance -> str()
+                desired_capabilities=desired,
             )
             cls.driver.implicitly_wait(10)
 

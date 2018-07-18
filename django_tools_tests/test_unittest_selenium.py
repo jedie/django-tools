@@ -54,9 +54,7 @@ class SeleniumHelperTests(unittest.TestCase):
             with self.assertRaises(FileNotFoundError) as context_manager:
                 find_executable(name)
 
-            self.assertEqual(
-                context_manager.exception.args, ("Can't find '%s' in PATH or None!" % name,)
-            )
+            self.assertEqual(context_manager.exception.args, ("Can't find '%s' in PATH or None!" % name,))
 
             old_path = os.environ['PATH']
             try:
@@ -65,9 +63,7 @@ class SeleniumHelperTests(unittest.TestCase):
                 with self.assertRaises(FileNotFoundError) as context_manager:
                     find_executable(name)
 
-                self.assertEqual(
-                    context_manager.exception.args, ("%s exists, but it's not executable!" % filepath,)
-                )
+                self.assertEqual(context_manager.exception.args, ("%s exists, but it's not executable!" % filepath,))
 
                 # File is in PATH and executable:
                 filepath.chmod(0x777)
@@ -93,17 +89,14 @@ class SeleniumTestsMixin:
 
         url = self.live_server_url + "/admin/login/?next=/admin/"
         self.driver.get(url)
-        # self._wait(
-        #     conditions=expected_conditions.element_to_be_clickable(
-        #          (By.XPATH, login_button_xpath)
-        #     ),
-        #     timeout=3,
-        #     msg="Wait for 'login button' text",
-        # )
 
         self.assert_in_page_source("Log in | Django site admin")
         self.assert_not_in_page_source("errornote")
         self.assert_not_in_page_source("Please enter the correct username and password")
+
+        self.assert_visible_by_id("id_username", timeout=2)
+        self.assert_clickable_by_id("id_password", timeout=2)
+        self.assert_clickable_by_xpath(login_button_xpath, timeout=2)
 
         try:
             username_input = self.driver.find_element_by_name("username")
@@ -117,19 +110,14 @@ class SeleniumTestsMixin:
         except NoSuchElementException as ex:
             self.fail(ex.msg)
 
-        # self._wait(
-        #     conditions=expected_conditions.element_to_be_clickable(
-        #          (By.ID, "foo bar...")
-        #     ),
-        #     timeout=10,
-        #     msg="Wait for 'login button' text",
-        # )
-
         self.assert_no_javascript_alert()
         self.assert_not_in_page_source("Please enter the correct username and password")
         self.assert_not_in_page_source("errornote")
         self.assert_equal_page_title("Site administration | Django site admin")
         self.assert_in_page_source("<strong>staff_test_user</strong>")
+
+        self.assert_visible_by_id("user-tools", timeout=2)
+        self.assert_clickable_by_id("site-name", timeout=2)
 
     def test_admin_static_files(self):
         self.driver.get(self.live_server_url + "/admin/login/?next=/admin/")
@@ -143,7 +131,15 @@ class SeleniumTestsMixin:
 @override_settings(DEBUG=True)
 @unittest.skipUnless(chromium_available(), "Skip because Chromium is not available!")
 class SeleniumChromiumAdminTests(TestUserMixin, SeleniumChromiumTestCase, SeleniumTestsMixin):
-    pass
+
+    def test_console(self):
+        self.driver.get(self.live_server_url + "/")
+
+        self.driver.execute_script("console.log('test console output 1');")
+        self.assert_in_browser_log("test console output 1")
+
+        self.driver.execute_script("console.log('test console output 2');")
+        self.assert_in_browser_log("test console output 2")
 
 
 @override_settings(DEBUG=True)
