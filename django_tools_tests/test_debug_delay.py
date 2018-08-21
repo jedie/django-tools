@@ -24,17 +24,20 @@ class CacheDelayTests(SimpleTestCase):
         super().setUp()
         cache.clear()
 
-    def test_delay(self):
-
+    def _get_request(self, url):
         rf = RequestFactory()
-        get_request = rf.get('/foo/bar/?delay=2')
-        get_request.user = AnonymousUser()
+        request = rf.get(url)
+        request.user = AnonymousUser()
+        return request
+
+    def test_delay(self):
+        request = self._get_request("/foo/bar/?delay=2")
 
         with LoggingBuffer(name="django_tools.debug.delay", level=logging.DEBUG) as log:
             CacheDelay(
                 key="delay", only_debug=False
             ).load(
-                get_request,
+                request,
                 query_string="delay",
             )
 
@@ -62,17 +65,66 @@ class CacheDelayTests(SimpleTestCase):
 
     @override_settings(DEBUG=False)
     def test_only_debug(self):
-        rf = RequestFactory()
-        get_request = rf.get('/foo/bar/?delay=0.01')
-        get_request.user = AnonymousUser()
+        request = self._get_request("/foo/bar/?delay=2")
 
         with LoggingBuffer(name="django_tools.debug.delay", level=logging.DEBUG) as log:
             CacheDelay(key="delay").load(
-                get_request,
+                request,
                 query_string="delay",
             )
 
         log.assert_messages(["DEBUG:django_tools.debug.delay:Ignore ?delay, because DEBUG is not ON!"])
+
+    def test_default_value(self):
+        request = self._get_request("/foo/bar/?test_default_value")
+
+        with LoggingBuffer(name="django_tools.debug.delay", level=logging.DEBUG) as log:
+            CacheDelay(
+                key="delay", only_debug=False
+            ).load(
+                request,
+                query_string="test_default_value",
+                default=123,
+            )
+
+        log.assert_messages([
+            "INFO:django_tools.debug.delay:Add 'test_default_value' value to cache",
+            "WARNING:django_tools.debug.delay:Save 123 sec. from 'test_default_value' for 'delay' into cache"
+        ])
+
+        with LoggingBuffer(name="django_tools.debug.delay", level=logging.DEBUG) as log:
+            with mock.patch.object(time, 'sleep', return_value=None) as mock_method:
+                CacheDelay(key="delay", only_debug=False).sleep()
+
+        log.assert_messages(["WARNING:django_tools.debug.delay:Delay 123 sec. for 'delay'"])
+
+        mock_method.assert_called_once_with(123)
+
+    def test_delete_value(self):
+        request = self._get_request("/foo/bar/?test_delete_value=3")
+
+        with LoggingBuffer(name="django_tools.debug.delay", level=logging.DEBUG) as log:
+            CacheDelay(
+                key="delay", only_debug=False
+            ).load(
+                request,
+                query_string="test_delete_value",
+            )
+
+        log.assert_messages([
+            "INFO:django_tools.debug.delay:Add 'test_delete_value' value to cache",
+            "WARNING:django_tools.debug.delay:Save 3 sec. from 'test_delete_value' for 'delay' into cache"
+        ])
+
+        with LoggingBuffer(name="django_tools.debug.delay", level=logging.DEBUG) as log:
+            CacheDelay(
+                key="delay", only_debug=False
+            ).load(
+                request,
+                query_string="not_existing_key",
+            )
+
+        log.assert_messages(["DEBUG:django_tools.debug.delay:Delete 'delay' delay from cache"])
 
 
 class SessionDelayTests(TestUserMixin, BaseTestCase):
