@@ -19,6 +19,7 @@ from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView
 
 # https://github.com/jedie/django-tools
+from django_tools.debug.delay import SessionDelay
 from django_tools.middlewares.ThreadLocal import get_current_request
 
 
@@ -67,3 +68,25 @@ def create_message_normal_response(request, msg):
 def create_message_redirect_response(request, msg):
     messages.info(request, msg)
     return HttpResponseRedirect("/create_message_redirect_response/")
+
+
+def delay_view(request):
+    """
+    Used in django_tools_tests.test_debug_delay.SessionDelayTests
+    """
+    SessionDelay(
+        request,
+        key="delay_view",
+        only_debug=False
+    ).load(
+        request,
+        query_string="sec",
+        default=5
+    )
+
+    SessionDelay(
+        request,
+        key="delay_view"
+    ).sleep()
+
+    return HttpResponse("django_tools_test_project.django_tools_test_app.views.delay_view")

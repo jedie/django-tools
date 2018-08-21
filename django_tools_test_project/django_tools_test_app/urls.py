@@ -13,7 +13,7 @@ from django.contrib import admin
 
 from django_tools_test_project.django_tools_test_app.views import (
     TemplateDoesNotExists, create_message_normal_response, create_message_redirect_response, display_site,
-    get_current_get_parameters, raise_exception
+    get_current_get_parameters, raise_exception, delay_view
 )
 
 admin.autodiscover()
@@ -29,6 +29,8 @@ urlpatterns = [
 
     url(r'^create_message_normal_response/(?P<msg>.*?)/$', create_message_normal_response),
     url(r'^create_message_redirect_response/(?P<msg>.*?)/$', create_message_redirect_response),
+
+    url(r'^delay/$', delay_view),
 ]
 
 if settings.DEBUG:

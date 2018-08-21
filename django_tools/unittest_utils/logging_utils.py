@@ -1,31 +1,30 @@
-
 """
     :created: 2015 by Jens Diemer
     :copyleft: 2015-2018 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-
 import logging
 from logging.handlers import MemoryHandler
 
 
 class LoggingBuffer:
-    def __init__(self, name=None, level=logging.DEBUG, formatter = None):
+
+    def __init__(self, name=None, level=logging.DEBUG, formatter=None):
         """
         To get the logger name, execute this in `./manage.py shell` e.g.:
 
         import logging;print("\n".join(sorted(logging.Logger.manager.loggerDict.keys())))
         """
         self.buffer = []
-        self.level=level
+        self.level = level
         if formatter is None:
             self.formatter = logging.Formatter(logging.BASIC_FORMAT)
         else:
             self.formatter = formatter
 
         self.log = logging.getLogger(name)
-        self.old_handlers = self.log.handlers[:] # .copy()
+        self.old_handlers = self.log.handlers[:]  # .copy()
         self.old_level = self.log.level
         self.log.setLevel(level)
         self.log.handlers = [MemoryHandler(capacity=0, flushLevel=level, target=self)]
@@ -43,8 +42,15 @@ class LoggingBuffer:
         self.log.handlers = self.old_handlers
         self.log.level = self.old_level
 
+    def get_message_list(self):
+        return [self.formatter.format(record) for record in self.buffer]
+
     def get_messages(self):
-        return "\n".join([self.formatter.format(record) for record in self.buffer])
+        return "\n".join(self.get_message_list())
+
+    def assert_messages(self, reference):
+        messages = self.get_message_list()
+        assert messages == reference, "%r != %r" % (messages, reference)
 
 
 class CutPathnameLogRecordFactory:
@@ -68,14 +74,15 @@ class CutPathnameLogRecordFactory:
             # ...
         }
     """
+
     def __init__(self, max_length=40):
         self.max_length = max_length
         self.origin_factory = logging.getLogRecordFactory()
 
     def cut_path(self, pathname):
-        if len(pathname)<=self.max_length:
+        if len(pathname) <= self.max_length:
             return pathname
-        return "...%s" % pathname[-(self.max_length-3):]
+        return "...%s" % pathname[-(self.max_length - 3):]
 
     def __call__(self, *args, **kwargs):
         record = self.origin_factory(*args, **kwargs)

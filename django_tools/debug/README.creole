@@ -1,5 +1,78 @@
 == debug tools
 
+=== Delay tools
+
+Sometimes you want to simulate when processing takes a little longer.
+There exists {{{django_tools.debug.delay.SessionDelay}}} and {{{django_tools.debug.delay.CacheDelay}}} for this.
+The usage will create logging entries and user messages, if user is authenticated.
+
+{{{SessionDelay}}} stores the sleep seconds into {{{request.session}}} and {{{CacheDelay}}} used the django cache backend.
+
+{{{SessionDelay}}} can be used if {{{request}}} object is available while the delay is to be executed. e.g.: usage in views.
+{{{CacheDelay}}} can be used to set the delay value in a view but the delay should be executed where no {{{request}}} is available, e.g.: in models or tasks.
+
+
+{{{SessionDelay}}} usage e.g.:
+
+{{{
+def your_view(request):
+    # Save delay value of "?delay" if it appears in the URL to request.session:
+    SessionDelay(
+        request,
+        key="slow_foo", # Used as session key
+        only_debug=True # Delay only if settings.DEBUG == True
+    ).load(
+        request,
+        query_string="delay", # The GET parameter name
+        default=5 # fallback value if GET parameter contains no value, e.g.: "?delay"
+    )
+
+    #...do something...
+
+    # get "?delay=XX" from session and delay with time.sleep() if exists:
+    SessionDelay(
+        request,
+        key="slow_foo"
+    ).sleep()
+    
+    return your_response
+}}}
+
+
+{{{CacheDelay}}} usage e.g.:
+
+{{{
+class FooBarModel(models.Model):
+    # ...
+    def save(self, **kwargs):
+        # Get the "?delay=XX" from cache and delay with time.sleep() if exists:
+        CacheDelay(key="slow_save_%s" % instance.pk).sleep()
+
+        super().save(**kwargs)
+
+
+def your_view(request):
+
+    instance = get_foo_bar_model_instance(request)
+
+    # Save delay value of "?delay" if it appears in the URL to cache:
+    CacheDelay(
+        key="slow_save_%s" % instance.pk, # Used as cache key
+        only_debug=True # Delay only if settings.DEBUG == True
+    ).load(
+        self.request,
+        query_string="delay", # The GET parameter name
+        default=5 # fallback value if GET parameter contains no value, e.g.: "?delay"
+    )
+
+    # ...
+
+    instance.save()
+
+    return your_response
+}}}
+
+
 === middlewares
 
 ==== SetRequestDebugMiddleware

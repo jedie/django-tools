@@ -133,6 +133,16 @@ SendMail(
 See also the existing unittests:
 * [[https://github.com/jedie/django-tools/blob/master/django_tools_tests/test_email.py|django_tools_tests/test_email.py]]
 
+
+=== Delay tools
+
+Sometimes you want to simulate when processing takes a little longer.
+There exists {{{django_tools.debug.delay.SessionDelay}}} and {{{django_tools.debug.delay.CacheDelay}}} for this.
+The usage will create logging entries and user messages, if user is authenticated.
+
+More info in seperate [[https://github.com/jedie/django-tools/blob/master/django_tools/debug/README.creole|django_tools/debug/README.creole]] file.
+
+
 === Filemanager library
 
 Library for building django application like filemanager, gallery etc.
@@ -727,6 +737,7 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.40.3...master|compare v0.40.3...master]]
+** NEW: {{{django_tools.debug.delay}}} to simulate longer processing time by set a delay via GET parameter (see above)
 * v0.40.3 - 18.07.2018 - [[https://github.com/jedie/django-tools/compare/v0.40.2...v0.40.3|compare v0.40.2...v0.40.3]]
 ** Enhance selenium test cases:
 *** NEW: {{{assert_visible_by_id()}}}
