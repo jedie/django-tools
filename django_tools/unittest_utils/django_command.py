@@ -98,7 +98,7 @@ class DjangoCommandMixin(object):
             ) % test_path
             raise AssertionError(msg)
 
-        cmd = [sys.executable, "manage.py"] + list(cmd)
+        cmd = [sys.executable, manage_py] + list(cmd)
         kwargs.update({
             "cwd": manage_dir,
             #"debug": True,
