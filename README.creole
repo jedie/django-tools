@@ -736,7 +736,9 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.40.4...master|compare v0.40.4...master]]
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.40.5...master|compare v0.40.5...master]]
+* v0.40.5 - 27.08.2018 - [[https://github.com/jedie/django-tools/compare/v0.40.4...v0.40.5|compare v0.40.4...v0.40.5]]
+** Bugfix {{{DjangoCommandMixin.call_manage_py()}}}: Use the given {{{manage.py}}} filename
 * v0.40.4 - 21.08.2018 - [[https://github.com/jedie/django-tools/compare/v0.40.3...v0.40.4|compare v0.40.3...v0.40.4]]
 ** NEW: {{{django_tools.debug.delay}}} to simulate longer processing time by set a delay via GET parameter (see above)
 * v0.40.3 - 18.07.2018 - [[https://github.com/jedie/django-tools/compare/v0.40.2...v0.40.3|compare v0.40.2...v0.40.3]]
