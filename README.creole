@@ -415,7 +415,13 @@ You can also decorate the test method ;)
 
 === unittest_utils/assertments.py
 
-The file contains some common assert functions.
+
+The file contains some common assert functions:
+
+* assert_startswith
+* assert_endswith
+* assert_celery_always_eager
+* assert_locmem_mail_backend
 
 
 === Speedup tests
