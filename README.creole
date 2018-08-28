@@ -413,29 +413,7 @@ class TestMyTemplate(SimpleTestCase):
 You can also decorate the test method ;)
 
 
-=== @task_always_eager() celery decorator
 
-Decorator activate celery {{{task_always_eager}}} and {{{task_eager_propagates}}}:
-
-* task_always_eager: executed locally instead of being sent to the queue
-* task_eager_propagates: raise exceptions on errors
-
-See also: http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-always-eager
-
-Usage, e.g.:
-
-{{{
-from django.core import mail
-from django.test import SimpleTestCase
-from django_tools.unittest_utils.celery_utils import task_always_eager
-
-@task_always_eager()
-class TestMyCeleryJobs(SimpleTestCase):
-    def test_send_mail(self):
-        response = self.client.get('/send_mail/foo/')
-        self.assertEqual(len(mail.outbox), 1)
-}}}
-You can also decorate the test method ;)
 
 
 === Speedup tests
@@ -715,6 +693,10 @@ to:
 
 File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 
+=== v0.41
+
+{{{@task_always_eager()}}} decorator was removed.
+
 
 == Django compatibility
 
@@ -736,6 +718,7 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.40.6...master|compare v0.40.6...master]]
+** Remove {{{@task_always_eager()}}} decorator
 * v0.40.6 - 28.08.2018 - [[https://github.com/jedie/django-tools/compare/v0.40.5...v0.40.6|compare v0.40.5...v0.40.6]]
 ** Bugfix {{{@task_always_eager()}}} decorator
 * v0.40.5 - 27.08.2018 - [[https://github.com/jedie/django-tools/compare/v0.40.4...v0.40.5|compare v0.40.4...v0.40.5]]
