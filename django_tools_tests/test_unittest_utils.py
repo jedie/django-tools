@@ -17,7 +17,6 @@ from django_tools_test_project.django_tools_test_app.models import PermissionTes
 # https://github.com/jedie/django-tools
 from django_tools.mail.send_mail import SendMail
 from django_tools.template.render import render_string_template
-from django_tools.unittest_utils.celery_utils import task_always_eager
 from django_tools.unittest_utils.email import print_mailbox
 from django_tools.unittest_utils.print_sql import PrintQueries
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
@@ -276,48 +275,6 @@ class TestSetStringIfInvalidDecorator(SimpleTestCase):
         content = render_string_template("pre{{ tag }}post", {})
         self.assertEqual(content, 'pre***invalid:tag***post')
         self.assertIn(TEMPLATE_INVALID_PREFIX, content)
-
-
-class TestCeleryDecoratorMethodUsage(SimpleTestCase):
-    """
-    Tests for django_tools.unittest_utils.celery_utils.task_always_eager
-    """
-
-    def test_always_eager_default(self):
-        from celery import current_app
-        self.assertFalse(current_app.conf['task_always_eager'])
-        self.assertFalse(current_app.conf.task_always_eager)
-
-    def test_eager_propagates_exceptions_default(self):
-        from celery import current_app
-        self.assertFalse(current_app.conf['task_eager_propagates'])
-
-    @task_always_eager()
-    def test_always_eager_on(self):
-        from celery import current_app
-        self.assertTrue(current_app.conf['task_always_eager'])
-        self.assertTrue(current_app.conf.task_always_eager)
-
-    @task_always_eager()
-    def test_eager_propagates_exceptions_on(self):
-        from celery import current_app
-        self.assertTrue(current_app.conf['task_eager_propagates'])
-
-
-@task_always_eager()
-class TestCeleryDecoratorClassUsage(SimpleTestCase):
-    """
-    Tests for django_tools.unittest_utils.celery_utils.task_always_eager
-    """
-
-    def test_always_eager_on(self):
-        from celery import current_app
-        self.assertTrue(current_app.conf['task_always_eager'])
-        self.assertTrue(current_app.conf.task_always_eager)
-
-    def test_eager_propagates_exceptions_on(self):
-        from celery import current_app
-        self.assertTrue(current_app.conf['task_eager_propagates'])
 
 
 class AssertResponseTest(BaseTestCase):
