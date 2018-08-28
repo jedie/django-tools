@@ -415,13 +415,12 @@ You can also decorate the test method ;)
 
 === @task_always_eager() celery decorator
 
-Decorator activate celery:
-{{{
-CELERY_ALWAYS_EAGER=True # executed locally instead of being sent to the queue
-CELERY_EAGER_PROPAGATES_EXCEPTIONS=True # raise exceptions on errors
-}}}
-Is also set these two items in settings by using {{{override_settings}}}
-See also: http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-task_always_eager
+Decorator activate celery {{{task_always_eager}}} and {{{task_eager_propagates}}}:
+
+* task_always_eager: executed locally instead of being sent to the queue
+* task_eager_propagates: raise exceptions on errors
+
+See also: http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-always-eager
 
 Usage, e.g.:
 

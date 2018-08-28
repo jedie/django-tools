@@ -276,22 +276,46 @@ class TestSetStringIfInvalidDecorator(SimpleTestCase):
         self.assertIn(TEMPLATE_INVALID_PREFIX, content)
 
 
+class TestCeleryDecoratorMethodUsage(SimpleTestCase):
+    """
+    Tests for django_tools.unittest_utils.celery_utils.task_always_eager
+    """
+
+    def test_always_eager_default(self):
+        from celery import current_app
+        self.assertFalse(current_app.conf['task_always_eager'])
+        self.assertFalse(current_app.conf.task_always_eager)
+
+    def test_eager_propagates_exceptions_default(self):
+        from celery import current_app
+        self.assertFalse(current_app.conf['task_eager_propagates'])
+
+    @task_always_eager()
+    def test_always_eager_on(self):
+        from celery import current_app
+        self.assertTrue(current_app.conf['task_always_eager'])
+        self.assertTrue(current_app.conf.task_always_eager)
+
+    @task_always_eager()
+    def test_eager_propagates_exceptions_on(self):
+        from celery import current_app
+        self.assertTrue(current_app.conf['task_eager_propagates'])
+
+
 @task_always_eager()
-class TestCeleryDecorator(SimpleTestCase):
-    def test_settings_set(self):
-        from django.conf import settings
-        self.assertTrue(settings.CELERY_ALWAYS_EAGER)
-        self.assertTrue(settings.CELERY_EAGER_PROPAGATES_EXCEPTIONS)
+class TestCeleryDecoratorClassUsage(SimpleTestCase):
+    """
+    Tests for django_tools.unittest_utils.celery_utils.task_always_eager
+    """
 
-    def test_always_eager(self):
+    def test_always_eager_on(self):
         from celery import current_app
-        self.assertTrue(current_app.conf.CELERY_ALWAYS_EAGER)
-        self.assertTrue(current_app.conf['CELERY_ALWAYS_EAGER'])
+        self.assertTrue(current_app.conf['task_always_eager'])
+        self.assertTrue(current_app.conf.task_always_eager)
 
-    def test_eager_propagates_exceptions(self):
+    def test_eager_propagates_exceptions_on(self):
         from celery import current_app
-        self.assertTrue(current_app.conf.CELERY_EAGER_PROPAGATES_EXCEPTIONS)
-        self.assertTrue(current_app.conf['CELERY_EAGER_PROPAGATES_EXCEPTIONS'])
+        self.assertTrue(current_app.conf['task_eager_propagates'])
 
 
 class AssertResponseTest(BaseTestCase):
