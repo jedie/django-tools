@@ -163,8 +163,12 @@ PARLER_DEFAULT_LANGUAGE_CODE = LANGUAGE_CODE
 
 #==============================================================================
 
-CELERY_ALWAYS_EAGER = True
-BROKER_TRANSPORT = "memory"
+# http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-task_always_eager
+CELERY_TASK_ALWAYS_EAGER = True  # Celery tasks doesn't use a queue
+
+# http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-eager-propagates
+CELERY_TASK_EAGER_PROPAGATES = True # executed tasks will propagate exceptions
+
 EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend'
 
 #==============================================================================
