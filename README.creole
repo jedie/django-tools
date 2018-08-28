@@ -413,7 +413,9 @@ class TestMyTemplate(SimpleTestCase):
 You can also decorate the test method ;)
 
 
+=== unittest_utils/assertments.py
 
+The file contains some common assert functions.
 
 
 === Speedup tests
@@ -718,6 +720,8 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.40.6...master|compare v0.40.6...master]]
+* v0.41.0
+** NEW: {{{unittest_utils/assertments.py}}} with some common assert functions
 ** Remove {{{@task_always_eager()}}} decorator
 * v0.40.6 - 28.08.2018 - [[https://github.com/jedie/django-tools/compare/v0.40.5...v0.40.6|compare v0.40.5...v0.40.6]]
 ** Bugfix {{{@task_always_eager()}}} decorator
