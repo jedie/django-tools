@@ -44,6 +44,21 @@ def print_celery_report(current_app=None):
     print("-" * 100, flush=True)
 
 
+def print_celery_info(current_app=None):
+    print("")
+    print("_" * 100)
+    print("Celery info:", flush=True)
+
+    if current_app is None:
+        from celery import current_app
+
+    print("Current app: %r" % current_app)
+    print("config:")
+    pprint(dict(current_app.conf))
+
+    print("-" * 100, flush=True)
+
+
 class CallCeleryTask:
     """
     Helper to call a celery task and collection status messages
