@@ -42,7 +42,7 @@ class TestStringAssertments(unittest.TestCase):
 class TestCeleryAssertments(SimpleTestCase):
 
     def test_default(self):
-        assert_celery_always_eager()
+        assert_celery_not_eager()
 
     def test_app_kwarg(self):
         app = Celery("test_app_kwarg")
