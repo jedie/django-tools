@@ -120,6 +120,7 @@ class CallCeleryTask:
         self.start_task_time = time.time()
         try:
             result = self.async_result.get(
+                # timeout=self.max_task_duration, <<< Will not work with RPC backend, see: https://github.com/celery/celery/issues/5034
                 on_message=self._on_message_callback,
                 propagate=False
             )
