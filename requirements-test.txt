@@ -6,10 +6,16 @@ docutils
 Pillow
 cmsplugin-filer
 django-filer>1.2.6
+
 pytest>=3.5.0
+
+# https://github.com/pytest-dev/pytest/issues/3753
+pluggy>0.7
+
 pytest-django
 pytest-cov
 celery
 django-parler
 django-debug-toolbar
 selenium
+
