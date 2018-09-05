@@ -163,11 +163,9 @@ PARLER_DEFAULT_LANGUAGE_CODE = LANGUAGE_CODE
 
 #==============================================================================
 
-# http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-task_always_eager
-CELERY_TASK_ALWAYS_EAGER = True  # Celery tasks doesn't use a queue
+CELERY_RESULT_BACKEND = "rpc" # redis and RPC are the only Async Backend that support on_message !
 
-# http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-eager-propagates
-CELERY_TASK_EAGER_PROPAGATES = True # executed tasks will propagate exceptions
+#==============================================================================
 
 EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend'
 

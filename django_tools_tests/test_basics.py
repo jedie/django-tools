@@ -38,9 +38,6 @@ class SettingsTests(SimpleTestCase):
         print(output)
         self.assertIn('django_tools_test_project.test_settings', output) # SETTINGS_MODULE
 
-        self.assertIn('CELERY_TASK_ALWAYS_EAGER = True', output)
-        self.assertIn('CELERY_TASK_EAGER_PROPAGATES = True', output)
-
 
 class ManageCommandTests(DjangoCommandMixin, TestCase):
 
