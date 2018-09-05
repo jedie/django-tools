@@ -28,7 +28,7 @@ def sleep_task(self, sleep_time=0):
 
 
 @shared_task(bind=True)
-def test_task(self):
+def on_message_test_task(self):
     self.update_state(state="FOO", meta={"bar": 1})
     self.update_state(state="FOO", meta={"bar": 2})
     return "return value"

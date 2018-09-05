@@ -9,7 +9,7 @@
 import pytest
 
 from celery.exceptions import TimeoutError
-from django_tools_test_project.django_tools_test_app.tasks import sleep_task, test_task
+from django_tools_test_project.django_tools_test_app.tasks import on_message_test_task, sleep_task
 
 # https://github.com/jedie/django-tools
 from django_tools.unittest_utils.assertments import assert_celery_not_eager
@@ -36,7 +36,7 @@ def test_print_celery_report(celery_worker):
 @pytest.mark.celery(result_backend="cache+memory:///", broker_url="memory://")
 def test_no_message_support(celery_worker):
     assert_celery_async_call(
-        task_func=test_task.apply_async,
+        task_func=on_message_test_task.apply_async,
         result="return value",
         messages=None,  # no on_message support
         max_task_duration=2,
@@ -47,7 +47,7 @@ def test_no_message_support(celery_worker):
 @pytest.mark.celery(result_backend="rpc", broker_url="memory://")
 def test_test_task(celery_worker):
     assert_celery_async_call(
-        task_func=test_task.apply_async,
+        task_func=on_message_test_task.apply_async,
         result="return value",
         messages=["FOO: {'bar': 1}", "FOO: {'bar': 2}", 'SUCCESS: return value'],
         max_task_duration=2,
@@ -114,6 +114,6 @@ def test_no_message_support_wrong_usage(celery_worker):
     """
     with pytest.raises(WongTestSetup, message="Only async backends (e.g.: RPC, redit) support on_message callback!"):
         assert_celery_async_call(
-            task_func=test_task.apply_async,
+            task_func=on_message_test_task.apply_async,
             messages="Must be None if backend is not async!!!",
         )
