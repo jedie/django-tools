@@ -10,6 +10,7 @@ import time
 from pprint import pprint
 
 from celery import current_app
+from celery.result import AsyncResult
 
 
 class WongTestSetup(AssertionError):
@@ -19,6 +20,11 @@ class WongTestSetup(AssertionError):
     pass
 
 
+class NotAsyncCall(AssertionError):
+    """
+    Task call didn't return celery.result.AsyncResult instance.
+    e.g.: didn't use "foobar_task.apply_async" as task_func
+    """
 def print_celery_report(current_app=None):
     """
     print celery report simmilar to `celery -A proj report` call.
@@ -70,6 +76,14 @@ class CallCeleryTask:
         print("Create Task with %r kwargs:%r" % (task_func, func_kwargs))
         self.create_task_time = time.time()
         self.async_result = task_func(**func_kwargs)
+
+        if not isinstance(self.async_result, AsyncResult):
+            msg = (
+                "Task %r not returned a AsyncResult instance"
+                " (not called via e.g.: .apply_async() ?!?)"
+                " has returned: %r"
+            ) % (task_func, self.async_result)
+            raise NotAsyncCall(msg)
 
         if hard_timeout:
             # timeout in celery doesn't work in some cases:

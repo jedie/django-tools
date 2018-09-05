@@ -13,7 +13,9 @@ from django_tools_test_project.django_tools_test_app.tasks import on_message_tes
 
 # https://github.com/jedie/django-tools
 from django_tools.unittest_utils.assertments import assert_celery_not_eager
-from django_tools.unittest_utils.celery_utils import WongTestSetup, assert_celery_async_call, print_celery_report
+from django_tools.unittest_utils.celery_utils import (
+    NotAsyncCall, WongTestSetup, assert_celery_async_call, print_celery_report
+)
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 
 
@@ -117,3 +119,12 @@ def test_no_message_support_wrong_usage(celery_worker):
             task_func=on_message_test_task.apply_async,
             messages="Must be None if backend is not async!!!",
         )
+
+
+def test_no_message_sync_call():
+    with pytest.raises(NotAsyncCall) as err:
+        assert_celery_async_call(task_func=on_message_test_task)
+
+    msg = str(err)
+    assert "not returned a AsyncResult instance" in msg
+    assert "has returned: 'return value'" in msg
