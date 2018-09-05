@@ -8,6 +8,7 @@
 
 import pytest
 
+from celery.exceptions import TimeoutError
 from django_tools_test_project.django_tools_test_app.tasks import sleep_task, test_task
 
 # https://github.com/jedie/django-tools
@@ -94,6 +95,16 @@ def test_sleep_task_raise_error(celery_worker):
         max_task_duration=3,
         max_create_task_duration=0.1,
     )
+
+
+@pytest.mark.celery(result_backend="rpc", broker_url="memory://")
+def test_sleep_task_hard_timeout(celery_worker):
+    with pytest.raises(TimeoutError, message="The operation timed out."):
+        assert_celery_async_call(
+            task_func=sleep_task.apply_async, func_kwargs={"kwargs": {
+                "sleep_time": 5
+            }}, hard_timeout=0.1
+        )
 
 
 @pytest.mark.celery(result_backend="cache+memory:///", broker_url="memory://")

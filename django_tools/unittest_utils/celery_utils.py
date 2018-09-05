@@ -6,11 +6,8 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-import sys
 import time
-import traceback
 from pprint import pprint
-from threading import Timer
 
 from celery import current_app
 
@@ -46,7 +43,7 @@ class CallCeleryTask:
         django-tools/django_tools_tests/test_unittest_celery.py
     """
 
-    def __init__(self, *, task_func, func_kwargs=None, hard_timeout=None):
+    def __init__(self, *, task_func, func_kwargs=None, hard_timeout=5):
         """
         :param task_func: e.g.: my_task.apply_async
         :param func_kwargs: pass to task_func, e.g.: {countdown=3, "kwargs": {"my_task_kwarg1": "foo"}}
@@ -71,46 +68,18 @@ class CallCeleryTask:
             self._on_message_callback = None
 
         print("Create Task with %r kwargs:%r" % (task_func, func_kwargs))
+        self.create_task_time = time.time()
+        self.async_result = task_func(**func_kwargs)
 
         if hard_timeout:
-            # Kill if task not ended
-            Timer(hard_timeout, self._hard_timeout).start()
-
-        self.create_task_time = time.time()
-
-        self.async_result = task_func(**func_kwargs)
+            # timeout in celery doesn't work in some cases:
+            #   https://github.com/celery/celery/issues/5034
+            #
+            # This works:
+            self.async_result.wait(timeout=hard_timeout, propagate=True)
 
         self.create_task_duration = time.time() - self.create_task_time
         print("Create Task duration: %.3f sec." % self.create_task_duration)
-
-    def _hard_timeout(self):
-        """
-        timeout in celery doesn't work in some cases:
-            https://github.com/celery/celery/issues/5034
-
-        Here we can just kill the complete test run process :(
-        """
-        print("hard_timeout expires", file=sys.stderr, flush=True)
-        if self.task_duration is not None:
-            # async task has ended: nothing to do
-            print("async task has ended: nothing to do", file=sys.stderr, flush=True)
-            return
-
-        # print current stack, sadly it's not the task stack ;)
-        traceback.print_stack()
-
-        # Kill only the task thread will also terminate the complete test process!
-        #
-        # exclude_idents = (
-        #     threading.get_ident(), # this Timer() thread
-        #     threading.main_thread().ident, # the main thread
-        # )
-        # for thread in threading.enumerate():
-        #     if thread.ident not in exclude_idents:
-        #         signal.pthread_kill(thread.ident, signal.SIGTERM)
-
-        print("sys.exit()", file=sys.stderr, flush=True)
-        sys.exit(-1)
 
     def get_result(self):
         """
