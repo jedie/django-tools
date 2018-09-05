@@ -94,3 +94,15 @@ def test_sleep_task_raise_error(celery_worker):
         max_task_duration=3,
         max_create_task_duration=0.1,
     )
+
+
+@pytest.mark.celery(result_backend="cache+memory:///", broker_url="memory://")
+def test_no_message_support_wrong_usage(celery_worker):
+    """
+    https://github.com/celery/celery/issues/5033
+    """
+    with pytest.raises(WongTestSetup, message="Only async backends (e.g.: RPC, redit) support on_message callback!"):
+        assert_celery_async_call(
+            task_func=test_task.apply_async,
+            messages="Must be None if backend is not async!!!",
+        )

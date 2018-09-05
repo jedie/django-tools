@@ -15,6 +15,13 @@ from threading import Timer
 from celery import current_app
 
 
+class WongTestSetup(AssertionError):
+    """
+    e.g.: Use on_message with a non async backend, see also: https://github.com/celery/celery/issues/5033
+    """
+    pass
+
+
 def print_celery_report(current_app=None):
     """
     print celery report simmilar to `celery -A proj report` call.
@@ -137,6 +144,9 @@ class CallCeleryTask:
         """
         :return: List of created task state messages in "short" format
         """
+        if not self.backend_is_async:
+            raise WongTestSetup("Only async backends (e.g.: RPC, redit) support on_message callback!")
+
         print("Task Messages:", end=" ")
         assert self.start_task_time is not None, "You have to call get_result() first!"
         messages = ["%s: %s" % (msg["status"], msg["result"]) for msg in self.raw_messages]
