@@ -25,6 +25,9 @@ class NotAsyncCall(AssertionError):
     Task call didn't return celery.result.AsyncResult instance.
     e.g.: didn't use "foobar_task.apply_async" as task_func
     """
+    pass
+
+
 def print_celery_report(current_app=None):
     """
     print celery report simmilar to `celery -A proj report` call.
