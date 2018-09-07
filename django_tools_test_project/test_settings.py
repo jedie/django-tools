@@ -1,16 +1,14 @@
 # coding: utf-8
-import os
-
-print("Use settings:", __file__)
-
 import logging
+import os
 import warnings
 
 from django.utils.translation import ugettext_lazy as _
 
 # https://github.com/jedie/django-tools
-from django_tools.mail.settings import *
 from django_tools.unittest_utils.logging_utils import CutPathnameLogRecordFactory, FilterAndLogWarnings
+
+print("Use settings:", __file__)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -18,8 +16,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DEBUG = True
 
 SECRET_KEY = "Unittests"
-ALLOWED_HOSTS = ["*"] # Allow any domain/subdomain
-
+ALLOWED_HOSTS = ["*"]  # Allow any domain/subdomain
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
@@ -31,18 +28,11 @@ DATABASES = {
     }
 }
 
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'unique-snowflake'
-    }
-}
+CACHES = {'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache', 'LOCATION': 'unique-snowflake'}}
 
 MIDDLEWARE_CLASSES = (
     # https://github.com/jazzband/django-debug-toolbar/
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -67,8 +57,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admindocs',
     'django.contrib.flatpages',
-
-    'easy_thumbnails', 'filer', # for django_tools.unittest_utils.mockup
+    'easy_thumbnails',
+    'filer',  # for django_tools.unittest_utils.mockup
 
     # TODO:
     # # https://pypi.org/project/django-parler
@@ -76,19 +66,13 @@ INSTALLED_APPS = (
     #
     # # https://pypi.org/project/django-ya-model-publisher/
     # 'publisher',
-
     'django_tools',
     'django_tools.local_sync_cache',
     # 'django_tools.dynamic_site',
     'django_tools_test_project.django_tools_test_app',
-
     'django_tools.manage_commands.django_tools_list_models',
-
     'django_tools.manage_commands.django_tools_nice_diffsettings',
 )
-
-
-
 
 TEMPLATES = [
     {
@@ -98,10 +82,12 @@ TEMPLATES = [
         ],
         'OPTIONS': {
             'loaders': [
-                ("django_tools.template.loader.DebugCacheLoader", (
-                    'django.template.loaders.filesystem.Loader',
-                    'django.template.loaders.app_directories.Loader',
-                )),
+                (
+                    "django_tools.template.loader.DebugCacheLoader", (
+                        'django.template.loaders.filesystem.Loader',
+                        'django.template.loaders.app_directories.Loader',
+                    )
+                ),
             ],
             'context_processors': [
                 'django.contrib.auth.context_processors.auth',
@@ -147,12 +133,11 @@ PARLER_LANGUAGES = {
     },
 }
 
-
 # https://docs.djangoproject.com/en/1.8/ref/settings/#languages
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGES = tuple([(d["code"], d["name"]) for d in PARLER_LANGUAGES[1]])
 
-LANGUAGE_DICT = dict(LANGUAGES) # useful to get translated name by language code
+LANGUAGE_DICT = dict(LANGUAGES)  # useful to get translated name by language code
 
 # http://docs.django-cms.org/en/latest/reference/configuration.html#std:setting-CMS_LANGUAGES
 # CMS_LANGUAGES = PARLER_LANGUAGES
@@ -160,14 +145,9 @@ LANGUAGE_DICT = dict(LANGUAGES) # useful to get translated name by language code
 # http://django-parler.readthedocs.org/en/latest/quickstart.html#configuration
 PARLER_DEFAULT_LANGUAGE_CODE = LANGUAGE_CODE
 
-
 #==============================================================================
 
-CELERY_RESULT_BACKEND = "rpc" # redis and RPC are the only Async Backend that support on_message !
-
-#==============================================================================
-
-EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
 #==============================================================================
 
@@ -182,17 +162,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 #==============================================================================
 
-
 SITE_ID = 1
 
 USE_DYNAMIC_SITE_MIDDLEWARE = True
 
 ROOT_URLCONF = 'django_tools_test_project.django_tools_test_app.urls'
 
-PASSWORD_HASHERS = ( # Speedup tests
+PASSWORD_HASHERS = (  # Speedup tests
     'django.contrib.auth.hashers.MD5PasswordHasher',
 )
-
 
 #_____________________________________________________________________________
 
@@ -206,7 +184,6 @@ warnings.showwarning = FilterAndLogWarnings()
 
 #-----------------------------------------------------------------------------
 
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
@@ -219,7 +196,9 @@ LOGGING = {
         },
     },
     'handlers': {
-        'null': {'class': 'logging.NullHandler',},
+        'null': {
+            'class': 'logging.NullHandler',
+        },
         'console': {
             'class': 'logging.StreamHandler',
             # 'formatter': 'simple'

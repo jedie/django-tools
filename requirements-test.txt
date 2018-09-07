@@ -14,7 +14,7 @@ pluggy>0.7
 
 pytest-django
 pytest-cov
-celery
+
 django-parler
 django-debug-toolbar
 selenium
