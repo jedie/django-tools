@@ -30,7 +30,7 @@ class TestListModelsCommand(DjangoCommandMixin, TestCase):
         output = self.call_manage_py(["--help"], manage_dir=MANAGE_DIR)
 
         self.assertIn("[django]", output)
-        self.assertIn("[django_tools_list_models]", output)
+        self.assertIn("[django_tools]", output)
         self.assertIn("list_models", output)
 
         self.assertNotIn("Traceback", output)
@@ -48,8 +48,8 @@ class TestListModelsCommand(DjangoCommandMixin, TestCase):
         self.assertIn("06 - django_tools_test_app.LimitToUsergroupsTestModel", output)
         self.assertIn("07 - django_tools_test_app.PermissionTestModel", output)
 
-        self.assertIn("INSTALLED_APPS....: 15", output)
-        self.assertIn("Apps with models..: 15", output)
+        self.assertIn("INSTALLED_APPS....: 13", output)
+        self.assertIn("Apps with models..: 13", output)
 
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
@@ -59,7 +59,7 @@ class TestNiceDiffSettingsCommand(DjangoCommandMixin, TestCase):
         output = self.call_manage_py(["--help"], manage_dir=MANAGE_DIR)
 
         self.assertIn("[django]", output)
-        self.assertIn("[django_tools_nice_diffsettings]", output)
+        self.assertIn("[django_tools]", output)
         self.assertIn("nice_diffsettings", output)
 
         self.assertNotIn("Traceback", output)
