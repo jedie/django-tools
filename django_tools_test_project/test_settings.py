@@ -70,8 +70,6 @@ INSTALLED_APPS = (
     'django_tools.local_sync_cache',
     # 'django_tools.dynamic_site',
     'django_tools_test_project.django_tools_test_app',
-    'django_tools.manage_commands.django_tools_list_models',
-    'django_tools.manage_commands.django_tools_nice_diffsettings',
 )
 
 TEMPLATES = [

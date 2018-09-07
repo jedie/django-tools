@@ -593,9 +593,8 @@ $ ./manage.py logging_info
 
 ==== nice_diffsettings
 
-Similar to django 'diffsettings', but used pretty-printed representation.
+Similar to django 'diffsettings', but used pretty-printed representation:
 
-To use it, add {{{'django_tools.manage_commands.django_tools_nice_diffsettings'}}} to your INSTALLED_APPS and call:
 {{{
 $ ./manage.py nice_diffsettings
 }}}
@@ -603,10 +602,7 @@ $ ./manage.py nice_diffsettings
 
 ==== database_info
 
-Just display some information about the used database and connections.
-(Needs {{{'django_tools'}}} in INSTALLED_APPS)
-
-e.g.:
+Just display some information about the used database and connections:
 
 {{{
 $ ./manage.py database_info
@@ -615,9 +611,8 @@ $ ./manage.py database_info
 
 ==== list_models
 
-Just list all existing models in app_label.ModelName format. Useful to use this in 'dumpdata' etc.
+Just list all existing models in app_label.ModelName format. Useful to use this in 'dumpdata' etc:
 
-To use it, add {{{'django_tools.manage_commands.django_tools_list_models'}}} to your INSTALLED_APPS and call:
 {{{
 $ ./manage.py list_models
 }}}
@@ -658,6 +653,11 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 === v0.42
 
 * All celery related stuff was removed.
+* The pseudo app for exra manage commands was removed. The commands are always available if "django_tools" is in INSTALLED_APPS
+  * Please remove from your INSTALLED_APPS:
+    * 'django_tools.manage_commands.django_tools_list_models',
+    * 'django_tools.manage_commands.django_tools_nice_diffsettings',
+
 
 == Django compatibility
 
@@ -682,6 +682,7 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 * v0.42.0 - 07.09.2018 - [[https://github.com/jedie/django-tools/compare/v0.41.0...v0.42.0|compare v0.41.0...v0.42.0]]
 ** remove all celery stuff
 ** NEW: {{{$ ./manage.py logging_info}}} Shows a list of all loggers and marks which ones are configured in settings.LOGGING
+** manage commands {{{list_models}}} and {{{nice_diffsettings}}} are moved from seperate apps
 * v0.41.0 - 28.08.2018 - [[https://github.com/jedie/django-tools/compare/v0.40.6...v0.41.0|compare v0.40.6...v0.41.0]]
 ** NEW: {{{unittest_utils/assertments.py}}} with some common assert functions
 ** Remove {{{@task_always_eager()}}} decorator
