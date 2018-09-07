@@ -8,6 +8,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.test import SimpleTestCase
 
 # https://github.com/jedie/django-tools
+from django_tools.mail.send_mail import SendMail
 from django_tools.unittest_utils.email import print_mailbox
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 from django_tools.unittest_utils.unittest_base import BaseUnittestCase
@@ -52,10 +53,12 @@ class TestEMail(BaseUnittestCase, SimpleTestCase):
 
         self.assertEqual(ok, True)
 
+        print_mailbox(mail.outbox)
+
         self.assertEqual(len(mail.outbox), 1)
         email = mail.outbox[0]
         self.assertEqual(email.subject, 'Only a test')
-        print(email.body)
+
         self.assertEqual_dedent(
             email.body, """
             <!-- START 'mail_test.txt' -->
@@ -71,7 +74,7 @@ class TestEMail(BaseUnittestCase, SimpleTestCase):
         self.assertIsInstance(email, EmailMultiAlternatives)
 
         html_email = email.alternatives[0]
-        print(html_email[0].strip())
+
         self.assertEqual_dedent(
             html_email[0].strip(), """
             <!-- START 'mail_test.html' -->
