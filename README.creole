@@ -582,6 +582,14 @@ All permissions for user 'test_editor':
 ...
 }}}
 
+==== logging_info
+
+Shows a list of all loggers and marks which ones are configured in settings.LOGGING:
+
+{{{
+$ ./manage.py logging_info
+}}}
+
 
 ==== nice_diffsettings
 
@@ -647,6 +655,9 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 
 {{{@task_always_eager()}}} decorator was removed.
 
+=== v0.42
+
+* All celery related stuff was removed.
 
 == Django compatibility
 
@@ -668,8 +679,10 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.40.6...master|compare v0.40.6...master]]
+* v0.42.0 - 07.09.2018 - [[https://github.com/jedie/django-tools/compare/v0.41.0...v0.42.0|compare v0.41.0...v0.42.0]]
 ** remove all celery stuff
-* v0.41.0
+** NEW: {{{$ ./manage.py logging_info}}} Shows a list of all loggers and marks which ones are configured in settings.LOGGING
+* v0.41.0 - 28.08.2018 - [[https://github.com/jedie/django-tools/compare/v0.40.6...v0.41.0|compare v0.40.6...v0.41.0]]
 ** NEW: {{{unittest_utils/assertments.py}}} with some common assert functions
 ** Remove {{{@task_always_eager()}}} decorator
 * v0.40.6 - 28.08.2018 - [[https://github.com/jedie/django-tools/compare/v0.40.5...v0.40.6|compare v0.40.5...v0.40.6]]
