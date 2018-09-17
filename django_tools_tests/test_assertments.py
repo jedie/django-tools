@@ -9,7 +9,9 @@ import unittest
 from django.test import SimpleTestCase
 
 # https://github.com/jedie/django-tools
-from django_tools.unittest_utils.assertments import assert_endswith, assert_locmem_mail_backend, assert_startswith
+from django_tools.unittest_utils.assertments import (
+    assert_endswith, assert_language_code, assert_locmem_mail_backend, assert_startswith
+)
 
 
 class TestStringAssertments(unittest.TestCase):
@@ -39,3 +41,13 @@ class TestMailAssertments(SimpleTestCase):
 
     def test_assert_locmem_mail_backend(self):
         assert_locmem_mail_backend()
+
+
+class TestLanguageCodeAssertments(unittest.TestCase):
+
+    def test_assert_language_code(self):
+        assert_language_code(language_code="de")
+        assert_language_code(language_code="en")
+
+    def test_assert_language_code_failed(self):
+        self.assertRaises(AssertionError, assert_language_code, language_code="XX")

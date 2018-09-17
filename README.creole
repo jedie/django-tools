@@ -418,9 +418,10 @@ You can also decorate the test method ;)
 
 The file contains some common assert functions:
 
-* assert_startswith
-* assert_endswith
-* assert_locmem_mail_backend
+* {{{assert_startswith}}} - Check if test starts with prefix.
+* {{{assert_endswith}}} - Check if text ends with suffix.
+* {{{assert_locmem_mail_backend}}} - Check if current email backend is the In-memory backend.
+* {{{assert_language_code() - Check if given language_code is in settings.LANGUAGES
 
 
 === Speedup tests
@@ -679,6 +680,7 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.40.6...master|compare v0.40.6...master]]
+** NEW: {{{django_tools.unittest_utils.assertments.assert_language_code}}} - Check if given language_code is in settings.LANGUAGES
 * v0.42.0 - 07.09.2018 - [[https://github.com/jedie/django-tools/compare/v0.41.0...v0.42.0|compare v0.41.0...v0.42.0]]
 ** remove all celery stuff
 ** NEW: {{{$ ./manage.py logging_info}}} Shows a list of all loggers and marks which ones are configured in settings.LOGGING
