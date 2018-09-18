@@ -680,7 +680,9 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.42.1...master|compare v0.42.1...master]]
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.42.2...master|compare v0.42.2...master]]
+** TBC
+* v0.42.2 - 18.09.2018 - [[https://github.com/jedie/django-tools/compare/v0.42.1...v0.42.2|compare v0.42.1...v0.42.2]]
 ** NEW: {{{assert_installed_apps()}}} - Check entries in settings.INSTALLED_APPS
 * v0.42.1 - 17.09.2018 - [[https://github.com/jedie/django-tools/compare/v0.42.0...v0.42.1|compare v0.42.0...v0.42.1]]
 ** NEW: {{{django_tools.unittest_utils.assertments.assert_language_code}}} - Check if given language_code is in settings.LANGUAGES
