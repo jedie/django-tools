@@ -10,9 +10,13 @@
 
 import os
 import textwrap
+import warnings
 
 from django.test import TestCase
 from django.urls import reverse
+
+# https://github.com/jedie/django-tools
+from django_tools.unittest_utils.assertments import assert_endswith, assert_startswith
 
 from .BrowserDebug import debug_response
 
@@ -20,6 +24,8 @@ from .BrowserDebug import debug_response
 class BaseUnittestCase(TestCase):
     """
     Extensions to plain Unittest TestCase
+
+    TODO: move all assert methods to django_tools/unittest_utils/assertments.py
     """
     maxDiff = 3000
 
@@ -59,12 +65,12 @@ class BaseUnittestCase(TestCase):
             self.fail('File "%s" exists, but should not exists!' % path)
 
     def assert_startswith(self, text, prefix):
-        if not text.startswith(prefix):
-            self.fail("String %r doesn't starts with %r" % (text, prefix))
+        warnings.warn("Use django_tools.unittest_utils.assertments.assert_startswith!", DeprecationWarning)
+        assert_startswith(text, prefix)
 
     def assert_endswith(self, text, prefix):
-        if not text.endswith(prefix):
-            self.fail("String %r doesn't ends with %r" % (text, prefix))
+        warnings.warn("Use django_tools.unittest_utils.assertments.assert_endswith!", DeprecationWarning)
+        assert_endswith(text, prefix)
 
     def assert_exception_startswith(self, context_manager, text):
         """
