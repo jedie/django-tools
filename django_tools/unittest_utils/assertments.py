@@ -3,6 +3,8 @@
     :copyleft: 2018 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
+import unittest
+
 from django.conf import settings
 from django.core import mail
 from django.core.mail import get_connection
@@ -40,3 +42,13 @@ def assert_language_code(*, language_code):
     assert language_code in existing_language_codes, "%r not in settings.LANGUAGES=%r" % (
         language_code, settings.LANGUAGES
     )
+
+
+def assert_installed_apps(*, app_names):
+    """
+    Check entries in settings.INSTALLED_APPS
+    """
+    assert isinstance(app_names, (tuple, list))
+    installed_apps = settings.INSTALLED_APPS
+    for app_name in app_names:
+        assert app_name in installed_apps, "%r not in settings.INSTALLED_APPS!" % app_name
