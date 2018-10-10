@@ -682,7 +682,9 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.42.2...master|compare v0.42.2...master]]
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.42.3...master|compare v0.42.3...master]]
+** TBC
+* v0.42.3 - 10.10.2018 - [[https://github.com/jedie/django-tools/compare/v0.42.2...v0.42.3|compare v0.42.2...v0.42.3]]
 ** NEW: * {{{assertments.assert_is_dir}}}, {{{assertments.assert_is_file}}}, {{{assertments.assert_path_not_exists}}}
 * v0.42.2 - 18.09.2018 - [[https://github.com/jedie/django-tools/compare/v0.42.1...v0.42.2|compare v0.42.1...v0.42.2]]
 ** NEW: {{{assert_installed_apps()}}} - Check entries in settings.INSTALLED_APPS
