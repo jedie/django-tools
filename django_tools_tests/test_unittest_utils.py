@@ -103,51 +103,33 @@ class TestBaseUnittestCase(BaseUnittestCase):
             'foo' not found in 'only bar'
         """))
 
+    # TODO: remove assertments tests in the future!
+
     def test_assert_is_dir(self):
         existing_path = os.path.dirname(__file__)
         self.assert_is_dir(existing_path)
-        try:
-            self.assert_is_dir("foobar_dir")
-        except AssertionError as err:
-            self.assertEqual(six.text_type(err), six.text_type('Directory "foobar_dir" doesn\'t exists!'))
+        self.assertRaises(AssertionError, self.assert_is_dir, "foobar_dir")
 
     def test_assert_not_is_dir(self):
         self.assert_not_is_dir("foobar_dir")
         existing_path = os.path.dirname(__file__)
-        try:
-            self.assert_not_is_dir(existing_path)
-        except AssertionError as err:
-            self.assertEqual(
-                six.text_type(err), six.text_type('Directory "%s" exists, but should not exists!' % existing_path)
-            )
+        self.assertRaises(AssertionError, self.assert_not_is_dir, existing_path)
 
     def test_assert_is_file(self):
         self.assert_is_file(__file__)
-        try:
-            self.assert_is_file("foobar_file.txt")
-        except AssertionError as err:
-            self.assertEqual(six.text_type(err), six.text_type('File "foobar_file.txt" doesn\'t exists!'))
+        self.assertRaises(AssertionError, self.assert_is_file, "foobar_file.txt")
 
     def test_assert_not_is_File(self):
         self.assert_not_is_File("foobar_file.txt")
-        try:
-            self.assert_not_is_File(__file__)
-        except AssertionError as err:
-            self.assertEqual(six.text_type(err), six.text_type('File "%s" exists, but should not exists!' % __file__))
+        self.assertRaises(AssertionError, self.assert_not_is_File, __file__)
 
     def test_assert_startswith(self):
         self.assert_startswith("foobar", "foo")
-        with self.assertRaises(self.failureException) as cm:
-            self.assert_startswith("foobar", "bar")
-
-        self.assertEqual(cm.exception.args[0], "String 'foobar' doesn't starts with 'bar'")
+        self.assertRaises(AssertionError, self.assert_startswith, "foobar", "bar")
 
     def test_assert_endswith(self):
         self.assert_endswith("foobar", "bar")
-        with self.assertRaises(self.failureException) as cm:
-            self.assert_endswith("foobar", "foo")
-
-        self.assertEqual(cm.exception.args[0], "String 'foobar' doesn't ends with 'foo'")
+        self.assertRaises(AssertionError, self.assert_endswith, "foobar", "foo")
 
     def test_get_admin_change_url(self):
         obj = PermissionTestModel.objects.create()
