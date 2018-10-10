@@ -348,8 +348,8 @@ with isolated_filesystem(prefix="temp_dir_prefix"):
 **django_tools.unittest_utils.unittest_base.BaseUnittestCase** contains some low-level assert methods:
 
 * assertEqual_dedent()
-* assert_is_dir(), assert_not_is_dir()
-* assert_is_file(), assert_not_is_File()
+
+Note: assert methods will be migrated to: {{{django_tools.unittest_utils.assertments}}} in the future!
 
 //django_tools.unittest_utils.tempdir// contains **TempDir**, a Context Manager Class:
 {{{
@@ -423,7 +423,9 @@ The file contains some common assert functions:
 * {{{assert_locmem_mail_backend}}} - Check if current email backend is the In-memory backend.
 * {{{assert_language_code() - Check if given language_code is in settings.LANGUAGES
 * {{{assert_installed_apps()}}} - Check entries in settings.INSTALLED_APPS
-
+* {{{assert_is_dir}}} - Check if given path is a directory
+* {{{assert_is_file}}} - Check if given path is a file
+* {{{assert_path_not_exists}}} - Check if given path doesn't exists
 
 === Speedup tests
 
@@ -681,7 +683,7 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.42.2...master|compare v0.42.2...master]]
-** TBC
+** NEW: * {{{assertments.assert_is_dir}}}, {{{assertments.assert_is_file}}}, {{{assertments.assert_path_not_exists}}}
 * v0.42.2 - 18.09.2018 - [[https://github.com/jedie/django-tools/compare/v0.42.1...v0.42.2|compare v0.42.1...v0.42.2]]
 ** NEW: {{{assert_installed_apps()}}} - Check entries in settings.INSTALLED_APPS
 * v0.42.1 - 17.09.2018 - [[https://github.com/jedie/django-tools/compare/v0.42.0...v0.42.1|compare v0.42.0...v0.42.1]]

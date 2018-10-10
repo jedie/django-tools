@@ -3,7 +3,8 @@
     :copyleft: 2018 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-import unittest
+
+from pathlib import Path
 
 from django.conf import settings
 from django.core import mail
@@ -40,7 +41,8 @@ def assert_language_code(*, language_code):
     """
     existing_language_codes = tuple(dict(settings.LANGUAGES).keys())
     assert language_code in existing_language_codes, "%r not in settings.LANGUAGES=%r" % (
-        language_code, settings.LANGUAGES
+        language_code,
+        settings.LANGUAGES,
     )
 
 
@@ -52,3 +54,35 @@ def assert_installed_apps(*, app_names):
     installed_apps = settings.INSTALLED_APPS
     for app_name in app_names:
         assert app_name in installed_apps, "%r not in settings.INSTALLED_APPS!" % app_name
+
+
+def assert_is_dir(path):
+    """
+    Check if given path is a directory
+    """
+    if not isinstance(path, Path):
+        path = Path(path)
+    assert path.is_dir(), "Directory not exists: %s" % path
+
+
+def assert_is_file(path):
+    """
+    Check if given path is a file
+    """
+    if not isinstance(path, Path):
+        path = Path(path)
+    assert_is_dir(path.parent)
+    assert path.is_file(), "File not exists: %s" % path
+
+
+def assert_path_not_exists(path):
+    """
+    Check if given path doesn't exists
+    """
+    if not isinstance(path, Path):
+        path = Path(path)
+
+    assert not path.is_dir(), "Path is a existing directory: %s" % path
+    assert not path.is_file(), "Path is a existing file: %s" % path
+    assert not path.is_fifo(), "Path is a existing fifo: %s" % path
+    assert not path.exists(), "Path exists: %s" % path

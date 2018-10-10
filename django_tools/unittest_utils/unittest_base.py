@@ -16,7 +16,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 # https://github.com/jedie/django-tools
-from django_tools.unittest_utils.assertments import assert_endswith, assert_startswith
+from django_tools.unittest_utils import assertments
 
 from .BrowserDebug import debug_response
 
@@ -49,28 +49,28 @@ class BaseUnittestCase(TestCase):
         self.assertIn(member, container, msg)
 
     def assert_is_dir(self, path):
-        if not os.path.isdir(path):
-            self.fail('Directory "%s" doesn\'t exists!' % path)
+        warnings.warn("Use django_tools.unittest_utils.assertments.assert_is_dir!", DeprecationWarning)
+        assertments.assert_is_dir(path)
 
     def assert_not_is_dir(self, path):
-        if os.path.isdir(path):
-            self.fail('Directory "%s" exists, but should not exists!' % path)
+        warnings.warn("Use django_tools.unittest_utils.assertments.assert_path_not_exists!", DeprecationWarning)
+        assertments.assert_path_not_exists(path)
 
     def assert_is_file(self, path):
-        if not os.path.isfile(path):
-            self.fail('File "%s" doesn\'t exists!' % path)
+        warnings.warn("Use django_tools.unittest_utils.assertments.assert_is_file!", DeprecationWarning)
+        assertments.assert_is_file(path)
 
     def assert_not_is_File(self, path):
-        if os.path.isfile(path):
-            self.fail('File "%s" exists, but should not exists!' % path)
+        warnings.warn("Use django_tools.unittest_utils.assertments.assert_path_not_exists!", DeprecationWarning)
+        assertments.assert_path_not_exists(path)
 
     def assert_startswith(self, text, prefix):
         warnings.warn("Use django_tools.unittest_utils.assertments.assert_startswith!", DeprecationWarning)
-        assert_startswith(text, prefix)
+        assertments.assert_startswith(text, prefix)
 
     def assert_endswith(self, text, prefix):
         warnings.warn("Use django_tools.unittest_utils.assertments.assert_endswith!", DeprecationWarning)
-        assert_endswith(text, prefix)
+        assertments.assert_endswith(text, prefix)
 
     def assert_exception_startswith(self, context_manager, text):
         """
