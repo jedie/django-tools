@@ -8,6 +8,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
+from django.http import HttpRequest
 
 log = logging.getLogger(__name__)
 
@@ -268,12 +269,19 @@ class TestUserMixin:
         """
         test_user = self.get_userdata(usertype)
 
-        count = self.UserModel.objects.filter(username=test_user["username"]).count()
-        self.assertNotEqual(count, 0, "You have to call self.create_testusers() first!")
-        self.assertEqual(count, 1)
+        username = test_user["username"]
 
-        ok = self.client.login(username=test_user["username"], password=test_user["password"])
+        count = self.UserModel.objects.all().count()
+        self.assertNotEqual(count, 0, "You have to call self.create_testusers() first!")
+
+        # Some auth backends needs request object (e.g.: django-axes)
+        request = HttpRequest()
+        user = self.UserModel.objects.get(username=username)
+        request.user = user
+
+        ok = self.client.login(request=request, username=test_user["username"], password=test_user["password"])
         self.assertTrue(ok, 'Can\'t login test user "%s"!' % usertype)
+
         return self._get_user(usertype)
 
     def add_user_permissions(self, user, permissions):
