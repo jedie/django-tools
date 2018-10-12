@@ -1,16 +1,10 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
 
 import logging
-
 import sys
 
-import pytest
 from django.contrib import auth
-
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
@@ -19,11 +13,15 @@ log = logging.getLogger(__name__)
 
 
 def create_user(
-    username, password=None, email="",
-    is_staff=False, is_superuser=False,
-    encrypted_password=None, groups=None,
-    update_existing=False
-    ):
+    username,
+    password=None,
+    email="",
+    is_staff=False,
+    is_superuser=False,
+    encrypted_password=None,
+    groups=None,
+    update_existing=False,
+):
     """
     Create a user and return the instance.
 
@@ -35,7 +33,7 @@ def create_user(
     if password is None and encrypted_password is None:
         raise RuntimeError("'password' or 'encrypted_password' needed.")
 
-    User=get_user_model()
+    User = get_user_model()
 
     user = None
     if update_existing:
@@ -44,15 +42,11 @@ def create_user(
         except User.DoesNotExist:
             user = None
         else:
-            created=False
+            created = False
 
     if user is None:
         # Create user with origin form to validate username:
-        user_form_data={
-            "username": username,
-            "password1": password,
-            "password2": password,
-        }
+        user_form_data = {"username": username, "password1": password, "password2": password}
 
         if password is None:
             # encrypted_password set later!
@@ -76,7 +70,7 @@ def create_user(
     elif password:
         user.set_password(password)
     else:
-        raise RuntimeError # should never happen, see above ;)
+        raise RuntimeError  # should never happen, see above ;)
 
     user.save()
 
@@ -100,7 +94,7 @@ def get_super_user():
     """
     :return: the first 'superuser'
     """
-    User=get_user_model()
+    User = get_user_model()
     try:
         super_user = User.objects.filter(is_superuser=True)[0]
     except (User.DoesNotExist, IndexError):
@@ -125,9 +119,9 @@ def get_or_create_user(username, group, encrypted_password):
     else:
         created = False
 
-    user.groups=(group,)
-    user.is_staff=True
-    user.is_superuser=False
+    user.groups = (group,)
+    user.is_staff = True
+    user.is_superuser = False
     user.save()
 
     return user, created
@@ -148,7 +142,8 @@ def get_or_create_group(groupname, permissions):
     existing_permission_count = group.permissions.all().count()
     print("Group %s has %i permissions" % (groupname, existing_permission_count))
     assert len(permissions) == existing_permission_count, "Wrong permission count: %i != %i" % (
-        existing_permission_count, len(permissions)
+        existing_permission_count,
+        len(permissions),
     )
 
     return group, created
@@ -207,6 +202,7 @@ class TestUserMixin:
         def test...
 
     """
+
     TEST_USERS = {
         "superuser": {
             "username": "superuser",
@@ -230,7 +226,6 @@ class TestUserMixin:
             "is_superuser": False,
         },
     }
-
 
     @classmethod
     def setUpClass(cls):
@@ -257,7 +252,7 @@ class TestUserMixin:
         except KeyError as err:
             etype, evalue, etb = sys.exc_info()
             evalue = etype(
-                'Wrong usetype %s! Existing usertypes are: %s' % (err, ", ".join(list(self.TEST_USERS.keys())))
+                "Wrong usetype %s! Existing usertypes are: %s" % (err, ", ".join(list(self.TEST_USERS.keys())))
             )
             raise etype(evalue).with_traceback(etb)
 
@@ -277,8 +272,7 @@ class TestUserMixin:
         self.assertNotEqual(count, 0, "You have to call self.create_testusers() first!")
         self.assertEqual(count, 1)
 
-        ok = self.client.login(username=test_user["username"],
-                               password=test_user["password"])
+        ok = self.client.login(username=test_user["username"], password=test_user["password"])
         self.assertTrue(ok, 'Can\'t login test user "%s"!' % usertype)
         return self._get_user(usertype)
 
@@ -297,9 +291,9 @@ class TestUserMixin:
                 content_type = ContentType.objects.get(app_label=app_label, model=model_name)
             except ContentType.DoesNotExist:
                 etype, evalue, etb = sys.exc_info()
-                evalue = etype('Can\'t get ContentType for app "%s" and model "%s": %s' % (
-                    app_label, model_name, evalue
-                ))
+                evalue = etype(
+                    'Can\'t get ContentType for app "%s" and model "%s": %s' % (app_label, model_name, evalue)
+                )
                 raise etype(evalue).with_traceback(etb)
 
             perm = Permission.objects.get(content_type=content_type, codename=permission_codename)
