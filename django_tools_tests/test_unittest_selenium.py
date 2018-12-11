@@ -15,6 +15,7 @@ from django.test import override_settings
 from selenium.common.exceptions import NoSuchElementException
 
 # https://github.com/jedie/django-tools
+from django_tools.selenium.base import SeleniumBaseTestCase
 from django_tools.selenium.chromedriver import SeleniumChromiumTestCase, chromium_available
 from django_tools.selenium.django import (
     SeleniumChromiumStaticLiveServerTestCase, SeleniumFirefoxStaticLiveServerTestCase
@@ -125,6 +126,33 @@ class SeleniumTestsMixin:
         self.driver.get(self.live_server_url + "/static/admin/css/base.css")
         self.assert_in_page_source("margin: 0;")
         self.assert_in_page_source("padding: 0;")
+
+    def test_local_storage_access(self):
+        self.driver.get(self.live_server_url + "/")
+
+        self.assertEqual(len(self.local_storage), 0)
+
+        with self.assertRaises(KeyError) as cm:
+            self.assert_local_storage_key_value(key="foo", value="bar")
+        self.assertEqual(cm.exception.args[0], "foo")
+
+        self.local_storage["bar"] = "foo"
+        self.assertEqual(len(self.local_storage), 1)
+        self.assert_local_storage_key_value(key="bar", value="foo")
+
+        self.assertIn("bar", self.local_storage)
+
+        self.assertEqual(repr(self.local_storage), "{'bar': 'foo'}")
+
+        # There's no type conversion!
+        self.local_storage["one"] = 1
+        self.local_storage["t"] = True
+        self.local_storage["f"] = False
+
+        self.assertEqual(self.local_storage.items(), {"bar": "foo", "f": "false", "t": "true", "one": "1"})
+        self.local_storage.clear()
+
+        self.assertEqual(self.local_storage.items(), {})
 
 
 @override_settings(DEBUG=True)

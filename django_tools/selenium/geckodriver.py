@@ -50,8 +50,6 @@ class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super().setUpClass()
-
         options = webdriver.FirefoxOptions()
         for argument in cls.options:
             options.add_argument(argument)
@@ -71,6 +69,8 @@ class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
                 desired_capabilities=desired,
             )
             cls.driver.implicitly_wait(10)
+
+        super().setUpClass()
 
 
 def firefox_available(filename=None):

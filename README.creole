@@ -709,6 +709,7 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.42.4...master|compare v0.42.4...master]]
 ** Refactor selenium helpers
 ** Split selenium test cases: with and without Django StaticLiveServerTestCase
+** NEW: Selenium helper to access {{{ window.localStorage }}}
 * v0.42.4 - 12.10.2018 - [[https://github.com/jedie/django-tools/compare/v0.42.3...v0.42.4|compare v0.42.3...v0.42.4]]
 ** Add {{{request}}} object to {{{TestUserMixin.login()}}} (needed for e.g.: django-axes auth backend)
 * v0.42.3 - 10.10.2018 - [[https://github.com/jedie/django-tools/compare/v0.42.2...v0.42.3|compare v0.42.2...v0.42.3]]

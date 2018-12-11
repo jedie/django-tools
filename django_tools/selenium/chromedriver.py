@@ -50,7 +50,6 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super().setUpClass()
 
         chrome_options = webdriver.ChromeOptions()
         for argument in cls.options:
@@ -71,6 +70,8 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
                 desired_capabilities=desired,
             )
             cls.driver.implicitly_wait(10)
+
+        super().setUpClass()
 
     def get_browser_log(self):
         assert "browser" in self.driver.log_types

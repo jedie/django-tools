@@ -4,6 +4,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 import logging
+import pprint
 import sys
 import traceback
 import unittest
@@ -19,7 +20,70 @@ from django_tools.selenium.response import selenium2fakes_response
 log = logging.getLogger(__name__)
 
 
+class LocalStorage:
+    """
+    https://developer.mozilla.org/de/docs/Web/API/Window/localStorage
+
+    Note:
+        * Access "window.localStorage" works only *after* a request.
+        * There's no type conversion!
+
+    Otherwise it ends in:
+
+    selenium.common.exceptions.WebDriverException:
+        Message: move target out of bounds:
+            Failed to read the 'localStorage' property from 'Window': Storage is disabled inside 'data:' URLs.
+    """
+
+    def __init__(self, driver):
+        self.driver = driver
+
+    def items(self):
+        return self.driver.execute_script(
+            "var ls = window.localStorage, items = {}; "
+            "for (var i = 0, k; i < ls.length; ++i) "
+            "  items[k = ls.key(i)] = ls.getItem(k); "
+            "return items; "
+        )
+
+    def keys(self):
+        return self.driver.execute_script(
+            "var ls = window.localStorage, keys = []; "
+            "for (var i = 0; i < ls.length; ++i) "
+            "  keys[i] = ls.key(i); "
+            "return keys; "
+        )
+
+    def clear(self):
+        self.driver.execute_script("window.localStorage.clear();")
+
+    def __len__(self):
+        return self.driver.execute_script("return window.localStorage.length;")
+
+    def __getitem__(self, key):
+        value = self.driver.execute_script("return window.localStorage.getItem(arguments[0]);", key)
+        if value is None:
+            raise KeyError(key)
+        return value
+
+    def __setitem__(self, key, value):
+        self.driver.execute_script("window.localStorage.setItem(arguments[0], arguments[1]);", key, value)
+
+    def __contains__(self, key):
+        return key in self.keys()
+
+    def __repr__(self):
+        return self.items().__str__()
+
+
 class SeleniumBaseTestCase(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        if cls.driver is not None:
+            cls.local_storage = LocalStorage(cls.driver)
+
     @classmethod
     def tearDownClass(cls):
         if cls.driver is not None:
@@ -152,3 +216,8 @@ class SeleniumBaseTestCase(unittest.TestCase):
             timeout=timeout,
             msg="Wait for '%s' to be clickable. (timeout: %i)" % (xpath, timeout),
         )
+
+    def assert_local_storage_key_value(self, *, key, value):
+        print("local_storage:", pprint.pformat(self.local_storage))
+        is_value = self.local_storage[key]
+        self.assertEqual(value, is_value)
