@@ -154,6 +154,12 @@ class SeleniumTestsMixin:
 
         self.assertEqual(self.local_storage.items(), {})
 
+        self.local_storage["foo"] = "bar"
+        self.assertEqual(self.local_storage.items(), {"foo": "bar"})
+
+        self.tearDown() # tearDown should clear the local_storage
+        self.assertEqual(self.local_storage.items(), {})
+
 
 @override_settings(DEBUG=True)
 @unittest.skipUnless(chromium_available(), "Skip because Chromium is not available!")

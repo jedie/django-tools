@@ -95,6 +95,13 @@ class SeleniumBaseTestCase(unittest.TestCase):
         if self.driver is not None:
             self.driver.delete_all_cookies()
 
+    def tearDown(self):
+        super().tearDown()
+        if self.driver is not None:
+            # we clear window.localStorage here and not in setUp(), because
+            # access "window.localStorage" works only *after* a request
+            self.local_storage.clear()
+
     def _wait(self, conditions, timeout=5, msg="wait timeout"):
         """
         Wait for the given condition.
