@@ -16,13 +16,16 @@ from selenium.common.exceptions import NoSuchElementException
 
 # https://github.com/jedie/django-tools
 from django_tools.selenium.chromedriver import SeleniumChromiumTestCase, chromium_available
+from django_tools.selenium.django import (
+    SeleniumChromiumStaticLiveServerTestCase, SeleniumFirefoxStaticLiveServerTestCase
+)
 from django_tools.selenium.geckodriver import SeleniumFirefoxTestCase, firefox_available
 from django_tools.selenium.utils import find_executable
 from django_tools.unittest_utils.user import TestUserMixin
 
 
 @unittest.skipUnless(chromium_available(), "Skip because Chromium is not available!")
-class ExampleChromiumTests(SeleniumChromiumTestCase):
+class ExampleChromiumTests(SeleniumChromiumStaticLiveServerTestCase):
     def test_admin_login_page(self):
         self.driver.get(self.live_server_url + "/admin/login/")
         self.assert_equal_page_title("Log in | Django site admin")
@@ -31,7 +34,7 @@ class ExampleChromiumTests(SeleniumChromiumTestCase):
 
 
 @unittest.skipUnless(firefox_available(), "Skip because Firefox is not available!")
-class ExampleFirefoxTests(SeleniumFirefoxTestCase):
+class ExampleFirefoxTests(SeleniumFirefoxStaticLiveServerTestCase):
     def test_admin_login_page(self):
         self.driver.get(self.live_server_url + "/admin/login/")
         self.assert_equal_page_title("Log in | Django site admin")
@@ -126,7 +129,7 @@ class SeleniumTestsMixin:
 
 @override_settings(DEBUG=True)
 @unittest.skipUnless(chromium_available(), "Skip because Chromium is not available!")
-class SeleniumChromiumAdminTests(TestUserMixin, SeleniumChromiumTestCase, SeleniumTestsMixin):
+class SeleniumChromiumAdminTests(TestUserMixin, SeleniumChromiumStaticLiveServerTestCase, SeleniumTestsMixin):
     def test_console(self):
         self.driver.get(self.live_server_url + "/")
 
@@ -139,5 +142,22 @@ class SeleniumChromiumAdminTests(TestUserMixin, SeleniumChromiumTestCase, Seleni
 
 @override_settings(DEBUG=True)
 @unittest.skipUnless(firefox_available(), "Skip because Firefox is not available!")
-class SeleniumFirefoxAdminTests(TestUserMixin, SeleniumFirefoxTestCase, SeleniumTestsMixin):
+class SeleniumFirefoxAdminTests(TestUserMixin, SeleniumFirefoxStaticLiveServerTestCase, SeleniumTestsMixin):
+    pass
+
+
+class NonStaticLiveServerMixin:
+    def test_google(self):
+        self.driver.get("https://www.google.com/")
+        self.assert_equal_page_title("Google")
+        self.assert_in_page_source("Google Inc.")
+
+
+@unittest.skipUnless(chromium_available(), "Skip because Chromium is not available!")
+class TestSeleniumChromiumNonStaticLiveServer(SeleniumChromiumTestCase, NonStaticLiveServerMixin):
+    pass
+
+
+@unittest.skipUnless(firefox_available(), "Skip because Firefox is not available!")
+class TestSeleniumFirefoxNonStaticLiveServer(SeleniumFirefoxTestCase, NonStaticLiveServerMixin):
     pass

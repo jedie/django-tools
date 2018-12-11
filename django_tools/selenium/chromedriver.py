@@ -19,12 +19,12 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
     """
     TestCase with Selenium and the Chromium WebDriver
     Note:
-        Needs 'chromium-chromedriver' executable!
-        See README.creole for more info
+        * Needs 'chromium-chromedriver' executable! See README.creole for more info
+        * It's without django StaticLiveServerTestCase
 
     usage e.g.:
 
-        from django_tools.unittest_utils.selenium_utils import SeleniumChromiumTestCase, chromium_available
+        from django_tools.selenium.chromedriver import SeleniumChromiumTestCase, chromium_available
 
         @unittest.skipUnless(chromium_available(), "Skip because Chromium is not available!")
         class ChromiumTests(SeleniumChromiumTestCase):

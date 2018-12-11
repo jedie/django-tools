@@ -4,10 +4,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 import logging
+import sys
 import traceback
-
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from django.test import TestCase
+import unittest
 
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
@@ -20,20 +19,7 @@ from django_tools.selenium.response import selenium2fakes_response
 log = logging.getLogger(__name__)
 
 
-
-
-class SeleniumBaseTestCase(TestCase, StaticLiveServerTestCase):
-    """
-    inherit only from 'LiveServerTestCase' will result in
-    a empty database after test run.
-
-    See:
-
-    https://github.com/pytest-dev/pytest-django/issues/613
-    https://code.djangoproject.com/ticket/25251
-    https://github.com/django/django/pull/7528
-    """
-
+class SeleniumBaseTestCase(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         if cls.driver is not None:

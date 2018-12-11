@@ -222,16 +222,54 @@ and unittests: [[https://github.com/jedie/django-tools/blob/master/django_tools_
 
 === Selenium Test Cases
 
-A ready to use **Firefox test case** is here: {{{django_tools.unittest_utils.selenium_utils.SeleniumFirefoxTestCase}}}
-A ready to use **Chromium test case** is here: {{{django_tools.unittest_utils.selenium_utils.SeleniumChromiumTestCase}}}
+There are Firefox and Chromium test cases, with and without django StaticLiveServerTestCase!
 
-A base class with some nice helper is here: {{{django_tools.unittest_utils.selenium_utils.SeleniumBaseTestCase}}}
+Chromium + StaticLiveServer example:
+{{{
+from django_tools.selenium.chromedriver import chromium_available
+from django_tools.selenium.django import SeleniumChromiumStaticLiveServerTestCase
+
+@unittest.skipUnless(chromium_available(), "Skip because Chromium is not available!")
+class ExampleChromiumTests(SeleniumChromiumStaticLiveServerTestCase):
+    def test_admin_login_page(self):
+        self.driver.get(self.live_server_url + "/admin/login/")
+        self.assert_equal_page_title("Log in | Django site admin")
+        self.assert_in_page_source('<form action="/admin/login/" method="post" id="login-form">')
+        self.assert_no_javascript_alert()
+}}}
+
+
+Firefox + StaticLiveServer example:
+{{{
+from django_tools.selenium.django import SeleniumFirefoxStaticLiveServerTestCase
+from django_tools.selenium.geckodriver import firefox_available
+
+@unittest.skipUnless(firefox_available(), "Skip because Firefox is not available!")
+class ExampleFirefoxTests(SeleniumFirefoxStaticLiveServerTestCase):
+    def test_admin_login_page(self):
+        self.driver.get(self.live_server_url + "/admin/login/")
+        self.assert_equal_page_title("Log in | Django site admin")
+        self.assert_in_page_source('<form action="/admin/login/" method="post" id="login-form">')
+        self.assert_no_javascript_alert()
+}}}
+
+Test cases without StaticLiveServer:
+{{{
+from django_tools.selenium.chromedriver import SeleniumChromiumTestCase
+from django_tools.selenium.geckodriver import SeleniumFirefoxTestCase
+}}}
+
+
+See also existing unitests here:
+
+* [[https://github.com/jedie/django-tools/blob/master/django_tools/django_tools_tests/test_unittest_selenium.py|/django_tools/django_tools_tests/test_unittest_selenium.py]]
+
 
 **Note:**
 
-To use {{{SeleniumChromiumTestCase}}} you need the **Chromium Browser WebDriver** e.g.: {{{apt install chromium-chromedriver}}}
+To use Chromium test cases you need the **Chromium Browser WebDriver** e.g.: {{{apt install chromium-chromedriver}}}
 
-To use {{{SeleniumFirefoxTestCase}}} you need the **Firefox Browser WebDriver** aka **geckodriver**
+To use Firefox test cases you need the **Firefox Browser WebDriver** aka **geckodriver**
 
 e.g.:
 {{{
@@ -244,39 +282,11 @@ e.g.:
 geckodriver 0.20.1
 ...
 }}}
+Current version number can be found here:
 
-==== usage
-
-e.g.:
-{{{
-from django_tools.unittest_utils.selenium_utils import (
-    SeleniumChromiumTestCase, SeleniumFirefoxTestCase, chromium_available, firefox_available
-)
+* https://github.com/mozilla/geckodriver/releases
 
 
-@unittest.skipUnless(chromium_available(), "Skip because Chromium is not available!")
-class ExampleChromiumTests(SeleniumChromiumTestCase):
-
-    def test_admin_login_page(self):
-        self.driver.get(self.live_server_url + "/admin/login/")
-        self.assert_equal_page_title("Log in | Django site admin")
-        self.assert_in_page_source('<form action="/admin/login/" method="post" id="login-form">')
-        self.assert_no_javascript_alert()
-
-
-@unittest.skipUnless(firefox_available(), "Skip because Firefox is not available!")
-class ExampleFirefoxTests(SeleniumFirefoxTestCase):
-
-    def test_admin_login_page(self):
-        self.driver.get(self.live_server_url + "/admin/login/")
-        self.assert_equal_page_title("Log in | Django site admin")
-        self.assert_in_page_source('<form action="/admin/login/" method="post" id="login-form">')
-        self.assert_no_javascript_alert()
-}}}
-
-See also here:
-
-* [[https://github.com/jedie/django-tools/blob/master/django_tools/django_tools_tests/test_unittest_selenium.py|/django_tools/django_tools_tests/test_unittest_selenium.py]]
 
 
 === Mockup utils
@@ -676,6 +686,7 @@ Selenium helpers moved:
 
 Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works, but will be removed in the future!
 
+
 == Django compatibility
 
 |= django-tools    |= django version |= python         |
@@ -697,6 +708,7 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.42.4...master|compare v0.42.4...master]]
 ** Refactor selenium helpers
+** Split selenium test cases: with and without Django StaticLiveServerTestCase
 * v0.42.4 - 12.10.2018 - [[https://github.com/jedie/django-tools/compare/v0.42.3...v0.42.4|compare v0.42.3...v0.42.4]]
 ** Add {{{request}}} object to {{{TestUserMixin.login()}}} (needed for e.g.: django-axes auth backend)
 * v0.42.3 - 10.10.2018 - [[https://github.com/jedie/django-tools/compare/v0.42.2...v0.42.3|compare v0.42.2...v0.42.3]]

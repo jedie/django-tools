@@ -19,12 +19,12 @@ class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
     """
     TestCase with Selenium and the Firefox WebDriver
     Note:
-        Needs 'geckodriver' executable!
-        See README.creole for more info
+        * Needs 'geckodriver' executable! See README.creole for more info
+        * It's without django StaticLiveServerTestCase
 
     usage e.g.:
 
-        from django_tools.unittest_utils.selenium_utils import SeleniumFirefoxTestCase, firefox_available
+        from django_tools.selenium.geckodriver import SeleniumFirefoxTestCase, firefox_available
 
         @unittest.skipUnless(firefox_available(), "Skip because Firefox is not available!")
         class FirefoxTests(SeleniumFirefoxTestCase):
