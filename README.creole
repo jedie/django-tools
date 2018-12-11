@@ -662,6 +662,19 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
     * 'django_tools.manage_commands.django_tools_list_models',
     * 'django_tools.manage_commands.django_tools_nice_diffsettings',
 
+=== v0.43
+
+Selenium helpers moved:
+{{{
+-from django_tools.unittest_utils.selenium_utils import (
+-    SeleniumChromiumTestCase, SeleniumFirefoxTestCase, chromium_available, find_executable, firefox_available
+-)
++from django_tools.selenium.chromedriver import SeleniumChromiumTestCase, chromium_available
++from django_tools.selenium.geckodriver import SeleniumFirefoxTestCase, firefox_available
++from django_tools.selenium.utils import find_executable
+}}}
+
+Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works, but will be removed in the future!
 
 == Django compatibility
 
@@ -683,7 +696,7 @@ File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.42.4...master|compare v0.42.4...master]]
-** TBC
+** Refactor selenium helpers
 * v0.42.4 - 12.10.2018 - [[https://github.com/jedie/django-tools/compare/v0.42.3...v0.42.4|compare v0.42.3...v0.42.4]]
 ** Add {{{request}}} object to {{{TestUserMixin.login()}}} (needed for e.g.: django-axes auth backend)
 * v0.42.3 - 10.10.2018 - [[https://github.com/jedie/django-tools/compare/v0.42.2...v0.42.3|compare v0.42.2...v0.42.3]]

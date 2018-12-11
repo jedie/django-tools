@@ -27,7 +27,7 @@ if __name__ == "__main__":
 
 
 from django_tools.unittest_utils.unittest_base import BaseTestCase
-from django_tools.unittest_utils.selenium_utils import FakedHttpResponse
+from django_tools.selenium.response import FakedHttpResponse
 
 FAKE_RESPONSE1 = FakedHttpResponse("""\
 <!DOCTYPE HTML>

@@ -15,15 +15,14 @@ from django.test import override_settings
 from selenium.common.exceptions import NoSuchElementException
 
 # https://github.com/jedie/django-tools
-from django_tools.unittest_utils.selenium_utils import (
-    SeleniumChromiumTestCase, SeleniumFirefoxTestCase, chromium_available, find_executable, firefox_available
-)
+from django_tools.selenium.chromedriver import SeleniumChromiumTestCase, chromium_available
+from django_tools.selenium.geckodriver import SeleniumFirefoxTestCase, firefox_available
+from django_tools.selenium.utils import find_executable
 from django_tools.unittest_utils.user import TestUserMixin
 
 
 @unittest.skipUnless(chromium_available(), "Skip because Chromium is not available!")
 class ExampleChromiumTests(SeleniumChromiumTestCase):
-
     def test_admin_login_page(self):
         self.driver.get(self.live_server_url + "/admin/login/")
         self.assert_equal_page_title("Log in | Django site admin")
@@ -33,7 +32,6 @@ class ExampleChromiumTests(SeleniumChromiumTestCase):
 
 @unittest.skipUnless(firefox_available(), "Skip because Firefox is not available!")
 class ExampleFirefoxTests(SeleniumFirefoxTestCase):
-
     def test_admin_login_page(self):
         self.driver.get(self.live_server_url + "/admin/login/")
         self.assert_equal_page_title("Log in | Django site admin")
@@ -42,7 +40,6 @@ class ExampleFirefoxTests(SeleniumFirefoxTestCase):
 
 
 class SeleniumHelperTests(unittest.TestCase):
-
     def test_find_executable(self):
         with tempfile.NamedTemporaryFile(prefix="test_not_executable_", delete=False) as f:
             filepath = Path(f.name).resolve()
@@ -56,10 +53,10 @@ class SeleniumHelperTests(unittest.TestCase):
 
             self.assertEqual(context_manager.exception.args, ("Can't find '%s' in PATH or None!" % name,))
 
-            old_path = os.environ['PATH']
+            old_path = os.environ["PATH"]
             try:
                 # File is in PATH, but not executable:
-                os.environ['PATH'] += "%s%s" % (os.pathsep, path)
+                os.environ["PATH"] += "%s%s" % (os.pathsep, path)
                 with self.assertRaises(FileNotFoundError) as context_manager:
                     find_executable(name)
 
@@ -70,7 +67,7 @@ class SeleniumHelperTests(unittest.TestCase):
                 result = find_executable(name)
                 self.assertEqual(result, filepath)
             finally:
-                os.environ['PATH'] = old_path
+                os.environ["PATH"] = old_path
 
             # Executable file is not in PATH, but can be found via extra_search_paths:
             result = find_executable(name, extra_search_paths=(path,))
@@ -78,7 +75,6 @@ class SeleniumHelperTests(unittest.TestCase):
 
 
 class SeleniumTestsMixin:
-
     def test_login(self):
 
         self.assertTrue(settings.DEBUG)
@@ -124,14 +120,13 @@ class SeleniumTestsMixin:
         self.assert_in_page_source('href="/static/admin/css/base.css"')
 
         self.driver.get(self.live_server_url + "/static/admin/css/base.css")
-        self.assert_in_page_source('margin: 0;')
-        self.assert_in_page_source('padding: 0;')
+        self.assert_in_page_source("margin: 0;")
+        self.assert_in_page_source("padding: 0;")
 
 
 @override_settings(DEBUG=True)
 @unittest.skipUnless(chromium_available(), "Skip because Chromium is not available!")
 class SeleniumChromiumAdminTests(TestUserMixin, SeleniumChromiumTestCase, SeleniumTestsMixin):
-
     def test_console(self):
         self.driver.get(self.live_server_url + "/")
 
