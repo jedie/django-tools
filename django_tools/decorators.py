@@ -165,3 +165,39 @@ def display_admin_error(func):
                 raise
 
     return wrapped
+
+
+def warn_class_usage(message, category=DeprecationWarning):
+    """
+    create warnings on class usage.
+    """
+
+    def cls_wrapper(cls):
+        class Wrapped(cls, object):
+            def __init__(self, *args, **kwargs):
+                warnings.warn(message, category)
+                super(Wrapped, self).__init__(*args, **kwargs)
+
+            def __new__(cls, *args, **kwargs):
+                warnings.warn(message, category)
+                return object.__new__(cls)
+
+        return Wrapped
+
+    return cls_wrapper
+
+
+def warn_function_usage(message, category=DeprecationWarning):
+    """
+    create warnings on function usage.
+    """
+
+    def decorator(function):
+        @wraps(function)
+        def emit_warning(*args, **kwargs):
+            warnings.warn(message, category)
+            return function(*args, **kwargs)
+
+        return emit_warning
+
+    return decorator
