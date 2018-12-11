@@ -18,7 +18,7 @@ class TestWarnDecorators(unittest.TestCase):
             SeleniumChromiumTestCase()
 
         self.assertEqual(
-            str(cm.warning), "Use 'from django_tools.selenium.chromedriver import SeleniumChromiumTestCase' !"
+            str(cm.warning), "Use 'from django_tools.selenium.django import SeleniumChromiumStaticLiveServerTestCase' !"
         )
 
     def test_SeleniumFirefoxTestCase(self):
@@ -27,7 +27,7 @@ class TestWarnDecorators(unittest.TestCase):
             SeleniumFirefoxTestCase()
 
         self.assertEqual(
-            str(cm.warning), "Use 'from django_tools.selenium.geckodriver import SeleniumFirefoxTestCase' !"
+            str(cm.warning), "Use 'from django_tools.selenium.django import SeleniumFirefoxStaticLiveServerTestCase' !"
         )
 
     def test_find_executable(self):

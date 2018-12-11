@@ -9,22 +9,23 @@ import logging
 
 # https://github.com/jedie/django-tools
 from django_tools.decorators import warn_class_usage, warn_function_usage
-from django_tools.selenium.chromedriver import SeleniumChromiumTestCase as NewSeleniumChromiumTestCase
 from django_tools.selenium.chromedriver import chromium_available as new_chromium_available
-from django_tools.selenium.geckodriver import SeleniumFirefoxTestCase as NewSeleniumFirefoxTestCase
+from django_tools.selenium.django import (
+    SeleniumChromiumStaticLiveServerTestCase, SeleniumFirefoxStaticLiveServerTestCase
+)
 from django_tools.selenium.geckodriver import firefox_available as new_firefox_available
 from django_tools.selenium.utils import find_executable as new_find_executable
 
 log = logging.getLogger(__name__)
 
 
-@warn_class_usage("Use 'from django_tools.selenium.chromedriver import SeleniumChromiumTestCase' !")
-class SeleniumChromiumTestCase(NewSeleniumChromiumTestCase):
+@warn_class_usage("Use 'from django_tools.selenium.django import SeleniumChromiumStaticLiveServerTestCase' !")
+class SeleniumChromiumTestCase(SeleniumChromiumStaticLiveServerTestCase):
     pass
 
 
-@warn_class_usage("Use 'from django_tools.selenium.geckodriver import SeleniumFirefoxTestCase' !")
-class SeleniumFirefoxTestCase(NewSeleniumFirefoxTestCase):
+@warn_class_usage("Use 'from django_tools.selenium.django import SeleniumFirefoxStaticLiveServerTestCase' !")
+class SeleniumFirefoxTestCase(SeleniumFirefoxStaticLiveServerTestCase):
     pass
 
 
