@@ -30,12 +30,12 @@ class TestLoggingUtilsTestCase(BaseUnittestCase):
                 message="test_filter_and_log_warnings_direct_call",
                 category=UserWarning,
                 filename="/foo/bar.py",
-                lineno=123
+                lineno=123,
             )
 
         self.assertEqual(
             log_buffer.get_messages(),
-            "WARNING:django_tools.unittest_utils.logging_utils:UserWarning:test_filter_and_log_warnings_direct_call"
+            "WARNING:django_tools.unittest_utils.logging_utils:UserWarning:test_filter_and_log_warnings_direct_call",
         )
 
     def test_filter_and_log_skip_external_package(self):
@@ -46,13 +46,13 @@ class TestLoggingUtilsTestCase(BaseUnittestCase):
                     message="test_filter_and_log_skip_external_package dist-packages %i" % i,
                     category=UserWarning,
                     filename="/foo/dist-packages/bar.py",
-                    lineno=456
+                    lineno=456,
                 )
                 instance(
                     message="test_filter_and_log_skip_external_package site-packages %i" % i,
                     category=UserWarning,
                     filename="/foo/site-packages/bar.py",
-                    lineno=789
+                    lineno=789,
                 )
 
         log_messages = log_buffer.get_messages()
@@ -63,5 +63,5 @@ class TestLoggingUtilsTestCase(BaseUnittestCase):
             (
                 "WARNING:django_tools.unittest_utils.logging_utils:There are warnings in: /foo/dist-packages/bar.py\n"
                 "WARNING:django_tools.unittest_utils.logging_utils:There are warnings in: /foo/site-packages/bar.py"
-            )
+            ),
         )
