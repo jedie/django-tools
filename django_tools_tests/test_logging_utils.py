@@ -7,7 +7,6 @@
 
 
 import logging
-import warnings
 
 # https://github.com/jedie/django-tools
 from django_tools.unittest_utils.logging_utils import FilterAndLogWarnings, LoggingBuffer
@@ -17,15 +16,12 @@ log = logging.getLogger(__name__)
 
 
 class TestLoggingUtilsTestCase(BaseUnittestCase):
-
     def test_filter_and_log_warnings_create_warning(self):
-        with LoggingBuffer(name=None, level=logging.DEBUG) as log_buffer:
-            warnings.warn("test_filter_and_log_warnings_create_warning", UserWarning)
 
-        self.assertEqual(
-            log_buffer.get_messages(),
-            "WARNING:django_tools.unittest_utils.logging_utils:UserWarning:test_filter_and_log_warnings_create_warning"
-        )
+        with LoggingBuffer(name=None, level=logging.DEBUG) as log_buffer:
+            log.debug("A test log...")
+
+        self.assertEqual(log_buffer.get_messages(), "DEBUG:django_tools_tests.test_logging_utils:A test log...")
 
     def test_filter_and_log_warnings_direct_call(self):
         instance = FilterAndLogWarnings()
