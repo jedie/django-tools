@@ -6,29 +6,24 @@
 
     from PyLucid decorators.
 
-    :copyleft: 2009-2016 by the PyLucid team, see AUTHORS for more details.
+    :copyleft: 2009-2018 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
-from __future__ import absolute_import, division, print_function
 
 
 import sys
 import traceback
 import warnings
-from django.contrib import messages
-try:
-    from functools import wraps
-except ImportError:
-    from django.utils.functional import wraps  # Python 2.3, 2.4 fallback.
+from functools import wraps
 
-from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
-from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.contrib import messages
 from django.contrib.auth.models import Permission
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+from django.utils.translation import ugettext_lazy as _
 
 
 def check_permissions(superuser_only, permissions=()):
@@ -54,17 +49,19 @@ def check_permissions(superuser_only, permissions=()):
             user = request.user
 
             if not user.is_authenticated():
-                #FIXME: HttpResponseRedirect to admin login?
+                # FIXME: HttpResponseRedirect to admin login?
                 msg = _("Permission denied for anonymous user. Please log in.")
-                if settings.DEBUG: # Usefull??
+                if settings.DEBUG:  # Usefull??
                     warnings.warn(msg)
                 raise PermissionDenied(msg)
 
             if not user.has_perms(permissions):
                 msg = "User %r has not all permissions: %r (existing permissions: %r)" % (
-                    user, permissions, user.get_all_permissions()
+                    user,
+                    permissions,
+                    user.get_all_permissions(),
                 )
-                if settings.DEBUG: # Usefull??
+                if settings.DEBUG:  # Usefull??
                     warnings.warn(msg)
                 raise PermissionDenied(msg)
             return view_function(request, *args, **kwargs)
@@ -75,6 +72,7 @@ def check_permissions(superuser_only, permissions=()):
         _check_permissions.permissions = permissions
 
         return _check_permissions
+
     return _inner
 
 
@@ -96,6 +94,7 @@ def render_to(template_name=None, debug=False, **response_kwargs):
             bar = Bar.object.all()
             return {'bar': bar, 'template_name': 'foo/template.html'}
     """
+
     def renderer(function):
         @wraps(function)
         def wrapper(*args, **kwargs):
@@ -111,19 +110,24 @@ def render_to(template_name=None, debug=False, **response_kwargs):
 
             if not isinstance(context, dict):
                 if debug:
-                    msg = (
-                        "renter_to info: %s (template: %r)"
-                        " has not return a dict, has return: %r (%r)"
-                    ) % (function.__name__, template_name, type(context), function.__code__)
+                    msg = ("renter_to info: %s (template: %r)" " has not return a dict, has return: %r (%r)") % (
+                        function.__name__,
+                        template_name,
+                        type(context),
+                        function.__code__,
+                    )
                     messages.info(request, msg)
                 return context
 
-            template_name2 = context.pop('template_name', template_name)
-            assert template_name2 != None, \
-                ("Template name must be passed as render_to parameter"
-                " or 'template_name' must be inserted into context!")
+            template_name2 = context.pop("template_name", template_name)
+            assert template_name2 != None, (
+                "Template name must be passed as render_to parameter"
+                " or 'template_name' must be inserted into context!"
+            )
 
-            response = render_to_response(template_name2, context, context_instance=RequestContext(request), **response_kwargs)
+            response = render_to_response(
+                template_name2, context, context_instance=RequestContext(request), **response_kwargs
+            )
 
             if debug:
                 messages.info(request, "render debug for %r (template: %r):" % (function.__name__, template_name2))
@@ -131,7 +135,9 @@ def render_to(template_name=None, debug=False, **response_kwargs):
                 messages.info(request, "response:", response.content)
 
             return response
+
         return wrapper
+
     return renderer
 
 
@@ -147,6 +153,7 @@ def display_admin_error(func):
 
             list_display = ('bsp',)
     """
+
     def wrapped(*args, **kwargs):
         try:
             return func(*args, **kwargs)
@@ -156,4 +163,5 @@ def display_admin_error(func):
                 return "%s: %s" % (err.__class__.__name__, err)
             else:
                 raise
+
     return wrapped
