@@ -5,15 +5,19 @@
     ~~~~~~~
 """
 
-from __future__ import print_function, unicode_literals
 
 import tempfile
-import warnings
 
 from django.core.files import File as DjangoFile
 
-from filer.models import Image as FilerImage
 from PIL import Image, ImageDraw, ImageFont
+
+try:
+    from filer.models import Image as FilerImage
+except ImportError as err:
+    FilerImage = None
+    FILER_IMPORT_ERROR = err
+
 
 DUMMY_TEXT = """Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula
 eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient
@@ -41,26 +45,25 @@ def create_filer_image(pil_image, user):
     """
     Create from a PIL image a filer.models.Image() instance
     """
+    if FilerImage is None:
+        # Django-Filer is not available: raise the origin error
+        raise ImportError(FILER_IMPORT_ERROR)
+
     file_obj = DjangoFile(pil_image, name=pil_image.name)
-    image = FilerImage.objects.create(
-        owner=user,
-        original_filename=pil_image.name,
-        file=file_obj,
-        folder=None
-    )
+    image = FilerImage.objects.create(owner=user, original_filename=pil_image.name, file=file_obj, folder=None)
     return image
 
 
 class ImageDummy:
-    new_image_color="black"
-    text_color="#ffffff"
-    text_align="center"
-    temp_prefix="dummy_"
-    format="png"
+    new_image_color = "black"
+    text_color = "#ffffff"
+    text_align = "center"
+    temp_prefix = "dummy_"
+    format = "png"
 
     def __init__(self, width, height):
-        self.width=width
-        self.height=height
+        self.width = width
+        self.height = height
 
     def fill_image(self, image):
         """
@@ -77,7 +80,7 @@ class ImageDummy:
         pixel_map = image.load()
         for i in range(self.width):
             for j in range(self.height):
-                pixel_map[i,j] = (i, j, 1)
+                pixel_map[i, j] = (i, j, 1)
 
     def draw_centered_text(self, image, text, color="#000000", size_factor=16, truetype=None):
         """
@@ -95,44 +98,35 @@ class ImageDummy:
         """
         draw = ImageDraw.Draw(image)
 
-        font_size=min([self.width, self.height])
-        font_size=int(font_size / size_factor)
+        font_size = min([self.width, self.height])
+        font_size = int(font_size / size_factor)
 
         if truetype is not None:
-            font = ImageFont.truetype(
-                font=truetype,
-                size=font_size
-            )
+            font = ImageFont.truetype(font=truetype, size=font_size)
             split_character = "\n" if isinstance(text, str) else b"\n"
             lines = text.split(split_character)
-            max_width=0
-            widths=[]
+            max_width = 0
+            widths = []
             for line in lines:
                 line_width, line_height = font.getsize(line)
                 widths.append(line_width)
                 max_width = max(max_width, line_width)
 
             line_width, line_height = font.getsize(text)
-            left=int((self.width-max_width)/2)
-            top=int((self.height-line_height)/2)
+            left = int((self.width - max_width) / 2)
+            top = int((self.height - line_height) / 2)
         else:
             font = None
-            left=int((self.width)/2)
-            top=int((self.height)/2)
+            left = int((self.width) / 2)
+            top = int((self.height) / 2)
 
-        draw.multiline_text(
-            xy=(left, top),
-            text=text,
-            fill=color,
-            font=font,
-            align="center"
-        )
+        draw.multiline_text(xy=(left, top), text=text, fill=color, font=font, align="center")
 
     def create_pil_image(self):
         """
         return a 'filled' PIL image
         """
-        image = Image.new('RGB', (self.width, self.height), self.new_image_color)
+        image = Image.new("RGB", (self.width, self.height), self.new_image_color)
         self.fill_image(image)
         return image
 
@@ -151,35 +145,12 @@ class ImageDummy:
         draw the given >text< on it
         and return a filer.models.Image() instance.
         """
+        if FilerImage is None:
+            # Django-Filer is not available: raise the origin error
+            raise ImportError(FILER_IMPORT_ERROR)
+
         f = tempfile.NamedTemporaryFile(prefix=self.temp_prefix, suffix=".%s" % self.format)
         image = self.create_info_image(text)
         image.save(f, format=self.format)
         filer_image = create_filer_image(f, user)
         return filer_image
-
-
-def create_pil_image(width, height):
-    warnings.warn(
-        "This is a old API, please use django_tools.unittest_utils.mockup.ImageDummy",
-        category=DeprecationWarning
-    )
-    return ImageDummy(width, height).create_pil_image()
-
-
-def create_info_image(width, height, text, fill='#ffffff', align='center'):
-    warnings.warn(
-        "This is a old API, please use django_tools.unittest_utils.mockup.ImageDummy",
-        category=DeprecationWarning
-    )
-    image_dummy=ImageDummy(width, height)
-    image_dummy.text_color=fill
-    image_dummy.text_align=align
-    return image_dummy.create_info_image(text)
-
-
-def create_temp_filer_info_image(width, height, text, user):
-    warnings.warn(
-        "This is a old API, please use django_tools.unittest_utils.mockup.ImageDummy",
-        category=DeprecationWarning
-    )
-    return ImageDummy(width, height).create_temp_filer_info_image(text, user)
