@@ -713,7 +713,9 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.44.0...master|compare v0.44.0...master]]
 ** TBC
 * v0.44.0 - 13.12.2018 - [[https://github.com/jedie/django-tools/compare/v0.43.2...v0.44.0|compare v0.43.2...v0.44.0]]
+** NEW: {{{django_file = ImageDummy().create_django_file_info_image(text="")}}} e.g.: for attach to {{{models.ImageField()}}}
 ** Make {{{mockup.ImageDummy()}}} usable even if django-filer is not installed.
+** {{{mockup.ImageDummy()}}} default image format changed from png to jpeg
 ** Cleanup: remove old, since v0.35 deprecated mockup image API
 * v0.43.2 - 11.12.2018 - [[https://github.com/jedie/django-tools/compare/v0.43.1...v0.43.2|compare v0.43.1...v0.43.2]]
 ** Bugfix Selenium refactor: Use the class with the same functionality if old usage places are used.

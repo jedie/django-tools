@@ -8,6 +8,8 @@
 
 import warnings
 
+from django.core.files import File as DjangoFile
+
 # https://github.com/jedie/django-tools
 from django_tools.unittest_utils.mockup import ImageDummy
 from django_tools.unittest_utils.unittest_base import BaseTestCase
@@ -50,7 +52,7 @@ class TestMockupImage(TestUserMixin, BaseTestCase):
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")  # trigger all warnings
 
-            filer_info_image = ImageDummy(width=500, height=300).create_temp_filer_info_image(
+            filer_info_image = ImageDummy(width=500, height=300, format="png").create_temp_filer_info_image(
                 text="A test image", user=user
             )
             self.assertEqual(filer_info_image.width, 500)
@@ -63,5 +65,15 @@ class TestMockupImage(TestUserMixin, BaseTestCase):
             path = path.replace("-", "_")  # e.g.: /django-tools/ -> /django_tools/
 
             self.assertIn("/django_tools/django_tools_test_project/media/filer_public/", path)
+
+            self.assertEqual(len(w), 0)  # No warnings created
+
+    def test_create_django_file_info_image(self):
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")  # trigger all warnings
+
+            django_file = ImageDummy(width=100, height=50).create_django_file_info_image(text="foo bar")
+
+            self.assertIsInstance(django_file, DjangoFile)
 
             self.assertEqual(len(w), 0)  # No warnings created

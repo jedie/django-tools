@@ -4,8 +4,7 @@
     Mockups
     ~~~~~~~
 """
-
-
+import io
 import tempfile
 
 from django.core.files import File as DjangoFile
@@ -59,11 +58,11 @@ class ImageDummy:
     text_color = "#ffffff"
     text_align = "center"
     temp_prefix = "dummy_"
-    format = "png"
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, format="jpeg"):
         self.width = width
         self.height = height
+        self.format = format
 
     def fill_image(self, image):
         """
@@ -139,11 +138,30 @@ class ImageDummy:
         draw.multiline_text((10, 10), text, fill=self.text_color, align=self.text_align)
         return image
 
+    def create_django_file_info_image(self, text, filename=None):
+        """
+        Create a django.core.files.base.File instance:
+            1. fill a PIL image with a colorful gradient
+            2. draw the given >text< on it
+
+        usable to attach this to: models.ImageField()
+        """
+        if filename is None:
+            filename = "dummy.%s" % self.format.lower()
+
+        pil_image = self.create_info_image(text)
+
+        temp = io.BytesIO()
+        pil_image.save(temp, format=self.format)
+
+        django_file = DjangoFile(temp, name=filename)
+        return django_file
+
     def create_temp_filer_info_image(self, text, user):
         """
-        Fill a PIL image with a colorful gradient,
-        draw the given >text< on it
-        and return a filer.models.Image() instance.
+        Create a filer.models.Image() instance:
+            1. fill a PIL image with a colorful gradient
+            2. draw the given >text< on it
         """
         if FilerImage is None:
             # Django-Filer is not available: raise the origin error
