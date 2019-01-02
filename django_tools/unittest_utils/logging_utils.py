@@ -1,6 +1,6 @@
 """
     :created: 2015 by Jens Diemer
-    :copyleft: 2015-2018 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2015-2019 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -27,7 +27,7 @@ class LoggingBuffer:
         self.old_handlers = self.log.handlers[:]  # .copy()
         self.old_level = self.log.level
         self.log.setLevel(level)
-        self.log.handlers = [MemoryHandler(capacity=0, flushLevel=level, target=self)]
+        self.log.handlers.append(MemoryHandler(capacity=0, flushLevel=level, target=self))
 
     def handle(self, record):
         self.buffer.append(record)
