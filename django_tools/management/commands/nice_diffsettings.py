@@ -13,7 +13,7 @@ from django.core.management.base import BaseCommand
 def module_to_dict(module, omittable=lambda k: k.startswith("_")):
     """
     Same as django.core.management.commands.diffsettings.module_to_dict
-    bur didn't use repr() ;)
+    but didn't use repr() ;)
     """
     return {k: v for k, v in module.__dict__.items() if not omittable(k)}
 
