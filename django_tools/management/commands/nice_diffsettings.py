@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     $ ./manage.py nice_diffsettings
 
@@ -7,13 +5,12 @@
         django.core.management.commands.diffsettings
 """
 
-from __future__ import absolute_import, unicode_literals, print_function
-
 import pprint
 
 from django.core.management.base import BaseCommand
 
-def module_to_dict(module, omittable=lambda k: k.startswith('_')):
+
+def module_to_dict(module, omittable=lambda k: k.startswith("_")):
     """
     Same as django.core.management.commands.diffsettings.module_to_dict
     bur didn't use repr() ;)
@@ -28,8 +25,13 @@ class Command(BaseCommand):
     requires_system_checks = False
 
     def add_arguments(self, parser):
-        parser.add_argument('--all', action='store_true', dest='all', default=False,
-            help='Display all settings, regardless of their value.')
+        parser.add_argument(
+            "--all",
+            action="store_true",
+            dest="all",
+            default=False,
+            help="Display all settings, regardless of their value.",
+        )
 
     def handle(self, **options):
         from django.conf import settings, global_settings
@@ -40,7 +42,7 @@ class Command(BaseCommand):
         user_settings = module_to_dict(settings._wrapped)
         default_settings = module_to_dict(global_settings)
 
-        self.stdout.write("-"*79)
+        self.stdout.write("-" * 79)
 
         for key in sorted(user_settings):
             display = False
@@ -48,7 +50,7 @@ class Command(BaseCommand):
                 display = True
             elif user_settings[key] != default_settings[key]:
                 display = True
-            elif options['all']:
+            elif options["all"]:
                 display = True
 
             if display:
@@ -63,4 +65,3 @@ class Command(BaseCommand):
                 self.stdout.write("%s = %s\n\n" % (key, pformated))
 
         self.stdout.write("-" * 79)
-
