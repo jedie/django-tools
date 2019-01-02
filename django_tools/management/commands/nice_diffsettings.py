@@ -52,9 +52,15 @@ class Command(BaseCommand):
                 display = True
 
             if display:
-                self.stdout.write(
-                    "%s = %s\n\n" % (key, pprint.pformat(user_settings[key]))
-                )
+
+                value = user_settings[key]
+                try:
+                    pformated = pprint.pformat(value)
+                except Exception as err:
+                    # e.g.: https://github.com/andymccurdy/redis-py/issues/995
+                    pformated = "<Error: %s>" % err
+
+                self.stdout.write("%s = %s\n\n" % (key, pformated))
 
         self.stdout.write("-" * 79)
 
