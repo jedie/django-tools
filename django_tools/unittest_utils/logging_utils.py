@@ -9,7 +9,6 @@ from logging.handlers import MemoryHandler
 
 
 class LoggingBuffer:
-
     def __init__(self, name=None, level=logging.DEBUG, formatter=None):
         """
         To get the logger name, execute this in `./manage.py shell` e.g.:
@@ -34,6 +33,43 @@ class LoggingBuffer:
 
     def clear(self):
         self.buffer = []
+
+    def add_record(
+        self,
+        *,
+        msg,
+        name="LoggingBuffer.add_record()",
+        level=logging.DEBUG,
+        pathname=None,
+        lineno=None,
+        args=None,
+        exc_info=None,
+        func=None,
+        sinfo=None,
+        **kwargs
+    ):
+        """
+        Helper to add log entries, e.g.:
+
+            with LoggingBuffer("foo.bar") as log:
+                for i in range(10):
+                    log.add_record(msg = "Create %i" % i)
+                    call_something(...)
+        """
+        self.buffer.append(
+            logging.LogRecord(
+                name=name,
+                level=level,
+                pathname=pathname,
+                lineno=lineno,
+                msg=msg,
+                args=args,
+                exc_info=exc_info,
+                func=func,
+                sinfo=sinfo,
+                **kwargs
+            )
+        )
 
     def __enter__(self):
         return self
@@ -82,7 +118,7 @@ class CutPathnameLogRecordFactory:
     def cut_path(self, pathname):
         if len(pathname) <= self.max_length:
             return pathname
-        return "...%s" % pathname[-(self.max_length - 3):]
+        return "...%s" % pathname[-(self.max_length - 3) :]
 
     def __call__(self, *args, **kwargs):
         record = self.origin_factory(*args, **kwargs)
@@ -106,6 +142,7 @@ class FilterAndLogWarnings:
 
         warnings.showwarning = FilterAndLogWarnings()
     """
+
     skipped_filenames = []
 
     def __init__(self, logger_name=None, external_package_paths=None):
@@ -114,10 +151,7 @@ class FilterAndLogWarnings:
         self.logger = logging.getLogger(logger_name)
 
         if external_package_paths is None:
-            self.external_package_paths = (
-                "/dist-packages/",
-                "/site-packages/",
-            )
+            self.external_package_paths = ("/dist-packages/", "/site-packages/")
         else:
             self.external_package_paths = external_package_paths
 
