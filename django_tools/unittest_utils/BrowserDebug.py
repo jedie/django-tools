@@ -7,7 +7,7 @@
 
     Helper functions for displaying test responses in webbrowser.
 
-    :copyleft: 2009-2018 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2009-2019 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -17,7 +17,9 @@ import cgi
 import datetime
 import logging
 import re
+import sys
 import tempfile
+import traceback
 import webbrowser
 from collections import OrderedDict
 from pprint import pformat
@@ -173,7 +175,14 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True, di
     #-------------------------------------------------------------------------
 
     response_info += "\t<dt><h3>settings</h3></dt>\n"
-    response_info += "\t<dd><pre>%s</pre></dd>\n" % pformat(get_safe_settings())
+
+    try:
+        safe_settings = pformat(get_safe_settings())
+    except Exception:
+        # e.g.: https://github.com/andymccurdy/redis-py/issues/995
+        safe_settings = traceback.format_exception(*sys.exc_info())
+
+    response_info += "\t<dd><pre>%s</pre></dd>\n" % safe_settings
 
     response_info += "</dl>\n"
 
