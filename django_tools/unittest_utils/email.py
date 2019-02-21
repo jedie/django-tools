@@ -19,7 +19,7 @@ def print_mailbox(outbox, max_length=120):
     def cutted_bytes(data, num=80):
         return Truncator(repr(data)).chars(num=num)
 
-    print("There are %i mails", len(outbox))
+    print("There are %i mails" % len(outbox))
     for no, mail_instance in enumerate(outbox, start=1):
         print("_" * 79)
         print(" *** Mail No. %i: ***" % no)
