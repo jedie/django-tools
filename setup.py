@@ -252,6 +252,14 @@ setup(
     install_requires=[
         "Django>=1.11",
         "lxml",
+        #
+        # https://pypi.org/project/icdiff/
+        # https://github.com/jeffkaufman/icdiff
+        "icdiff",
+        #
+        # https://pypi.org/project/pprintpp/
+        # https://github.com/wolever/pprintpp
+        "pprintpp"
     ],
     zip_safe=False,
     classifiers=[

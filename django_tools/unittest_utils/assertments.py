@@ -4,11 +4,15 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+
 from pathlib import Path
 
 from django.conf import settings
 from django.core import mail
 from django.core.mail import get_connection
+
+import icdiff
+import pprintpp
 
 
 def assert_startswith(text, prefix):
@@ -86,3 +90,36 @@ def assert_path_not_exists(path):
     assert not path.is_file(), "Path is a existing file: %s" % path
     assert not path.is_fifo(), "Path is a existing fifo: %s" % path
     assert not path.exists(), "Path exists: %s" % path
+
+
+def pformat(obj, indent=4, width=100):
+    pformat_return_list = pprintpp.pformat(obj, indent=indent, width=width)
+    return pformat_return_list.splitlines()
+
+
+def create_icdiff(first, second, fromfile="first", tofile="second", indent=4, width=100):
+    """
+    Based on:
+        https://github.com/hjwp/pytest-icdiff/blob/master/pytest_icdiff.py
+    """
+    pformat_first = pformat(first, indent=indent, width=width)
+    pformat_second = pformat(second, indent=indent, width=width)
+
+    icdiff_lines = list(
+        icdiff.ConsoleDiff(tabsize=2, cols=width, highlight=True).make_table(
+            fromlines=pformat_first, tolines=pformat_second, fromdesc=fromfile, todesc=tofile
+        )
+    )
+    if len(icdiff_lines) == 1:
+        # hacky whitespace reduce:
+        icdiff_lines[0] = icdiff_lines[0].replace("        ", " ")
+
+    # icdiff_lines = [f"{COLOR_OFF}{l}" for l in icdiff_lines]
+
+    return "\n".join(icdiff_lines)
+
+
+def assert_pformat_equal(first, second, **pformat_kwargs):
+    """ compare with pprintpp and icdiff output """
+    if first != second:
+        assert first == second, create_icdiff(first=first, second=second, **pformat_kwargs)
