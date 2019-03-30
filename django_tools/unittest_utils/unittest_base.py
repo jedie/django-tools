@@ -17,6 +17,7 @@ from django.urls import reverse
 
 # https://github.com/jedie/django-tools
 from django_tools.unittest_utils import assertments
+from django_tools.unittest_utils.assertments import assert_pformat_equal
 
 from .BrowserDebug import debug_response
 
@@ -38,10 +39,10 @@ class BaseUnittestCase(TestCase):
         txt = txt.strip()
         return txt
 
-    def assertEqual_dedent(self, first, second, msg=None):
+    def assertEqual_dedent(self, first, second, msg=""):
         first = self._dedent(first)
         second = self._dedent(second)
-        self.assertEqual(first, second, msg)
+        assert_pformat_equal(first, second, msg=msg)
 
     def assertIn_dedent(self, member, container, msg=None):
         member = self._dedent(member)

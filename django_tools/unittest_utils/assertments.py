@@ -102,12 +102,19 @@ def create_icdiff(first, second, fromfile="first", tofile="second", indent=4, wi
     Based on:
         https://github.com/hjwp/pytest-icdiff/blob/master/pytest_icdiff.py
     """
-    pformat_first = pformat(first, indent=indent, width=width)
-    pformat_second = pformat(second, indent=indent, width=width)
+    if isinstance(first, str):
+        first = first.splitlines()
+    else:
+        first = pformat(first, indent=indent, width=width)
+
+    if isinstance(second, str):
+        second = second.splitlines()
+    else:
+        second = pformat(second, indent=indent, width=width)
 
     icdiff_lines = list(
         icdiff.ConsoleDiff(tabsize=2, cols=width, highlight=True).make_table(
-            fromlines=pformat_first, tolines=pformat_second, fromdesc=fromfile, todesc=tofile
+            fromlines=first, tolines=second, fromdesc=fromfile, todesc=tofile
         )
     )
     if len(icdiff_lines) == 1:
@@ -119,10 +126,10 @@ def create_icdiff(first, second, fromfile="first", tofile="second", indent=4, wi
     return "\n".join(icdiff_lines)
 
 
-def assert_pformat_equal(first, second, **pformat_kwargs):
+def assert_pformat_equal(first, second, msg="", **pformat_kwargs):
     """ compare with pprintpp and icdiff output """
     if first != second:
-        assert first == second, create_icdiff(first=first, second=second, **pformat_kwargs)
+        assert first == second, "%s%s" % (msg, create_icdiff(first=first, second=second, **pformat_kwargs))
 
 
 def assert_filenames_and_content(*, path, reference, fromfile="current", tofile="reference", **pformat_kwargs):
