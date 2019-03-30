@@ -183,40 +183,17 @@ warnings.showwarning = FilterAndLogWarnings()
 #-----------------------------------------------------------------------------
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': True,
-    'formatters': {
-        'verbose': {
-            'format': '%(levelname)8s %(pathname)s:%(lineno)-3s %(message)s'
-        },
-        'simple': {
-            'format': '%(levelname)s %(message)s'
-        },
+    "version": 1,
+    "disable_existing_loggers": True,
+    "formatters": {
+        "colored": {  # https://github.com/borntyping/python-colorlog
+            "()": "colorlog.ColoredFormatter",
+            "format": "%(log_color)s%(asctime)s %(levelname)8s %(cut_path)s:%(lineno)-3s %(message)s",
+        }
     },
-    'handlers': {
-        'null': {
-            'class': 'logging.NullHandler',
-        },
-        'console': {
-            'class': 'logging.StreamHandler',
-            # 'formatter': 'simple'
-            'formatter': 'verbose'
-        },
-    },
-    'loggers': {
-        "django_tools": {
-            'handlers': [
-                # 'null',
-                'console'
-            ],
-            'level': 'DEBUG',
-        },
-        "django_tools.DynamicSite": {
-            'handlers': [
-                # 'null',
-                'console'
-            ],
-            'level': 'DEBUG',
-        },
+    "handlers": {"console": {"class": "colorlog.StreamHandler", "formatter": "colored"}},
+    "loggers": {
+        "django_tools": {"handlers": ["console"], "level": "DEBUG", "propagate": False},
+        "django_tools.DynamicSite": {"handlers": ["console"], "level": "DEBUG", "propagate": False},
     },
 }

@@ -19,3 +19,6 @@ django-parler
 django-debug-toolbar
 selenium
 
+# https://pypi.org/project/colorlog/
+# https://github.com/borntyping/python-colorlog
+colorlog
