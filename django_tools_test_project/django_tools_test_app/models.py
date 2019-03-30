@@ -1,4 +1,3 @@
-
 """
     django-tools test models
     ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -34,26 +33,20 @@ class PermissionTestModel(ModelPermissionMixin, models.Model):
 
     class Meta:
         # https://docs.djangoproject.com/en/1.8/ref/models/options/#permissions
-        permissions = (
-            ("extra_permission", "Extra permission"),
-        )
+        permissions = (("extra_permission", "Extra permission"),)
 
 
-#_____________________________________________________________________________
+# _____________________________________________________________________________
 # for django_tools.parler_utils.parler_fixtures.ParlerDummyGenerator
 
 
 class SimpleParlerModel(TranslatableModel):
-    translations = TranslatedFields(
-        slug=models.SlugField()
-    )
+    translations = TranslatedFields(slug=models.SlugField())
 
 
 def generate_simple_parler_dummies():
     ParlerDummyGenerator(
-        ParlerModelClass=SimpleParlerModel,
-        publisher_model=False,
-        unique_translation_field="slug"
+        ParlerModelClass=SimpleParlerModel, publisher_model=False, unique_translation_field="slug"
     ).get_or_create(count=5)
 
 
