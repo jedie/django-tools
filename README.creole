@@ -711,8 +711,10 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.44.2...master|compare v0.44.2...master]]
+** NEW: {{{OverwriteFileSystemStorage}}} with backup functionality
 ** NEW: {{{print_exc_plus()}}} - traceback with a listing of all the local variables
 ** NEW: {{{assert_pformat_equal}}} with {{{pprintpp}}} and {{{icdiff}}}
+** NEW: {{{assert_filenames_and_content}}}
 * v0.44.2 - 02.01.2019 - [[https://github.com/jedie/django-tools/compare/v0.44.1...v0.44.2|compare v0.44.1...v0.44.2]]
 ** Handle errors like: https://github.com/andymccurdy/redis-py/issues/995
 * v0.44.1 - 02.01.2019 - [[https://github.com/jedie/django-tools/compare/v0.44.0...v0.44.1|compare v0.44.0...v0.44.1]]

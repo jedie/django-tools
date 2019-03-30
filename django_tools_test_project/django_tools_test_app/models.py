@@ -6,6 +6,7 @@
     :copyleft: 2012-2018 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
+import tempfile
 
 from django.db import models
 
@@ -13,6 +14,7 @@ from parler.models import TranslatableModel, TranslatedFields
 
 # https://github.com/jedie/django-tools
 from django_tools import limit_to_usergroups
+from django_tools.file_storage.file_system_storage import OverwriteFileSystemStorage
 from django_tools.parler_utils.parler_fixtures import ParlerDummyGenerator
 from django_tools.permissions import ModelPermissionMixin, check_permission
 
@@ -55,8 +57,20 @@ def generate_simple_parler_dummies():
     ).get_or_create(count=5)
 
 
+# _____________________________________________________________________________
+# for django_tools.file_storage.file_system_storage.OverwriteFileSystemStorage
 
-#-----------------------------------------------------------------------------
+temp_storage_location = tempfile.mkdtemp(prefix="OverwriteFileSystemStorage_")
+
+
+class OverwriteFileSystemStorageModel(models.Model):
+    file = models.FileField(storage=OverwriteFileSystemStorage(location=temp_storage_location, create_backups=True))
+
+    def __str__(self):
+        return "pk:%r - %r" % (self.pk, self.file)
+
+
+# -----------------------------------------------------------------------------
 
 
 # TODO:

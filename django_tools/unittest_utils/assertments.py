@@ -123,3 +123,21 @@ def assert_pformat_equal(first, second, **pformat_kwargs):
     """ compare with pprintpp and icdiff output """
     if first != second:
         assert first == second, create_icdiff(first=first, second=second, **pformat_kwargs)
+
+
+def assert_filenames_and_content(*, path, reference, fromfile="current", tofile="reference", **pformat_kwargs):
+    if not isinstance(path, Path):
+        path = Path(path)
+
+    assert_is_dir(path)
+
+    current_data = []
+    for item in sorted(path.iterdir()):
+        with item.open("rb") as f:
+            current_data.append((item.name, f.read()))
+
+    if current_data != reference:
+        print("\nCurrent filenames and content:")
+        pprintpp.pprint(current_data, **pformat_kwargs)
+
+    assert_pformat_equal(current_data, reference, fromfile=fromfile, tofile=tofile, **pformat_kwargs)
