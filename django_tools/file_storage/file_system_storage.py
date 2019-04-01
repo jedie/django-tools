@@ -34,7 +34,7 @@ def file_compare(path1, path2):
 
     # Compare file content:
     filecmp.clear_cache()  # if we didn't clear the cache: unittests may be failed!
-    return filecmp.cmp(path1, path2, shallow=False)
+    return filecmp.cmp(str(path1), str(path2), shallow=False)  # str() needed for python 3.5
 
 
 class OverwriteFileSystemStorage(FileSystemStorage):
