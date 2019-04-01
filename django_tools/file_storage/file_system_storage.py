@@ -55,9 +55,8 @@ class OverwriteFileSystemStorage(FileSystemStorage):
             * backup 1..: foo.bar.bak
             * backup 2..: foo.bar.bak0
             * backup 3..: foo.bar.bak1
-            * foo.bar.bak0
-            * foo.bar.bak1
-    Backup files are only made if file content changed. But at least one time!
+
+    Backup files are only made if file content changed.
 
     Based on: https://djangosnippets.org/snippets/976/
     see also: https://code.djangoproject.com/ticket/11663

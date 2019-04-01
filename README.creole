@@ -40,6 +40,29 @@ e.g.:
 
 == existing stuff
 
+=== OverwriteFileSystemStorage
+
+A django filesystem storage that will overwrite existing files and can create backups, if content changed.
+usage:
+
+{{{
+class ExampleModel(models.Model):
+    foo_file = models.FileField(
+        storage=OverwriteFileSystemStorage(create_backups=True)
+    )
+    bar_image = models.ImageField(
+        storage=OverwriteFileSystemStorage(create_backups=False)
+    )
+}}}
+
+Backup made by appending a suffix and sequential number, e.g.:
+
+* source....: foo.bar
+* backup 1..: foo.bar.bak
+* backup 2..: foo.bar.bak0
+* backup 3..: foo.bar.bak1
+
+Backup files are only made if file content changed. But at least one time!
 
 === Django Logging utils
 
