@@ -733,7 +733,9 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.44.2...master|compare v0.44.2...master]]
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.45.0...master|compare v0.45.0...master]]
+** tbc
+* v0.45.0 - 01.04.2019 - [[https://github.com/jedie/django-tools/compare/v0.44.2...v0.45.0|compare v0.44.2...v0.45.0]]
 ** NEW: {{{OverwriteFileSystemStorage}}} with backup functionality
 ** NEW: {{{print_exc_plus()}}} - traceback with a listing of all the local variables
 ** NEW: {{{assert_pformat_equal}}} with {{{pprintpp}}} and {{{icdiff}}}
@@ -1079,12 +1081,12 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 
 == links ==
 
-| Homepage   | http://github.com/jedie/django-tools
-| PyPi       | http://pypi.python.org/pypi/django-tools/
+| Homepage   | https://github.com/jedie/django-tools
+| PyPi       | https://pypi.python.org/pypi/django-tools/
 
 
 == donation ==
 
 * [[https://www.paypal.me/JensDiemer|paypal.me/JensDiemer]]
 * [[https://flattr.com/submit/auto?uid=jedie&url=https%3A%2F%2Fgithub.com%2Fjedie%2Fdjango-tools%2F|Flattr This!]]
-* Send [[http://www.bitcoin.org/|Bitcoins]] to [[https://blockexplorer.com/address/1823RZ5Md1Q2X5aSXRC5LRPcYdveCiVX6F|1823RZ5Md1Q2X5aSXRC5LRPcYdveCiVX6F]]
+* Send [[https://www.bitcoin.org/|Bitcoins]] to [[https://blockexplorer.com/address/1823RZ5Md1Q2X5aSXRC5LRPcYdveCiVX6F|1823RZ5Md1Q2X5aSXRC5LRPcYdveCiVX6F]]
