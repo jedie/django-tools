@@ -4,12 +4,11 @@
     unittest base
     ~~~~~~~~~~~~~
 
-    :copyleft: 2009-2018 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2009-2019 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-import os
-import textwrap
+
 import warnings
 
 from django.test import TestCase
@@ -17,7 +16,7 @@ from django.urls import reverse
 
 # https://github.com/jedie/django-tools
 from django_tools.unittest_utils import assertments
-from django_tools.unittest_utils.assertments import assert_pformat_equal
+from django_tools.unittest_utils.assertments import assert_in_dedent, assert_pformat_equal
 
 from .BrowserDebug import debug_response
 
@@ -28,26 +27,16 @@ class BaseUnittestCase(TestCase):
 
     TODO: move all assert methods to django_tools/unittest_utils/assertments.py
     """
+
     maxDiff = 3000
 
-    def _dedent(self, txt):
-        # Remove any common leading whitespace from every line
-        txt = textwrap.dedent(txt)
-
-        # strip whitespace at the end of every line
-        txt = "\n".join([line.rstrip() for line in txt.splitlines()])
-        txt = txt.strip()
-        return txt
-
     def assertEqual_dedent(self, first, second, msg=""):
-        first = self._dedent(first)
-        second = self._dedent(second)
+        warnings.warn("Use django_tools.unittest_utils.assertments.assert_pformat_equal!", DeprecationWarning)
         assert_pformat_equal(first, second, msg=msg)
 
     def assertIn_dedent(self, member, container, msg=None):
-        member = self._dedent(member)
-        container = self._dedent(container)
-        self.assertIn(member, container, msg)
+        warnings.warn("Use django_tools.unittest_utils.assertments.assert_in_dedent!", DeprecationWarning)
+        assert_in_dedent(member, container)
 
     def assert_is_dir(self, path):
         warnings.warn("Use django_tools.unittest_utils.assertments.assert_is_dir!", DeprecationWarning)
@@ -89,10 +78,7 @@ class BaseUnittestCase(TestCase):
 
     def get_admin_url(self, obj, suffix):
         opts = obj._meta
-        change_url = reverse(
-            'admin:%s_%s_%s' % (opts.app_label, opts.model_name, suffix),
-            args=(obj.pk,),
-        )
+        change_url = reverse("admin:%s_%s_%s" % (opts.app_label, opts.model_name, suffix), args=(obj.pk,))
         return change_url
 
     def get_admin_change_url(self, obj):
@@ -110,7 +96,7 @@ class BaseUnittestCase(TestCase):
             "/admin/<app_name>/<model_name>/add/"
         """
         opts = obj._meta
-        change_url = reverse('admin:%s_%s_add' % (opts.app_label, opts.model_name),)
+        change_url = reverse("admin:%s_%s_add" % (opts.app_label, opts.model_name))
         return change_url
 
     def get_messages(self, response):
@@ -191,7 +177,7 @@ class BaseTestCase(BaseUnittestCase):
         template_name=None,
         messages=None,
         html=False,
-        browser_traceback=True
+        browser_traceback=True,
     ):
         """
         Check the content of the response
@@ -222,7 +208,7 @@ class BaseTestCase(BaseUnittestCase):
             self.assertEqual(response.status_code, status_code)
         except AssertionError as err:
             if browser_traceback:
-                msg = 'Wrong status code: %s' % err
+                msg = "Wrong status code: %s" % err
                 debug_response(response, self.browser_traceback, msg, display_tb=True)
             raise
 
@@ -231,7 +217,7 @@ class BaseTestCase(BaseUnittestCase):
                 self.assertTemplateUsed(response, template_name=template_name)
             except AssertionError as err:
                 if browser_traceback:
-                    msg = 'Template not used: %s' % err
+                    msg = "Template not used: %s" % err
                     debug_response(response, self.browser_traceback, msg, display_tb=True)
                 raise
 
@@ -240,6 +226,6 @@ class BaseTestCase(BaseUnittestCase):
                 self.assertMessages(response, messages)
             except AssertionError as err:
                 if browser_traceback:
-                    msg = 'Wrong messages: %s' % err
+                    msg = "Wrong messages: %s" % err
                     debug_response(response, self.browser_traceback, msg, display_tb=True)
                 raise

@@ -1,10 +1,9 @@
 """
     :created: 28.08.2018 by Jens Diemer
-    :copyleft: 2018 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2018-2019 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
-
+import textwrap
 from pathlib import Path
 
 from django.conf import settings
@@ -129,7 +128,31 @@ def create_icdiff(first, second, fromfile="first", tofile="second", indent=4, wi
 def assert_pformat_equal(first, second, msg="", **pformat_kwargs):
     """ compare with pprintpp and icdiff output """
     if first != second:
+        if isinstance(first, str):
+            print(first)
+        else:
+            pprintpp.pprint(first, **pformat_kwargs)
         assert first == second, "%s%s" % (msg, create_icdiff(first=first, second=second, **pformat_kwargs))
+
+
+def dedent(txt):
+    # Remove any common leading whitespace from every line
+    txt = textwrap.dedent(txt)
+
+    # strip whitespace at the end of every line
+    txt = "\n".join([line.rstrip() for line in txt.splitlines()])
+    txt = txt.strip()
+    return txt
+
+
+def assert_equal_dedent(first, second, msg=""):
+    assert_pformat_equal(dedent(first), dedent(second), msg=msg)
+
+
+def assert_in_dedent(member, container):
+    member = dedent(member)
+    container = dedent(container)
+    assert member in container, "%r not found in %r" % (member, container)
 
 
 def assert_filenames_and_content(*, path, reference, fromfile="current", tofile="reference", **pformat_kwargs):

@@ -1,10 +1,10 @@
-# coding: utf-8
-
 """
     test django_tools.unittest_utils.user stuff
+
+    :copyleft: 2017-2019 by the django-tools team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import unicode_literals
 
 import warnings
 
@@ -19,6 +19,7 @@ from django.test import TestCase
 
 # https://github.com/jedie/django-tools
 from django_tools.permissions import get_filtered_permissions
+from django_tools.unittest_utils.assertments import assert_equal_dedent, assert_pformat_equal
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 from django_tools.unittest_utils.unittest_base import BaseTestCase
 from django_tools.unittest_utils.user import (
@@ -27,13 +28,12 @@ from django_tools.unittest_utils.user import (
 
 
 class TestUserUtils(TestUserMixin, BaseTestCase):
-
     def test_create_user(self):
         user1 = create_user(username="foo", password="bar")
         user2 = self.UserModel.objects.get(username="foo")
 
-        self.assertEqual(user1.pk, user2.pk)
-        self.assertEqual(user1, user2)
+        assert_pformat_equal(user1.pk, user2.pk)
+        assert_pformat_equal(user1, user2)
 
         # check defaults:
         self.assertFalse(user2.is_staff)
@@ -50,22 +50,22 @@ class TestUserUtils(TestUserMixin, BaseTestCase):
 
     def test_email(self):
         user = create_user(username="foo", password="foo", email="foo@bar.tld")
-        self.assertEqual(user.email, "foo@bar.tld")
+        assert_pformat_equal(user.email, "foo@bar.tld")
 
     def test_groups(self):
         group1 = Group.objects.create(name="Group 1")
         group2 = Group.objects.create(name="Group 2")
         create_user(username="foo", password="foo", groups=(group1, group2))
         user = self.UserModel.objects.get(username="foo")
-        groups = user.groups.values_list('pk', 'name')
-        self.assertEqual(list(groups), [(1, 'Group 1'), (2, 'Group 2')])
+        groups = user.groups.values_list("pk", "name")
+        assert_pformat_equal(list(groups), [(1, "Group 1"), (2, "Group 2")])
 
     def test_encrypted_password(self):
         user1 = create_user(username="foo1", password="bar")
         encrypted_password = user1.password
         create_user(username="foo2", encrypted_password=encrypted_password)
         user2 = self.UserModel.objects.get(username="foo2")
-        self.assertEqual(user2.password, encrypted_password)
+        assert_pformat_equal(user2.password, encrypted_password)
 
     def test_get_super_user(self):
         self.UserModel.objects.all().delete()
@@ -74,22 +74,21 @@ class TestUserUtils(TestUserMixin, BaseTestCase):
         user2 = create_user(username="bar", password="bar", is_superuser=True)
         user3 = get_super_user()
 
-        self.assertEqual(user2.pk, user3.pk)
-        self.assertEqual(user2, user3)
+        assert_pformat_equal(user2.pk, user3.pk)
+        assert_pformat_equal(user2, user3)
         self.assertTrue(user3.is_superuser)
-
 
 
 class TestUserFixtures(TestUserMixin, BaseTestCase):
     def assert_user_fixtures(self):
         users = self.UserModel.objects.all()
         usernames = users.values_list("username", flat=True).order_by("username")
-        reference = ('normal_test_user', 'staff_test_user', 'superuser')
-        self.assertEqual(tuple(usernames), reference)
+        reference = ("normal_test_user", "staff_test_user", "superuser")
+        assert_pformat_equal(tuple(usernames), reference)
 
     def test_double_creation(self):
         self.assert_user_fixtures()
-        self.create_testusers() # create user a second time
+        self.create_testusers()  # create user a second time
         self.assert_user_fixtures()
 
     def test_get_or_create_user_and_group(self):
@@ -101,19 +100,11 @@ class TestUserFixtures(TestUserMixin, BaseTestCase):
             groupname="testgroup",
             permissions=get_filtered_permissions(
                 exclude_app_labels=("admin", "sites"),
-                exclude_models=(
-                    Session,
-                ),
-                exclude_codenames=(
-                    "delete_user",
-                    "delete_group",
-                ),
-                exclude_permissions=(
-                    (ContentType, "add_contenttype"),
-                    (ContentType, "delete_contenttype"),
-                )
+                exclude_models=(Session,),
+                exclude_codenames=("delete_user", "delete_group"),
+                exclude_permissions=((ContentType, "add_contenttype"), (ContentType, "delete_contenttype")),
             ),
-            encrypted_password=encrypted_password
+            encrypted_password=encrypted_password,
         )
 
         with StdoutStderrBuffer() as buff:
@@ -124,7 +115,9 @@ class TestUserFixtures(TestUserMixin, BaseTestCase):
         output = "\n".join([line for line in output if line])
         print(output)
 
-        self.assertEqual_dedent(output, """
+        assert_equal_dedent(
+            output,
+            """
             Display effective user permissions in the same format as user.has_perm() argument: <appname>.<codename>
             All permissions for user 'testuser':
             is_active    : yes
@@ -148,6 +141,9 @@ class TestUserFixtures(TestUserMixin, BaseTestCase):
             [*] django_tools_test_app.add_limittousergroupstestmodel
             [*] django_tools_test_app.change_limittousergroupstestmodel
             [*] django_tools_test_app.delete_limittousergroupstestmodel
+            [*] django_tools_test_app.add_overwritefilesystemstoragemodel
+            [*] django_tools_test_app.change_overwritefilesystemstoragemodel
+            [*] django_tools_test_app.delete_overwritefilesystemstoragemodel
             [*] django_tools_test_app.add_permissiontestmodel
             [*] django_tools_test_app.change_permissiontestmodel
             [*] django_tools_test_app.delete_permissiontestmodel
@@ -195,9 +191,10 @@ class TestUserFixtures(TestUserMixin, BaseTestCase):
             [ ] sites.add_site
             [ ] sites.change_site
             [ ] sites.delete_site
-        """)
+        """,
+        )
 
-        self.assertEqual(test_user.password, encrypted_password)
+        assert_pformat_equal(test_user.password, encrypted_password)
 
     def test_remove_obsolete_permissions(self):
         superuser = self.UserModel.objects.filter(is_superuser=True, is_active=True)[0]
@@ -210,11 +207,9 @@ class TestUserFixtures(TestUserMixin, BaseTestCase):
             permissions=get_filtered_permissions(
                 exclude_app_labels=("admin",),
                 exclude_codenames=("delete_group",),
-                exclude_permissions=(
-                    (ContentType, "delete_contenttype"),
-                )
+                exclude_permissions=((ContentType, "delete_contenttype"),),
             ),
-            encrypted_password=encrypted_password
+            encrypted_password=encrypted_password,
         )
 
         with StdoutStderrBuffer() as buff:
@@ -223,23 +218,17 @@ class TestUserFixtures(TestUserMixin, BaseTestCase):
                 groupname="testgroup",
                 permissions=get_filtered_permissions(
                     exclude_app_labels=("admin", "sites"),
-                    exclude_models=(
-                        Session,
-                    ),
-                    exclude_codenames=(
-                        "delete_user",
-                        "delete_group",
-                    ),
-                    exclude_permissions=(
-                        (ContentType, "add_contenttype"),
-                        (ContentType, "delete_contenttype"),
-                    )
+                    exclude_models=(Session,),
+                    exclude_codenames=("delete_user", "delete_group"),
+                    exclude_permissions=((ContentType, "add_contenttype"), (ContentType, "delete_contenttype")),
                 ),
-                encrypted_password=encrypted_password
+                encrypted_password=encrypted_password,
             )
         output = buff.get_output()
         print(output)
-        self.assertEqual_dedent(output, """
+        assert_equal_dedent(
+            output,
+            """
             Check 'admin'
             Check 'sites'
             remove permission: auth | user | Can delete user
@@ -250,9 +239,10 @@ class TestUserFixtures(TestUserMixin, BaseTestCase):
             remove permission: sites | site | Can add site
             remove permission: sites | site | Can change site
             remove permission: sites | site | Can delete site
-            Add 52 permissions to 'testgroup'
-            Group testgroup has 52 permissions
-        """)
+            Add 55 permissions to 'testgroup'
+            Group testgroup has 55 permissions
+        """,
+        )
 
     def test_update_existing_user(self):
         superuser = self.UserModel.objects.filter(is_superuser=True, is_active=True)[0]
@@ -261,31 +251,17 @@ class TestUserFixtures(TestUserMixin, BaseTestCase):
         group1, created = get_or_create_group(groupname="group1", permissions=())
         self.assertTrue(created)
 
-        user, created = get_or_create_user(
-            username="foo",
-            group=group1,
-            encrypted_password=encrypted_password
-        )
+        user, created = get_or_create_user(username="foo", group=group1, encrypted_password=encrypted_password)
         self.assertTrue(created)
 
-        self.assertEqual(
-            list(self.UserModel.objects.get(username="foo").groups.all()),
-            [group1]
-        )
+        assert_pformat_equal(list(self.UserModel.objects.get(username="foo").groups.all()), [group1])
 
         # Update user and attach group2:
 
         group2, created = get_or_create_group(groupname="group2", permissions=())
         self.assertTrue(created)
 
-        user, created = get_or_create_user(
-            username="foo",
-            group=group2,
-            encrypted_password=encrypted_password
-        )
+        user, created = get_or_create_user(username="foo", group=group2, encrypted_password=encrypted_password)
         self.assertFalse(created)
 
-        self.assertEqual(
-            list(self.UserModel.objects.get(username="foo").groups.all()),
-            [group2]
-        )
+        assert_pformat_equal(list(self.UserModel.objects.get(username="foo").groups.all()), [group2])

@@ -1,23 +1,22 @@
-# coding: utf-8
-
 """
     Test django_tools.unittest_utils.django_command
+
+    :copyleft: 2017-2019 by the django-tools team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import print_function, unicode_literals
 
 import os
 
 import pytest
 
-from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.management import call_command
 from django.test import TestCase
 
 # https://github.com/jedie/django-tools
 import django_tools
+from django_tools.unittest_utils.assertments import assert_equal_dedent, assert_pformat_equal
 from django_tools.unittest_utils.django_command import DjangoCommandMixin
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 from django_tools.unittest_utils.user import TestUserMixin
@@ -39,20 +38,40 @@ class TestListModelsCommand(DjangoCommandMixin, TestCase):
     def test_list_models(self):
         output = self.call_manage_py(["list_models"], manage_dir=MANAGE_DIR)
         print(output)
+        assert "existing models in app_label.ModelName format:" in output
+        output = output.split("existing models in app_label.ModelName format:", 1)[1]
+        assert_equal_dedent(
+            output,
+            """           
+            01 - admin.LogEntry
+            02 - auth.Group
+            03 - auth.Permission
+            04 - auth.User
+            05 - contenttypes.ContentType
+            06 - django_tools_test_app.LimitToUsergroupsTestModel
+            07 - django_tools_test_app.OverwriteFileSystemStorageModel
+            08 - django_tools_test_app.PermissionTestModel
+            09 - django_tools_test_app.SimpleParlerModel
+            10 - django_tools_test_app.SimpleParlerModelTranslation
+            11 - easy_thumbnails.Source
+            12 - easy_thumbnails.Thumbnail
+            13 - easy_thumbnails.ThumbnailDimensions
+            14 - filer.Clipboard
+            15 - filer.ClipboardItem
+            16 - filer.File
+            17 - filer.Folder
+            18 - filer.FolderPermission
+            19 - filer.Image
+            20 - filer.ThumbnailOption
+            21 - flatpages.FlatPage
+            22 - sessions.Session
+            23 - sites.Site
+            
+            INSTALLED_APPS....: 13
+            Apps with models..: 13
+        """,
+        )
 
-        self.assertIn("existing models in app_label.ModelName format:", output)
-
-        self.assertIn("01 - admin.LogEntry", output)
-        self.assertIn("02 - auth.Group", output)
-
-        self.assertIn("06 - django_tools_test_app.LimitToUsergroupsTestModel", output)
-        self.assertIn("07 - django_tools_test_app.PermissionTestModel", output)
-
-        self.assertIn("INSTALLED_APPS....: 13", output)
-        self.assertIn("Apps with models..: 13", output)
-
-        self.assertNotIn("Traceback", output)
-        self.assertNotIn("ERROR", output)
 
 class TestNiceDiffSettingsCommand(DjangoCommandMixin, TestCase):
     def test_help(self):
@@ -72,17 +91,15 @@ class TestNiceDiffSettingsCommand(DjangoCommandMixin, TestCase):
         self.assertIn("\n\nSETTINGS_MODULE = 'django_tools_test_project.test_settings'\n\n", output)
         self.assertIn("\n\nINSTALLED_APPS = ('django.contrib.auth',\n", output)
 
-        self.assertNotIn("Traceback ", output) # Space after Traceback is important ;)
+        self.assertNotIn("Traceback ", output)  # Space after Traceback is important ;)
         self.assertNotIn("ERROR", output)
 
 
 @pytest.mark.django_db
 class TestPermissionInfoCommand(TestUserMixin, DjangoCommandMixin, TestCase):
     def test_environment(self):
-        usernames = ",".join(
-            self.UserModel.objects.values_list("username", flat=True).order_by("username")
-        )
-        self.assertEqual(usernames, "normal_test_user,staff_test_user,superuser")
+        usernames = ",".join(self.UserModel.objects.values_list("username", flat=True).order_by("username"))
+        assert_pformat_equal(usernames, "normal_test_user,staff_test_user,superuser")
 
     def test_help(self):
         output = self.call_manage_py(["--help"], manage_dir=MANAGE_DIR)
@@ -131,8 +148,8 @@ class TestPermissionInfoCommand(TestUserMixin, DjangoCommandMixin, TestCase):
         self.assertIn("[ ] auth.add_user", output)
         self.assertIn("[ ] sites.delete_site", output)
 
-        self.assertNotIn("[*]", output) # normal user hasn't any permissions ;)
-        self.assertNotIn("missing:", output) # no missing permissions
+        self.assertNotIn("[*]", output)  # normal user hasn't any permissions ;)
+        self.assertNotIn("missing:", output)  # no missing permissions
 
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
@@ -143,6 +160,7 @@ class TestUpdatePermissionCommand(TestUserMixin, DjangoCommandMixin, TestCase):
     Test for:
     django_tools.management.commands.update_permissions.Command
     """
+
     def test_help(self):
         output = self.call_manage_py(["--help"], manage_dir=MANAGE_DIR)
 
@@ -171,6 +189,7 @@ class TestClearCacheCommand(DjangoCommandMixin, TestCase):
     Test for:
     django_tools.management.commands.clear_cache.Command
     """
+
     def test_help(self):
         output = self.call_manage_py(["--help"], manage_dir=MANAGE_DIR)
 
@@ -183,14 +202,14 @@ class TestClearCacheCommand(DjangoCommandMixin, TestCase):
     def test_clear_cache(self):
 
         cache.set("key_foo", "bar", 30)
-        self.assertEqual(cache.get("key_foo"), "bar")
+        assert_pformat_equal(cache.get("key_foo"), "bar")
 
         with StdoutStderrBuffer() as buff:
             call_command("clear_cache")
         output = buff.get_output()
         print(output)
 
-        self.assertEqual(cache.get("key_foo"), None)
+        assert_pformat_equal(cache.get("key_foo"), None)
 
         self.assertIn("Clear caches:", output)
         self.assertIn("Clear 'LocMemCache'", output)
@@ -198,5 +217,3 @@ class TestClearCacheCommand(DjangoCommandMixin, TestCase):
 
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
-
-

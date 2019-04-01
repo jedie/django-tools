@@ -167,7 +167,9 @@ LOGGING = {
     "formatters": {
         "colored": {  # https://github.com/borntyping/python-colorlog
             "()": "colorlog.ColoredFormatter",
-            "format": "%(log_color)s%(asctime)s %(levelname)8s %(cut_path)s:%(lineno)-3s %(message)s",
+            #
+            # https://docs.python.org/3/library/logging.html#logrecord-attributes
+            "format": "%(log_color)s%(asctime)s %(levelname)8s %(cut_path)s:%(lineno)-3s %(name)s %(message)s",
         }
     },
     "handlers": {"console": {"class": "colorlog.StreamHandler", "formatter": "colored"}},
@@ -176,3 +178,4 @@ LOGGING = {
         "django_tools.DynamicSite": {"handlers": ["console"], "level": "DEBUG", "propagate": False},
     },
 }
+

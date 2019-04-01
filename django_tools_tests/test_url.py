@@ -1,14 +1,20 @@
+"""
+    :copyleft: 2017-2019 by the django-tools team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
+"""
 import os
 from pathlib import Path
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.test import SimpleTestCase
-from django.utils import six
 from django.test.utils import override_settings
+from django.utils import six
 
+# https://github.com/jedie/django-tools
 import django_tools
-from django_tools.validators import URLValidator2, ExistingDirValidator
+from django_tools.unittest_utils.assertments import assert_pformat_equal
+from django_tools.validators import ExistingDirValidator, URLValidator2
 
 
 @override_settings(DEBUG=False)
@@ -23,7 +29,7 @@ class TestExistingDirValidator(SimpleTestCase):
         try:
             self.media_root_validator("does/not/exist")
         except ValidationError as err:
-            self.assertEqual(six.text_type(err.message), "Directory doesn't exist!")
+            assert_pformat_equal(six.text_type(err.message), "Directory doesn't exist!")
 
     @override_settings(DEBUG=True)
     def test_debug_message(self):
@@ -32,10 +38,10 @@ class TestExistingDirValidator(SimpleTestCase):
         try:
             self.media_root_validator(path)
         except ValidationError as err:
-            self.assertEqual(six.text_type(err.message), "Directory '%s' doesn't exist!" % path)
+            assert_pformat_equal(six.text_type(err.message), "Directory '%s' doesn't exist!" % path)
 
     def test_existing_dirs(self):
-        BASE_PATH=os.path.abspath(os.path.dirname(django_tools.__file__))
+        BASE_PATH = os.path.abspath(os.path.dirname(django_tools.__file__))
         validator = ExistingDirValidator(BASE_PATH)
         for root, dirs, files in os.walk(BASE_PATH):
             for dir in dirs:
@@ -46,33 +52,31 @@ class TestExistingDirValidator(SimpleTestCase):
         try:
             self.media_root_validator("../")
         except ValidationError as err:
-            self.assertEqual(six.text_type(err.message), "Directory is not in base path!")
+            assert_pformat_equal(six.text_type(err.message), "Directory is not in base path!")
 
     def test_not_in_media_root2(self):
         try:
             self.media_root_validator("//")
         except ValidationError as err:
-            self.assertEqual(six.text_type(err.message), "Directory is not in base path!")
+            assert_pformat_equal(six.text_type(err.message), "Directory is not in base path!")
 
     def test_directory_traversal_attack_encodings(self):
         parts = (
             # URI encoded directory traversal:
-            "%2e%2e%2f", # ../
-            "%2e%2e/", # ../
-            "..%2f", # ../
-            "%2e%2e%5c", # ..\
-
+            "%2e%2e%2f",  # ../
+            "%2e%2e/",  # ../
+            "..%2f",  # ../
+            "%2e%2e%5c",  # ..\
             # Unicode / UTF-8 encoded directory traversal:
-            "..%c1%1c", # ../
-            "..%c0%af", # ..\
-            "%c0%ae", # .
+            "..%c1%1c",  # ../
+            "..%c0%af",  # ..\
+            "%c0%ae",  # .
         )
         for part in parts:
             try:
                 self.media_root_validator(part)
             except ValidationError as err:
-                self.assertEqual(six.text_type(err.message), "Directory doesn't exist!")
-
+                assert_pformat_equal(six.text_type(err.message), "Directory doesn't exist!")
 
 
 class TestUrlValidator(SimpleTestCase):
@@ -80,20 +84,20 @@ class TestUrlValidator(SimpleTestCase):
         try:
             URLValidator2(allow_all_schemes=True, allow_netloc=False)
         except AssertionError as err:
-            self.assertEqual(str(err), "Can't allow schemes without netloc!")
+            assert_pformat_equal(str(err), "Can't allow schemes without netloc!")
 
     def test_no_allow_all_schemes(self):
         try:
-            URLValidator2(allow_schemes=("http","ftp"), allow_all_schemes=True)
+            URLValidator2(allow_schemes=("http", "ftp"), allow_all_schemes=True)
         except Warning as err:
-            self.assertEqual(str(err), "allow_schemes would be ignored, while allow_all_schemes==True!")
+            assert_pformat_equal(str(err), "allow_schemes would be ignored, while allow_all_schemes==True!")
 
     def test_not_start_with_allow_all_schemes(self):
         URLValidator2(allow_schemes=("svn",))("svn://domain.test")
         try:
-            URLValidator2(allow_schemes=("http","ftp"))("svn://domain.test")
+            URLValidator2(allow_schemes=("http", "ftp"))("svn://domain.test")
         except ValidationError as err:
-            self.assertEqual(six.text_type(err.message), "The URL doesn't start with a allowed scheme.")
+            assert_pformat_equal(six.text_type(err.message), "The URL doesn't start with a allowed scheme.")
 
     def test_allow_query(self):
         validator = URLValidator2(allow_query=False)
@@ -101,7 +105,7 @@ class TestUrlValidator(SimpleTestCase):
         try:
             validator("http://www.domain.test/with/?query")
         except ValidationError as err:
-            self.assertEqual(six.text_type(err.message), "Enter a valid URL without a query.")
+            assert_pformat_equal(six.text_type(err.message), "Enter a valid URL without a query.")
 
     def test_allow_fragment(self):
         validator = URLValidator2(allow_fragment=False)
@@ -109,7 +113,7 @@ class TestUrlValidator(SimpleTestCase):
         try:
             validator("http://www.domain.test/with/a/#fragment")
         except ValidationError as err:
-            self.assertEqual(six.text_type(err.message), "Enter a valid URL without a fragment.")
+            assert_pformat_equal(six.text_type(err.message), "Enter a valid URL without a fragment.")
 
     def test_only_local_path1(self):
         validator = URLValidator2(allow_schemes=None, allow_netloc=False)
@@ -117,7 +121,7 @@ class TestUrlValidator(SimpleTestCase):
         try:
             validator("http://domain.test/path/?query#fragment")
         except ValidationError as err:
-            self.assertEqual(six.text_type(err.message), "Please enter a local URL (without protocol/domain).")
+            assert_pformat_equal(six.text_type(err.message), "Please enter a local URL (without protocol/domain).")
 
     def test_only_local_path2(self):
         """
@@ -132,4 +136,4 @@ class TestUrlValidator(SimpleTestCase):
         try:
             validator("//www.pylucid.org/path?query#fragment")
         except ValidationError as err:
-            self.assertEqual(six.text_type(err.message), "Please enter a local URL (without protocol/domain).")
+            assert_pformat_equal(six.text_type(err.message), "Please enter a local URL (without protocol/domain).")

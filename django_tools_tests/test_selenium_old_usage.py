@@ -1,11 +1,12 @@
 """
     :created: 11.12.2018 by Jens Diemer
-    :copyleft: 2018 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2018-2019 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 import unittest
 
 # https://github.com/jedie/django-tools
+from django_tools.unittest_utils.assertments import assert_pformat_equal
 from django_tools.unittest_utils.selenium_utils import (
     SeleniumChromiumTestCase, SeleniumFirefoxTestCase, chromium_available, find_executable, firefox_available
 )
@@ -17,8 +18,9 @@ class TestWarnDecorators(unittest.TestCase):
         with self.assertWarns(DeprecationWarning) as cm:
             SeleniumChromiumTestCase()
 
-        self.assertEqual(
-            str(cm.warning), "Use 'from django_tools.selenium.django import SeleniumChromiumStaticLiveServerTestCase' !"
+        assert_pformat_equal(
+            str(cm.warning),
+            "Use 'from django_tools.selenium.django import SeleniumChromiumStaticLiveServerTestCase' !",
         )
 
     def test_SeleniumFirefoxTestCase(self):
@@ -26,7 +28,7 @@ class TestWarnDecorators(unittest.TestCase):
         with self.assertWarns(DeprecationWarning) as cm:
             SeleniumFirefoxTestCase()
 
-        self.assertEqual(
+        assert_pformat_equal(
             str(cm.warning), "Use 'from django_tools.selenium.django import SeleniumFirefoxStaticLiveServerTestCase' !"
         )
 
@@ -36,18 +38,22 @@ class TestWarnDecorators(unittest.TestCase):
             with self.assertRaises(FileNotFoundError):
                 find_executable("foobar")
 
-        self.assertEqual(str(cm.warning), "Use 'from django_tools.selenium.utils import find_executable' !")
+        assert_pformat_equal(str(cm.warning), "Use 'from django_tools.selenium.utils import find_executable' !")
 
     def test_chromium_available(self):
 
         with self.assertWarns(DeprecationWarning) as cm:
             chromium_available()
 
-        self.assertEqual(str(cm.warning), "Use 'from django_tools.selenium.chromedriver import chromium_available' !")
+        assert_pformat_equal(
+            str(cm.warning), "Use 'from django_tools.selenium.chromedriver import chromium_available' !"
+        )
 
     def test_firefox_available(self):
 
         with self.assertWarns(DeprecationWarning) as cm:
             firefox_available()
 
-        self.assertEqual(str(cm.warning), "Use 'from django_tools.selenium.geckodriver import firefox_available' !")
+        assert_pformat_equal(
+            str(cm.warning), "Use 'from django_tools.selenium.geckodriver import firefox_available' !"
+        )

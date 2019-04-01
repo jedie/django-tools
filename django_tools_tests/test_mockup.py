@@ -1,8 +1,9 @@
-# coding: utf-8
-
 """
     test Mockups
     ~~~~~~~~~~~~
+
+    :copyleft: 2018-2019 by the django-tools team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 
@@ -11,6 +12,7 @@ import warnings
 from django.core.files import File as DjangoFile
 
 # https://github.com/jedie/django-tools
+from django_tools.unittest_utils.assertments import assert_pformat_equal
 from django_tools.unittest_utils.mockup import ImageDummy
 from django_tools.unittest_utils.unittest_base import BaseTestCase
 from django_tools.unittest_utils.user import TestUserMixin
@@ -23,28 +25,28 @@ class TestMockupImage(TestUserMixin, BaseTestCase):
 
             pil_image = ImageDummy(width=300, height=150).create_pil_image()
 
-            self.assertEqual(pil_image.width, 300)
-            self.assertEqual(pil_image.height, 150)
+            assert_pformat_equal(pil_image.width, 300)
+            assert_pformat_equal(pil_image.height, 150)
 
-            self.assertEqual(pil_image.verify(), None)
+            assert_pformat_equal(pil_image.verify(), None)
 
-            self.assertEqual(len(w), 0)  # No warnings created
+            assert_pformat_equal(len(w), 0)  # No warnings created
 
     def test_create_info_image(self):
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")  # trigger all warnings
 
             image_dummy = ImageDummy(width=400, height=200)
-            self.assertEqual(image_dummy.text_color, "#ffffff")
-            self.assertEqual(image_dummy.text_align, "center")
+            assert_pformat_equal(image_dummy.text_color, "#ffffff")
+            assert_pformat_equal(image_dummy.text_align, "center")
             pil_image = image_dummy.create_info_image(text="foo")
 
-            self.assertEqual(pil_image.width, 400)
-            self.assertEqual(pil_image.height, 200)
+            assert_pformat_equal(pil_image.width, 400)
+            assert_pformat_equal(pil_image.height, 200)
 
-            self.assertEqual(pil_image.verify(), None)
+            assert_pformat_equal(pil_image.verify(), None)
 
-            self.assertEqual(len(w), 0)  # No warnings created
+            assert_pformat_equal(len(w), 0)  # No warnings created
 
     def test_create_temp_filer_info_image(self):
         user = self.login(usertype="normal")
@@ -55,10 +57,10 @@ class TestMockupImage(TestUserMixin, BaseTestCase):
             filer_info_image = ImageDummy(width=500, height=300, format="png").create_temp_filer_info_image(
                 text="A test image", user=user
             )
-            self.assertEqual(filer_info_image.width, 500)
-            self.assertEqual(filer_info_image.height, 300)
+            assert_pformat_equal(filer_info_image.width, 500)
+            assert_pformat_equal(filer_info_image.height, 300)
 
-            self.assertEqual(filer_info_image.size, 1791)
+            assert_pformat_equal(filer_info_image.size, 1791)
             self.assertIn(".png", filer_info_image.path)
 
             path = filer_info_image.path
@@ -66,7 +68,7 @@ class TestMockupImage(TestUserMixin, BaseTestCase):
 
             self.assertIn("/django_tools/django_tools_test_project/media/filer_public/", path)
 
-            self.assertEqual(len(w), 0)  # No warnings created
+            assert_pformat_equal(len(w), 0)  # No warnings created
 
     def test_create_django_file_info_image(self):
         with warnings.catch_warnings(record=True) as w:
@@ -76,4 +78,4 @@ class TestMockupImage(TestUserMixin, BaseTestCase):
 
             self.assertIsInstance(django_file, DjangoFile)
 
-            self.assertEqual(len(w), 0)  # No warnings created
+            assert_pformat_equal(len(w), 0)  # No warnings created

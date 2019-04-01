@@ -1,6 +1,6 @@
 """
     :created: 13.06.2018 by Jens Diemer
-    :copyleft: 2018 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2018-2019 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 import os
@@ -9,19 +9,18 @@ import unittest
 from pathlib import Path
 
 from django.conf import settings
-from django.contrib import auth
 from django.test import override_settings
 
 from selenium.common.exceptions import NoSuchElementException
 
 # https://github.com/jedie/django-tools
-from django_tools.selenium.base import SeleniumBaseTestCase
 from django_tools.selenium.chromedriver import SeleniumChromiumTestCase, chromium_available
 from django_tools.selenium.django import (
     SeleniumChromiumStaticLiveServerTestCase, SeleniumFirefoxStaticLiveServerTestCase
 )
 from django_tools.selenium.geckodriver import SeleniumFirefoxTestCase, firefox_available
 from django_tools.selenium.utils import find_executable
+from django_tools.unittest_utils.assertments import assert_pformat_equal
 from django_tools.unittest_utils.user import TestUserMixin
 
 
@@ -55,7 +54,7 @@ class SeleniumHelperTests(unittest.TestCase):
             with self.assertRaises(FileNotFoundError) as context_manager:
                 find_executable(name)
 
-            self.assertEqual(context_manager.exception.args, ("Can't find '%s' in PATH or None!" % name,))
+            assert_pformat_equal(context_manager.exception.args, ("Can't find '%s' in PATH or None!" % name,))
 
             old_path = os.environ["PATH"]
             try:
@@ -64,18 +63,20 @@ class SeleniumHelperTests(unittest.TestCase):
                 with self.assertRaises(FileNotFoundError) as context_manager:
                     find_executable(name)
 
-                self.assertEqual(context_manager.exception.args, ("%s exists, but it's not executable!" % filepath,))
+                assert_pformat_equal(
+                    context_manager.exception.args, ("%s exists, but it's not executable!" % filepath,)
+                )
 
                 # File is in PATH and executable:
                 filepath.chmod(0x777)
                 result = find_executable(name)
-                self.assertEqual(result, filepath)
+                assert_pformat_equal(result, filepath)
             finally:
                 os.environ["PATH"] = old_path
 
             # Executable file is not in PATH, but can be found via extra_search_paths:
             result = find_executable(name, extra_search_paths=(path,))
-            self.assertEqual(result, filepath)
+            assert_pformat_equal(result, filepath)
 
 
 class SeleniumTestsMixin:
@@ -130,35 +131,35 @@ class SeleniumTestsMixin:
     def test_local_storage_access(self):
         self.driver.get(self.live_server_url + "/")
 
-        self.assertEqual(len(self.local_storage), 0)
+        assert_pformat_equal(len(self.local_storage), 0)
 
         with self.assertRaises(KeyError) as cm:
             self.assert_local_storage_key_value(key="foo", value="bar")
-        self.assertEqual(cm.exception.args[0], "foo")
+        assert_pformat_equal(cm.exception.args[0], "foo")
 
         self.local_storage["bar"] = "foo"
-        self.assertEqual(len(self.local_storage), 1)
+        assert_pformat_equal(len(self.local_storage), 1)
         self.assert_local_storage_key_value(key="bar", value="foo")
 
         self.assertIn("bar", self.local_storage)
 
-        self.assertEqual(repr(self.local_storage), "{'bar': 'foo'}")
+        assert_pformat_equal(repr(self.local_storage), "{'bar': 'foo'}")
 
         # There's no type conversion!
         self.local_storage["one"] = 1
         self.local_storage["t"] = True
         self.local_storage["f"] = False
 
-        self.assertEqual(self.local_storage.items(), {"bar": "foo", "f": "false", "t": "true", "one": "1"})
+        assert_pformat_equal(self.local_storage.items(), {"bar": "foo", "f": "false", "t": "true", "one": "1"})
         self.local_storage.clear()
 
-        self.assertEqual(self.local_storage.items(), {})
+        assert_pformat_equal(self.local_storage.items(), {})
 
         self.local_storage["foo"] = "bar"
-        self.assertEqual(self.local_storage.items(), {"foo": "bar"})
+        assert_pformat_equal(self.local_storage.items(), {"foo": "bar"})
 
-        self.tearDown() # tearDown should clear the local_storage
-        self.assertEqual(self.local_storage.items(), {})
+        self.tearDown()  # tearDown should clear the local_storage
+        assert_pformat_equal(self.local_storage.items(), {})
 
 
 @override_settings(DEBUG=True)

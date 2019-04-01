@@ -1,37 +1,28 @@
-# coding: utf-8
-
 """
     Test Local sync cache
     ~~~~~~~~~~~~~~~~~~~~~
     
     For more information look into DocString in local_sync_cache.py !
     
-    :copyleft: 2011 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2011-2019 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
-
-import unittest
 import time
-import pprint
-from django_tools.unittest_utils.logging_utils import LoggingBuffer
+import unittest
 
-if __name__ == "__main__":
-    # run unittest directly
-    import os
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django_tools.django_tools_tests.test_settings"
-
-from django.core import management
 from django.core.cache import cache
 
+# https://github.com/jedie/django-tools
 from django_tools.local_sync_cache.local_sync_cache import LocalSyncCache
 from django_tools.local_sync_cache.LocalSyncCacheMiddleware import LocalSyncCacheMiddleware
+from django_tools.unittest_utils.assertments import assert_pformat_equal
+from django_tools.unittest_utils.logging_utils import LoggingBuffer
 
 
 class LocalSyncCacheTest(unittest.TestCase):
-    maxDiff=4000
+    maxDiff = 4000
 
     def setUp(self):
         LocalSyncCache.CACHES = []
@@ -42,15 +33,15 @@ class LocalSyncCacheTest(unittest.TestCase):
     def testBasic(self):
         c = LocalSyncCache(id="test1")
         c["key1"] = "value1"
-        self.assertEqual(c, {'key1': 'value1'})
+        assert_pformat_equal(c, {"key1": "value1"})
 
         cache.set("test1", time.time())
 
         c.check_state()
-        self.assertEqual(c, {})
+        assert_pformat_equal(c, {})
 
         cache_information = LocalSyncCache.get_cache_information()
-        self.assertEqual(len(cache_information), 1)
+        assert_pformat_equal(len(cache_information), 1)
 
     def testUniqueID(self):
         with LoggingBuffer("django_tools.local_sync_cache") as log:
@@ -58,13 +49,12 @@ class LocalSyncCacheTest(unittest.TestCase):
             log.clear()
             c2 = LocalSyncCache(id="test1")
             self.assertIn(
-                "ID 'test1' was already used! It must be unique! (Existing ids are: ['test1'])",
-                log.get_messages()
+                "ID 'test1' was already used! It must be unique! (Existing ids are: ['test1'])", log.get_messages()
             )
 
     def testEmptyPformatCacheInfo(self):
         txt = LocalSyncCache.pformat_cache_information()
-        self.assertEqual(txt, "")
+        assert_pformat_equal(txt, "")
 
     def testPformatCacheInfo(self):
         LocalSyncCache(id="FooBar")
@@ -74,33 +64,34 @@ class LocalSyncCacheTest(unittest.TestCase):
         self.assertTrue("cleared: False" in txt)
 
     def testMulti(self):
-        self.assertEqual(len(LocalSyncCache.CACHES), 0)
+        assert_pformat_equal(len(LocalSyncCache.CACHES), 0)
         c1 = LocalSyncCache(id="test1")
-        self.assertEqual(len(LocalSyncCache.CACHES), 1)
+        assert_pformat_equal(len(LocalSyncCache.CACHES), 1)
         c2 = LocalSyncCache(id="test1", unique_ids=False)
-        self.assertEqual(len(LocalSyncCache.CACHES), 2)
+        assert_pformat_equal(len(LocalSyncCache.CACHES), 2)
         c1["c1"] = "foo"
         c2["c2"] = "bar"
-        self.assertEqual(c1, {'c1': 'foo'})
-        self.assertEqual(c2, {'c2': 'bar'})
+        assert_pformat_equal(c1, {"c1": "foo"})
+        assert_pformat_equal(c2, {"c2": "bar"})
 
         c1.check_state()
         c2.check_state()
 
-        self.assertEqual(c1, {'c1': 'foo'})
-        self.assertEqual(c2, {'c2': 'bar'})
+        assert_pformat_equal(c1, {"c1": "foo"})
+        assert_pformat_equal(c2, {"c2": "bar"})
 
         c1.clear()
-        self.assertEqual(c1, {})
+        assert_pformat_equal(c1, {})
 
         # In a "new request" all the same caches should be cleared
         c2.check_state()
-        self.assertEqual(c2, {})
+        assert_pformat_equal(c2, {})
 
         cache_information = LocalSyncCache.get_cache_information()
-        self.assertEqual(len(cache_information), 2)
-#        for item in cache_information:
-#            print item["instance"].id, item
+        assert_pformat_equal(len(cache_information), 2)
+
+    #        for item in cache_information:
+    #            print item["instance"].id, item
 
     def testLocalSyncCacheMiddleware(self):
         middleware = LocalSyncCacheMiddleware()
@@ -110,7 +101,7 @@ class LocalSyncCacheTest(unittest.TestCase):
 
         c3 = LocalSyncCache(id="testLocalSyncCacheMiddleware2")
 
-        self.assertEqual(len(LocalSyncCache.CACHES), 3)
+        assert_pformat_equal(len(LocalSyncCache.CACHES), 3)
 
         c1["c1"] = "foo"
         c2["c2"] = "bar"
@@ -118,58 +109,48 @@ class LocalSyncCacheTest(unittest.TestCase):
 
         middleware.process_request(None)
 
-        self.assertEqual(c1, {'c1': 'foo'})
-        self.assertEqual(c2, {'c2': 'bar'})
-        self.assertEqual(c3, {'foo': 'bar'})
+        assert_pformat_equal(c1, {"c1": "foo"})
+        assert_pformat_equal(c2, {"c2": "bar"})
+        assert_pformat_equal(c3, {"foo": "bar"})
 
         c1.clear()
-        self.assertEqual(c1, {})
+        assert_pformat_equal(c1, {})
 
         # In a "new request" all the same caches should be cleared
         middleware.process_request(None)
-        self.assertEqual(c2, {})
+        assert_pformat_equal(c2, {})
 
         # Other caches should be not affected by clear()
-        self.assertEqual(c3, {'foo': 'bar'})
+        assert_pformat_equal(c3, {"foo": "bar"})
 
         c1["c1"] = "foo2"
         c2["c2"] = "bar2"
 
         middleware.process_request(None)
 
-        self.assertEqual(c1, {'c1': 'foo2'})
-        self.assertEqual(c2, {'c2': 'bar2'})
-        self.assertEqual(c3, {'foo': 'bar'})
+        assert_pformat_equal(c1, {"c1": "foo2"})
+        assert_pformat_equal(c2, {"c2": "bar2"})
+        assert_pformat_equal(c3, {"foo": "bar"})
 
         c2.clear()
-        self.assertEqual(c2, {})
+        assert_pformat_equal(c2, {})
 
         # In a "new request" all the same caches should be cleared
         middleware.process_request(None)
-        self.assertEqual(c1, {})
+        assert_pformat_equal(c1, {})
 
-#        print LocalSyncCache.pformat_cache_information()
+        #        print LocalSyncCache.pformat_cache_information()
         cache_information = LocalSyncCache.get_cache_information()
-        self.assertEqual(len(cache_information), 3)
+        assert_pformat_equal(len(cache_information), 3)
         for item in cache_information:
             instance = item["instance"]
-            self.assertEqual(instance.request_counter, 4)
+            assert_pformat_equal(instance.request_counter, 4)
 
             if instance.id == "testLocalSyncCacheMiddleware2":
-                self.assertEqual(instance.own_clear_counter, 0)
-                self.assertEqual(instance.ext_clear_counter, 0)
-                self.assertEqual(instance, {'foo': 'bar'})
+                assert_pformat_equal(instance.own_clear_counter, 0)
+                assert_pformat_equal(instance.ext_clear_counter, 0)
+                assert_pformat_equal(instance, {"foo": "bar"})
             else:
-                self.assertEqual(instance.own_clear_counter, 1)
-                self.assertEqual(instance.ext_clear_counter, 1)
-                self.assertEqual(instance, {})
-
-
-if __name__ == "__main__":
-    # Run this unittest directly
-#    management.call_command('test', "django_tools.django_tools_tests.test_local_sync_cache.LocalSyncCacheTest",
-#        verbosity=2,
-#        failfast=True
-#    )
-    unittest.main()
-
+                assert_pformat_equal(instance.own_clear_counter, 1)
+                assert_pformat_equal(instance.ext_clear_counter, 1)
+                assert_pformat_equal(instance, {})
