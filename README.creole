@@ -1079,12 +1079,12 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 
 == links ==
 
-| Homepage   | http://github.com/jedie/django-tools
-| PyPi       | http://pypi.python.org/pypi/django-tools/
+| Homepage   | https://github.com/jedie/django-tools
+| PyPi       | https://pypi.python.org/pypi/django-tools/
 
 
 == donation ==
 
 * [[https://www.paypal.me/JensDiemer|paypal.me/JensDiemer]]
 * [[https://flattr.com/submit/auto?uid=jedie&url=https%3A%2F%2Fgithub.com%2Fjedie%2Fdjango-tools%2F|Flattr This!]]
-* Send [[http://www.bitcoin.org/|Bitcoins]] to [[https://blockexplorer.com/address/1823RZ5Md1Q2X5aSXRC5LRPcYdveCiVX6F|1823RZ5Md1Q2X5aSXRC5LRPcYdveCiVX6F]]
+* Send [[https://www.bitcoin.org/|Bitcoins]] to [[https://blockexplorer.com/address/1823RZ5Md1Q2X5aSXRC5LRPcYdveCiVX6F|1823RZ5Md1Q2X5aSXRC5LRPcYdveCiVX6F]]
