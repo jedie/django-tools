@@ -1,9 +1,10 @@
-
 """
     :created: 2018 by Jens Diemer
     :copyleft: 2018-2019 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
+from email.mime.image import MIMEImage
+
 from django.utils.text import Truncator
 
 
@@ -44,8 +45,14 @@ def print_mailbox(outbox, max_length=120):
 
             elif attr_name == "attachments":
                 print("\n")
-                for filename, data, mine_type in attr:
-                    line = " * %s (%s)" % (filename, mine_type)
+                for attachment in attr:
+                    if isinstance(attachment, MIMEImage):
+                        line = " * %s" % repr(attachment)
+                        data = attachment.get_payload(decode=True)
+                    else:
+                        filename, data, mine_type = attachment
+                        line = " * %s (%s)" % (filename, mine_type)
+
                     print(line, end=" ")
                     print(cutted_bytes(data, num=(max_length - len(line))))
                 print()

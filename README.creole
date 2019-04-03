@@ -733,8 +733,10 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.45.0...master|compare v0.45.0...master]]
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.45.1...master|compare v0.45.1...master]]
 ** tbc
+* v0.45.1 - 03.04.2019 - [[https://github.com/jedie/django-tools/compare/v0.45.0...v0.45.1|compare v0.45.0...v0.45.1]]
+** Bugfix ValueError in {{{django_tools.unittest_utils.email.print_mailbox}}}
 * v0.45.0 - 01.04.2019 - [[https://github.com/jedie/django-tools/compare/v0.44.2...v0.45.0|compare v0.44.2...v0.45.0]]
 ** NEW: {{{OverwriteFileSystemStorage}}} with backup functionality
 ** NEW: {{{print_exc_plus()}}} - traceback with a listing of all the local variables

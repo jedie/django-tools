@@ -5,6 +5,7 @@
 
 import os
 import sys
+from email.mime.image import MIMEImage
 
 import django
 from django.core import mail
@@ -344,7 +345,7 @@ class AssertResponseTest(BaseTestCase):
 
         self.assert_exception_startswith(cm, "Lists differ: ['this-is-it'] != ['this-is-not-it']")
 
-    def test_print_mailbox(self):
+    def test_print_mailbox_no_attachments(self):
         assert_pformat_equal(len(mail.outbox), 0)
 
         ok = SendMail(
@@ -369,3 +370,33 @@ class AssertResponseTest(BaseTestCase):
         self.assertIn("<!-- END 'mail_test.txt' -->", output)
         self.assertIn("from_email: webmaster@localhost", output)
         self.assertIn("to: ['foo@bar.tld']", output)
+
+    def test_print_mailbox_mime_image(self):
+        assert_pformat_equal(len(mail.outbox), 0)
+
+        ok = SendMail(
+            template_base="mail_test.{ext}",
+            mail_context={"foo": "first", "bar": "second"},
+            subject="test test_print_mailbox()",
+            recipient_list="foo@bar.tld",
+            attachments=[MIMEImage(b"GIF89a This is not a gif picture ;)")],
+        ).send()
+
+        assert_pformat_equal(ok, True)
+
+        assert_pformat_equal(len(mail.outbox), 1)
+
+        with StdoutStderrBuffer() as buff:
+            print_mailbox(mail.outbox)
+        output = buff.get_output()
+        print(output)
+
+        self.assertIn("*** Mail No. 1: ***", output)
+        self.assertIn("subject: test test_print_mailbox()", output)
+        self.assertIn("<!-- START 'mail_test.txt' -->", output)
+        self.assertIn("<!-- END 'mail_test.txt' -->", output)
+        self.assertIn("from_email: webmaster@localhost", output)
+        self.assertIn("to: ['foo@bar.tld']", output)
+        self.assertIn("attachments:", output)
+        self.assertIn("MIMEImage object", output)
+        self.assertIn("b'GIF89a", output)
