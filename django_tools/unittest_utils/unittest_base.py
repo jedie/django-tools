@@ -16,7 +16,7 @@ from django.urls import reverse
 
 # https://github.com/jedie/django-tools
 from django_tools.unittest_utils import assertments
-from django_tools.unittest_utils.assertments import assert_in_dedent, assert_pformat_equal
+from django_tools.unittest_utils.assertments import assert_in_dedent, assert_equal_dedent
 
 from .BrowserDebug import debug_response
 
@@ -31,8 +31,8 @@ class BaseUnittestCase(TestCase):
     maxDiff = 3000
 
     def assertEqual_dedent(self, first, second, msg=""):
-        warnings.warn("Use django_tools.unittest_utils.assertments.assert_pformat_equal!", DeprecationWarning)
-        assert_pformat_equal(first, second, msg=msg)
+        warnings.warn("Use django_tools.unittest_utils.assertments.assert_equal_dedent!", DeprecationWarning)
+        assert_equal_dedent(first, second, msg=msg)
 
     def assertIn_dedent(self, member, container, msg=None):
         warnings.warn("Use django_tools.unittest_utils.assertments.assert_in_dedent!", DeprecationWarning)
