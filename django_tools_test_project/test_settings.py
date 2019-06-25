@@ -30,7 +30,7 @@ DATABASES = {
 
 CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache", "LOCATION": "unique-snowflake"}}
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     # https://github.com/jazzband/django-debug-toolbar/
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
