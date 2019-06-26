@@ -91,6 +91,29 @@ LOGGING = {
 (Activate warnings by, e.g.: {{{export PYTHONWARNINGS=all}}})
 
 
+==== ThrottledAdminEmailHandler
+
+[[https://github.com/jedie/django-tools/blob/master/django_tools/log_utils/throttle_admin_email_handler.py|ThrottledAdminEmailHandler]] works similar as the origin [[https://docs.djangoproject.com/en/1.11/topics/logging/#django.utils.log.AdminEmailHandler|django.utils.log.AdminEmailHandler]]
+but is will throttle the number of mails that can be send in a time range.
+usage e.g.:
+
+{{{
+LOGGING = {
+    # ...
+    "handlers": {
+        "mail_admins": {
+            "level": "ERROR",
+            "class": "django_tools.log_utils.throttle_admin_email_handler.ThrottledAdminEmailHandler",
+            "formatter": "email",
+            "min_delay_sec": 20, # << -- skip mails in this time range
+        },
+        # ...
+    },
+    # ...
+}
+}}}
+
+
 === django_tools.template.loader.DebugCacheLoader
 
 Insert template name as html comments, e.g.:
@@ -733,7 +756,9 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.45.1...master|compare v0.45.1...master]]
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.45.2...master|compare v0.45.2...master]]
+* TBC
+* v0.45.2 - 26.06.2019 - [[https://github.com/jedie/django-tools/compare/v0.45.1...v0.45.2|compare v0.45.1...v0.45.2]]
 ** NEW: {{{django_tools.log_utils.throttle_admin_email_handler.ThrottledAdminEmailHandler}}}
 * v0.45.1 - 03.04.2019 - [[https://github.com/jedie/django-tools/compare/v0.45.0...v0.45.1|compare v0.45.0...v0.45.1]]
 ** Bugfix ValueError in {{{django_tools.unittest_utils.email.print_mailbox}}}
