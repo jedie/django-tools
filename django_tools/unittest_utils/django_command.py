@@ -18,7 +18,7 @@ import sys
 
 
 class DjangoCommandMixin(object):
-    def subprocess_getstatusoutput(self, cmd, debug=False, **kwargs):
+    def subprocess_getstatusoutput(self, cmd, debug=False, excepted_exit_code=0, **kwargs):
         """
         Return (status, output) of executing cmd in a shell.
 
@@ -58,9 +58,9 @@ class DjangoCommandMixin(object):
         if output[-1:] == '\n':
             output = output[:-1]
 
-        if status != 0 or debug:
+        if status != excepted_exit_code or debug:
             msg = (
-                "subprocess exist status == %(status)r\n"
+                "subprocess exist status == %(status)r (excepted: %(excepted_exit_code)r)\n"
                 "Call %(cmd)r with:\n"
                 "%(kwargs)s\n"
                 "subprocess output:\n"
@@ -69,11 +69,12 @@ class DjangoCommandMixin(object):
                 "------------------------------------------------------------\n"
             ) % {
                 "status": status,
+                "excepted_exit_code": excepted_exit_code,
                 "cmd": cmd,
                 "kwargs": pprint.pformat(subprocess_kwargs),
                 "output": output
             }
-            if status != 0:
+            if status != excepted_exit_code:
                 raise AssertionError(msg)
             else:
                 print(msg)

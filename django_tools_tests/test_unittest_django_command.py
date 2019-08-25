@@ -11,6 +11,7 @@ from unittest import TestCase
 # https://github.com/jedie/django-tools
 import django_tools
 from django_tools.unittest_utils.django_command import DjangoCommandMixin
+from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 
 PY35 = sys.version_info[0:2] == (3, 5)
 
@@ -23,7 +24,9 @@ class TestDjangoCommand(DjangoCommandMixin, TestCase):
 
         self.assertNotIn("ERROR", output)
         self.assertIn("[django]", output)
-        self.assertIn("Type 'manage.py help <subcommand>' for help on a specific subcommand.", output)
+        self.assertIn(
+            "Type 'manage.py help <subcommand>' for help on a specific subcommand.", output
+        )
 
     def test_check(self):
         output = self.call_manage_py(["check"], manage_dir=MANAGE_DIR)
@@ -35,7 +38,7 @@ class TestDjangoCommand(DjangoCommandMixin, TestCase):
         Test if we can set "DJANGO_SETTINGS_MODULE"
         """
         env = dict(os.environ)
-        env["DJANGO_SETTINGS_MODULE"]="does-not-exist"
+        env["DJANGO_SETTINGS_MODULE"] = "does-not-exist"
 
         with self.assertRaises(AssertionError) as cm:
             self.call_manage_py(["--help"], manage_dir=MANAGE_DIR, env=env)
@@ -51,3 +54,10 @@ class TestDjangoCommand(DjangoCommandMixin, TestCase):
             member = "ModuleNotFoundError: No module named 'does-not-exist'"
 
         self.assertIn(member, output)
+
+    def test_excepted_exit_code(self):
+        output = self.call_manage_py(
+            ["NotExistingCommand"], excepted_exit_code=1, manage_dir=MANAGE_DIR
+        )
+        print(output)
+        self.assertIn("Unknown command: 'NotExistingCommand'", output)

@@ -757,6 +757,7 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.45.2...master|compare v0.45.2...master]]
+** Add {{{excepted_exit_code}}} to {{{django_tools.unittest_utils.django_command.DjangoCommandMixin}}} to it's possible to test errors in manage commands
 * TBC
 * v0.45.2 - 26.06.2019 - [[https://github.com/jedie/django-tools/compare/v0.45.1...v0.45.2|compare v0.45.1...v0.45.2]]
 ** NEW: {{{django_tools.log_utils.throttle_admin_email_handler.ThrottledAdminEmailHandler}}}
