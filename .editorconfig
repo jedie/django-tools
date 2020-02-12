@@ -1,38 +1,24 @@
-# http://editorconfig.org
-
+# see http://editorconfig.org
 root = true
 
 [*]
 indent_style = space
 indent_size = 4
+end_of_line = lf
+charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
-charset = utf-8
-end_of_line = lf
 
-[*.{bat,cmd,ps1}]
-end_of_line = crlf
-
-[{Makefile,**.mk}]
-indent_style = tab
-
-[LICENSE]
+[*.{html,css,js}]
 insert_final_newline = false
 
 [*.py]
-# Configuring isort
-# https://github.com/timothycrosley/isort/wiki/isort-Settings
-atomic = true
-line_length = 120
-# 5 - Hanging Grid Grouped
-multi_line_output = 5
+line_length = 119
 
-known_external=pytest
-known_django=django
-known_cms=cms
+[{Makefile,**.mk}]
+indent_style = tab
+insert_final_newline = false
 
-import_heading_djangotools=https://github.com/jedie/django-tools
-known_djangotools=django_tools
-
-default_section=THIRDPARTY
-sections=FUTURE,STDLIB,EXTERNAL,DJANGO,CMS,THIRDPARTY,DJANGOTOOLS,FIRSTPARTY,LOCALFOLDER
+[*.{yml}]
+indent_style = space
+indent_size = 2

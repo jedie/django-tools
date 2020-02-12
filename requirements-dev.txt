@@ -1,6 +1,0 @@
--r requirements-test.txt
-django<2.3
-wheel
-twine
-python-creole
-docutils

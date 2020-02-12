@@ -1,0 +1,64 @@
+[tool.poetry]
+name = "django-tools"
+version = "0.46.0.dev0"
+description = "miscellaneous tools for django"
+
+# Will be generated from README.creole with: "poetry run update_rst_readme"
+readme="README.rst"
+
+license = "GPL-3.0-or-later"
+authors = ["Jens Diemer <django-tools@jensdiemer.de>"]
+homepage = "https://github.com/jedie/django-tools/"
+keywords=["django", "helpers"]
+classifiers = [
+    # http://pypi.python.org/pypi?%3Aaction=list_classifiers
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License (GPL)",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Operating System :: OS Independent",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Utilities",
+]
+packages = [
+    { include = "django_tools" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+icdiff = "^1.9.1"  # https://github.com/jeffkaufman/icdiff
+pprintpp = "^0.4.0"  # https://github.com/wolever/pprintpp
+bleach = "^3.1.0"
+django = "^2.2"
+
+[tool.poetry.dev-dependencies]
+poetry-publish = "^0.2.2"
+tox = "^3.14.3"
+pytest = "^4.6"
+pytest-django = "^3.8.0"
+pytest-cov = "^2.8.1"
+isort = "^4.3.21"
+flake8 = "^3.7.9"
+flynt = "^0.40.1"
+autopep8 = "^1.4.4"
+colorlog = "^4.1.0"
+easy_thumbnails = "^2.7"
+django-filer = "^1.6.0"
+django-parler = "^2.0.1"
+selenium = "^3.141.0"
+
+[tool.poetry.scripts]
+update_rst_readme = "django_tools.publish:update_readme"
+publish = "django_tools.publish:publish"
+dev_server = "django_tools_test_project:start_test_project_server"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+

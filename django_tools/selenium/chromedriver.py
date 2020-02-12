@@ -12,6 +12,7 @@ from selenium.webdriver import DesiredCapabilities
 from django_tools.selenium.base import SeleniumBaseTestCase
 from django_tools.selenium.utils import find_executable
 
+
 log = logging.getLogger(__name__)
 
 
@@ -52,6 +53,7 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
     def setUpClass(cls):
 
         chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_experimental_option('w3c', False)  # needed to get browser logs
         for argument in cls.options:
             chrome_options.add_argument(argument)
 
@@ -103,5 +105,5 @@ def chromium_available(filename=None):
         log.error("Chromium is no available: %s")
         return False
 
-    log.debug("Chromium found here: %s" % executable)
+    log.debug(f"Chromium found here: {executable}")
     return True
