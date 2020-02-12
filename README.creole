@@ -757,6 +757,7 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.45.3...master|compare v0.45.3...master]]
+** remove {{{lxml}}} decency by using [[https://github.com/mozilla/bleach|bleach]] for {{{html_utils.html2text}}}
 * TBC
 * v0.45.3 - 25.08.2019 - [[https://github.com/jedie/django-tools/compare/v0.45.2...v0.45.3|compare v0.45.2...v0.45.3]]
 ** Add {{{excepted_exit_code}}} to {{{django_tools.unittest_utils.django_command.DjangoCommandMixin}}} to it's possible to test errors in manage commands
