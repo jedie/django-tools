@@ -12,8 +12,6 @@ import datetime
 from django.template.defaultfilters import stringfilter
 from django.utils.translation import ugettext as _
 
-from django_tools.utils.time_utils import datetime2float
-
 
 CHMOD_TRANS_DATA = (
     "---", "--x", "-w-", "-wx", "r--", "r-x", "rw-", "rwx"

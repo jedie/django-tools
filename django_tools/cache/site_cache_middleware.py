@@ -157,7 +157,10 @@ class CacheMiddlewareBase:
             return False
 
         if response and getattr(response, 'csrf_processing_done', False):
-            logger.debug("Don't cache because response.csrf_processing_done==True (e.g.: view use @csrf_protect decorator)")
+            logger.debug(
+                "Don't cache because response.csrf_processing_done==True"
+                " (e.g.: view use @csrf_protect decorator)"
+            )
             return False
 
         if cache_callback:

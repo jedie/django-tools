@@ -64,7 +64,7 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True, di
     TODO: We should delete the temp files after viewing!
     """
     global BROWSER_TRACEBACK_OPENED
-    if browser_traceback != True or BROWSER_TRACEBACK_OPENED == True:
+    if browser_traceback is not True or BROWSER_TRACEBACK_OPENED:
         return
     # Save for the next traceback
     BROWSER_TRACEBACK_OPENED = True

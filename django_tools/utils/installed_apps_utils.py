@@ -62,7 +62,7 @@ def get_filtered_apps(resolve_url="/", no_args=True, debug=False, skip_fail=Fals
             func, func_args, func_kwargs = resolver.resolve(resolve_url)
         except Resolver404 as err:
             if debug:
-                print(f"Skip {app_label!r}: Can't handle root url.")
+                print(f"Skip {app_label!r}: Can't handle root url. ({err})")
             continue
         if not no_args or func_args == () and func_kwargs == {}:
             root_apps.append(app_label)

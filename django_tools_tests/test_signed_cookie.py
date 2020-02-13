@@ -64,12 +64,16 @@ class TestSignedCookieStorage(SimpleTestCase):
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")  # trigger all warnings
 
-            c = ClientCookieStorage(cookie_key="foo")
+            ClientCookieStorage(cookie_key="foo")
 
             assert_pformat_equal(len(w), 1)
             assert_pformat_equal(
                 str(w[-1].message),
-                "ClientCookieStorage is old API! Please change to SignedCookieStorage! This will be removed in the future!",
+                (
+                    "ClientCookieStorage is old API!"
+                    " Please change to SignedCookieStorage!"
+                    " This will be removed in the future!"
+                ),
             )
             # self.assertIsInstance(w[-1].category, FutureWarning) # FIXME:
             # AssertionError: <class 'FutureWarning'> is not an instance of <class

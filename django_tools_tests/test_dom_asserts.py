@@ -23,7 +23,9 @@ FAKE_RESPONSE1 = FakedHttpResponse("""\
 <head><title>A html5 page</title></head>
 <body>
 <form action="." method="post">
-    <div style='display:none'><input type='hidden' name='csrfmiddlewaretoken' value='35e51f70b63058513d571a29465951b4' /></div>
+    <div style='display:none'>
+        <input type='hidden' name='csrfmiddlewaretoken' value='35e51f70b63058513d571a29465951b4' />
+    </div>
     First name: <input type="text" name="first_name" value="Foo" /><br />
     Last name:<input type="text" name="last_name" value="Bar" /><br />
     <input type="submit" value="Submit" />

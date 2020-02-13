@@ -18,20 +18,12 @@ class Command(RunServerCommand):
     """
     help = "Setup test project and run django developer server"
 
-    def add_arguments(self, parser):
-        super().add_arguments(parser)
-
-        parser.add_argument("--fresh", action="store_true", dest="delete_first", default=False,
-                            help="Delete existing entries.")
-
     def verbose_call(self, command, *args, **kwargs):
         self.stderr.write("_" * 79)
         self.stdout.write(f"Call {command!r} with: {args!r} {kwargs!r}")
         call_command(command, *args, **kwargs)
 
     def handle(self, *args, **options):
-
-        delete_first = options.get('delete_first')
 
         if "RUN_MAIN" not in os.environ:
             # RUN_MAIN added by auto reloader, see: django/utils/autoreload.py

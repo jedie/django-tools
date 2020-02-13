@@ -127,11 +127,16 @@ class _SmoothCache:
         max_age = get_max_age(load_average)
         if outdate_age > max_age:
             logger.debug(
-                f"Out-dated {key!r} (added {last_change_time - create_time}sec after clear() - age: {outdate_age}, max age: {max_age}, load: {load_average})")
+                f"Out-dated {key!r}"
+                f" (added {last_change_time - create_time}sec after clear()"
+                f" - age: {outdate_age}, max age: {max_age}, load: {load_average})"
+            )
             return True
         else:
             logger.debug(
-                f"Keep {key!r} by load (out-dated age: {outdate_age:.1f}sec, max age: {max_age}, load: {load_average})")
+                f"Keep {key!r} by load"
+                f" (out-dated age: {outdate_age:.1f}sec, max age: {max_age}, load: {load_average})"
+            )
             return False
 
     def smooth_update(self):

@@ -32,7 +32,6 @@
 """
 
 
-import os
 import warnings
 
 from django.core import signing
@@ -83,7 +82,11 @@ class ClientCookieStorage:
 
     def __new__(self, *args, **kwargs):
         warnings.warn(
-            "ClientCookieStorage is old API! Please change to SignedCookieStorage! This will be removed in the future!",
+            (
+                "ClientCookieStorage is old API!"
+                " Please change to SignedCookieStorage!"
+                " This will be removed in the future!"
+            ),
             FutureWarning,
             stacklevel=2)
         return SignedCookieStorage(*args, **kwargs)

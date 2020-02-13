@@ -278,7 +278,10 @@ class ModelPermissionMixin:
         """
         if settings.DEBUG:
             all_permissions = [p[0] for p in cls._meta.permissions]
-            assert action in all_permissions, f"'{action}' not in Meta.permissions! Existing keys are: {', '.join(all_permissions)}"
+            assert action in all_permissions, (
+                f"'{action}' not in Meta.permissions!"
+                f" Existing keys are: {', '.join(all_permissions)}"
+            )
         permission = f"{cls._meta.app_label}.{action}"
         return permission
 
@@ -336,8 +339,6 @@ def get_filtered_permissions(
 
     if exclude_app_labels is not None:
         # SQLite doesn't support .distinct, so we can't do this:
-        # app_lables = ContentType.objects.all().values_list("app_label", flat=True).order_by("app_label").distinct("app_label")
-        # This isn't perfomance criticle code, isn't it? So just do this:
         app_lables = set(ContentType.objects.all().values_list("app_label", flat=True))
 
         exclude_content_types = []

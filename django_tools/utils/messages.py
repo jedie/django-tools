@@ -9,7 +9,6 @@
 """
 
 
-import inspect
 import warnings
 
 from django.conf import settings
@@ -65,9 +64,13 @@ class StackInfoStorage(FallbackStorage):
     Template e.g.:
     ~~~~~~~~~~~~~~
     <ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}{% if message.stack_info %} title="click for stack info" onclick="alert('Stack info (limit: {{ message.stack_limit }}, url: [{{ message.full_path }}]):\n\n{{ message.stack_info }}');"{% endif %}>
-       {{ message }}
+    {% for m in messages %}
+    <li{% if m.tags %} class="{{ m.tags }}"{% endif %}{% if m.stack_info %}
+        title="click for stack info" onclick="
+        alert(
+            'Stack info (limit: {{ m.stack_limit }}, url: [{{ m.full_path }}]):\n\n{{ m.stack_info }}'
+        );"{% endif %}>
+       {{ m }}
     </li>
     {% endfor %}
     </ul>

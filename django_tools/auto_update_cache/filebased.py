@@ -9,7 +9,6 @@
 
 import logging
 import os
-import sys
 import time
 
 from django.conf import settings

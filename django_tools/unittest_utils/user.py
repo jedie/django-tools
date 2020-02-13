@@ -142,8 +142,9 @@ def get_or_create_group(groupname, permissions):
 
     existing_permission_count = group.permissions.all().count()
     print(f"Group {groupname} has {existing_permission_count:d} permissions")
-    assert len(
-        permissions) == existing_permission_count, f"Wrong permission count: {existing_permission_count:d} != {len(permissions):d}"
+    assert len(permissions) == existing_permission_count, (
+        f"Wrong permission count: {existing_permission_count:d} != {len(permissions):d}"
+    )
 
     return group, created
 

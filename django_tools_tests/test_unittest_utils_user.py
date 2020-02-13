@@ -6,15 +6,10 @@
 """
 
 
-import warnings
-
-import pytest
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sessions.models import Session
 from django.core.management import call_command
-from django.test import TestCase
 
 # https://github.com/jedie/django-tools
 from django_tools.permissions import get_filtered_permissions

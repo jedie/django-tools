@@ -42,7 +42,9 @@ def assert_language_code(*, language_code):
     Check if given language_code is in settings.LANGUAGES
     """
     existing_language_codes = tuple(dict(settings.LANGUAGES).keys())
-    assert language_code in existing_language_codes, f"{language_code!r} not in settings.LANGUAGES={settings.LANGUAGES!r}"
+    assert language_code in existing_language_codes, (
+        f"{language_code!r} not in settings.LANGUAGES={settings.LANGUAGES!r}"
+    )
 
 
 def assert_installed_apps(*, app_names):

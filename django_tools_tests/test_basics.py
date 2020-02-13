@@ -10,7 +10,7 @@ from unittest import TestCase
 
 from django.conf import settings
 from django.core.management import call_command
-from django.test import SimpleTestCase, override_settings
+from django.test import SimpleTestCase
 
 # https://github.com/jedie/django-tools
 import django_tools_test_project

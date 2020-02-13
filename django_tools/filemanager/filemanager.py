@@ -102,7 +102,7 @@ class BaseFilemanager(BaseFilesystemBrowser):
                 elif os.path.isfile(link_path):
                     item_class = self.FILE_LINK_ITEM
                 else:
-                    raise NotImplemented
+                    raise NotImplementedError
             elif os.path.isdir(item_abs_path):
                 item_class = self.DIR_ITEM
             elif os.path.isfile(item_abs_path):

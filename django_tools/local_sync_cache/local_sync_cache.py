@@ -174,7 +174,10 @@ class LocalSyncCache(dict):
             # We have out-dated data -> reset dict
             self.ext_clear_counter += 1
             logger.info(
-                f"{self.id!r} out-dated data -> reset (global_update_time: {global_update_time!r} - self.last_reset: {self.last_reset!r})")
+                f"{self.id!r} out-dated data -> reset"
+                f" (global_update_time: {global_update_time!r}"
+                f" - self.last_reset: {self.last_reset!r})"
+            )
             dict.clear(self)
             self.last_reset = time.time()
 
