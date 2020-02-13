@@ -33,28 +33,24 @@ e.g.:
 
 ::
 
-    # create a python virtualenv:
-    ~$ python3 -Im venv DjangoToolsEnv
-    
-    # activate the created virtualenv:
-    ~$ cd DjangoToolsEnv/
-    ~/DjangoToolsEnv$ source bin/activate
-    
-    # Upgrate pip:
-    (DjangoToolsEnv) ~/DjangoToolsEnv$ pip3 install --upgrade pip
-    
-    # install django-tools:
-    (DjangoToolsEnv) ~/DjangoToolsEnv$ pip3 install -e git+https://github.com/jedie/django-tools.git@master#egg=django_tools
-    
-    # install dependencies:
-    (DjangoToolsEnv) ~/DjangoToolsEnv$ cd src/django-tools/
-    (DjangoToolsEnv) ~/DjangoToolsEnv/src/django-tools$ pip install -r requirements-dev.txt
-    
-    # run tests:
-    (DjangoToolsEnv) ~/DjangoToolsEnv/src/django-tools$ ./setup.py test
-    
-    # start test project:
-    (DjangoToolsEnv) ~/DjangoToolsEnv/src/django-tools$ ./run_test_project_dev_server.sh
+    ~$ git clone https://github.com/jedie/django-tools.git
+    ~$ cd django-tools/
+    ~/django-tools$ make install
+    ~/django-tools$ make
+    help                 List all commands
+    install-poetry       install or update poetry
+    install              install django-tools via poetry
+    lint                 Run code formatters and linter
+    fix-code-style       Fix code formatting
+    tox-listenvs         List all tox test environments
+    tox                  Run pytest via tox with all environments
+    tox-py36             Run pytest via tox with *python v3.6*
+    tox-py37             Run pytest via tox with *python v3.7*
+    tox-py38             Run pytest via tox with *python v3.8*
+    pytest               Run pytest
+    update-rst-readme    update README.rst from README.creole
+    publish              Release new version to PyPi
+    start-dev-server     Start Django dev. server with the test project
 
 --------------
 existing stuff
@@ -877,7 +873,11 @@ Django compatibility
 history
 -------
 
-* *dev* - `compare v0.45.3...master <https://github.com/jedie/django-tools/compare/v0.45.3...master>`_ 
+* *dev* - `compare v0.46.0...master <https://github.com/jedie/django-tools/compare/v0.46.0...master>`_
+
+* TBC
+
+* v0.46.0 - 13.02.2020 - `compare v0.45.3...v0.46.0 <https://github.com/jedie/django-tools/compare/v0.45.3...v0.46.0>`_ 
 
     * ``dynamic_site`` was removed. Please use e.g.: `django-hosts <https://github.com/jazzband/django-hosts>`_
 
@@ -885,7 +885,7 @@ history
 
     * remove ``lxml`` decency by using `bleach <https://github.com/mozilla/bleach>`_ for ``html_utils.html2text``
 
-* TBC
+    * update code and code style
 
 * v0.45.3 - 25.08.2019 - `compare v0.45.2...v0.45.3 <https://github.com/jedie/django-tools/compare/v0.45.2...v0.45.3>`_ 
 
@@ -1608,4 +1608,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-02-13 08:19:24 with "python-creole"``
+``Note: this file is generated from README.creole 2020-02-13 14:57:58 with "python-creole"``

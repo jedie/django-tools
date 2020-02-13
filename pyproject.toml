@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-tools"
-version = "0.46.0.dev0"
+version = "0.46.0"
 description = "miscellaneous tools for django"
 
 # Will be generated from README.creole with: "poetry run update_rst_readme"

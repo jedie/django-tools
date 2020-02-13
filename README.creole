@@ -14,28 +14,24 @@ Look also at the siblings project: [[https://github.com/jedie/django-cms-tools|d
 
 e.g.:
 {{{
-# create a python virtualenv:
-~$ python3 -Im venv DjangoToolsEnv
-
-# activate the created virtualenv:
-~$ cd DjangoToolsEnv/
-~/DjangoToolsEnv$ source bin/activate
-
-# Upgrate pip:
-(DjangoToolsEnv) ~/DjangoToolsEnv$ pip3 install --upgrade pip
-
-# install django-tools:
-(DjangoToolsEnv) ~/DjangoToolsEnv$ pip3 install -e git+https://github.com/jedie/django-tools.git@master#egg=django_tools
-
-# install dependencies:
-(DjangoToolsEnv) ~/DjangoToolsEnv$ cd src/django-tools/
-(DjangoToolsEnv) ~/DjangoToolsEnv/src/django-tools$ pip install -r requirements-dev.txt
-
-# run tests:
-(DjangoToolsEnv) ~/DjangoToolsEnv/src/django-tools$ ./setup.py test
-
-# start test project:
-(DjangoToolsEnv) ~/DjangoToolsEnv/src/django-tools$ ./run_test_project_dev_server.sh
+~$ git clone https://github.com/jedie/django-tools.git
+~$ cd django-tools/
+~/django-tools$ make install
+~/django-tools$ make
+help                 List all commands
+install-poetry       install or update poetry
+install              install django-tools via poetry
+lint                 Run code formatters and linter
+fix-code-style       Fix code formatting
+tox-listenvs         List all tox test environments
+tox                  Run pytest via tox with all environments
+tox-py36             Run pytest via tox with *python v3.6*
+tox-py37             Run pytest via tox with *python v3.7*
+tox-py38             Run pytest via tox with *python v3.8*
+pytest               Run pytest
+update-rst-readme    update README.rst from README.creole
+publish              Release new version to PyPi
+start-dev-server     Start Django dev. server with the test project
 }}}
 
 == existing stuff
@@ -756,11 +752,13 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.45.3...master|compare v0.45.3...master]]
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.46.0...master|compare v0.46.0...master]]
+* TBC
+* v0.46.0 - 13.02.2020 - [[https://github.com/jedie/django-tools/compare/v0.45.3...v0.46.0|compare v0.45.3...v0.46.0]]
 ** {{{dynamic_site}}} was removed. Please use e.g.: [[https://github.com/jazzband/django-hosts|django-hosts]]
 ** modernize project setup and use {{{poetry}}}
 ** remove {{{lxml}}} decency by using [[https://github.com/mozilla/bleach|bleach]] for {{{html_utils.html2text}}}
-* TBC
+** update code and code style
 * v0.45.3 - 25.08.2019 - [[https://github.com/jedie/django-tools/compare/v0.45.2...v0.45.3|compare v0.45.2...v0.45.3]]
 ** Add {{{excepted_exit_code}}} to {{{django_tools.unittest_utils.django_command.DjangoCommandMixin}}} to it's possible to test errors in manage commands
 * v0.45.2 - 26.06.2019 - [[https://github.com/jedie/django-tools/compare/v0.45.1...v0.45.2|compare v0.45.1...v0.45.2]]
