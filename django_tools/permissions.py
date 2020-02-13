@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     permission helpers
     ~~~~~~~~~~~~~~~~~~
@@ -8,8 +6,6 @@
 """
 
 
-from __future__ import absolute_import, print_function, unicode_literals
-
 import logging
 
 from django.conf import settings
@@ -17,6 +13,8 @@ from django.contrib.admin.sites import site
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
+from django.db import NotSupportedError
+
 
 log = logging.getLogger(__name__)
 
@@ -27,7 +25,7 @@ def pformat_permission(permission):
         "<appname>.<codename>"
     """
     assert isinstance(permission, Permission), "No auth.models.Permission instance!"
-    return "%s.%s" % (permission.content_type.app_label, permission.codename)
+    return f"{permission.content_type.app_label}.{permission.codename}"
 
 
 def get_permission(app_label, codename):
@@ -44,7 +42,7 @@ def get_permission(app_label, codename):
             qs = ContentType.objects.all().values_list("app_label", flat=True).order_by("app_label")
             try:
                 app_lables = ", ".join(qs.distinct("app_label"))
-            except NotImplementedError:
+            except NotSupportedError:
                 # e.g.: sqlite has no distinct
                 app_lables = ", ".join(set(qs))
             raise PermissionDenied(
@@ -71,7 +69,7 @@ def get_permission_by_string(permission):
         app_label, codename = permission.split(".")
     except ValueError as err:
         raise PermissionDenied(
-            "Wrong permission string format '%s': %s" % (permission, err)
+            f"Wrong permission string format '{permission}': {err}"
         )
     return get_permission(app_label, codename)
 
@@ -122,7 +120,7 @@ def log_user_permissions(user, log_callable=None):
     if log_callable is None:
         log_callable = log.debug
 
-    permissions = sorted(user.get_all_permissions()) # A string list!
+    permissions = sorted(user.get_all_permissions())  # A string list!
 
     if not permissions:
         log_callable("User '%s' has no permission!", user.username)
@@ -177,9 +175,9 @@ def add_app_permissions(permission_obj, app_label):
     e.g.:
         add_app_permissions(permission_obj=user_group_instance, app_label="filer")
     """
-    content_types = ContentType.objects.filter(app_label = app_label)
+    content_types = ContentType.objects.filter(app_label=app_label)
     permissions = Permission.objects.filter(content_type__in=content_types)
-    log.debug("Add %i permissions from app '%s'" % (permissions.count(), app_label))
+    log.debug(f"Add {permissions.count():d} permissions from app '{app_label}'")
     for permission in permissions:
         permission_obj.permissions.add(permission)
 
@@ -229,7 +227,7 @@ def has_perm(user, permission):
     return True
 
 
-class ModelPermissionMixin(object):
+class ModelPermissionMixin:
     """
     Helper for easy model permission checks.
     e.g.:
@@ -265,12 +263,8 @@ class ModelPermissionMixin(object):
 
         https://docs.djangoproject.com/en/1.8/ref/models/options/#default-permissions
         """
-        assert action in cls._meta.default_permissions, "'%s' not in Meta.default_permissions !" % action
-        permission = "{app}.{action}_{model}".format(
-            app=cls._meta.app_label,
-            action=action,
-            model=cls._meta.model_name,
-        )
+        assert action in cls._meta.default_permissions, f"'{action}' not in Meta.default_permissions !"
+        permission = f"{cls._meta.app_label}.{action}_{cls._meta.model_name}"
         return permission
 
     @classmethod
@@ -284,13 +278,8 @@ class ModelPermissionMixin(object):
         """
         if settings.DEBUG:
             all_permissions = [p[0] for p in cls._meta.permissions]
-            assert action in all_permissions, "'%s' not in Meta.permissions! Existing keys are: %s" % (
-                action, ", ".join(all_permissions)
-            )
-        permission = "{app}.{action}".format(
-            app=cls._meta.app_label,
-            action=action,
-        )
+            assert action in all_permissions, f"'{action}' not in Meta.permissions! Existing keys are: {', '.join(all_permissions)}"
+        permission = f"{cls._meta.app_label}.{action}"
         return permission
 
     @classmethod
@@ -310,12 +299,12 @@ class ModelPermissionMixin(object):
 
 
 def get_filtered_permissions(
-        exclude_app_labels=None,
-        exclude_actions=None,
-        exclude_models=None,
-        exclude_codenames=None,
-        exclude_permissions=None
-    ):
+    exclude_app_labels=None,
+    exclude_actions=None,
+    exclude_models=None,
+    exclude_codenames=None,
+    exclude_permissions=None
+):
     """
     Generate a Permission instance list and exclude parts of it.
 
@@ -342,7 +331,7 @@ def get_filtered_permissions(
 
     if exclude_actions is not None:
         for action in exclude_actions:
-            codename_prefix = "%s_" % action
+            codename_prefix = f"{action}_"
             qs = qs.exclude(codename__startswith=codename_prefix)
 
     if exclude_app_labels is not None:
@@ -355,13 +344,11 @@ def get_filtered_permissions(
         for app_label in exclude_app_labels:
             if app_label not in app_lables:
                 raise AssertionError(
-                    "app label %r not found! Existing labels: %s" % (
-                        app_label, ",".join(app_lables)
-                    )
+                    f"app label {app_label!r} not found! Existing labels: {','.join(app_lables)}"
                 )
-            print("Check %r" % app_label)
-            content_types = ContentType.objects.all().filter(app_label = app_label)
-            assert content_types.count()>0
+            print(f"Check {app_label!r}")
+            content_types = ContentType.objects.all().filter(app_label=app_label)
+            assert content_types.count() > 0
             exclude_content_types += content_types
 
         qs = qs.exclude(content_type__in=exclude_content_types)
@@ -399,4 +386,4 @@ def pprint_filtered_permissions(permissions):
     qs = Permission.objects.all().order_by("content_type__app_label", "content_type__model", "codename")
     for permission in qs:
         contains = "[*]" if permission in permissions else "[ ]"
-        print("%s %s" % (contains, pformat_permission(permission)))
+        print(f"{contains} {pformat_permission(permission)}")

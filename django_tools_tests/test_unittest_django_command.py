@@ -3,14 +3,12 @@
 """
 
 import os
-import sys
 from pathlib import Path
 from unittest import TestCase
 
 # https://github.com/jedie/django-tools
 import django_tools_test_project
 from django_tools.unittest_utils.django_command import DjangoCommandMixin
-from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 
 
 MANAGE_DIR = Path(django_tools_test_project.__file__).parent
@@ -39,7 +37,7 @@ class TestDjangoCommand(DjangoCommandMixin, TestCase):
         env["DJANGO_SETTINGS_MODULE"] = "does-not-exist"
 
         with self.assertRaises(AssertionError) as cm:
-            self.call_manage_py(["--help"], manage_dir=MANAGE_DIR, env=env)
+            self.call_manage_py(["diffsettings"], manage_dir=MANAGE_DIR, env=env)
 
         output = "\n".join(cm.exception.args)
         # print(output)

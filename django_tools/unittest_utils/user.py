@@ -1,4 +1,3 @@
-
 import logging
 import sys
 
@@ -9,6 +8,7 @@ from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.http import HttpRequest
+
 
 log = logging.getLogger(__name__)
 
@@ -59,7 +59,7 @@ def create_user(
             user = user_form.save(commit=False)
             created = True
         else:
-            raise ValidationError("%s" % user_form.errors)
+            raise ValidationError(f"{user_form.errors}")
 
     user.email = email
     user.is_staff = is_staff
@@ -80,13 +80,13 @@ def create_user(
             try:
                 user_group = Group.objects.get(name=group_name)
             except Group.DoesNotExist:
-                raise RuntimeError('User group "%s" not found!' % group_name)
+                raise RuntimeError(f'User group "{group_name}" not found!')
             user.groups.add(user_group)
 
     if created:
-        log.debug("Create new user %r account" % user)
+        log.debug(f"Create new user {user!r} account")
     else:
-        log.debug("Update existing %r account" % user)
+        log.debug(f"Update existing {user!r} account")
 
     return user
 
@@ -136,16 +136,14 @@ def get_or_create_group(groupname, permissions):
             print("remove permission:", permission)
             group.permissions.remove(permission)
 
-    print("Add %i permissions to %r" % (len(permissions), groupname))
+    print(f"Add {len(permissions):d} permissions to {groupname!r}")
     for permission in permissions:
         group.permissions.add(permission)
 
     existing_permission_count = group.permissions.all().count()
-    print("Group %s has %i permissions" % (groupname, existing_permission_count))
-    assert len(permissions) == existing_permission_count, "Wrong permission count: %i != %i" % (
-        existing_permission_count,
-        len(permissions),
-    )
+    print(f"Group {groupname} has {existing_permission_count:d} permissions")
+    assert len(
+        permissions) == existing_permission_count, f"Wrong permission count: {existing_permission_count:d} != {len(permissions):d}"
 
     return group, created
 
@@ -230,13 +228,12 @@ class TestUserMixin:
 
     @classmethod
     def setUpClass(cls):
-        super(TestUserMixin, cls).setUpClass()
+        super().setUpClass()
         cls.UserModel = auth.get_user_model()
 
-    @classmethod
-    def setUpTestData(cls):
-        super(TestUserMixin, cls).setUpTestData()
-        cls.create_testusers(cls)
+    def setUp(self):
+        super().setUp()
+        self.create_testusers()
 
     def create_testusers(self):
         """
@@ -244,18 +241,23 @@ class TestUserMixin:
         """
         for user_data in self.TEST_USERS.values():
             user = create_user(update_existing=True, **user_data)
-            log.debug("Test user %s created." % user)
+            log.debug(f"Test user {user} created.")
 
     def get_userdata(self, usertype):
         """ return userdata from self.TEST_USERS for the given usertype """
         try:
-            return self.TEST_USERS[usertype]
+            userdata = self.TEST_USERS[usertype]
         except KeyError as err:
             etype, evalue, etb = sys.exc_info()
             evalue = etype(
-                "Wrong usetype %s! Existing usertypes are: %s" % (err, ", ".join(list(self.TEST_USERS.keys())))
+                f"Wrong usetype {err}! Existing usertypes are: {', '.join(list(self.TEST_USERS.keys()))}"
             )
             raise etype(evalue).with_traceback(etb)
+
+        if not self.UserModel.objects.filter(username=userdata["username"]).exists():
+            raise AssertionError('Test users not created!')
+
+        return userdata
 
     def _get_user(self, usertype):
         """ return User model instance for the given usertype"""
@@ -300,7 +302,7 @@ class TestUserMixin:
             except ContentType.DoesNotExist:
                 etype, evalue, etb = sys.exc_info()
                 evalue = etype(
-                    'Can\'t get ContentType for app "%s" and model "%s": %s' % (app_label, model_name, evalue)
+                    f'Can\'t get ContentType for app "{app_label}" and model "{model_name}": {evalue}'
                 )
                 raise etype(evalue).with_traceback(etb)
 
