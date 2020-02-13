@@ -10,28 +10,31 @@
 import os
 import posixpath
 
-from django.utils.six.moves import urllib
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.http import Http404
+from django.utils.six.moves import urllib
 from django.utils.translation import ugettext as _
 
-from django_tools.filemanager.utils import add_slash, clean_posixpath
 from django_tools.filemanager.exceptions import DirectoryTraversalAttack
+from django_tools.filemanager.utils import add_slash, clean_posixpath
 from django_tools.validators import ExistingDirValidator
+
 
 STOP_PARTS = (
     # https://en.wikipedia.org/wiki/Directory_traversal_attack#Unicode_.2F_UTF-8_encoded_directory_traversal
-    "%c1%1c", # %c1%1c can be translated to /
-    "%c0%af", # %c0%af can be translated to \
-    "%c0%ae", # %c0%af can be translated to .
+    "%c1%1c",  # %c1%1c can be translated to /
+    "%c0%af",  # %c0%af can be translated to \
+    "%c0%ae",  # %c0%af can be translated to .
 )
+
 
 class BaseFilesystemBrowser:
     """
     Base class for a django app like a filemanager, which contains only
     the base functionality to browse to a base path of the filesystem.
     """
+
     def __init__(self, request, absolute_path, base_url, rest_url):
         """
         absolute_path - path in filesystem to the root directory
@@ -63,7 +66,7 @@ class BaseFilesystemBrowser:
         if not os.path.isdir(self.absolute_path):
             if settings.DEBUG:
                 raise Http404(
-                    "Formed path %r doesn't exist." % self.absolute_path)
+                    f"Formed path {self.absolute_path!r} doesn't exist.")
             else:
                 raise Http404(_("Directory doesn't exist!"))
 
@@ -112,8 +115,8 @@ class BaseFilesystemBrowser:
             return breadcrumbs
 
         for url_part in rel_url.split("/"):
-            url += "%s/" % url_part
-            parts += "%s/" % url_part
+            url += f"{url_part}/"
+            parts += f"{url_part}/"
             breadcrumbs.append({
                 "name": url_part,
                 "title": _("goto '%s'") % parts.strip("/"),
@@ -144,5 +147,3 @@ class BaseFilesystemBrowser:
 
         if not path.startswith(base_path):
             raise DirectoryTraversalAttack(f"{path!r} doesn't start with {base_path!r}")
-
-

@@ -14,8 +14,7 @@ from django.urls import reverse
 
 # https://github.com/jedie/django-tools
 from django_tools.unittest_utils import assertments
-from django_tools.unittest_utils.assertments import assert_in_dedent, assert_equal_dedent
-
+from django_tools.unittest_utils.assertments import assert_equal_dedent, assert_in_dedent
 from .BrowserDebug import debug_response
 
 
@@ -206,7 +205,7 @@ class BaseTestCase(BaseUnittestCase):
             self.assertEqual(response.status_code, status_code)
         except AssertionError as err:
             if browser_traceback:
-                msg = "Wrong status code: %s" % err
+                msg = f"Wrong status code: {err}"
                 debug_response(response, self.browser_traceback, msg, display_tb=True)
             raise
 
@@ -215,7 +214,7 @@ class BaseTestCase(BaseUnittestCase):
                 self.assertTemplateUsed(response, template_name=template_name)
             except AssertionError as err:
                 if browser_traceback:
-                    msg = "Template not used: %s" % err
+                    msg = f"Template not used: {err}"
                     debug_response(response, self.browser_traceback, msg, display_tb=True)
                 raise
 
@@ -224,6 +223,6 @@ class BaseTestCase(BaseUnittestCase):
                 self.assertMessages(response, messages)
             except AssertionError as err:
                 if browser_traceback:
-                    msg = "Wrong messages: %s" % err
+                    msg = f"Wrong messages: {err}"
                     debug_response(response, self.browser_traceback, msg, display_tb=True)
                 raise

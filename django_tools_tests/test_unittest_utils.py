@@ -11,8 +11,6 @@ import django
 from django.core import mail
 from django.test import Client, SimpleTestCase
 
-from django_tools_test_project.django_tools_test_app.models import PermissionTestModel
-
 # https://github.com/jedie/django-tools
 from django_tools.mail.send_mail import SendMail
 from django_tools.template.render import render_string_template
@@ -24,6 +22,7 @@ from django_tools.unittest_utils.tempdir import TempDir
 from django_tools.unittest_utils.template import TEMPLATE_INVALID_PREFIX, set_string_if_invalid
 from django_tools.unittest_utils.unittest_base import BaseTestCase, BaseUnittestCase
 from django_tools.unittest_utils.user import TestUserMixin
+from django_tools_test_project.django_tools_test_app.models import PermissionTestModel
 
 
 class TestBaseUnittestCase(BaseUnittestCase):
@@ -132,9 +131,9 @@ class TestBaseUnittestCase(BaseUnittestCase):
         obj = PermissionTestModel.objects.create()
         url = self.get_admin_change_url(obj)
         if django.VERSION < (1, 11):
-            assert_pformat_equal(url, "/admin/django_tools_test_app/permissiontestmodel/%i/" % obj.pk)
+            assert_pformat_equal(url, f"/admin/django_tools_test_app/permissiontestmodel/{obj.pk:d}/")
         else:
-            assert_pformat_equal(url, "/admin/django_tools_test_app/permissiontestmodel/%i/change/" % obj.pk)
+            assert_pformat_equal(url, f"/admin/django_tools_test_app/permissiontestmodel/{obj.pk:d}/change/")
 
     def test_get_admin_add_url(self):
         url = self.get_admin_add_url(obj=PermissionTestModel)
@@ -211,8 +210,7 @@ class TestBaseTestCase(TestUserMixin, BaseTestCase):
         self.create_testusers()
 
         usernames = self.UserModel.objects.all().values_list("username", flat=True)
-        usernames = list(usernames)
-        usernames.sort()
+        usernames = sorted(usernames)
         assert_pformat_equal(usernames, ["normal_test_user", "staff_test_user", "superuser"])
 
         # Are all users active?

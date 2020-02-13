@@ -7,15 +7,13 @@
 """
 
 
-
-
 import os
 import re
 
-from django.utils.six.moves import urllib
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator, URLValidator
+from django.utils.six.moves import urllib
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -53,16 +51,23 @@ class ExistingDirValidator:
         return abs_path
 
 
-
 class URLValidator2(URLValidator):
     """
     A flexible version of the original django URLValidator ;)
-    
+
     scheme://netloc/path?query#fragment
     """
     regex = re.compile(r'^.+$', re.IGNORECASE)
 
-    def __init__(self, allow_schemes=("http", "https"), allow_all_schemes=False, allow_netloc=True, allow_query=True, allow_fragment=True):
+    def __init__(
+            self,
+            allow_schemes=(
+                "http",
+                "https"),
+            allow_all_schemes=False,
+            allow_netloc=True,
+            allow_query=True,
+            allow_fragment=True):
         super().__init__()
 
         if __debug__ and (allow_schemes or allow_all_schemes) and not allow_netloc:
@@ -95,12 +100,3 @@ class URLValidator2(URLValidator):
 
         if fragment and not self.allow_fragment:
             raise ValidationError(_('Enter a valid URL without a fragment.'), code='fragment')
-
-
-
-if __name__ == "__main__":
-    import doctest
-    print(doctest.testmod(
-#        verbose=True
-        verbose=False
-    ))

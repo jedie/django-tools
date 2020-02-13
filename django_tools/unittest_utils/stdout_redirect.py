@@ -3,6 +3,7 @@ import sys
 
 from django.utils.encoding import smart_text
 
+
 # origin_stderr = sys.stderr
 
 class StringBuffer(io.StringIO):
@@ -29,6 +30,7 @@ class StdoutStderrBuffer():
 
         output = buffer.get_output()
     """
+
     def __init__(self):
         sys.stdout.flush()
         sys.stderr.flush()
@@ -53,6 +55,3 @@ class StdoutStderrBuffer():
         self.old_stderr.flush()
         output = self.buffer.getvalue()
         return output
-
-
-

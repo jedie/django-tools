@@ -10,9 +10,8 @@ import warnings
 from django.http import HttpResponse, SimpleCookie
 from django.test import RequestFactory
 
+
 log = logging.getLogger(__name__)
-
-
 
 
 class FakedHttpResponse(HttpResponse):

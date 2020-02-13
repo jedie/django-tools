@@ -26,8 +26,8 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('model_label', nargs="?",
-            help='Name of the Django model (can only be the first characters! We use "startwith"'
-        )
+                            help='Name of the Django model (can only be the first characters! We use "startwith"'
+                            )
         parser.add_argument('--translation', help='Language code that will be activated', default="en")
         parser.add_argument('--count', help='Number of data records to be generated.', type=int, default=2)
 
@@ -47,7 +47,7 @@ class Command(BaseCommand):
 
         models = model_test_generator.get_models_startwith_label(model_label)
         if not models:
-            print("\nERROR: No models starts with given label %r\n" % model_label)
+            print(f"\nERROR: No models starts with given label {model_label!r}\n")
             model_test_generator.print_all_plugins()
             return
 
@@ -55,15 +55,15 @@ class Command(BaseCommand):
             queryset = model.objects.all()
 
             existing_count = queryset.count()
-            if existing_count==0:
+            if existing_count == 0:
                 print("#")
-                print("# ERROR: %r is empty!" % model._meta.label)
+                print(f"# ERROR: {model._meta.label!r} is empty!")
                 print("#")
                 continue
 
-            if existing_count<count:
+            if existing_count < count:
                 print("#")
-                print("# Warning: They exists only %i items in %r!" % (existing_count, model._meta.label))
+                print(f"# Warning: They exists only {existing_count:d} items in {model._meta.label!r}!")
                 print("#")
 
             queryset = queryset[:count]

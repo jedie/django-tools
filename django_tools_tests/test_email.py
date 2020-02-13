@@ -56,7 +56,7 @@ class TestEMail(BaseUnittestCase, SimpleTestCase):
             <!-- START 'mail_test.txt' -->
             This is is a test mail.
             It used the django template: first, second
-            
+
             <!-- END 'mail_test.txt' -->
         """,
         )
@@ -79,8 +79,8 @@ class TestEMail(BaseUnittestCase, SimpleTestCase):
                     It used the django template: first, second</p>
                 </body>
             </html>
-            
-            
+
+
             <!-- END 'mail_test.html' -->
             """,
         )

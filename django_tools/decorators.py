@@ -118,7 +118,7 @@ def render_to(template_name=None, debug=False, **response_kwargs):
                 return context
 
             template_name2 = context.pop("template_name", template_name)
-            assert template_name2 != None, (
+            assert template_name2 is not None, (
                 "Template name must be passed as render_to parameter"
                 " or 'template_name' must be inserted into context!"
             )

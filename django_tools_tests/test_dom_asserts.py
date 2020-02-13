@@ -1,30 +1,21 @@
 """
     Test DOM asserts
     ~~~~~~~~~~~~~~~~
-    
+
     Test the DOM unittest stuff from
         Gregor Müllegger GSoC work in the Django soc2011/form-rendering branch
 
     https://github.com/gregmuellegger/django/blob/soc2011%2Fform-rendering/django/test/testcases.py
     https://github.com/gregmuellegger/django/blob/soc2011%2Fform-rendering/django/test/html.py
-    
+
     :copyleft: 2011 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 
-
-import unittest
-
-
-if __name__ == "__main__":
-    # run unittest directly
-    import os
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django_tools.django_tools_tests.test_settings"
-
-
-from django_tools.unittest_utils.unittest_base import BaseTestCase
 from django_tools.selenium.response import FakedHttpResponse
+from django_tools.unittest_utils.unittest_base import BaseTestCase
+
 
 FAKE_RESPONSE1 = FakedHttpResponse("""\
 <!DOCTYPE HTML>
@@ -49,7 +40,8 @@ class DOMassertTest(BaseTestCase):
         )
 
     def test_assertHTMLEqual2(self):
-        self.assertRaises(AssertionError,
+        self.assertRaises(
+            AssertionError,
             self.assertHTMLEqual,
             '<a href="#" id="foo" class="bar">foobar</a>',
             '<a class="bar" id="foo" href="#">other</a>',
@@ -80,7 +72,8 @@ class DOMassertTest(BaseTestCase):
         )
 
     def test_assertDOM_must_contain(self):
-        self.assertRaises(AssertionError,
+        self.assertRaises(
+            AssertionError,
             self.assertDOM,
             response=FAKE_RESPONSE1,
             must_contain=(
@@ -90,7 +83,8 @@ class DOMassertTest(BaseTestCase):
         )
 
     def test_assertDOM_must_not_contain(self):
-        self.assertRaises(AssertionError,
+        self.assertRaises(
+            AssertionError,
             self.assertDOM,
             response=FAKE_RESPONSE1,
             must_not_contain=(
@@ -100,21 +94,17 @@ class DOMassertTest(BaseTestCase):
         )
 
     def test_assertContains1(self):
-        self.assertContains(response=FAKE_RESPONSE1,
+        self.assertContains(
+            response=FAKE_RESPONSE1,
             text='<input name="last_name" type="text" value="Bar" />',
             count=1, html=True
         )
 
     def test_assertContains2(self):
-        self.assertRaises(AssertionError,
+        self.assertRaises(
+            AssertionError,
             self.assertContains,
             response=FAKE_RESPONSE1,
             text='<input name="last_name" type="WRONG" value="Bar" />',
             count=1, html=True
         )
-
-
-if __name__ == "__main__":
-    # Run this unittest directly
-    unittest.main()
-

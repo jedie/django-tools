@@ -7,8 +7,6 @@
 """
 
 
-
-
 class FilemanagerError(Exception):
     """
     for errors with a message to staff/admin users.

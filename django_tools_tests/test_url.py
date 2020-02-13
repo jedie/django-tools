@@ -38,7 +38,7 @@ class TestExistingDirValidator(SimpleTestCase):
         try:
             self.media_root_validator(path)
         except ValidationError as err:
-            assert_pformat_equal(str(err.message), "Directory '%s' doesn't exist!" % path)
+            assert_pformat_equal(str(err.message), f"Directory '{path}' doesn't exist!")
 
     def test_existing_dirs(self):
         BASE_PATH = os.path.abspath(os.path.dirname(django_tools.__file__))

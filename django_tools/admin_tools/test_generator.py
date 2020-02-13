@@ -33,7 +33,7 @@ def generate_test_code(modeladmin, request, queryset):
     response = HttpResponse(content, content_type="text/python")
 
     model_label = modeladmin.model._meta.label
-    response['Content-Disposition'] = 'attachment; filename=%s.py' % model_label
+    response['Content-Disposition'] = f'attachment; filename={model_label}.py'
 
     return response
 

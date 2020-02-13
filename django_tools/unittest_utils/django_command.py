@@ -10,7 +10,6 @@
 import os
 import pprint
 import subprocess
-
 import sys
 
 
@@ -27,7 +26,7 @@ class DjangoCommandMixin:
         #   manage.py use os.environ.setdefault("DJANGO_SETTINGS_MODULE",...)
         #   so it will ignore the own module path!
         # You can set env by given kwargs, too.
-        env=dict(os.environ)
+        env = dict(os.environ)
         if "DJANGO_SETTINGS_MODULE" in env:
             del(env["DJANGO_SETTINGS_MODULE"])
 
@@ -40,11 +39,11 @@ class DjangoCommandMixin:
         subprocess_kwargs.update(kwargs)
         if "cwd" in subprocess_kwargs:
             cwd = subprocess_kwargs["cwd"]
-            assert os.path.isdir(cwd), "cwd %r doesn't exists!" % cwd
+            assert os.path.isdir(cwd), f"cwd {cwd!r} doesn't exists!"
             if debug:
-                print("DEBUG: cwd %r, ok" % cwd)
+                print(f"DEBUG: cwd {cwd!r}, ok")
 
-        cmd=" ".join(cmd) # FIXME: Why?!?
+        cmd = " ".join(cmd)  # FIXME: Why?!?
         try:
             output = subprocess.check_output(cmd, **subprocess_kwargs)
             status = 0
@@ -99,7 +98,6 @@ class DjangoCommandMixin:
         cmd = [sys.executable, manage_py] + list(cmd)
         kwargs.update({
             "cwd": manage_dir,
-            #"debug": True,
+            # "debug": True,
         })
         return self.subprocess_getstatusoutput(cmd, **kwargs)
-

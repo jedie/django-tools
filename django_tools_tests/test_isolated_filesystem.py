@@ -37,11 +37,11 @@ class TestIsolatedFilesystem(BaseUnittestCase):
 
     def assert_after(self):
         self.assertTrue(self.temp_cwd is not None, "ERROR: 'self.assert_in_isolated_filesystem()' not called?!?")
-        self.assertFalse(self.temp_cwd.is_dir(), "ERROR: %r still exists?!?" % self.temp_cwd)
-        self.assertFalse(self.temp_file.is_file(), "ERROR: %r still exists!" % self.temp_file)
+        self.assertFalse(self.temp_cwd.is_dir(), f"ERROR: {self.temp_cwd!r} still exists?!?")
+        self.assertFalse(self.temp_file.is_file(), f"ERROR: {self.temp_file!r} still exists!")
 
     def test_as_context_manager(self):
-        prefix="test_as_context_manager"
+        prefix = "test_as_context_manager"
         with isolated_filesystem(prefix=prefix):
             self.assert_in_isolated_filesystem(prefix)
 

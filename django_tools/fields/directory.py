@@ -7,17 +7,16 @@
 """
 
 
-
 import os
 
 from django import forms
-from django.db import models
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
+from django.db import models
 from django.utils.six import with_metaclass
+from django.utils.translation import ugettext_lazy as _
 
-from django_tools.utils.messages import failsafe_message
 from django_tools import validators
+from django_tools.utils.messages import failsafe_message
 
 
 class DirectoryWidget(forms.TextInput):
@@ -40,7 +39,7 @@ class DirectoryFormField(forms.CharField):
         return value
 
 
-class DirectoryModelField(models.CharField):#, with_metaclass(models.SubfieldBase)):
+class DirectoryModelField(models.CharField):  # , with_metaclass(models.SubfieldBase)):
     """
     >>> settings.DEBUG=False # Don't add path to error messages
     >>> dir = DirectoryModelField()

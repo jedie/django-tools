@@ -39,6 +39,7 @@ class LanguageCodeFormField(forms.CharField):
     >>> LanguageCodeFormField(required=False).clean(None)
     ''
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.validators.append(validators.validate_language_code)

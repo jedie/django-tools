@@ -27,6 +27,7 @@ class isolated_filesystem(TestContextDecorator):
         def test_foo(self):
             print("I'm in the temp path here: %s" % Path().cwd())
     """
+
     def __init__(self, prefix=None):
         super().__init__()
 
@@ -39,14 +40,14 @@ class isolated_filesystem(TestContextDecorator):
         else:
             prefix = self.prefix
 
-        print("Use prefix: %r" % prefix)
+        print(f"Use prefix: {prefix!r}")
 
         self.cwd = Path().cwd()
         self.temp_path = tempfile.mkdtemp(prefix=prefix)
         os.chdir(self.temp_path)
 
     def disable(self):
-        os.chdir(str(self.cwd)) # str() needed for older python <=3.5
+        os.chdir(str(self.cwd))  # str() needed for older python <=3.5
         try:
             shutil.rmtree(self.temp_path)
         except OSError:

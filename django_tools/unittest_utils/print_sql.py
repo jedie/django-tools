@@ -1,17 +1,19 @@
-"""   
+"""
     print SQL
     ~~~~~~~~~
-    
+
     :copyleft: 2012-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from django.db import connections, DEFAULT_DB_ALIAS
-from django.utils import six
+from django.db import DEFAULT_DB_ALIAS, connections
 from django.test.utils import CaptureQueriesContext
+from django.utils import six
 from django.utils.encoding import smart_text
 
+
 PFORMAT_SQL_KEYWORDS = ("FROM", "WHERE", "ORDER BY", "VALUES")
+
 
 def pformat_sql(sql):
     # remove unicode u''
@@ -19,7 +21,7 @@ def pformat_sql(sql):
 
     sql = sql.replace('`', '')
     for keyword in PFORMAT_SQL_KEYWORDS:
-        sql = sql.replace(' %s ' % keyword, '\n\t%s ' % keyword)
+        sql = sql.replace(f' {keyword} ', f'\n\t{keyword} ')
 
     return smart_text(sql)
 
@@ -29,20 +31,20 @@ class PrintQueries(CaptureQueriesContext):
     with context manager to print the used SQL Queries.
     usage e.g.:
     ---------------------------------------------------------------------------
-    
+
     from django_tools.unittest_utils.print_sql import PrintQueries
-    
+
     # e.g. use in unittests:
     class MyTests(TestCase):
         def test_foobar(self):
             with PrintQueries("Create object"):
                 FooBar.objects.create("name"=foo)
-                
+
     # e.g. use in views:
     def my_view(request):
         with PrintQueries("Create object"):
             FooBar.objects.create("name"=foo)
-                
+
     the output is like:
     ___________________________________________________________________________
      *** Create object ***
@@ -50,10 +52,11 @@ class PrintQueries(CaptureQueriesContext):
         VALUES (foo)
     ---------------------------------------------------------------------------
     """
+
     def __init__(self, headline, **kwargs):
         self.headline = headline
 
-        if not "connection" in kwargs:
+        if "connection" not in kwargs:
             using = kwargs.pop("using", DEFAULT_DB_ALIAS)
             kwargs["connection"] = connections[using]
 
@@ -65,14 +68,11 @@ class PrintQueries(CaptureQueriesContext):
             return
 
         print()
-        print("_"*79)
+        print("_" * 79)
         if self.headline:
-            print(" *** %s ***" % self.headline)
+            print(f" *** {self.headline} ***")
         for no, q in enumerate(self.captured_queries, 1):
             sql = pformat_sql(q["sql"])
-            msg = smart_text("%i - %s\n" % (no, sql))
+            msg = smart_text(f"{no:d} - {sql}\n")
             print(msg)
-        print("-"*79)
-
-
-
+        print("-" * 79)

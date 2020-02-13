@@ -51,11 +51,10 @@
 """
 
 
-
+from django.contrib.auth.models import Group
 from django.db import models
 from django.utils import six
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import Group
 
 
 def has_permission(item, **kwargs):
@@ -103,7 +102,6 @@ def has_permission(item, **kwargs):
             return False
 
     return True
-
 
 
 def filter_permission(queryset, **kwargs):
@@ -185,5 +183,3 @@ class UsergroupsModelField(models.IntegerField):
         groups = get_user_groups()
         choices = self.USER_TYPES_CHOICES + list(groups)
         return choices
-
-

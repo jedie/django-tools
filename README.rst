@@ -879,6 +879,8 @@ history
 
 * *dev* - `compare v0.45.3...master <https://github.com/jedie/django-tools/compare/v0.45.3...master>`_ 
 
+    * ``dynamic_site`` was removed. Please use e.g.: `django-hosts <https://github.com/jazzband/django-hosts>`_
+
     * modernize project setup and use ``poetry``
 
     * remove ``lxml`` decency by using `bleach <https://github.com/mozilla/bleach>`_ for ``html_utils.html2text``
@@ -1606,4 +1608,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-02-12 16:29:39 with "python-creole"``
+``Note: this file is generated from README.creole 2020-02-13 08:19:24 with "python-creole"``

@@ -35,8 +35,8 @@ lint: ## Run code formatters and linter
 
 fix-code-style: ## Fix code formatting
 	poetry run flynt --line_length=${MAX_LINE_LENGTH} django_tools django_tools_test_project django_tools_tests
-	poetry run isort --apply --recursive django_tools django_tools_test_project django_tools_tests
 	poetry run autopep8 --ignore-local-config --max-line-length=${MAX_LINE_LENGTH} --aggressive --aggressive --in-place --recursive django_tools django_tools_test_project django_tools_tests
+	poetry run isort --apply --recursive django_tools django_tools_test_project django_tools_tests
 
 tox-listenvs: check-poetry ## List all tox test environments
 	poetry run tox --listenvs

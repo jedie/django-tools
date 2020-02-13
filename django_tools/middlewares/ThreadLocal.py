@@ -60,6 +60,7 @@ def get_current_user():
 
 class ThreadLocalMiddleware(MiddlewareMixin):
     """ Simple middleware that adds the request object in thread local storage."""
+
     def process_request(self, request):
         _thread_locals.request = request
 

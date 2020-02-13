@@ -11,13 +11,6 @@
 """
 
 
-
-if __name__ == "__main__":
-    # For doctest only
-    import os
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django_tools.django_tools_tests.test_settings"
-
-from django.utils import six
 from django import forms
 from django.db import models
 
@@ -41,6 +34,7 @@ def _split(raw_value, separator, strip_items, skip_empty):
 
     values = tuple(values)
     return values
+
 
 def _join(value, separator):
     if value is None:
@@ -89,6 +83,7 @@ class SignSeparatedFormField(forms.CharField):
     ...     print(err.__class__.__name__, err)
     ValidationError ['This field is required.']
     """
+
     def __init__(self, separator=",", strip_items=True, skip_empty=True, *args, **kwargs):
         self.separator = separator
         self.strip_items = strip_items
@@ -187,14 +182,3 @@ class SignSeparatedModelField(models.TextField):
         kwargs["widget"] = SignSeparatedInput
         kwargs["form_class"] = SignSeparatedFormField
         return super().formfield(**kwargs)
-
-
-
-if __name__ == "__main__":
-    # Run all unittest directly
-    import doctest
-    print(doctest.testmod(
-#        verbose=True
-        verbose=False,
-    ))
-    print("DocTest end.")

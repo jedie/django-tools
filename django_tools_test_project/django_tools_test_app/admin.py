@@ -1,9 +1,8 @@
 from django.contrib import admin
 
-from django_tools_test_project.django_tools_test_app.models import OverwriteFileSystemStorageModel, PermissionTestModel
-
 # https://github.com/jedie/django-tools
 from django_tools.admin_tools.test_generator import generate_test_code
+from django_tools_test_project.django_tools_test_app.models import OverwriteFileSystemStorageModel, PermissionTestModel
 
 
 @admin.register(PermissionTestModel)

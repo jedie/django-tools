@@ -50,7 +50,7 @@ class Command(BaseCommand):
         user_count = qs.count()
         usernames = qs.values_list("username", flat=True).order_by("username")
         self.stdout.write(", ".join(usernames))
-        self.stdout.write("(%i users)" % user_count)
+        self.stdout.write(f"({user_count:d} users)")
 
     def username_error(self):
         self.stderr.write("No username given!")
@@ -59,7 +59,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.stdout.write("")
-        self.stdout.write("_"*79)
+        self.stdout.write("_" * 79)
         self.stdout.write(self.help)
         self.stdout.write("")
 
@@ -69,7 +69,7 @@ class Command(BaseCommand):
             self.username_error()
             return
 
-        self.stdout.write("All permissions for user '%s':" % username)
+        self.stdout.write(f"All permissions for user '{username}':")
 
         UserModel = get_user_model()
         try:
@@ -107,4 +107,4 @@ class Command(BaseCommand):
         # We should never miss a permission, but we can still try it out:
         not_seen = all_permissions - seen_permissions
         for perm_name in sorted(not_seen):
-            self.stderr.write("missing: %s" % perm_name)
+            self.stderr.write(f"missing: {perm_name}")

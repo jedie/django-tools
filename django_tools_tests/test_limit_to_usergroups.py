@@ -13,14 +13,13 @@
 from django.contrib.auth.models import AnonymousUser, Group
 from django.test import TestCase
 
-from django_tools_test_project.django_tools_test_app.models import LimitToUsergroupsTestModel
-
 # https://github.com/jedie/django-tools
 from django_tools import limit_to_usergroups
 from django_tools.limit_to_usergroups import get_verbose_limit_name, has_permission
 from django_tools.unittest_utils.assertments import assert_pformat_equal
 from django_tools.unittest_utils.unittest_base import BaseTestCase
 from django_tools.unittest_utils.user import TestUserMixin
+from django_tools_test_project.django_tools_test_app.models import LimitToUsergroupsTestModel
 
 
 class LimitToUsergroupsTest1(TestCase):

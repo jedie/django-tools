@@ -1,22 +1,22 @@
 """
     Client storage
     ~~~~~~~~~~~~~~
-    
+
     Use dumps() and loads() from django.core.signing to store data into a Cookie.
-    
+
     See:
     https://docs.djangoproject.com/en/1.4/topics/signing/#verifying-timestamped-values
-    
+
     Usage e.g.:
     --------------------------------------------------------------------------
     from django_tools.utils.client_storage import SignedCookieStorageError, SignedCookieStorage
-    
+
     def view1(request):
         response = HttpResponse("Hello World!")
         c = SignedCookieStorage(cookie_key="my_key", max_age=60)
         response = c.save_data(my_data, response)
         return response
-    
+
     def view2(request):
         c = SignedCookieStorage(cookie_key="my_key", max_age=60)
         try:
@@ -26,7 +26,7 @@
         else:
            ...do something with the data...
     --------------------------------------------------------------------------
-    
+
     :copyleft: 2010-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
@@ -43,10 +43,11 @@ class SignedCookieStorageError(signing.BadSignature):
 
 
 class SignedCookieStorage:
-    """  
+    """
     see:
         django_tools_tests.test_signed_cookie.TestSignedCookieStorage
     """
+
     def __init__(self, cookie_key, max_age=60 * 60 * 24 * 7 * 52, compress=False):
         self.cookie_key = cookie_key
         self.max_age = max_age
@@ -63,15 +64,14 @@ class SignedCookieStorage:
         try:
             raw_data = request.COOKIES[self.cookie_key]
         except KeyError:
-            raise SignedCookieStorageError("Cookie %r doesn't exists" % self.cookie_key)
+            raise SignedCookieStorageError(f"Cookie {self.cookie_key!r} doesn't exists")
 
         try:
             data = signing.loads(raw_data, max_age=self.max_age)
         except Exception as err:
-            raise SignedCookieStorageError("Can't load data: %s" % err)
+            raise SignedCookieStorageError(f"Can't load data: {err}")
 
         return data
-
 
 
 class ClientCookieStorage:
@@ -80,11 +80,10 @@ class ClientCookieStorage:
 
     TODO: remove in future
     """
+
     def __new__(self, *args, **kwargs):
         warnings.warn(
             "ClientCookieStorage is old API! Please change to SignedCookieStorage! This will be removed in the future!",
             FutureWarning,
-            stacklevel=2
-        )
+            stacklevel=2)
         return SignedCookieStorage(*args, **kwargs)
-

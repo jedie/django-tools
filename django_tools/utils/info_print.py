@@ -24,17 +24,18 @@
 """
 
 
-
+import inspect
 import os
 import sys
-import inspect
 import warnings
+
 
 MAX_FILEPATH_LEN = 66
 
 
 class InfoStdout:
     """ Insert in every stdout.write() a info line from witch code line this print comes."""
+
     def __init__(self, orig_stdout):
         self.orig_stdout = orig_stdout
         self.old_fileinfo = None
@@ -66,10 +67,10 @@ class InfoStdout:
                     break
 
             if len(filename) >= MAX_FILEPATH_LEN:
-                filename = "...%s" % filename[-MAX_FILEPATH_LEN:]
+                filename = f"...{filename[-MAX_FILEPATH_LEN:]}"
             fileinfo = f"{filename} line {lineno}"
         except Exception as e:
-            fileinfo = "(inspect Error: %s)" % e
+            fileinfo = f"(inspect Error: {e})"
 
         return fileinfo
 

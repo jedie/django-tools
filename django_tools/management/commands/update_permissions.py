@@ -23,9 +23,9 @@
 """
 
 
-from django.core.management.base import BaseCommand
 from django.apps import apps
 from django.contrib.auth.management import create_permissions
+from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
@@ -34,9 +34,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write("Create permissions for:")
 
-        verbosity=int(options.get('verbosity', 0))
+        verbosity = int(options.get('verbosity', 0))
         app_configs = apps.get_app_configs()
         for app_config in app_configs:
             app_label = app_config.label
-            self.stdout.write(" * %s" % app_label)
+            self.stdout.write(f" * {app_label}")
             create_permissions(app_config, verbosity=verbosity)

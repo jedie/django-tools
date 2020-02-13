@@ -8,7 +8,6 @@
 import tempfile
 
 from django.db import models
-
 from parler.models import TranslatableModel, TranslatedFields
 
 # https://github.com/jedie/django-tools

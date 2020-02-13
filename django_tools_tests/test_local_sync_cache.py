@@ -1,9 +1,9 @@
 """
     Test Local sync cache
     ~~~~~~~~~~~~~~~~~~~~~
-    
+
     For more information look into DocString in local_sync_cache.py !
-    
+
     :copyleft: 2011-2019 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """

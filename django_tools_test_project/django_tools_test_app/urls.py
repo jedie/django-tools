@@ -10,9 +10,15 @@ from django.conf.urls import include, static, url
 from django.contrib import admin
 
 from django_tools_test_project.django_tools_test_app.views import (
-    TemplateDoesNotExists, create_message_normal_response, create_message_redirect_response, display_site,
-    get_current_get_parameters, raise_exception, delay_view
+    TemplateDoesNotExists,
+    create_message_normal_response,
+    create_message_redirect_response,
+    delay_view,
+    display_site,
+    get_current_get_parameters,
+    raise_exception,
 )
+
 
 admin.autodiscover()
 

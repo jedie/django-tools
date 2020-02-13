@@ -68,9 +68,9 @@ def get_setting(setting_name):
         return path
     else:
         if not hasattr(settings, setting_name):
-            logger.debug("%r not in settings defined" % setting_name)
+            logger.debug(f"{setting_name!r} not in settings defined")
         else:
-            logger.debug("settings.%s is None or empty" % setting_name)
+            logger.debug(f"settings.{setting_name} is None or empty")
 
 
 def get_attr_from_settings(setting_name, obj_name=""):
@@ -95,6 +95,3 @@ def get_class_instance_from_settings(setting_name, obj_name=""):
     path = get_setting(setting_name)
     if path:
         return get_class_instance(path, obj_name)
-
-
-

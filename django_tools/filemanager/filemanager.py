@@ -10,20 +10,12 @@
 """
 
 
-
-
-from operator import attrgetter
 import datetime
 import grp
 import os
 import pwd
 import stat
-
-if __name__ == "__main__":
-    # For doctest only
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
-    from django.conf import global_settings
-    global_settings.SITE_ID = 1
+from operator import attrgetter
 
 from django.contrib import messages
 
@@ -34,10 +26,10 @@ from django_tools.filemanager.utils import symbolic_notation
 
 class BaseFilesystemObject:
     def __init__(self, base_path, name, abs_path, link_path=None):
-        self.base_path = base_path # path in which this item exists
-        self.name = name # The name of the directory item
-        self.abs_path = abs_path # absolute path to this dir item
-        self.link_path = link_path # Only for links: the real path of the dir item
+        self.base_path = base_path  # path in which this item exists
+        self.name = name  # The name of the directory item
+        self.abs_path = abs_path  # absolute path to this dir item
+        self.link_path = link_path  # Only for links: the real path of the dir item
 
         self.stat = os.stat(self.abs_path)
         self.size = self.stat[stat.ST_SIZE]
@@ -71,15 +63,16 @@ class BaseDirItem(BaseFilesystemObject):
 class BaseFileLinkItem(BaseFileItem):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.item_type = "file link to %s" % self.link_path
+        self.item_type = f"file link to {self.link_path}"
+
 
 class BaseDirLinkItem(BaseDirItem):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.item_type = "dir link to %s" % self.link_path
+        self.item_type = f"dir link to {self.link_path}"
 
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 
 class BaseFilemanager(BaseFilesystemBrowser):
@@ -115,7 +108,7 @@ class BaseFilemanager(BaseFilesystemBrowser):
             elif os.path.isfile(item_abs_path):
                 item_class = self.FILE_ITEM
             else:
-                messages.info(self.request, "unhandled directory item: %r" % self.absolute_path)
+                messages.info(self.request, f"unhandled directory item: {self.absolute_path!r}")
                 continue
 
             instance = self.get_filesystem_item_instance(item_class, item, item_abs_path, link_path)
@@ -145,13 +138,5 @@ class BaseFilemanager(BaseFilesystemBrowser):
         destination.close()
 
         messages.success(self.request,
-            "File '%s' (%i Bytes) uploaded to %s" % (f.name, f.size, self.absolute_path)
-        )
-
-
-if __name__ == "__main__":
-    import doctest
-    print(doctest.testmod(
-#        verbose=True
-        verbose=False
-    ))
+                         f"File '{f.name}' ({f.size:d} Bytes) uploaded to {self.absolute_path}"
+                         )

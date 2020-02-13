@@ -13,7 +13,7 @@ from django.conf import settings
 from django.core.files import File as DjangoFile
 
 # https://github.com/jedie/django-tools
-from django_tools.unittest_utils.assertments import assert_pformat_equal, assert_endswith
+from django_tools.unittest_utils.assertments import assert_endswith, assert_pformat_equal
 from django_tools.unittest_utils.mockup import ImageDummy
 from django_tools.unittest_utils.unittest_base import BaseTestCase
 from django_tools.unittest_utils.user import TestUserMixin

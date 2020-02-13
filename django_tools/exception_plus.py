@@ -9,6 +9,7 @@
 import sys
 import traceback
 
+
 MAX_CHARS = 256
 
 DEFAULT_STOP_LOCAL_VARS = ("django/core/management/base.py", "django/core/handlers/exception.py", "/wsgiref")
@@ -51,8 +52,8 @@ def print_exc_plus(stop_local_vars=None):
     print("Locals by frame, most recent call first:")
     for frame in stack:
         file_path = frame.f_code.co_filename
-        msg = 'File "%s", line %i, in %s' % (file_path, frame.f_lineno, frame.f_code.co_name)
-        print("\n *** %s" % msg, end="", flush=True)
+        msg = f'File "{file_path}", line {frame.f_lineno:d}, in {frame.f_code.co_name}'
+        print(f"\n *** {msg}", end="", flush=True)
 
         if stop_local_vars is not None and print_local_vars:
             for path_part in stop_local_vars:
@@ -68,16 +69,16 @@ def print_exc_plus(stop_local_vars=None):
                 # printer! Calling str() on an unknown object could cause an
                 # error we don't want.
                 if isinstance(value, int):
-                    value = "$%x (decimal: %i)" % (value, value)
+                    value = f"${value:x} (decimal: {value:d})"
                 else:
                     value = repr(value)
 
                 if len(value) > MAX_CHARS:
-                    value = "%s..." % value[:MAX_CHARS]
+                    value = f"{value[:MAX_CHARS]}..."
 
                 try:
                     print(value)
-                except:
+                except BaseException:
                     print("<ERROR WHILE PRINTING VALUE>")
 
     print()

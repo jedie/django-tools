@@ -19,19 +19,20 @@ class GetDict(QueryDict):
         - always mutable
         - urlencode() output changed (see DocString there)
     """
+
     def __init__(self, *args, **kwargs):
-        kwargs["mutable"]=True
+        kwargs["mutable"] = True
         super().__init__(*args, **kwargs)
 
     def _encode(self, k, v, safe=None):
         if safe is None:
-            safe=""
+            safe = ""
 
         if v is None:
             return quote(k, safe)
 
         v = force_bytes(v, self.encoding)
-        return '{}={}'.format(quote(k, safe), quote(v, safe))
+        return f'{quote(k, safe)}={quote(v, safe)}'
 
     def urlencode(self, safe=None):
         """
@@ -47,5 +48,3 @@ class GetDict(QueryDict):
                 for v in sorted(list_)
             )
         return '&'.join(output)
-
-

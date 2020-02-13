@@ -9,7 +9,6 @@
 import warnings
 
 import pytest
-
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.models import ContentType
@@ -23,7 +22,12 @@ from django_tools.unittest_utils.assertments import assert_equal_dedent, assert_
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 from django_tools.unittest_utils.unittest_base import BaseTestCase
 from django_tools.unittest_utils.user import (
-    TestUserMixin, create_user, get_or_create_group, get_or_create_user, get_or_create_user_and_group, get_super_user
+    TestUserMixin,
+    create_user,
+    get_or_create_group,
+    get_or_create_user,
+    get_or_create_user_and_group,
+    get_super_user,
 )
 
 

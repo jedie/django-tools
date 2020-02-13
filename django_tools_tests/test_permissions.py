@@ -6,19 +6,27 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
 from django.test import override_settings
 
-from django_tools_test_project.django_tools_test_app.models import LimitToUsergroupsTestModel, PermissionTestModel
-
 # https://github.com/jedie/django-tools
 from django_tools.permissions import (
-    add_app_permissions, add_permissions, check_permission, get_admin_permissions, get_filtered_permissions,
-    get_permission_by_string, has_perm, log_group_permissions, log_user_permissions, permissions2list,
-    pprint_filtered_permissions
+    add_app_permissions,
+    add_permissions,
+    check_permission,
+    get_admin_permissions,
+    get_filtered_permissions,
+    get_permission_by_string,
+    has_perm,
+    log_group_permissions,
+    log_user_permissions,
+    permissions2list,
+    pprint_filtered_permissions,
 )
 from django_tools.unittest_utils.assertments import assert_equal_dedent, assert_pformat_equal
 from django_tools.unittest_utils.logging_utils import LoggingBuffer
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 from django_tools.unittest_utils.unittest_base import BaseTestCase
 from django_tools.unittest_utils.user import TestUserMixin
+from django_tools_test_project.django_tools_test_app.models import LimitToUsergroupsTestModel, PermissionTestModel
+
 
 log = logging.getLogger(__name__)
 
@@ -370,14 +378,12 @@ class TestPermissions(TestUserMixin, BaseTestCase):
     # -------------------------------------------------------------------------
 
     def test_get_filtered_permissions_without_any_filter(self):
-        permissions = permissions2list(
+        permissions = sorted(permissions2list(
             get_filtered_permissions()  # without any filter -> we get all existing permissions
-        )
-        permissions.sort()
+        ))
         pprint.pprint(permissions)
 
-        all_permissions = permissions2list(Permission.objects.all())
-        all_permissions.sort()
+        all_permissions = sorted(permissions2list(Permission.objects.all()))
 
         assert_pformat_equal(permissions, all_permissions)
 

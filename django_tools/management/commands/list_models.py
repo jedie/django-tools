@@ -4,7 +4,6 @@
 """
 
 
-
 from django.apps import apps
 from django.conf import settings
 from django.core.management.base import BaseCommand
@@ -27,7 +26,7 @@ class Command(BaseCommand):
                 )
 
         for no, dotname in enumerate(sorted(dotnames), 1):
-            self.stdout.write("%02i - %s\n" % (no, dotname))
+            self.stdout.write(f"{no:02d} - {dotname}\n")
 
         self.stdout.write("\nINSTALLED_APPS....: %i\n" % len(settings.INSTALLED_APPS))
         self.stdout.write("Apps with models..: %i\n\n" % len(app_configs))

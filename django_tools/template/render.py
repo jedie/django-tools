@@ -28,5 +28,3 @@ def render_string_template(template, context):
     t = Template(template)
     c = Context(context)
     return t.render(c)
-
-

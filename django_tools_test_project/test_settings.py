@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 # https://github.com/jedie/django-tools
 from django_tools.unittest_utils.logging_utils import CutPathnameLogRecordFactory, FilterAndLogWarnings
 
+
 print("Use settings:", __file__)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -180,4 +181,3 @@ LOGGING = {
         "django_tools.DynamicSite": {"handlers": ["console"], "level": "DEBUG", "propagate": False},
     },
 }
-

@@ -9,13 +9,11 @@
 """
 
 
-
-
 import inspect
 
 
-STACK_LIMIT = 6 # Display only the last X stack lines
-MAX_FILEPATH_LEN = 50 # Cut filepath in stack info message
+STACK_LIMIT = 6  # Display only the last X stack lines
+MAX_FILEPATH_LEN = 50  # Cut filepath in stack info message
 
 
 def format_list(extracted_list):
@@ -23,7 +21,7 @@ def format_list(extracted_list):
     Format a list of traceback entry tuples.
     """
     list = []
-    for _, filename, lineno, func_name, line, _  in extracted_list:
+    for _, filename, lineno, func_name, line, _ in extracted_list:
         code = "".join(line).strip()
         item = (
             'File "%s", line %d, in %s\n'
