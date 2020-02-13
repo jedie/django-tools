@@ -9,7 +9,6 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.test import SimpleTestCase
 from django.test.utils import override_settings
-from django.utils import six
 
 # https://github.com/jedie/django-tools
 import django_tools

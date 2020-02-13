@@ -8,7 +8,6 @@
 
 from django.db import DEFAULT_DB_ALIAS, connections
 from django.test.utils import CaptureQueriesContext
-from django.utils import six
 from django.utils.encoding import smart_text
 
 

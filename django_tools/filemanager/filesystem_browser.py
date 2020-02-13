@@ -13,7 +13,6 @@ import posixpath
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.http import Http404
-from django.utils.six.moves import urllib
 from django.utils.translation import ugettext as _
 
 from django_tools.filemanager.exceptions import DirectoryTraversalAttack

@@ -6,11 +6,10 @@
     :copyleft: 2017 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
+from urllib.parse import quote
 
 from django.http import QueryDict
 from django.utils.encoding import force_bytes
-from django.utils.six.moves.urllib.parse import quote
 
 
 class GetDict(QueryDict):

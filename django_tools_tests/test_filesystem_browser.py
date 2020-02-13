@@ -7,7 +7,6 @@ import os
 from django.http import Http404
 from django.test import SimpleTestCase
 from django.test.utils import override_settings
-from django.utils import six
 
 # https://github.com/jedie/django-tools
 import django_tools

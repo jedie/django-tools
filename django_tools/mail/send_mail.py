@@ -12,7 +12,6 @@ import logging
 from django.conf import settings
 from django.core.mail.message import EmailMultiAlternatives
 from django.template.loader import render_to_string
-from django.utils import six
 
 
 log = logging.getLogger(__name__)

@@ -9,11 +9,11 @@
 
 import os
 import re
+from urllib.parse import urlsplit
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator, URLValidator
-from django.utils.six.moves import urllib
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -83,10 +83,15 @@ class URLValidator2(URLValidator):
         self.allow_fragment = allow_fragment
 
     def __call__(self, value):
-        scheme, netloc, path, query, fragment = urllib.parse.urlsplit(value)
+        scheme, netloc, path, query, fragment = urlsplit(value)
 
-        if (scheme or netloc) and not self.allow_schemes and not self.allow_all_schemes and not self.allow_netloc:
-            raise ValidationError(_("Please enter a local URL (without protocol/domain)."), code="local")
+        if (scheme or netloc) and \
+                not self.allow_schemes and \
+                not self.allow_all_schemes and \
+                not self.allow_netloc:
+            raise ValidationError(
+                _("Please enter a local URL (without protocol/domain)."), code="local"
+            )
 
         if scheme:
             if not self.allow_all_schemes and scheme not in self.allow_schemes:

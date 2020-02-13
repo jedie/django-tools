@@ -12,11 +12,9 @@ import os
 from django import forms
 from django.conf import settings
 from django.db import models
-from django.utils.six import with_metaclass
 from django.utils.translation import ugettext_lazy as _
 
 from django_tools import validators
-from django_tools.utils.messages import failsafe_message
 
 
 class DirectoryWidget(forms.TextInput):
