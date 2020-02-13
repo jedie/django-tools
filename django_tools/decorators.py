@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     some decorators
     ~~~~~~~~~~~~~~~
@@ -18,9 +16,8 @@ from functools import wraps
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.models import Permission
 from django.core.exceptions import PermissionDenied
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
@@ -48,7 +45,7 @@ def check_permissions(superuser_only, permissions=()):
         def _check_permissions(request, *args, **kwargs):
             user = request.user
 
-            if not user.is_authenticated():
+            if not user.is_authenticated:
                 # FIXME: HttpResponseRedirect to admin login?
                 msg = _("Permission denied for anonymous user. Please log in.")
                 if settings.DEBUG:  # Usefull??
@@ -56,7 +53,7 @@ def check_permissions(superuser_only, permissions=()):
                 raise PermissionDenied(msg)
 
             if not user.has_perms(permissions):
-                msg = "User %r has not all permissions: %r (existing permissions: %r)" % (
+                msg = "User {!r} has not all permissions: {!r} (existing permissions: {!r})".format(
                     user,
                     permissions,
                     user.get_all_permissions(),
@@ -120,7 +117,7 @@ def render_to(template_name=None, debug=False, **response_kwargs):
                 return context
 
             template_name2 = context.pop("template_name", template_name)
-            assert template_name2 != None, (
+            assert template_name2 is not None, (
                 "Template name must be passed as render_to parameter"
                 " or 'template_name' must be inserted into context!"
             )
@@ -130,7 +127,7 @@ def render_to(template_name=None, debug=False, **response_kwargs):
             )
 
             if debug:
-                messages.info(request, "render debug for %r (template: %r):" % (function.__name__, template_name2))
+                messages.info(request, f"render debug for {function.__name__!r} (template: {template_name2!r}):")
                 messages.info(request, "local view context:", context)
                 messages.info(request, "response:", response.content)
 
@@ -160,7 +157,7 @@ def display_admin_error(func):
         except Exception as err:
             traceback.print_exc(file=sys.stderr)
             if settings.DEBUG:
-                return "%s: %s" % (err.__class__.__name__, err)
+                return f"{err.__class__.__name__}: {err}"
             else:
                 raise
 
@@ -173,10 +170,10 @@ def warn_class_usage(message, category=DeprecationWarning):
     """
 
     def cls_wrapper(cls):
-        class Wrapped(cls, object):
+        class Wrapped(cls):
             def __init__(self, *args, **kwargs):
                 warnings.warn(message, category)
-                super(Wrapped, self).__init__(*args, **kwargs)
+                super().__init__(*args, **kwargs)
 
             def __new__(cls, *args, **kwargs):
                 warnings.warn(message, category)

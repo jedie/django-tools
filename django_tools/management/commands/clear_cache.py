@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     'clear django cache' manage command
 
@@ -26,13 +24,14 @@
 from django.core.cache import caches
 from django.core.management.base import BaseCommand
 
+
 class Command(BaseCommand):
     help = "Clears the complete Django cache."
 
     def handle(self, *args, **options):
         self.stdout.write("\nClear caches:\n")
         for cache in caches.all():
-            self.stdout.write("\tClear '%s'\n" % cache.__class__.__name__)
+            self.stdout.write(f"\tClear '{cache.__class__.__name__}'\n")
             cache.clear()
 
         self.stdout.write("\ndone.\n")

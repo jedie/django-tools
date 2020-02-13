@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     Dynamic SITE ID unittests
     ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -26,19 +24,15 @@ from django_tools.middlewares.ThreadLocal import get_current_request
 log = logging.getLogger(__name__)
 
 
-
 @never_cache
 def display_site(request):
     settings_id = settings.SITE_ID
     current_site = Site.objects.get_current()
     current_id = current_site.id
 
-    txt = "ID from settings: %r - id from get_current(): %r" % (
-        settings_id, current_id
-    )
+    txt = f"ID from settings: {settings_id!r} - id from get_current(): {current_id!r}"
     log.debug("display_site(): %s", txt)
     return HttpResponse(txt)
-
 
 
 def raise_exception(request, msg=""):

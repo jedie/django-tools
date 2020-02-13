@@ -29,6 +29,7 @@ from django.views.debug import get_safe_settings
 # https://github.com/jedie/django-tools
 from django_tools.utils.stack_info import get_stack_info
 
+
 log = logging.getLogger(__name__)
 
 
@@ -63,7 +64,7 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True, di
     TODO: We should delete the temp files after viewing!
     """
     global BROWSER_TRACEBACK_OPENED
-    if browser_traceback != True or BROWSER_TRACEBACK_OPENED == True:
+    if browser_traceback is not True or BROWSER_TRACEBACK_OPENED:
         return
     # Save for the next traceback
     BROWSER_TRACEBACK_OPENED = True
@@ -101,10 +102,10 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True, di
             templates = [template.name for template in OrderedDict.fromkeys(templates)]
             templates = pformat(templates)
             if print_filtered_html:
-                print("Used template: %s" % response.templates[0].name)
+                print(f"Used template: {response.templates[0].name}")
     else:
         templates = "---"
-    response_info += "\t<dd><pre>%s</pre></dd>\n" % templates
+    response_info += f"\t<dd><pre>{templates}</pre></dd>\n"
 
     # -------------------------------------------------------------------------
 
@@ -114,7 +115,7 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True, di
         msg = "".join(["%s\n" % x for x in msg])
     else:
         msg = "---"
-    response_info += "\t<dd><pre>%s</pre></dd>\n" % msg
+    response_info += f"\t<dd><pre>{msg}</pre></dd>\n"
 
     # -------------------------------------------------------------------------
 
@@ -135,26 +136,26 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True, di
         post_data = pformat(post_data)
     except Exception as err:
         log.error("Can't collect POST data: %s", err)
-        post_data = "(Error: %s)" % err
+        post_data = f"(Error: {err})"
 
-    response_info += "\t<dd><pre>%s</pre></dd>\n" % post_data
+    response_info += f"\t<dd><pre>{post_data}</pre></dd>\n"
 
     # -------------------------------------------------------------------------
 
     for attr in RESPONSE_INFO_ATTR:
         # FIXME: There must be exist a easier way to display the info
-        response_info += "\t<dt><h3>%s</h3></dt>\n" % attr
+        response_info += f"\t<dt><h3>{attr}</h3></dt>\n"
         value = getattr(response, attr, "---")
         value = pformat(value)
 
         try:
             value = force_text(value, errors="strict")
         except UnicodeDecodeError:
-            log.exception("decode error in attr %r:" % attr)
+            log.exception(f"decode error in attr {attr!r}:")
             value = force_text(value, errors="replace")
 
         value = escape(value)
-        response_info += "\t<dd><pre>%s</pre></dd>\n" % value
+        response_info += f"\t<dd><pre>{value}</pre></dd>\n"
 
     # -------------------------------------------------------------------------
 
@@ -166,7 +167,7 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True, di
         # e.g.: https://github.com/andymccurdy/redis-py/issues/995
         safe_settings = traceback.format_exception(*sys.exc_info())
 
-    response_info += "\t<dd><pre>%s</pre></dd>\n" % safe_settings
+    response_info += f"\t<dd><pre>{safe_settings}</pre></dd>\n"
 
     response_info += "</dl>\n"
 
@@ -198,10 +199,10 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True, di
     with tempfile.NamedTemporaryFile(dir=dir, prefix=prefix, suffix=".html", delete=False) as f:
         f.write(content.encode("utf-8"))
 
-        print("\nWrite time file '%s'" % f.name)
+        print(f"\nWrite time file '{f.name}'")
 
-        url = "file://%s" % f.name
-        print("\nDEBUG html page in Browser! (url: %s)" % url)
+        url = f"file://{f.name}"
+        print(f"\nDEBUG html page in Browser! (url: {url})")
         try:
             webbrowser.open(url)
         except Exception as err:

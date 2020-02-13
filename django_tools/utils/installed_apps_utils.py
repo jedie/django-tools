@@ -1,11 +1,8 @@
-# coding:utf-8
-
 from importlib import import_module
 
-from django.utils.six import PY2
 from django.conf import settings
-from django.core import urlresolvers
-
+from django.urls import Resolver404
+from django.urls.resolvers import RegexPattern, URLResolver
 
 
 def get_filtered_apps(resolve_url="/", no_args=True, debug=False, skip_fail=False):
@@ -20,7 +17,7 @@ def get_filtered_apps(resolve_url="/", no_args=True, debug=False, skip_fail=Fals
     Please look at:
 
         django_tools.django_tools_tests.test_installed_apps_utils
-    
+
     with debug, some print messages would be created:
 
     e.g.: get_filtered_apps(debug=True)
@@ -32,54 +29,41 @@ def get_filtered_apps(resolve_url="/", no_args=True, debug=False, skip_fail=Fals
     """
     root_apps = []
     for app_label in settings.INSTALLED_APPS:
-        urls_pkg = "%s.urls" % app_label
+        urls_pkg = f"{app_label}.urls"
         try:
             url_mod = import_module(urls_pkg)
         except ImportError as err:
             if debug:
-                print("Skip %r: has no urls.py" % app_label)
-            if PY2:
-                msg_should = "No module named urls"
-            else:
-                msg_should = "No module named '%s'" % urls_pkg
-            if str(err) == msg_should:
+                print(f"Skip {app_label!r}: has no urls.py")
+            if str(err) == f"No module named '{urls_pkg}'":
                 continue
             if not skip_fail:
                 raise
         except Exception as err:
             if debug:
-                print("Error importing %r: %s" % (app_label, err))
+                print(f"Error importing {app_label!r}: {err}")
             if not skip_fail:
                 raise
             else:
                 continue
 
         if debug:
-            print("found %r with urls.py" % app_label)
+            print(f"found {app_label!r} with urls.py")
 
         try:
             urlpatterns = url_mod.urlpatterns
         except AttributeError:
             if debug:
-                print("Skip %r: urls.py has no 'urlpatterns'" % app_label)
+                print(f"Skip {app_label!r}: urls.py has no 'urlpatterns'")
             continue
 
-        resolver = urlresolvers.RegexURLResolver(r'^', urlpatterns)
+        resolver = URLResolver(RegexPattern(r'^'), urlpatterns)
         try:
             func, func_args, func_kwargs = resolver.resolve(resolve_url)
-        except urlresolvers.Resolver404 as err:
+        except Resolver404 as err:
             if debug:
-                print("Skip %r: Can't handle root url." % app_label)
+                print(f"Skip {app_label!r}: Can't handle root url. ({err})")
             continue
         if not no_args or func_args == () and func_kwargs == {}:
             root_apps.append(app_label)
     return root_apps
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod(
-#        verbose=True
-        verbose=False
-    )
-    print("DocTest end.")

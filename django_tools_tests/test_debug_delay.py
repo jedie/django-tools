@@ -178,7 +178,7 @@ class SessionDelayTests(TestUserMixin, BaseTestCase):
 
     def test_message(self):
         self.login(usertype="normal")
-        with mock.patch.object(time, 'sleep', return_value=None) as mock_method:
+        with mock.patch.object(time, 'sleep', return_value=None):
             response = self.client.get("/delay/?sec=3")
 
         self.assertResponse(

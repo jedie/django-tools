@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     Mockups
     ~~~~~~~
@@ -8,8 +6,8 @@ import io
 import tempfile
 
 from django.core.files import File as DjangoFile
-
 from PIL import Image, ImageDraw, ImageFont
+
 
 try:
     from filer.models import Image as FilerImage
@@ -167,7 +165,7 @@ class ImageDummy:
             # Django-Filer is not available: raise the origin error
             raise ImportError(FILER_IMPORT_ERROR)
 
-        f = tempfile.NamedTemporaryFile(prefix=self.temp_prefix, suffix=".%s" % self.format)
+        f = tempfile.NamedTemporaryFile(prefix=self.temp_prefix, suffix=f".{self.format}")
         image = self.create_info_image(text)
         image.save(f, format=self.format)
         filer_image = create_filer_image(f, user)

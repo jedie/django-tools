@@ -1,5 +1,3 @@
-# coding:utf-8
-
 """
     Info print
     ~~~~~~~~~~
@@ -25,19 +23,19 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
-
+import inspect
 import os
 import sys
-import inspect
 import warnings
+
 
 MAX_FILEPATH_LEN = 66
 
 
-class InfoStdout(object):
+class InfoStdout:
     """ Insert in every stdout.write() a info line from witch code line this print comes."""
+
     def __init__(self, orig_stdout):
         self.orig_stdout = orig_stdout
         self.old_fileinfo = None
@@ -45,7 +43,7 @@ class InfoStdout(object):
     def write(self, txt):
         fileinfo = self._get_fileinfo()
         if fileinfo != self.old_fileinfo:
-            self.orig_stdout.write("\n%s:\n%s" % (fileinfo, txt))
+            self.orig_stdout.write(f"\n{fileinfo}:\n{txt}")
             self.old_fileinfo = fileinfo
         else:
             self.orig_stdout.write(txt)
@@ -69,10 +67,10 @@ class InfoStdout(object):
                     break
 
             if len(filename) >= MAX_FILEPATH_LEN:
-                filename = "...%s" % filename[-MAX_FILEPATH_LEN:]
-            fileinfo = "%s line %s" % (filename, lineno)
+                filename = f"...{filename[-MAX_FILEPATH_LEN:]}"
+            fileinfo = f"{filename} line {lineno}"
         except Exception as e:
-            fileinfo = "(inspect Error: %s)" % e
+            fileinfo = f"(inspect Error: {e})"
 
         return fileinfo
 

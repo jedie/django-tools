@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     media path selection
     ~~~~~~~~~~~~~~~~~~~~
@@ -14,20 +12,17 @@
      INFO: This exist only for backward-compatibility and will be removed
      in the future. Please use static_path!
 
-    :copyleft: 2010-2016 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2010-2020 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
-from __future__ import absolute_import, division, print_function
 
 
 import os
 import warnings
 
 from django import forms
-from django.db import models
 from django.conf import settings
-from django.utils.six import with_metaclass
+from django.db import models
 
 from django_tools.utils.messages import failsafe_message
 
@@ -52,23 +47,16 @@ def directory_walk(path):
 
     for dir in dirs:
         sub_path = os.path.join(path, dir)
-        for x in directory_walk(sub_path):
-            yield x
-
-
+        yield from directory_walk(sub_path)
 
 
 class MediaPathWidget(forms.Select):
     """
     Select a sub directory in settings.MEDIA_ROOT
-
-    >>> import os, django_tools
-    >>> settings.MEDIA_ROOT = os.path.dirname(os.path.abspath(django_tools.__file__))
-    >>> MediaPathWidget().choices[:2]
-    [('__pycache__', '__pycache__'), ('admin_tools', 'admin_tools')]
     """
+
     def __init__(self, attrs=None):
-        super(MediaPathWidget, self).__init__(attrs)
+        super().__init__(attrs)
 
         self._base_path = os.path.abspath(os.path.normpath(settings.MEDIA_ROOT))
 
@@ -77,7 +65,7 @@ class MediaPathWidget(forms.Select):
         except OSError as err:
             self.choices = []
             if settings.DEBUG:
-                failsafe_message("Can't read MEDIA_ROOT: %s" % err)
+                failsafe_message(f"Can't read MEDIA_ROOT: {err}")
 
         warnings.warn(
             "MediaPathWidget is deprecated and will removed in the future!"
@@ -95,16 +83,7 @@ class MediaPathWidget(forms.Select):
         return media_dirs_choices
 
 
-class MediaPathModelField(models.TextField):#, with_metaclass(models.SubfieldBase)):
-    """
-
-    """
-
-#    def __init__(self, separator=",", strip_items=True, skip_empty=True, *args, **kwargs):
-#        self.separator = separator
-#        self.strip_items = strip_items
-#        self.skip_empty = skip_empty
-#        super(MediaPathModelField, self).__init__(*args, **kwargs)
+class MediaPathModelField(models.TextField):
 
     def formfield(self, **kwargs):
         """ Use always own widget and form field. """
@@ -117,6 +96,4 @@ class MediaPathModelField(models.TextField):#, with_metaclass(models.SubfieldBas
 
         kwargs["widget"] = MediaPathWidget
 #        kwargs["form_class"] = SignSeparatedFormField
-        return super(MediaPathModelField, self).formfield(**kwargs)
-
-
+        return super().formfield(**kwargs)

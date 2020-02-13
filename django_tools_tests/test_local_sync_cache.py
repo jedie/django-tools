@@ -1,9 +1,9 @@
 """
     Test Local sync cache
     ~~~~~~~~~~~~~~~~~~~~~
-    
+
     For more information look into DocString in local_sync_cache.py !
-    
+
     :copyleft: 2011-2019 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
@@ -45,11 +45,12 @@ class LocalSyncCacheTest(unittest.TestCase):
 
     def testUniqueID(self):
         with LoggingBuffer("django_tools.local_sync_cache") as log:
-            c1 = LocalSyncCache(id="test1")
+            LocalSyncCache(id="test1")
             log.clear()
-            c2 = LocalSyncCache(id="test1")
+            LocalSyncCache(id="test1")
             self.assertIn(
-                "ID 'test1' was already used! It must be unique! (Existing ids are: ['test1'])", log.get_messages()
+                "ID 'test1' was already used! It must be unique! (Existing ids are: ['test1'])",
+                log.get_messages()
             )
 
     def testEmptyPformatCacheInfo(self):

@@ -1,27 +1,27 @@
 """
     Test django_tools.unittest_utils.django_command
 
-    :copyleft: 2017-2019 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2017-2020 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 
-import os
+from pathlib import Path
 
 import pytest
-
 from django.core.cache import cache
 from django.core.management import call_command
 from django.test import TestCase
 
 # https://github.com/jedie/django-tools
-import django_tools
+import django_tools_test_project
 from django_tools.unittest_utils.assertments import assert_equal_dedent, assert_pformat_equal
 from django_tools.unittest_utils.django_command import DjangoCommandMixin
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 from django_tools.unittest_utils.user import TestUserMixin
 
-MANAGE_DIR = os.path.abspath(os.path.join(os.path.dirname(django_tools.__file__), ".."))
+
+MANAGE_DIR = Path(django_tools_test_project.__file__).parent
 
 
 class TestListModelsCommand(DjangoCommandMixin, TestCase):
@@ -42,7 +42,7 @@ class TestListModelsCommand(DjangoCommandMixin, TestCase):
         output = output.split("existing models in app_label.ModelName format:", 1)[1]
         assert_equal_dedent(
             output,
-            """           
+            """
             01 - admin.LogEntry
             02 - auth.Group
             03 - auth.Permission
@@ -66,9 +66,9 @@ class TestListModelsCommand(DjangoCommandMixin, TestCase):
             21 - flatpages.FlatPage
             22 - sessions.Session
             23 - sites.Site
-            
-            INSTALLED_APPS....: 13
-            Apps with models..: 13
+
+            INSTALLED_APPS....: 14
+            Apps with models..: 14
         """,
         )
 

@@ -12,6 +12,7 @@ from django_tools.unittest_utils.assertments import assert_pformat_equal
 from django_tools.unittest_utils.logging_utils import FilterAndLogWarnings, LoggingBuffer
 from django_tools.unittest_utils.unittest_base import BaseUnittestCase
 
+
 log = logging.getLogger(__name__)
 
 
@@ -43,20 +44,20 @@ class TestLoggingUtilsTestCase(BaseUnittestCase):
         with LoggingBuffer(name="django_tools.unittest_utils.logging_utils", level=logging.DEBUG) as log_buffer:
             for i in range(3):
                 instance(
-                    message="test_filter_and_log_skip_external_package dist-packages %i" % i,
+                    message=f"test_filter_and_log_skip_external_package dist-packages {i:d}",
                     category=UserWarning,
                     filename="/foo/dist-packages/bar.py",
                     lineno=456,
                 )
                 instance(
-                    message="test_filter_and_log_skip_external_package site-packages %i" % i,
+                    message=f"test_filter_and_log_skip_external_package site-packages {i:d}",
                     category=UserWarning,
                     filename="/foo/site-packages/bar.py",
                     lineno=789,
                 )
 
         log_messages = log_buffer.get_messages()
-        print("log_messages:\n%s" % log_messages)
+        print(f"log_messages:\n{log_messages}")
 
         assert_pformat_equal(
             log_messages,

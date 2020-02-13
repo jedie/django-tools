@@ -1,5 +1,5 @@
 """
-    :copyleft: 2017-2019 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2017-2020 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -10,10 +10,6 @@ from email.mime.image import MIMEImage
 import django
 from django.core import mail
 from django.test import Client, SimpleTestCase
-from django.utils import six
-from django.utils.six import PY2
-
-from django_tools_test_project.django_tools_test_app.models import PermissionTestModel
 
 # https://github.com/jedie/django-tools
 from django_tools.mail.send_mail import SendMail
@@ -26,6 +22,7 @@ from django_tools.unittest_utils.tempdir import TempDir
 from django_tools.unittest_utils.template import TEMPLATE_INVALID_PREFIX, set_string_if_invalid
 from django_tools.unittest_utils.unittest_base import BaseTestCase, BaseUnittestCase
 from django_tools.unittest_utils.user import TestUserMixin
+from django_tools_test_project.django_tools_test_app.models import PermissionTestModel
 
 
 class TestBaseUnittestCase(BaseUnittestCase):
@@ -85,8 +82,6 @@ class TestBaseUnittestCase(BaseUnittestCase):
             assert_equal_dedent(first="foo bar", second="foo X bar")
 
         err_msg = "\n".join([line.strip() for line in cm.exception.args[0].splitlines()])
-        if PY2:
-            err_msg = err_msg.replace("u'", "'")
         print("***\n%s\n***" % repr(err_msg))
 
         assert "\x1b[0;34mfirst\x1b[m" in err_msg
@@ -136,9 +131,9 @@ class TestBaseUnittestCase(BaseUnittestCase):
         obj = PermissionTestModel.objects.create()
         url = self.get_admin_change_url(obj)
         if django.VERSION < (1, 11):
-            assert_pformat_equal(url, "/admin/django_tools_test_app/permissiontestmodel/%i/" % obj.pk)
+            assert_pformat_equal(url, f"/admin/django_tools_test_app/permissiontestmodel/{obj.pk:d}/")
         else:
-            assert_pformat_equal(url, "/admin/django_tools_test_app/permissiontestmodel/%i/change/" % obj.pk)
+            assert_pformat_equal(url, f"/admin/django_tools_test_app/permissiontestmodel/{obj.pk:d}/change/")
 
     def test_get_admin_add_url(self):
         url = self.get_admin_add_url(obj=PermissionTestModel)
@@ -164,9 +159,9 @@ class TestTempDir(BaseUnittestCase):
 class TestStdoutStderrBuffer(BaseUnittestCase):
     def test_text_type(self):
         with StdoutStderrBuffer() as buffer:
-            print(six.text_type("print text_type"))
-            sys.stdout.write(six.text_type("stdout.write text_type\n"))
-            sys.stderr.write(six.text_type("stderr.write text_type"))
+            print("print text_type")
+            sys.stdout.write("stdout.write text_type\n")
+            sys.stderr.write("stderr.write text_type")
         assert_equal_dedent(
             buffer.get_output(),
             """
@@ -177,35 +172,19 @@ class TestStdoutStderrBuffer(BaseUnittestCase):
         )
 
     def test_binary_type(self):
-        if six.PY2:
-            with StdoutStderrBuffer() as buffer:
-                print("print str")
-                sys.stdout.write("stdout.write str\n")
-                sys.stderr.write("stderr.write str")
-            assert_equal_dedent(
-                buffer.get_output(),
-                """
-                print str
-                stdout.write str
-                stderr.write str
+        # The print function will use repr
+        with StdoutStderrBuffer() as buffer:
+            print(b"print binary_type")
+            sys.stdout.write(b"stdout.write binary_type\n")
+            sys.stderr.write(b"stderr.write binary_type")
+        assert_equal_dedent(
+            buffer.get_output(),
+            """
+            b'print binary_type'
+            stdout.write binary_type
+            stderr.write binary_type
             """,
-            )
-        elif six.PY3:
-            # The print function will use repr
-            with StdoutStderrBuffer() as buffer:
-                print(b"print binary_type")
-                sys.stdout.write(b"stdout.write binary_type\n")
-                sys.stderr.write(b"stderr.write binary_type")
-            assert_equal_dedent(
-                buffer.get_output(),
-                """
-                b'print binary_type'
-                stdout.write binary_type
-                stderr.write binary_type
-            """,
-            )
-        else:
-            self.fail()
+        )
 
 
 class TestBaseTestCase(TestUserMixin, BaseTestCase):
@@ -231,8 +210,7 @@ class TestBaseTestCase(TestUserMixin, BaseTestCase):
         self.create_testusers()
 
         usernames = self.UserModel.objects.all().values_list("username", flat=True)
-        usernames = list(usernames)
-        usernames.sort()
+        usernames = sorted(usernames)
         assert_pformat_equal(usernames, ["normal_test_user", "staff_test_user", "superuser"])
 
         # Are all users active?
@@ -263,7 +241,7 @@ class TestSetStringIfInvalidDecorator(SimpleTestCase):
 class AssertResponseTest(BaseTestCase):
     @classmethod
     def setUpClass(cls):
-        super(AssertResponseTest, cls).setUpClass()
+        super().setUpClass()
         cls.response = Client().get("/admin/login/")
 
     def test_assert_response_ok(self):

@@ -6,12 +6,11 @@
 from django.conf import settings
 from django.test import TestCase
 from django.utils import translation
-
-from django_tools_test_project.django_tools_test_app.models import SimpleParlerModel, generate_simple_parler_dummies
 from pprintpp import pprint
 
 # https://github.com/jedie/django-tools
 from django_tools.unittest_utils.assertments import assert_pformat_equal
+from django_tools_test_project.django_tools_test_app.models import SimpleParlerModel, generate_simple_parler_dummies
 
 
 class ParlerFixturesTestCase(TestCase):

@@ -1,0 +1,50 @@
+name: test
+
+on:
+  schedule:
+    - cron: '0 8 * * *'
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.8, 3.7, 3.6, pypy3]
+    steps:
+    - uses: actions/checkout@v1
+    - name: 'Set up Python ${{ matrix.python-version }}'
+      uses: actions/setup-python@v1
+      with:
+        python-version: '${{ matrix.python-version }}'
+
+    - name: 'Install package'
+      run: |
+        make install-poetry
+        source $HOME/.poetry/env
+        make install
+
+    - name: 'List installed packages'
+      run: |
+        source $HOME/.poetry/env
+        poetry run pip freeze
+
+    - name: 'List all tox test environments'
+      run: |
+        source $HOME/.poetry/env
+        make tox-listenvs
+
+    - name: 'Run tests with Python v${{ matrix.python-version }}'
+      run: |
+        source $HOME/.poetry/env
+        make pytest
+
+    - name: 'Run linters'
+      if: matrix.python-version == '3.8'
+      run: |
+        source $HOME/.poetry/env
+        make lint
+
+    - name: 'Upload coverage report'
+      run: bash <(curl -s https://codecov.io/bash)

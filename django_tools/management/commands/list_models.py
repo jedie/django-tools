@@ -1,11 +1,7 @@
-# coding: utf-8
-
 """
     $ ./manage.py list_models
 
 """
-
-from __future__ import absolute_import, unicode_literals, print_function
 
 
 from django.apps import apps
@@ -26,11 +22,11 @@ class Command(BaseCommand):
             models = app_config.get_models()
             for model in models:
                 dotnames.append(
-                    "%s.%s" % (app_label, model._meta.object_name)
+                    f"{app_label}.{model._meta.object_name}"
                 )
 
         for no, dotname in enumerate(sorted(dotnames), 1):
-            self.stdout.write("%02i - %s\n" % (no, dotname))
+            self.stdout.write(f"{no:02d} - {dotname}\n")
 
         self.stdout.write("\nINSTALLED_APPS....: %i\n" % len(settings.INSTALLED_APPS))
         self.stdout.write("Apps with models..: %i\n\n" % len(app_configs))

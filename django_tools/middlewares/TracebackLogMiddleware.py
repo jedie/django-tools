@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     Put this into your settings:
     --------------------------------------------------------------------------
@@ -14,9 +12,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import unicode_literals
 
 import logging
+
 
 try:
     from django.utils.deprecation import MiddlewareMixin
@@ -27,5 +25,4 @@ except ImportError:
 class TracebackLogMiddleware(MiddlewareMixin):
 
     def process_exception(self, request, exception):
-        logging.exception('Exception on url: %s' % request.path)
-
+        logging.exception(f'Exception on url: {request.path}')

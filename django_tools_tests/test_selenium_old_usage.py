@@ -8,7 +8,11 @@ import unittest
 # https://github.com/jedie/django-tools
 from django_tools.unittest_utils.assertments import assert_pformat_equal
 from django_tools.unittest_utils.selenium_utils import (
-    SeleniumChromiumTestCase, SeleniumFirefoxTestCase, chromium_available, find_executable, firefox_available
+    SeleniumChromiumTestCase,
+    SeleniumFirefoxTestCase,
+    chromium_available,
+    find_executable,
+    firefox_available,
 )
 
 

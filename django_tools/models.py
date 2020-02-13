@@ -31,11 +31,11 @@ class UpdateTimeBaseModel(models.Model):
     lastupdatetime = models.DateTimeField(default=now, editable=False, help_text="Time of the last change.")
 
     def __str__(self):  # to be overwritten
-        return "model instance ID:%s" % self.pk
+        return f"model instance ID:{self.pk}"
 
     def save(self, *args, **kwargs):
         self.lastupdatetime = now()
-        return super(UpdateTimeBaseModel, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     class Meta:
         abstract = True
@@ -70,7 +70,7 @@ class UpdateUserBaseModel(models.Model):
     )
 
     def __str__(self):  # to be overwritten
-        return "model instance ID:%s" % self.pk
+        return f"model instance ID:{self.pk}"
 
     def save(self, *args, **kwargs):
         current_user = ThreadLocal.get_current_user()
@@ -82,7 +82,7 @@ class UpdateUserBaseModel(models.Model):
                     self.createby = current_user
                 self.lastupdateby = current_user
 
-        return super(UpdateUserBaseModel, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     class Meta:
         abstract = True

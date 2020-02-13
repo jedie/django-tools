@@ -1,5 +1,3 @@
-# coding:utf-8
-
 """
     Limit to usergroups
     ~~~~~~~~~~~~~~~~~~~
@@ -52,13 +50,10 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
-
-from django.db import models
-from django.utils import six
-from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import Group
+from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
 
 def has_permission(item, **kwargs):
@@ -79,11 +74,11 @@ def has_permission(item, **kwargs):
         if limit_permission_value == UsergroupsModelField.ANONYMOUS_USERS:
             continue
 
-        if user.is_anonymous():
+        if user.is_anonymous:
             return False
 
         if limit_permission_value == UsergroupsModelField.NORMAL_USERS:
-            if user.is_authenticated():
+            if user.is_authenticated:
                 continue
             else:
                 return False
@@ -106,7 +101,6 @@ def has_permission(item, **kwargs):
             return False
 
     return True
-
 
 
 def filter_permission(queryset, **kwargs):
@@ -142,7 +136,7 @@ def get_user_groups():
 
 def get_limit_dict():
     # use unicode() to evaluate ugettext_lazy:
-    limit_dict = dict([(k, six.text_type(v)) for k, v in list(UsergroupsModelField.USER_TYPES_DICT.items())])
+    limit_dict = {k: str(v) for k, v in list(UsergroupsModelField.USER_TYPES_DICT.items())}
 
     groups = get_user_groups()
     limit_dict.update(dict(groups))
@@ -178,7 +172,7 @@ class UsergroupsModelField(models.IntegerField):
         """
         kwargs["choices"] = self.USER_TYPES_CHOICES
 
-        super(UsergroupsModelField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_choices(self, *args, **kwargs):
         """
@@ -188,5 +182,3 @@ class UsergroupsModelField(models.IntegerField):
         groups = get_user_groups()
         choices = self.USER_TYPES_CHOICES + list(groups)
         return choices
-
-

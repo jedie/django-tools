@@ -21,10 +21,10 @@ def test_throttle_admin_email_handler():
 
     for char in ("A", "B"):
         for no in range(3):
-            handler.send_mail(subject="subject %s %i" % (char, no), message="message %s %i" % (char, no))
+            handler.send_mail(subject=f"subject {char} {no:d}", message=f"message {char} {no:d}")
 
         time.sleep(0.11)
-        handler.send_mail(subject="subject %s last" % char, message="message %s last" % char)
+        handler.send_mail(subject=f"subject {char} last", message=f"message {char} last")
         time.sleep(0.11)
 
     print_mailbox(mail.outbox)

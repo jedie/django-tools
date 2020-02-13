@@ -12,6 +12,7 @@ from django.core.files.storage import FileSystemStorage
 # https://github.com/jedie/django-tools
 from django_tools.unittest_utils.assertments import assert_is_file
 
+
 log = logging.getLogger(__name__)
 
 
@@ -78,7 +79,7 @@ class OverwriteFileSystemStorage(FileSystemStorage):
 
     def get_bak_path(self, full_path):
         for no in range(1, 99):
-            bak_path = full_path.with_suffix("%s%s%02i" % (full_path.suffix, self.backup_suffix, no))
+            bak_path = full_path.with_suffix(f"{full_path.suffix}{self.backup_suffix}{no:02d}")
             if not bak_path.is_file():
                 return bak_path
 

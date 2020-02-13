@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     utilities for settings.py
     ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -8,8 +6,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-
-from __future__ import absolute_import, division, print_function
 
 from fnmatch import fnmatch
 
@@ -51,8 +47,9 @@ class FnMatchIps(list):
 
     borrowed from https://djangosnippets.org/snippets/1380/
     """
+
     def __init__(self, pattern_list):
-        super(FnMatchIps, self).__init__([IpPattern(pat) for pat in pattern_list])
+        super().__init__([IpPattern(pat) for pat in pattern_list])
 
     def __contains__(self, pat):
         # INTERNAL_IPS checks via "<ip> in INTERNAL_IPS"
@@ -62,4 +59,4 @@ class FnMatchIps(list):
         return False
 
 
-InternalIps = FnMatchIps # for compatibility
+InternalIps = FnMatchIps  # for compatibility

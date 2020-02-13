@@ -11,7 +11,6 @@ from django.test import SimpleTestCase
 from django_tools.mail.send_mail import SendMail
 from django_tools.unittest_utils.assertments import assert_equal_dedent, assert_pformat_equal
 from django_tools.unittest_utils.email import print_mailbox
-from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 from django_tools.unittest_utils.unittest_base import BaseUnittestCase
 
 
@@ -56,7 +55,7 @@ class TestEMail(BaseUnittestCase, SimpleTestCase):
             <!-- START 'mail_test.txt' -->
             This is is a test mail.
             It used the django template: first, second
-            
+
             <!-- END 'mail_test.txt' -->
         """,
         )
@@ -79,8 +78,8 @@ class TestEMail(BaseUnittestCase, SimpleTestCase):
                     It used the django template: first, second</p>
                 </body>
             </html>
-            
-            
+
+
             <!-- END 'mail_test.html' -->
             """,
         )

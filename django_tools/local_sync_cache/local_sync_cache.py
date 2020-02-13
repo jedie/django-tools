@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     Local sync cache
     ~~~~~~~~~~~~~~~~
@@ -80,12 +78,11 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
+import datetime
 import logging
 import sys
 import time
-import datetime
 
 from django.conf import settings
 from django.core.cache import caches
@@ -104,24 +101,24 @@ def _get_cache():
     """
     if LOCAL_SYNC_CACHE_BACKEND not in settings.CACHES:
         # TODO: Not needed in django v1.4: https://code.djangoproject.com/ticket/16410
-        msg = "You should define a '%s' cache in your settings.CACHES (use default cache)" % LOCAL_SYNC_CACHE_BACKEND
+        msg = f"You should define a '{LOCAL_SYNC_CACHE_BACKEND}' cache in your settings.CACHES (use default cache)"
         logger.critical(msg)
-        cache_name = "default" # fallback to default cache entry
+        cache_name = "default"  # fallback to default cache entry
     else:
         cache_name = LOCAL_SYNC_CACHE_BACKEND
 
     backend = settings.CACHES[cache_name]["BACKEND"]
     if "dummy" in backend or "locmem" in backend:
-        msg = "You should use Memcache, FileBasedCache or DatabaseCache and not: %s" % backend
+        msg = f"You should use Memcache, FileBasedCache or DatabaseCache and not: {backend}"
         logger.critical(msg)
 
     django_cache = caches[cache_name]
-    logger.debug("Use django '%s' cache: %r" % (cache_name, django_cache))
+    logger.debug(f"Use django '{cache_name}' cache: {django_cache!r}")
     return django_cache
 
 
 class LocalSyncCache(dict):
-    INIT_COUNTER = {} # Counts how often __init__ used, should always be 1!
+    INIT_COUNTER = {}  # Counts how often __init__ used, should always be 1!
 
     # Stores all existing instance, used in middleware to call check_state()
     CACHES = []
@@ -137,27 +134,27 @@ class LocalSyncCache(dict):
             for existing_cache in self.CACHES:
                 if id == existing_cache.id:
                     logger.error(
-                        "ID %r was already used! It must be unique! (Existing ids are: %s)" % (
+                        "ID {!r} was already used! It must be unique! (Existing ids are: {})".format(
                             id, repr([i.id for i in self.CACHES])
                         )
                     )
 
         self.id = id
         self.django_cache = _get_cache()
-        self.last_reset = time.time() # Save last creation/reset time
+        self.last_reset = time.time()  # Save last creation/reset time
         self.CACHES.append(self)
 
-        if not self.id in self.INIT_COUNTER:
+        if self.id not in self.INIT_COUNTER:
             self.INIT_COUNTER[self.id] = 1
         else:
-            logger.error("Error: __init__ for %s was called to often!" % self.id)
+            logger.error(f"Error: __init__ for {self.id} was called to often!")
             self.INIT_COUNTER[self.id] += 1
 
-        self.request_counter = 0 # Counts how often check_state called (Normally called one time per request)
-        self.own_clear_counter = 0 # Counts how often clear called in this thread
-        self.ext_clear_counter = 0 # Counts how often clears from external thread
+        self.request_counter = 0  # Counts how often check_state called (Normally called one time per request)
+        self.own_clear_counter = 0  # Counts how often clear called in this thread
+        self.ext_clear_counter = 0  # Counts how often clears from external thread
 
-        logger.debug("%r __init__" % id)
+        logger.debug(f"{id!r} __init__")
 
     def check_state(self):
         """
@@ -171,12 +168,16 @@ class LocalSyncCache(dict):
             if self.id in self._OWN_RESET_TIMES:
                 # clear() was called in the past in this thread and it
                 # is not stored in the django cache -> resave it
-                logger.info("Resave %r last reset time in cache" % self.id)
+                logger.info(f"Resave {self.id!r} last reset time in cache")
                 self.django_cache.set(self.id, self._OWN_RESET_TIMES[self.id])
         elif self.last_reset < global_update_time:
             # We have out-dated data -> reset dict
             self.ext_clear_counter += 1
-            logger.info("%r out-dated data -> reset (global_update_time: %r - self.last_reset: %r)" % (self.id, global_update_time, self.last_reset))
+            logger.info(
+                f"{self.id!r} out-dated data -> reset"
+                f" (global_update_time: {global_update_time!r}"
+                f" - self.last_reset: {self.last_reset!r})"
+            )
             dict.clear(self)
             self.last_reset = time.time()
 
@@ -184,7 +185,7 @@ class LocalSyncCache(dict):
                 # In this thread clear() was called in the past and now in
                 # a other thread clear() was called.
                 del(self._OWN_RESET_TIMES[self.id])
-                logger.debug("remove %r from _OWN_RESET_TIMES" % self.id)
+                logger.debug(f"remove {self.id!r} from _OWN_RESET_TIMES")
 
     def clear(self):
         """
@@ -196,7 +197,7 @@ class LocalSyncCache(dict):
         dict.clear(self)
         self.last_reset = time.time()
         self.django_cache.set(self.id, self.last_reset)
-        logger.info("%r - dict.clear - Set global_update_time to %r" % (self.id, self.last_reset))
+        logger.info(f"{self.id!r} - dict.clear - Set global_update_time to {self.last_reset!r}")
 
         # Save reset time in this thread for re-adding it to cache in check_state()
         self._OWN_RESET_TIMES[self.id] = self.last_reset
@@ -204,7 +205,7 @@ class LocalSyncCache(dict):
         # Check if cache worked
         cached_value = self.django_cache.get(self.id)
         if cached_value != self.last_reset:
-            logger.error("Cache seems not to work: %r != %r" % (cached_value, self.last_reset))
+            logger.error(f"Cache seems not to work: {cached_value!r} != {self.last_reset!r}")
 
     @staticmethod
     def get_cache_information():
@@ -212,8 +213,8 @@ class LocalSyncCache(dict):
         django_cache = _get_cache()
         for instance in LocalSyncCache.CACHES:
             try:
-                instance_size = sys.getsizeof(instance) # New in version 2.6
-            except (AttributeError, TypeError): # PyPy raised a TypeError
+                instance_size = sys.getsizeof(instance)  # New in version 2.6
+            except (AttributeError, TypeError):  # PyPy raised a TypeError
                 instance_size = None
 
             id = instance.id
@@ -251,9 +252,9 @@ class LocalSyncCache(dict):
             instance = item["instance"]
 
             for attr in attributes:
-                output.append("%22s: %s" % (attr, getattr(instance, attr)))
+                output.append(f"{attr:>22}: {getattr(instance, attr)}")
 
             for key, value in item.items():
-                output.append("%22s: %r" % (key, value))
+                output.append(f"{key:>22}: {value!r}")
 
         return "\n".join(output)

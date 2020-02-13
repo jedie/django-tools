@@ -86,7 +86,7 @@ class LoggingBuffer:
 
     def assert_messages(self, reference):
         messages = self.get_message_list()
-        assert messages == reference, "%r != %r" % (messages, reference)
+        assert messages == reference, f"{messages!r} != {reference!r}"
 
 
 class CutPathnameLogRecordFactory:
@@ -118,7 +118,7 @@ class CutPathnameLogRecordFactory:
     def cut_path(self, pathname):
         if len(pathname) <= self.max_length:
             return pathname
-        return "...%s" % pathname[-(self.max_length - 3) :]
+        return "...%s" % pathname[-(self.max_length - 3):]
 
     def __call__(self, *args, **kwargs):
         record = self.origin_factory(*args, **kwargs)
@@ -162,7 +162,7 @@ class FilterAndLogWarnings:
             if path_part in filename:
                 if filename not in self.skipped_filenames:
                     self.skipped_filenames.append(filename)
-                    self.logger.warning("There are warnings in: %s" % filename)
+                    self.logger.warning(f"There are warnings in: {filename}")
                 return
 
         # Create log entry for the warning:
@@ -171,7 +171,7 @@ class FilterAndLogWarnings:
             level=logging.WARNING,
             fn=filename,
             lno=lineno,
-            msg="%s:%s" % (category.__name__, message),
+            msg=f"{category.__name__}:{message}",
             args=args,
             exc_info=exc_info,
         )

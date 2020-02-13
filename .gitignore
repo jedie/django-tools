@@ -1,73 +1,23 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
+.*
 
-# C extensions
-*.so
+!.github
+!.editorconfig
+!.flake8
+!.isort.cfg
+!.travis.yml
 
-# Distribution / packaging
-.Python
-env/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-*.egg-info/
-.installed.cfg
-*.egg
+/.git
+*.py[co]
+*~
+*.egg-info
+/dist
+/build
+/publish.log
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.coverage
-.coverage.*
-.cache
-.pytest_cache
-nosetests.xml
+/coverage_html/
 coverage.xml
-*,cover
-coverage_html/
-coverage_report/
 
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
-*.log
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# PyCharm
-.idea
-
-# SQLite
-.sqlite3
-
-# PyDev
-.project
-.pydevproject
+/poetry.lock
 
 # Test project:
 test_project_db.sqlite3
@@ -76,3 +26,5 @@ django_tools_test_project/media/*
 !django_tools_test_project/media/.gitkeep
 django_tools_test_project/static/*
 !django_tools_test_project/static/.gitkeep
+
+

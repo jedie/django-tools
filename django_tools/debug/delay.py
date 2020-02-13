@@ -11,6 +11,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.cache import cache
 
+
 log = logging.getLogger(__name__)
 
 
@@ -70,7 +71,7 @@ class DelayBase:
         log.warning("Save %s sec. from %r for %r into %s", sec, query_string, self.key, self.backend_name)
 
         if request.user.is_authenticated:
-            messages.warning(request, "Use %s sec. %r" % (sec, query_string))
+            messages.warning(request, f"Use {sec} sec. {query_string!r}")
 
         self._set(sec)
 

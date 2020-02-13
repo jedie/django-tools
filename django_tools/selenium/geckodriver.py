@@ -12,6 +12,7 @@ from selenium.webdriver import DesiredCapabilities
 from django_tools.selenium.base import SeleniumBaseTestCase
 from django_tools.selenium.utils import find_executable
 
+
 log = logging.getLogger(__name__)
 
 
@@ -86,8 +87,8 @@ def firefox_available(filename=None):
     try:
         executable = find_executable(filename, SeleniumFirefoxTestCase.extra_search_paths)
     except FileNotFoundError as err:
-        log.error("Firefox is no available: %s")
+        log.error("Firefox is no available: %s", err)
         return False
 
-    log.debug("Firefox found here: %s" % executable)
+    log.debug(f"Firefox found here: {executable}")
     return True

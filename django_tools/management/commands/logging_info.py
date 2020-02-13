@@ -12,6 +12,7 @@ from pprint import pprint
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
+
 log = logging.getLogger(__name__)
 
 
@@ -39,6 +40,6 @@ class Command(BaseCommand):
             else:
                 prefix = "\t[ ]"
 
-            self.stdout.write("%s%r" % (prefix, log_name))
+            self.stdout.write(f"{prefix}{log_name!r}")
 
         self.stdout.write('[ ] -> not configured in settings.LOGGING["loggers"]')

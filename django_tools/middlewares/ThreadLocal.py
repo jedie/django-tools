@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     threadlocals middleware
     ~~~~~~~~~~~~~~~~~~~~~~~
@@ -33,7 +31,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 try:
     from threading import local
@@ -63,6 +60,7 @@ def get_current_user():
 
 class ThreadLocalMiddleware(MiddlewareMixin):
     """ Simple middleware that adds the request object in thread local storage."""
+
     def process_request(self, request):
         _thread_locals.request = request
 

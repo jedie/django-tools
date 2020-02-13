@@ -10,13 +10,13 @@ from pathlib import Path
 
 from django.conf import settings
 from django.test import override_settings
-
 from selenium.common.exceptions import NoSuchElementException
 
 # https://github.com/jedie/django-tools
 from django_tools.selenium.chromedriver import SeleniumChromiumTestCase, chromium_available
 from django_tools.selenium.django import (
-    SeleniumChromiumStaticLiveServerTestCase, SeleniumFirefoxStaticLiveServerTestCase
+    SeleniumChromiumStaticLiveServerTestCase,
+    SeleniumFirefoxStaticLiveServerTestCase,
 )
 from django_tools.selenium.geckodriver import SeleniumFirefoxTestCase, firefox_available
 from django_tools.selenium.utils import find_executable
@@ -54,17 +54,17 @@ class SeleniumHelperTests(unittest.TestCase):
             with self.assertRaises(FileNotFoundError) as context_manager:
                 find_executable(name)
 
-            assert_pformat_equal(context_manager.exception.args, ("Can't find '%s' in PATH or None!" % name,))
+            assert_pformat_equal(context_manager.exception.args, (f"Can't find '{name}' in PATH or None!",))
 
             old_path = os.environ["PATH"]
             try:
                 # File is in PATH, but not executable:
-                os.environ["PATH"] += "%s%s" % (os.pathsep, path)
+                os.environ["PATH"] += f"{os.pathsep}{path}"
                 with self.assertRaises(FileNotFoundError) as context_manager:
                     find_executable(name)
 
                 assert_pformat_equal(
-                    context_manager.exception.args, ("%s exists, but it's not executable!" % filepath,)
+                    context_manager.exception.args, (f"{filepath} exists, but it's not executable!",)
                 )
 
                 # File is in PATH and executable:

@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     per-site cache middleware
     ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -10,7 +8,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 import logging
 import sys
@@ -51,12 +48,12 @@ _CACHE_KEYS = (CACHE_REQUESTS, CACHE_REQUEST_HITS, CACHE_RESPONSES, CACHE_RESPON
 # Set settings.COUNT_IN_CACHE=True for process/thread safe counting.
 LOCAL_CACHE_INFO = {
     # from FetchFromCacheMiddleware:
-    "requests": None, # total numbers of requests
-    "request hits": None, # number of cache hits
+    "requests": None,  # total numbers of requests
+    "request hits": None,  # number of cache hits
 
     # from UpdateCacheMiddleware:
-    "responses": None, # total numbers of responses
-    "response hits": None, # number of responses from cache
+    "responses": None,  # total numbers of responses
+    "response hits": None,  # number of responses from cache
 }
 
 
@@ -67,7 +64,7 @@ def init_cache_counting():
     and should be 0, if enabled.
     """
     for key in _CACHE_KEYS:
-        cache.delete(key) # delete old entrie, if exist
+        cache.delete(key)  # delete old entrie, if exist
 
     if COUNT_FETCH_FROM_CACHE:
         # Count in FetchFromCacheMiddleware is enabled
@@ -87,13 +84,14 @@ def init_cache_counting():
             cache.set(CACHE_RESPONSES, 0)
             cache.set(CACHE_RESPONSE_HITS, 0)
 
+
 init_cache_counting()
 
 
 def build_cache_key(url, language_code, site_id):
-    cache_key = "%s:%s:%s" % (url, language_code, site_id)
+    cache_key = f"{url}:{language_code}:{site_id}"
     if EXTRA_DEBUG:
-        logger.debug("Cache key: %r" % cache_key)
+        logger.debug(f"Cache key: {cache_key!r}")
     return cache_key
 
 
@@ -109,10 +107,10 @@ def get_cache_key(request):
     url = request.get_full_path()
 
     try:
-        language_code = request.LANGUAGE_CODE # set in django.middleware.locale.LocaleMiddleware
+        language_code = request.LANGUAGE_CODE  # set in django.middleware.locale.LocaleMiddleware
     except AttributeError:
         etype, evalue, etb = sys.exc_info()
-        evalue = etype("%s (django.middleware.locale.LocaleMiddleware must be insert before cache middleware!)" % evalue)
+        evalue = etype(f"{evalue} (django.middleware.locale.LocaleMiddleware must be insert before cache middleware!)")
         raise etype(evalue).with_traceback(etb)
 
     site_id = settings.SITE_ID
@@ -125,14 +123,14 @@ def delete_cache_item(url, language_code, site_id=None):
         site_id = settings.SITE_ID
 
     cache_key = build_cache_key(url, language_code, site_id)
-    logger.debug("delete from cache: %r" % cache_key)
+    logger.debug(f"delete from cache: {cache_key!r}")
     cache.delete(cache_key)
 
 
-class CacheMiddlewareBase(object):
+class CacheMiddlewareBase:
     def use_cache(self, request, response=None):
-        if not request.method in ('GET', 'HEAD'):
-            logger.debug("Don't cache %r (%s)" % (request.method, request.get_full_path()))
+        if request.method not in ('GET', 'HEAD'):
+            logger.debug(f"Don't cache {request.method!r} ({request.get_full_path()})")
             return False
 
         if RUN_WITH_DEV_SERVER and request.path.startswith(settings.STATIC_URL):
@@ -141,10 +139,10 @@ class CacheMiddlewareBase(object):
             return False
 
         if response and response.status_code != 200:
-            logger.debug("Don't cache response with status code: %s (%s)" % (response.status_code, request.get_full_path()))
+            logger.debug(f"Don't cache response with status code: {response.status_code} ({request.get_full_path()})")
             return False
 
-        if CACHE_MIDDLEWARE_ANONYMOUS_ONLY and request.user.is_authenticated():
+        if CACHE_MIDDLEWARE_ANONYMOUS_ONLY and request.user.is_authenticated:
             logger.debug("Don't cache requests from authenticated users.")
             return False
 
@@ -154,12 +152,15 @@ class CacheMiddlewareBase(object):
                 storage = messages.get_messages(request)
                 raw_messages = ", ".join([message.message for message in storage])
                 storage.used = False
-                msg += " (messages: %s)" % raw_messages
+                msg += f" (messages: {raw_messages})"
             logger.debug(msg)
             return False
 
         if response and getattr(response, 'csrf_processing_done', False):
-            logger.debug("Don't cache because response.csrf_processing_done==True (e.g.: view use @csrf_protect decorator)")
+            logger.debug(
+                "Don't cache because response.csrf_processing_done==True"
+                " (e.g.: view use @csrf_protect decorator)"
+            )
             return False
 
         if cache_callback:
@@ -171,7 +172,7 @@ class CacheMiddlewareBase(object):
 def save_incr(key, default=1):
     try:
         cache.incr(key)
-    except ValueError: # Doesn't exist, yet.
+    except ValueError:  # Doesn't exist, yet.
         cache.set(key, default)
 
 
@@ -204,9 +205,9 @@ class FetchFromCacheMiddleware(CacheMiddlewareBase):
         cache_key = get_cache_key(request)
         response = cache.get(cache_key)
         if response is None:
-            logger.debug("Not found in cache: %r" % cache_key)
+            logger.debug(f"Not found in cache: {cache_key!r}")
         else:
-            logger.debug("Use %r from cache!" % cache_key)
+            logger.debug(f"Use {cache_key!r} from cache!")
             if COUNT_FETCH_FROM_CACHE:
                 self._count_hit()
             response._from_cache = True
@@ -230,7 +231,7 @@ class UpdateCacheMiddleware(CacheMiddlewareBase):
         if COUNT_UPDATE_CACHE:
             self._count_response(request)
 
-        if getattr(response, "_from_cache", False) == True:
+        if getattr(response, "_from_cache", False):
             if COUNT_UPDATE_CACHE:
                 self._count_hit()
             logger.debug("response comes from the cache, no need to update the cache")
@@ -246,7 +247,7 @@ class UpdateCacheMiddleware(CacheMiddlewareBase):
 
         # get the timeout from the "max-age" section of the "Cache-Control" header
         timeout = get_max_age(response)
-        if timeout == None:
+        if timeout is None:
             # use default cache_timeout
             timeout = settings.CACHE_MIDDLEWARE_SECONDS
         elif timeout == 0:
@@ -267,7 +268,7 @@ class UpdateCacheMiddleware(CacheMiddlewareBase):
             # Check if we store a {% csrf_token %} into the cache, this should never happen!
             for content in response._container:
                 if "csrfmiddlewaretoken" in content:
-                    raise AssertionError("csrf_token would be put into the cache! content: %r" % content)
+                    raise AssertionError(f"csrf_token would be put into the cache! content: {content!r}")
 
         # Adds ETag, Last-Modified, Expires and Cache-Control headers
         patch_response_headers(response2, timeout)
@@ -275,5 +276,5 @@ class UpdateCacheMiddleware(CacheMiddlewareBase):
         cache_key = get_cache_key(request)
         cache.set(cache_key, response2, timeout)
 
-        logger.debug("Put to cache: %r" % cache_key)
+        logger.debug(f"Put to cache: {cache_key!r}")
         return response

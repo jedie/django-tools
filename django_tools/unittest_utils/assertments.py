@@ -1,31 +1,30 @@
 """
     :created: 28.08.2018 by Jens Diemer
-    :copyleft: 2018-2019 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2018-2020 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 import textwrap
 from pathlib import Path
 
+import icdiff
+import pprintpp
 from django.conf import settings
 from django.core import mail
 from django.core.mail import get_connection
-
-import icdiff
-import pprintpp
 
 
 def assert_startswith(text, prefix):
     """
     Check if test starts with prefix.
     """
-    assert text.startswith(prefix), "%r doesn't starts with %r" % (text, prefix)
+    assert text.startswith(prefix), f"{text!r} doesn't starts with {prefix!r}"
 
 
 def assert_endswith(text, suffix):
     """
     Check if text ends with suffix.
     """
-    assert text.endswith(suffix), "%r doesn't ends with %r" % (text, suffix)
+    assert text.endswith(suffix), f"{text!r} doesn't ends with {suffix!r}"
 
 
 def assert_locmem_mail_backend():
@@ -35,7 +34,7 @@ def assert_locmem_mail_backend():
         https://docs.djangoproject.com/en/1.11/topics/email/#in-memory-backend
     """
     mail_backend = get_connection()
-    assert isinstance(mail_backend, mail.backends.locmem.EmailBackend), "Wrong backend: %s" % mail_backend
+    assert isinstance(mail_backend, mail.backends.locmem.EmailBackend), f"Wrong backend: {mail_backend}"
 
 
 def assert_language_code(*, language_code):
@@ -43,9 +42,8 @@ def assert_language_code(*, language_code):
     Check if given language_code is in settings.LANGUAGES
     """
     existing_language_codes = tuple(dict(settings.LANGUAGES).keys())
-    assert language_code in existing_language_codes, "%r not in settings.LANGUAGES=%r" % (
-        language_code,
-        settings.LANGUAGES,
+    assert language_code in existing_language_codes, (
+        f"{language_code!r} not in settings.LANGUAGES={settings.LANGUAGES!r}"
     )
 
 
@@ -56,7 +54,7 @@ def assert_installed_apps(*, app_names):
     assert isinstance(app_names, (tuple, list))
     installed_apps = settings.INSTALLED_APPS
     for app_name in app_names:
-        assert app_name in installed_apps, "%r not in settings.INSTALLED_APPS!" % app_name
+        assert app_name in installed_apps, f"{app_name!r} not in settings.INSTALLED_APPS!"
 
 
 def assert_is_dir(path):
@@ -65,7 +63,7 @@ def assert_is_dir(path):
     """
     if not isinstance(path, Path):
         path = Path(path)
-    assert path.is_dir(), "Directory not exists: %s" % path
+    assert path.is_dir(), f"Directory not exists: {path}"
 
 
 def assert_is_file(path):
@@ -75,7 +73,7 @@ def assert_is_file(path):
     if not isinstance(path, Path):
         path = Path(path)
     assert_is_dir(path.parent)
-    assert path.is_file(), "File not exists: %s" % path
+    assert path.is_file(), f"File not exists: {path}"
 
 
 def assert_path_not_exists(path):
@@ -85,10 +83,10 @@ def assert_path_not_exists(path):
     if not isinstance(path, Path):
         path = Path(path)
 
-    assert not path.is_dir(), "Path is a existing directory: %s" % path
-    assert not path.is_file(), "Path is a existing file: %s" % path
-    assert not path.is_fifo(), "Path is a existing fifo: %s" % path
-    assert not path.exists(), "Path exists: %s" % path
+    assert not path.is_dir(), f"Path is a existing directory: {path}"
+    assert not path.is_file(), f"Path is a existing file: {path}"
+    assert not path.is_fifo(), f"Path is a existing fifo: {path}"
+    assert not path.exists(), f"Path exists: {path}"
 
 
 def pformat(obj, indent=4, width=100):
@@ -132,7 +130,7 @@ def assert_pformat_equal(first, second, msg="", **pformat_kwargs):
             print(first)
         else:
             pprintpp.pprint(first, **pformat_kwargs)
-        assert first == second, "%s%s" % (msg, create_icdiff(first=first, second=second, **pformat_kwargs))
+        assert first == second, f"{msg}{create_icdiff(first=first, second=second, **pformat_kwargs)}"
 
 
 def dedent(txt):
@@ -152,7 +150,7 @@ def assert_equal_dedent(first, second, msg=""):
 def assert_in_dedent(member, container):
     member = dedent(member)
     container = dedent(container)
-    assert member in container, "%r not found in %r" % (member, container)
+    assert member in container, f"{member!r} not found in {container!r}"
 
 
 def assert_filenames_and_content(*, path, reference, fromfile="current", tofile="reference", **pformat_kwargs):

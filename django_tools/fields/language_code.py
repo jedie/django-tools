@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     need full model and form fields
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -8,7 +6,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 from django import forms
 from django.db import models
@@ -42,8 +39,9 @@ class LanguageCodeFormField(forms.CharField):
     >>> LanguageCodeFormField(required=False).clean(None)
     ''
     """
+
     def __init__(self, *args, **kwargs):
-        super(LanguageCodeFormField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.validators.append(validators.validate_language_code)
 
 

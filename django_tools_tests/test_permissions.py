@@ -1,8 +1,3 @@
-# coding: utf-8
-
-
-from __future__ import print_function, unicode_literals
-
 import logging
 import pprint
 
@@ -11,19 +6,27 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
 from django.test import override_settings
 
-from django_tools_test_project.django_tools_test_app.models import LimitToUsergroupsTestModel, PermissionTestModel
-
 # https://github.com/jedie/django-tools
 from django_tools.permissions import (
-    add_app_permissions, add_permissions, check_permission, get_admin_permissions, get_filtered_permissions,
-    get_permission_by_string, has_perm, log_group_permissions, log_user_permissions, permissions2list,
-    pprint_filtered_permissions
+    add_app_permissions,
+    add_permissions,
+    check_permission,
+    get_admin_permissions,
+    get_filtered_permissions,
+    get_permission_by_string,
+    has_perm,
+    log_group_permissions,
+    log_user_permissions,
+    permissions2list,
+    pprint_filtered_permissions,
 )
 from django_tools.unittest_utils.assertments import assert_equal_dedent, assert_pformat_equal
 from django_tools.unittest_utils.logging_utils import LoggingBuffer
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 from django_tools.unittest_utils.unittest_base import BaseTestCase
 from django_tools.unittest_utils.user import TestUserMixin
+from django_tools_test_project.django_tools_test_app.models import LimitToUsergroupsTestModel, PermissionTestModel
+
 
 log = logging.getLogger(__name__)
 
@@ -32,14 +35,14 @@ log = logging.getLogger(__name__)
 class TestPermissions(TestUserMixin, BaseTestCase):
     @classmethod
     def setUpTestData(cls):
-        super(TestPermissions, cls).setUpTestData()
+        super().setUpTestData()
 
         cls.extra_permission = get_permission_by_string(permission="django_tools_test_app.extra_permission")
 
         cls.instance = PermissionTestModel.objects.create(foo="bar")
 
     def setUp(self):
-        super(TestPermissions, self).setUp()
+        super().setUp()
 
         users = User.objects.all()
         usernames = users.values_list("username", flat=True).order_by("username")
@@ -95,7 +98,7 @@ class TestPermissions(TestUserMixin, BaseTestCase):
             },
         )
 
-        all_permissions = ["%s.%s" % (entry.content_type, entry.codename) for entry in Permission.objects.all()]
+        all_permissions = [f"{entry.content_type}.{entry.codename}" for entry in Permission.objects.all()]
         pprint.pprint(all_permissions)
 
         # Default mode permissions:
@@ -205,41 +208,53 @@ class TestPermissions(TestUserMixin, BaseTestCase):
                 "auth.add_group",
                 "auth.change_group",
                 "auth.delete_group",
+                "auth.view_group",
                 "auth.add_user",
                 "auth.change_user",
                 "auth.delete_user",
+                "auth.view_user",
                 "django_tools_test_app.add_overwritefilesystemstoragemodel",
                 "django_tools_test_app.change_overwritefilesystemstoragemodel",
                 "django_tools_test_app.delete_overwritefilesystemstoragemodel",
+                "django_tools_test_app.view_overwritefilesystemstoragemodel",
                 "django_tools_test_app.add_permissiontestmodel",
                 "django_tools_test_app.change_permissiontestmodel",
                 "django_tools_test_app.delete_permissiontestmodel",
                 "django_tools_test_app.extra_permission",
+                "django_tools_test_app.view_permissiontestmodel",
                 "filer.add_clipboard",
                 "filer.change_clipboard",
                 "filer.delete_clipboard",
+                "filer.view_clipboard",
                 "filer.add_file",
                 "filer.change_file",
                 "filer.delete_file",
+                "filer.view_file",
                 "filer.add_folder",
                 "filer.can_use_directory_listing",
                 "filer.change_folder",
                 "filer.delete_folder",
+                "filer.view_folder",
                 "filer.add_folderpermission",
                 "filer.change_folderpermission",
                 "filer.delete_folderpermission",
+                "filer.view_folderpermission",
                 "filer.add_image",
                 "filer.change_image",
                 "filer.delete_image",
+                "filer.view_image",
                 "filer.add_thumbnailoption",
                 "filer.change_thumbnailoption",
                 "filer.delete_thumbnailoption",
+                "filer.view_thumbnailoption",
                 "flatpages.add_flatpage",
                 "flatpages.change_flatpage",
                 "flatpages.delete_flatpage",
+                "flatpages.view_flatpage",
                 "sites.add_site",
                 "sites.change_site",
                 "sites.delete_site",
+                "sites.view_site",
             ],
         )
 
@@ -332,7 +347,7 @@ class TestPermissions(TestUserMixin, BaseTestCase):
 
         assert_pformat_equal(
             log_buffer.get_messages(),
-            "DEBUG:django_tools.permissions:Add 13 permissions from app 'django_tools_test_app'",
+            "DEBUG:django_tools.permissions:Add 17 permissions from app 'django_tools_test_app'",
         )
 
         permissions = self.normal_group.permissions.all()
@@ -343,30 +358,32 @@ class TestPermissions(TestUserMixin, BaseTestCase):
                 "django_tools_test_app.add_limittousergroupstestmodel",
                 "django_tools_test_app.change_limittousergroupstestmodel",
                 "django_tools_test_app.delete_limittousergroupstestmodel",
+                "django_tools_test_app.view_limittousergroupstestmodel",
                 "django_tools_test_app.add_overwritefilesystemstoragemodel",
                 "django_tools_test_app.change_overwritefilesystemstoragemodel",
                 "django_tools_test_app.delete_overwritefilesystemstoragemodel",
+                "django_tools_test_app.view_overwritefilesystemstoragemodel",
                 "django_tools_test_app.add_permissiontestmodel",
                 "django_tools_test_app.change_permissiontestmodel",
                 "django_tools_test_app.delete_permissiontestmodel",
                 "django_tools_test_app.extra_permission",
+                "django_tools_test_app.view_permissiontestmodel",
                 "django_tools_test_app.add_simpleparlermodel",
                 "django_tools_test_app.change_simpleparlermodel",
                 "django_tools_test_app.delete_simpleparlermodel",
+                "django_tools_test_app.view_simpleparlermodel",
             ],
         )
 
     # -------------------------------------------------------------------------
 
     def test_get_filtered_permissions_without_any_filter(self):
-        permissions = permissions2list(
+        permissions = sorted(permissions2list(
             get_filtered_permissions()  # without any filter -> we get all existing permissions
-        )
-        permissions.sort()
+        ))
         pprint.pprint(permissions)
 
-        all_permissions = permissions2list(Permission.objects.all())
-        all_permissions.sort()
+        all_permissions = sorted(permissions2list(Permission.objects.all()))
 
         assert_pformat_equal(permissions, all_permissions)
 
@@ -384,29 +401,39 @@ class TestPermissions(TestUserMixin, BaseTestCase):
                 "admin.add_logentry",
                 "admin.change_logentry",
                 "admin.delete_logentry",
+                "admin.view_logentry",
                 "auth.add_group",
                 "auth.change_group",
+                "auth.view_group",
                 "auth.add_permission",
                 "auth.change_permission",
                 "auth.delete_permission",
+                "auth.view_permission",
                 "auth.add_user",
                 "auth.change_user",
+                "auth.view_user",
                 "contenttypes.change_contenttype",
+                "contenttypes.view_contenttype",
                 "django_tools_test_app.add_overwritefilesystemstoragemodel",
                 "django_tools_test_app.change_overwritefilesystemstoragemodel",
                 "django_tools_test_app.delete_overwritefilesystemstoragemodel",
+                "django_tools_test_app.view_overwritefilesystemstoragemodel",
                 "django_tools_test_app.add_simpleparlermodel",
                 "django_tools_test_app.change_simpleparlermodel",
                 "django_tools_test_app.delete_simpleparlermodel",
+                "django_tools_test_app.view_simpleparlermodel",
                 "flatpages.add_flatpage",
                 "flatpages.change_flatpage",
                 "flatpages.delete_flatpage",
+                "flatpages.view_flatpage",
                 "sessions.add_session",
                 "sessions.change_session",
                 "sessions.delete_session",
+                "sessions.view_session",
                 "sites.add_site",
                 "sites.change_site",
                 "sites.delete_site",
+                "sites.view_site",
             ],
         )
 
@@ -433,70 +460,92 @@ class TestPermissions(TestUserMixin, BaseTestCase):
                 [*] admin.add_logentry
                 [*] admin.change_logentry
                 [ ] admin.delete_logentry
+                [*] admin.view_logentry
                 [*] auth.add_group
                 [ ] auth.change_group
                 [ ] auth.delete_group
+                [*] auth.view_group
                 [*] auth.add_permission
                 [*] auth.change_permission
                 [ ] auth.delete_permission
+                [*] auth.view_permission
                 [*] auth.add_user
                 [ ] auth.change_user
                 [ ] auth.delete_user
+                [*] auth.view_user
                 [ ] contenttypes.add_contenttype
                 [*] contenttypes.change_contenttype
                 [ ] contenttypes.delete_contenttype
+                [*] contenttypes.view_contenttype
                 [ ] django_tools_test_app.add_limittousergroupstestmodel
                 [ ] django_tools_test_app.change_limittousergroupstestmodel
                 [ ] django_tools_test_app.delete_limittousergroupstestmodel
+                [ ] django_tools_test_app.view_limittousergroupstestmodel
                 [*] django_tools_test_app.add_overwritefilesystemstoragemodel
                 [*] django_tools_test_app.change_overwritefilesystemstoragemodel
                 [ ] django_tools_test_app.delete_overwritefilesystemstoragemodel
+                [*] django_tools_test_app.view_overwritefilesystemstoragemodel
                 [ ] django_tools_test_app.add_permissiontestmodel
                 [ ] django_tools_test_app.change_permissiontestmodel
                 [ ] django_tools_test_app.delete_permissiontestmodel
                 [ ] django_tools_test_app.extra_permission
+                [ ] django_tools_test_app.view_permissiontestmodel
                 [*] django_tools_test_app.add_simpleparlermodel
                 [*] django_tools_test_app.change_simpleparlermodel
                 [ ] django_tools_test_app.delete_simpleparlermodel
+                [*] django_tools_test_app.view_simpleparlermodel
                 [ ] easy_thumbnails.add_source
                 [ ] easy_thumbnails.change_source
                 [ ] easy_thumbnails.delete_source
+                [ ] easy_thumbnails.view_source
                 [ ] easy_thumbnails.add_thumbnail
                 [ ] easy_thumbnails.change_thumbnail
                 [ ] easy_thumbnails.delete_thumbnail
+                [ ] easy_thumbnails.view_thumbnail
                 [ ] easy_thumbnails.add_thumbnaildimensions
                 [ ] easy_thumbnails.change_thumbnaildimensions
                 [ ] easy_thumbnails.delete_thumbnaildimensions
+                [ ] easy_thumbnails.view_thumbnaildimensions
                 [ ] filer.add_clipboard
                 [ ] filer.change_clipboard
                 [ ] filer.delete_clipboard
+                [ ] filer.view_clipboard
                 [ ] filer.add_clipboarditem
                 [ ] filer.change_clipboarditem
                 [ ] filer.delete_clipboarditem
+                [ ] filer.view_clipboarditem
                 [ ] filer.add_file
                 [ ] filer.change_file
                 [ ] filer.delete_file
+                [ ] filer.view_file
                 [ ] filer.add_folder
                 [ ] filer.can_use_directory_listing
                 [ ] filer.change_folder
                 [ ] filer.delete_folder
+                [ ] filer.view_folder
                 [ ] filer.add_folderpermission
                 [ ] filer.change_folderpermission
                 [ ] filer.delete_folderpermission
+                [ ] filer.view_folderpermission
                 [ ] filer.add_image
                 [ ] filer.change_image
                 [ ] filer.delete_image
+                [ ] filer.view_image
                 [ ] filer.add_thumbnailoption
                 [ ] filer.change_thumbnailoption
                 [ ] filer.delete_thumbnailoption
+                [ ] filer.view_thumbnailoption
                 [*] flatpages.add_flatpage
                 [*] flatpages.change_flatpage
                 [ ] flatpages.delete_flatpage
+                [*] flatpages.view_flatpage
                 [*] sessions.add_session
                 [*] sessions.change_session
                 [ ] sessions.delete_session
+                [*] sessions.view_session
                 [*] sites.add_site
                 [*] sites.change_site
                 [ ] sites.delete_site
+                [*] sites.view_site
             """,
         )

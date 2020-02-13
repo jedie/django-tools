@@ -1,67 +1,38 @@
 # Config file for automatic testing at travis-ci.org
 
-sudo: required
-dist: trusty
-# https://blog.travis-ci.com/2017-12-12-new-trusty-images-q4-launch
-group: deprecated-2017Q4
 language: python
-
-addons:
-    addons:
-        firefox: latest
-
-cache:
-    directories:
-        - $HOME/.pip-accel
-        - $HOME/.cache/pip
+cache: pip
 
 matrix:
-    fast_finish: true
-    include:
-         #
-         # Generated from 'tox -l' with tox2travis.py
-         # https://github.com/jedie/python-code-snippets/blob/master/CodeSnippets/tox2travis.py
-         #
-        - env: TOXENV=py35-django111
-          python: 3.5
-        - env: TOXENV=py35-django20
-          python: 3.5
-
-        - env: TOXENV=py36-django111
-          python: 3.6
-        - env: TOXENV=py36-django20
-          python: 3.6
-
-        - env: TOXENV=pypy3-django111
-          python: pypy3
-        - env: TOXENV=pypy3-django20
-          python: pypy3
-
-before_install:
-    #
-    # install Chromium Browser + Selenium WebDriver for it:
-    - sudo apt-get update
-    - sudo apt-get install chromium-browser chromium-chromedriver
-    #
-    # install Selenium Firefox WebDriver 'geckodriver':
-    - wget https://github.com/mozilla/geckodriver/releases/download/v0.20.1/geckodriver-v0.20.1-linux64.tar.gz -O geckodriver.tar.gz
-    - mkdir $PWD/geckodriver
-    - tar -xvf geckodriver.tar.gz -C $PWD/geckodriver
-    - ls -la $PWD/geckodriver
-    - export PATH=$PATH:$PWD/geckodriver
-    - geckodriver --version
+  include:
+  - os: linux
+    python: 3.6
+    env: TOXENV=py36
+  - os: linux
+    python: 3.7
+    env: TOXENV=py37
+  - os: linux
+    python: 3.8
+    env: TOXENV=py38
+  - os: linux
+    python: pypy3
+  # TODO:
+  #- os: osx
+  #  language: generic
 
 install:
-    # install only the needed package to run tox
-    # tox will install all needed packages
-    - travis_retry pip install tox coveralls python-creole docutils
+  - make install-poetry
+  - source $HOME/.poetry/env
+  - make install
+  - poetry run pip freeze
+  - make tox-listenvs
 
 script:
-    - ./setup.py tox
+  - if [ "$TOXENV" == "" ]; then make pytest; fi
+  - if [ "$TOXENV" != "" ]; then make tox; fi
+  - if [ "$TOXENV" != "" ]; then make lint; fi
 
 after_success:
-    # https://github.com/codecov/codecov-bash
-    - bash <(curl -s https://codecov.io/bash)
-    - coveralls
-
-
+  - coveralls
+  # https://github.com/codecov/codecov-bash
+  - bash <(curl -s https://codecov.io/bash)

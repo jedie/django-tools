@@ -1,6 +1,4 @@
-
-
-class DisableMigrations(object):
+class DisableMigrations:
     """
     Speedup test run start by disable migrations, just create the database tables ;)
 
@@ -9,6 +7,7 @@ class DisableMigrations(object):
     from django_tools.unittest_utils.disable_migrations import DisableMigrations
     MIGRATION_MODULES = DisableMigrations()
     """
+
     def __contains__(self, item):
         return True
 

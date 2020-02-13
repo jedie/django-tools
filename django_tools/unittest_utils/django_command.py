@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     DjangoCommandMixin
     ~~~~~~~~~~~~~~~~~~
@@ -8,16 +6,14 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import unicode_literals, print_function
 
 import os
 import pprint
 import subprocess
-
 import sys
 
 
-class DjangoCommandMixin(object):
+class DjangoCommandMixin:
     def subprocess_getstatusoutput(self, cmd, debug=False, excepted_exit_code=0, **kwargs):
         """
         Return (status, output) of executing cmd in a shell.
@@ -30,7 +26,7 @@ class DjangoCommandMixin(object):
         #   manage.py use os.environ.setdefault("DJANGO_SETTINGS_MODULE",...)
         #   so it will ignore the own module path!
         # You can set env by given kwargs, too.
-        env=dict(os.environ)
+        env = dict(os.environ)
         if "DJANGO_SETTINGS_MODULE" in env:
             del(env["DJANGO_SETTINGS_MODULE"])
 
@@ -43,11 +39,11 @@ class DjangoCommandMixin(object):
         subprocess_kwargs.update(kwargs)
         if "cwd" in subprocess_kwargs:
             cwd = subprocess_kwargs["cwd"]
-            assert os.path.isdir(cwd), "cwd %r doesn't exists!" % cwd
+            assert os.path.isdir(cwd), f"cwd {cwd!r} doesn't exists!"
             if debug:
-                print("DEBUG: cwd %r, ok" % cwd)
+                print(f"DEBUG: cwd {cwd!r}, ok")
 
-        cmd=" ".join(cmd) # FIXME: Why?!?
+        cmd = " ".join(cmd)  # FIXME: Why?!?
         try:
             output = subprocess.check_output(cmd, **subprocess_kwargs)
             status = 0
@@ -102,7 +98,6 @@ class DjangoCommandMixin(object):
         cmd = [sys.executable, manage_py] + list(cmd)
         kwargs.update({
             "cwd": manage_dir,
-            #"debug": True,
+            # "debug": True,
         })
         return self.subprocess_getstatusoutput(cmd, **kwargs)
-

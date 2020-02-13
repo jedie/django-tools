@@ -17,6 +17,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 # https://github.com/jedie/django-tools
 from django_tools.selenium.response import selenium2fakes_response
 
+
 log = logging.getLogger(__name__)
 
 
@@ -110,7 +111,7 @@ class SeleniumBaseTestCase(unittest.TestCase):
         try:
             check = WebDriverWait(self.driver, timeout).until(conditions)
         except TimeoutException as err:
-            print("\nError: %s\n%s\npage source:\n%s\n" % (msg, err, self.driver.page_source))
+            print(f"\nError: {msg}\n{err}\npage source:\n{self.driver.page_source}\n")
             raise
         else:
             self.assertTrue(check)
@@ -151,7 +152,7 @@ class SeleniumBaseTestCase(unittest.TestCase):
         try:
             page_source = self.driver.page_source
         except Exception as e:
-            print("Can't get 'driver.page_source': %s" % e)
+            print(f"Can't get 'driver.page_source': {e}")
         else:
             page_source = "\n".join([line for line in page_source.splitlines() if line.rstrip()])
             print(page_source, file=sys.stderr)
@@ -165,11 +166,11 @@ class SeleniumBaseTestCase(unittest.TestCase):
 
     def assert_no_javascript_alert(self):
         alert = expected_conditions.alert_is_present()(self.driver)
-        if alert != False:
+        if alert:
             alert_text = alert.text
             alert.accept()  # Confirm a alert dialog, otherwise access to driver.page_source will failed!
             try:
-                raise self.failureException("Alert is preset: %s" % alert_text)
+                raise self.failureException(f"Alert is preset: {alert_text}")
             except AssertionError as err:
                 self._verbose_assertion_error(err)
 
@@ -199,7 +200,7 @@ class SeleniumBaseTestCase(unittest.TestCase):
         self._wait(
             conditions=expected_conditions.visibility_of_element_located(locator),
             timeout=timeout,
-            msg="Wait for '#%s' to be visible. (timeout: %i)" % (id, timeout),
+            msg=f"Wait for '#{id}' to be visible. (timeout: {timeout:d})",
         )
 
     def assert_clickable_by_id(self, id, timeout=10):
@@ -210,7 +211,7 @@ class SeleniumBaseTestCase(unittest.TestCase):
         self._wait(
             conditions=expected_conditions.element_to_be_clickable(locator),
             timeout=timeout,
-            msg="Wait for '#%s' to be clickable. (timeout: %i)" % (id, timeout),
+            msg=f"Wait for '#{id}' to be clickable. (timeout: {timeout:d})",
         )
 
     def assert_clickable_by_xpath(self, xpath, timeout=10):
@@ -221,7 +222,7 @@ class SeleniumBaseTestCase(unittest.TestCase):
         self._wait(
             conditions=expected_conditions.element_to_be_clickable(locator),
             timeout=timeout,
-            msg="Wait for '%s' to be clickable. (timeout: %i)" % (xpath, timeout),
+            msg=f"Wait for '{xpath}' to be clickable. (timeout: {timeout:d})",
         )
 
     def assert_local_storage_key_value(self, *, key, value):

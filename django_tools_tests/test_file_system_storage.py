@@ -9,12 +9,12 @@ from pathlib import Path
 from django.core.files.uploadedfile import TemporaryUploadedFile
 from django.test import TestCase
 
-from django_tools_test_project.django_tools_test_app.models import (
-    OverwriteFileSystemStorageModel, temp_storage_location
-)
-
 # https://github.com/jedie/django-tools
 from django_tools.unittest_utils.assertments import assert_filenames_and_content, assert_is_file
+from django_tools_test_project.django_tools_test_app.models import (
+    OverwriteFileSystemStorageModel,
+    temp_storage_location,
+)
 
 
 class FileSystemStorageTestCase(TestCase):
@@ -84,7 +84,7 @@ class FileSystemStorageTestCase(TestCase):
 
         for content_no in range(1, 7):
             # Save 4 times different content
-            content = "content %i" % content_no
+            content = f"content {content_no:d}"
             for file_no in range(1, 5):
                 origin_log.critical("_" * 100)
                 origin_log.critical("Save %r for %i time(s)", content, file_no)

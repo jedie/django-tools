@@ -11,8 +11,15 @@ from django.test import SimpleTestCase
 
 # https://github.com/jedie/django-tools
 from django_tools.unittest_utils.assertments import (
-    assert_endswith, assert_installed_apps, assert_is_dir, assert_is_file, assert_language_code,
-    assert_locmem_mail_backend, assert_path_not_exists, assert_pformat_equal, assert_startswith
+    assert_endswith,
+    assert_installed_apps,
+    assert_is_dir,
+    assert_is_file,
+    assert_language_code,
+    assert_locmem_mail_backend,
+    assert_path_not_exists,
+    assert_pformat_equal,
+    assert_startswith,
 )
 
 
@@ -106,10 +113,10 @@ class TestPathAssertments(unittest.TestCase):
         with self.assertRaises(AssertionError) as cm:
             assert_path_not_exists(self.existing_file_path)
 
-        assert_pformat_equal(cm.exception.args[0], "Path is a existing file: %s" % self.existing_file_path)
+        assert_pformat_equal(cm.exception.args[0], f"Path is a existing file: {self.existing_file_path}")
 
     def test_assert_path_not_exists_is_dir(self):
         with self.assertRaises(AssertionError) as cm:
             assert_path_not_exists(str(self.existing_dir_path))
 
-        assert_pformat_equal(cm.exception.args[0], "Path is a existing directory: %s" % self.existing_dir_path)
+        assert_pformat_equal(cm.exception.args[0], f"Path is a existing directory: {self.existing_dir_path}")

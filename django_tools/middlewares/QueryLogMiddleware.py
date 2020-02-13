@@ -26,10 +26,9 @@ class QueryLogMiddleware(MiddlewareMixin):
             duplicates = sum([count - 1 for count in list(queries.values())])
             print("------------------------------------------------------")
             print("Total Queries:     %s" % len(queries))
-            print("Duplicate Queries: %s" % duplicates)
+            print(f"Duplicate Queries: {duplicates}")
             print()
             for query, count in list(queries.items()):
-                print("%s x %s" % (count, query))
+                print(f"{count} x {query}")
             print("------------------------------------------------------")
         return response
-

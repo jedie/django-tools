@@ -11,10 +11,12 @@ import logging
 from django_tools.decorators import warn_class_usage, warn_function_usage
 from django_tools.selenium.chromedriver import chromium_available as new_chromium_available
 from django_tools.selenium.django import (
-    SeleniumChromiumStaticLiveServerTestCase, SeleniumFirefoxStaticLiveServerTestCase
+    SeleniumChromiumStaticLiveServerTestCase,
+    SeleniumFirefoxStaticLiveServerTestCase,
 )
 from django_tools.selenium.geckodriver import firefox_available as new_firefox_available
 from django_tools.selenium.utils import find_executable as new_find_executable
+
 
 log = logging.getLogger(__name__)
 

@@ -13,7 +13,11 @@ from django.test import SimpleTestCase, override_settings
 from django_tools.cache.site_cache_middleware import UpdateCacheMiddleware
 from django_tools.unittest_utils.assertments import assert_pformat_equal
 from django_tools.utils.importlib import (
-    ImproperlyConfigured, get_attr_from_settings, get_attr_from_string, get_class_instance_from_settings, get_setting
+    ImproperlyConfigured,
+    get_attr_from_settings,
+    get_attr_from_string,
+    get_class_instance_from_settings,
+    get_setting,
 )
 
 

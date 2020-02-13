@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     static path selection
     ~~~~~~~~~~~~~~~~~~~~
@@ -15,19 +13,12 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
-
 
 import os
 
-if __name__ == "__main__":
-    # For doctest only
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
-
-from django.utils import six
 from django import forms
-from django.db import models
 from django.conf import settings
+from django.db import models
 
 from django_tools.utils.messages import failsafe_message
 
@@ -52,10 +43,7 @@ def directory_walk(path):
 
     for dir in dirs:
         sub_path = os.path.join(path, dir)
-        for x in directory_walk(sub_path):
-            yield x
-
-
+        yield from directory_walk(sub_path)
 
 
 class StaticPathWidget(forms.Select):
@@ -67,8 +55,9 @@ class StaticPathWidget(forms.Select):
     >>> StaticPathWidget().choices[:2]
     [('__pycache__', '__pycache__'), ('admin_tools', 'admin_tools')]
     """
+
     def __init__(self, attrs=None):
-        super(StaticPathWidget, self).__init__(attrs)
+        super().__init__(attrs)
 
         self._base_path = os.path.abspath(os.path.normpath(settings.STATIC_ROOT))
 
@@ -77,7 +66,7 @@ class StaticPathWidget(forms.Select):
         except OSError as err:
             self.choices = []
             if settings.DEBUG:
-                failsafe_message("Can't read STATIC_ROOT: %s" % err)
+                failsafe_message(f"Can't read STATIC_ROOT: {err}")
 
     def _get_path_choices(self):
         Static_dirs_choices = []
@@ -105,13 +94,4 @@ class StaticPathModelField(models.TextField):
         """ Use always own widget and form field. """
         kwargs["widget"] = StaticPathWidget
 #        kwargs["form_class"] = SignSeparatedFormField
-        return super(StaticPathModelField, self).formfield(**kwargs)
-
-
-if __name__ == "__main__":
-    import doctest
-    print(doctest.testmod(
-#        verbose=True
-        verbose=False
-    ))
-    print("DocTest end.")
+        return super().formfield(**kwargs)

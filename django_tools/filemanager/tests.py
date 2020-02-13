@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     unittests for filemanager
     ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -8,17 +6,15 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
-
 
 import os
-import unittest
 import tempfile
+import unittest
 
 from django.http import Http404
 
-from django_tools.filemanager.filemanager import BaseFilemanager
 from django_tools.filemanager.exceptions import DirectoryTraversalAttack
+from django_tools.filemanager.filemanager import BaseFilemanager
 
 
 class FilemanagerBaseTestCase(unittest.TestCase):
@@ -36,18 +32,20 @@ class FilemanagerBaseTestCase(unittest.TestCase):
     """
     @classmethod
     def setUpClass(cls):
-        super(FilemanagerBaseTestCase, cls).setUpClass()
+        super().setUpClass()
         cls.BASE_PATH = "%s/" % tempfile.mkdtemp(prefix="filemanager-unittests_")
 
         # For dir traversal attack tests
         cls.SUB_BASE_PATH = os.path.join(cls.BASE_PATH, "subdir1")
         cls.ATTACK_PARTS = ("..", "..\\", "../",
-            # from https://en.wikipedia.org/wiki/Directory_traversal_attack#URI_encoded_directory_traversal
-            "%2e%2e%2f", "%2e%2e/", "..%2f", "%2e%2e%5c"
-            # from https://en.wikipedia.org/wiki/Directory_traversal_attack#Unicode_.2F_UTF-8_encoded_directory_traversal
-            "..%c1%1c", "..%c0%af",
-            "..\xc1\x1c", "..\xc0\xaf",
-        )
+                            # from
+                            # https://en.wikipedia.org/wiki/Directory_traversal_attack#URI_encoded_directory_traversal
+                            "%2e%2e%2f", "%2e%2e/", "..%2f", "%2e%2e%5c"
+                            # from
+                            # https://en.wikipedia.org/wiki/Directory_traversal_attack#Unicode_.2F_UTF-8_encoded_directory_traversal
+                            "..%c1%1c", "..%c0%af",
+                            "..\xc1\x1c", "..\xc0\xaf",
+                            )
 
         cls.DIRS = (
             (cls.BASE_PATH, "subdir1", "subsubdir1"),
@@ -78,7 +76,7 @@ class FilemanagerBaseTestCase(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        super(FilemanagerBaseTestCase, cls).tearDownClass()
+        super().tearDownClass()
         tempdir = tempfile.gettempdir()
         if cls.BASE_PATH.startswith(tempdir):
             for root, dirs, files in os.walk(cls.BASE_PATH, topdown=False):
@@ -90,7 +88,7 @@ class FilemanagerBaseTestCase(unittest.TestCase):
                     os.rmdir(path)
             os.rmdir(cls.BASE_PATH)
         else:
-            cls.fail("Cleanup error: %s not in %s" % (cls.BASE_PATH, tempdir))
+            cls.fail(f"Cleanup error: {cls.BASE_PATH} not in {tempdir}")
 
     def test_setup(self):
         """ if this tests fails, all other may fail, too. """
@@ -104,44 +102,43 @@ class FilemanagerDirectoryTraversal(FilemanagerBaseTestCase):
     def test_subdir1(self):
         subdir = "subdir1"
         base_url = "/base/url/"
-        rest_url = "%s/" % subdir
+        rest_url = f"{subdir}/"
         fm = BaseFilemanager(None, self.BASE_PATH, base_url, rest_url)
         self.assertEqual(fm.abs_url, '/base/url/subdir1/')
         self.assertEqual(fm.absolute_path, self.BASE_PATH)
         self.assertEqual(fm.breadcrumbs, [
             {'url': base_url, 'name': 'index', 'title': "goto 'index'"},
-            {'url': '/base/url/%s/' % subdir, 'name': subdir, 'title': "goto '%s'" % subdir}
+            {'url': f'/base/url/{subdir}/', 'name': subdir, 'title': f"goto '{subdir}'"}
         ])
 
     def test_not_existing_path1(self):
         self.assertRaises(Http404,
-            BaseFilemanager, None, self.BASE_PATH, "/base/url/", "not_exists"
-        )
+                          BaseFilemanager, None, self.BASE_PATH, "/base/url/", "not_exists"
+                          )
+
     def test_not_existing_path2(self):
         self.assertRaises(Http404,
-            BaseFilemanager, None, self.BASE_PATH, "/base/url/", "does/not/exists"
-        )
+                          BaseFilemanager, None, self.BASE_PATH, "/base/url/", "does/not/exists"
+                          )
 
     def test_dir_traversal_attack1(self):
         for parts in self.ATTACK_PARTS:
             self.assertRaises((DirectoryTraversalAttack, Http404),
-                BaseFilemanager, None, self.SUB_BASE_PATH, "/base/url/", parts,
-            )
+                              BaseFilemanager, None, self.SUB_BASE_PATH, "/base/url/", parts,
+                              )
 
     def test_dir_traversal_attack2(self):
         for parts in self.ATTACK_PARTS:
             self.assertRaises((DirectoryTraversalAttack, Http404),
-                BaseFilemanager, None, self.SUB_BASE_PATH, "/base/url/", "%semptysubdir" % parts,
-            )
+                              BaseFilemanager, None, self.SUB_BASE_PATH, "/base/url/", f"{parts}emptysubdir",
+                              )
 
     def test_dir_traversal_attack3(self):
         self.assertRaises(Http404,
-            BaseFilemanager, None, self.BASE_PATH, "/base/url/", "subdir1/../../etc/passwd"
-        )
+                          BaseFilemanager, None, self.BASE_PATH, "/base/url/", "subdir1/../../etc/passwd"
+                          )
 
     def test_dir_traversal_attack4(self):
         self.assertRaises(Http404,
-            BaseFilemanager, None, self.BASE_PATH, "/base/url/", "subdir1/c:\\boot.ini"
-        )
-
-
+                          BaseFilemanager, None, self.BASE_PATH, "/base/url/", "subdir1/c:\\boot.ini"
+                          )

@@ -41,7 +41,7 @@ class ModelTestGenerator:
             models = app_config.get_models()
             for model in models:
                 qs = model.objects.all()
-                print("%6i instances: %r" % (qs.count(), model._meta.label))
+                print(f"{qs.count():6d} instances: {model._meta.label!r}")
 
     def test_code_for_instance(self, instance):
         prefix_lines = []
@@ -50,10 +50,7 @@ class ModelTestGenerator:
                 pk=instance.pk,
                 label=instance._meta.label,
                 type=type(instance),
-            ), "#", "{name} = {ClassName}.objects.create(".format(
-                name=instance._meta.model_name,
-                ClassName=instance._meta.object_name,
-            )
+            ), "#", f"{instance._meta.model_name} = {instance._meta.object_name}.objects.create("
         ]
         for field in instance._meta.fields:
             # field == django.db.models.fields.Field
@@ -72,12 +69,7 @@ class ModelTestGenerator:
             if isinstance(value, models.Model):
                 prefix_lines += self.test_code_for_instance(instance=value)
                 lines.append(
-                    "    {name}={obj_name}.pk, # {internal_type} to {label}".format(
-                        name=field.name,
-                        obj_name=value._meta.model_name,
-                        internal_type=internal_type,
-                        label=value._meta.label
-                    )
+                    f"    {field.name}={value._meta.model_name}.pk, # {internal_type} to {value._meta.label}"
                 )
                 continue
 
@@ -85,13 +77,11 @@ class ModelTestGenerator:
                 "max_length": field.max_length,
             }
 
-            line = "{name}={value!r}, # {internal_type}, {comment}".format(
-                name=field.name, value=value, internal_type=internal_type, comment=comment
-            )
+            line = f"{field.name}={value!r}, # {internal_type}, {comment}"
             if comment_post_line:
-                line = "# %s" % line
+                line = f"# {line}"
 
-            lines.append("    %s" % line)
+            lines.append(f"    {line}")
 
         lines.append(")")
         lines.append("")

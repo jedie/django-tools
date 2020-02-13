@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     some additional template filters
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -8,19 +6,18 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 import datetime
 
 from django.template.defaultfilters import stringfilter
 from django.utils.translation import ugettext as _
 
-from django_tools.utils.time_utils import datetime2float
-
 
 CHMOD_TRANS_DATA = (
     "---", "--x", "-w-", "-wx", "r--", "r-x", "rw-", "rwx"
 )
+
+
 def chmod_symbol(octal_value):
     """
     Transform a os.stat().st_octal_value octal value to a symbolic string.
@@ -33,8 +30,10 @@ def chmod_symbol(octal_value):
     >>> chmod_symbol("777")
     'rwxrwxrwx'
     """
-    octal_value_string = str(octal_value)[-3:] # strip "meta info"
+    octal_value_string = str(octal_value)[-3:]  # strip "meta info"
     return ''.join(CHMOD_TRANS_DATA[int(num)] for num in octal_value_string)
+
+
 chmod_symbol.is_safe = True
 chmod_symbol = stringfilter(chmod_symbol)
 
@@ -45,8 +44,10 @@ def get_oct(value):
     """
     try:
         return oct(value)
-    except:
+    except BaseException:
         return value
+
+
 get_oct.is_safe = False
 
 
@@ -87,11 +88,11 @@ def human_duration(t):
         raise TypeError("human_duration() argument must be timedelta, integer or float)")
 
     chunks = (
-      (60 * 60 * 24 * 365, _('years')),
-      (60 * 60 * 24 * 30, _('months')),
-      (60 * 60 * 24 * 7, _('weeks')),
-      (60 * 60 * 24, _('days')),
-      (60 * 60, _('hours')),
+        (60 * 60 * 24 * 365, _('years')),
+        (60 * 60 * 24 * 30, _('months')),
+        (60 * 60 * 24 * 7, _('weeks')),
+        (60 * 60 * 24, _('days')),
+        (60 * 60, _('hours')),
     )
 
     if t < 1:
@@ -106,6 +107,7 @@ def human_duration(t):
         if count >= 1:
             count = round(count, 1)
             break
-    return "%(number).1f %(type)s" % {'number': count, 'type': name}
-human_duration.is_safe = True
+    return f"{count:.1f} {name}"
 
+
+human_duration.is_safe = True

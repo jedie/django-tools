@@ -1,21 +1,17 @@
-# coding: utf-8
-
 """
     Test django_tools.unittest_utils.django_command
 """
 
 import os
-import sys
+from pathlib import Path
 from unittest import TestCase
 
 # https://github.com/jedie/django-tools
-import django_tools
+import django_tools_test_project
 from django_tools.unittest_utils.django_command import DjangoCommandMixin
-from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 
-PY35 = sys.version_info[0:2] == (3, 5)
 
-MANAGE_DIR = os.path.abspath(os.path.join(os.path.dirname(django_tools.__file__), ".."))
+MANAGE_DIR = Path(django_tools_test_project.__file__).parent
 
 
 class TestDjangoCommand(DjangoCommandMixin, TestCase):
@@ -41,19 +37,13 @@ class TestDjangoCommand(DjangoCommandMixin, TestCase):
         env["DJANGO_SETTINGS_MODULE"] = "does-not-exist"
 
         with self.assertRaises(AssertionError) as cm:
-            self.call_manage_py(["--help"], manage_dir=MANAGE_DIR, env=env)
+            self.call_manage_py(["diffsettings"], manage_dir=MANAGE_DIR, env=env)
 
         output = "\n".join(cm.exception.args)
         # print(output)
 
         self.assertIn("subprocess exist status == 1", output)
-
-        if PY35:
-            member = "ImportError: No module named 'does-not-exist'"
-        else:
-            member = "ModuleNotFoundError: No module named 'does-not-exist'"
-
-        self.assertIn(member, output)
+        self.assertIn("ModuleNotFoundError: No module named 'does-not-exist'", output)
 
     def test_excepted_exit_code(self):
         output = self.call_manage_py(

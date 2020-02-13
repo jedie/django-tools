@@ -1,26 +1,24 @@
-# coding: utf-8
-
 """
-    :copyleft: 2017 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2017-2020 by the django-tools team, see AUTHORS for more details.
     :created: 2017 by Jens Diemer
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import print_function, unicode_literals
 
-import os
+from pathlib import Path
 from unittest import TestCase
 
 from django.conf import settings
 from django.core.management import call_command
-from django.test import SimpleTestCase, override_settings
+from django.test import SimpleTestCase
 
 # https://github.com/jedie/django-tools
-import django_tools
+import django_tools_test_project
 from django_tools.unittest_utils.django_command import DjangoCommandMixin
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 
-MANAGE_DIR = os.path.abspath(os.path.join(os.path.dirname(django_tools.__file__), ".."))
+
+MANAGE_DIR = Path(django_tools_test_project.__file__).parent
 
 
 class SettingsTests(SimpleTestCase):
@@ -36,7 +34,7 @@ class SettingsTests(SimpleTestCase):
             call_command('diffsettings')
         output = buff.get_output()
         print(output)
-        self.assertIn('django_tools_test_project.test_settings', output) # SETTINGS_MODULE
+        self.assertIn('django_tools_test_project.test_settings', output)  # SETTINGS_MODULE
 
 
 class ManageCommandTests(DjangoCommandMixin, TestCase):
@@ -64,7 +62,7 @@ class ManageCommandTests(DjangoCommandMixin, TestCase):
         output = self.call_manage_py(["makemigrations", "--dry-run"], manage_dir=MANAGE_DIR)
         print(output)
         self.assertIn("No changes detected", output)
-        self.assertNotIn("Migrations for", output) # output like: """Migrations for 'appname':"""
+        self.assertNotIn("Migrations for", output)  # output like: """Migrations for 'appname':"""
         self.assertNotIn("SystemCheckError", output)
         self.assertNotIn("ERRORS", output)
 

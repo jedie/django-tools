@@ -7,6 +7,7 @@ import logging
 import os
 from pathlib import Path
 
+
 log = logging.getLogger(__name__)
 
 
@@ -31,7 +32,7 @@ def find_executable(filename, extra_search_paths=None):
         path = Path(path, filename)
         if path.is_file():
             if not os.access(str(path), os.X_OK):
-                raise FileNotFoundError("%s exists, but it's not executable!" % path)
+                raise FileNotFoundError(f"{path} exists, but it's not executable!")
             return path
 
-    raise FileNotFoundError("Can't find %r in PATH or %s!" % (filename, extra_search_paths))
+    raise FileNotFoundError(f"Can't find {filename!r} in PATH or {extra_search_paths}!")

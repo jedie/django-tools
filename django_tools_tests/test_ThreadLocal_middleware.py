@@ -21,10 +21,10 @@ class TestGetCurrentRequest(TestCase):
         assert_pformat_equal(current_get_parameters, {"foo": "bar"})
 
     def test_current_request_is_cleared_after_request_is_finished(self):
-        response = self.client.get("/get_current_get_parameters/")
+        self.client.get("/get_current_get_parameters/")
         assert_pformat_equal(get_current_request(), None)
 
     def test_current_request_is_cleared_when_exception_is_raised(self):
         with self.assertRaises(Exception):
-            response = self.client.get("/raise_exception/TestGetCurrentRequest/")
+            self.client.get("/raise_exception/TestGetCurrentRequest/")
         assert_pformat_equal(get_current_request(), None)

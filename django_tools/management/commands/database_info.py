@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     database_info manage command
 
@@ -35,7 +33,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.stdout.write("")
-        self.stdout.write("_"*79)
+        self.stdout.write("_" * 79)
         self.stdout.write(self.help)
         self.stdout.write("")
 
@@ -44,21 +42,21 @@ class Command(BaseCommand):
         # self.stdout.write("-"*79)
 
         for alias, settings_dict in settings.DATABASES.items():
-            self.stdout.write("Database alias %r:" % alias)
+            self.stdout.write(f"Database alias {alias!r}:")
             self.stdout.write("")
             engine = settings_dict["ENGINE"]
-            engine = engine.rsplit(".",1)[-1]
-            self.stdout.write("engine...............: %r" % engine)
+            engine = engine.rsplit(".", 1)[-1]
+            self.stdout.write(f"engine...............: {engine!r}")
             if engine == "sqlite3":
                 # https://docs.python.org/3/library/sqlite3.html#module-functions-and-constants
                 import sqlite3
-                self.stdout.write("sqlite lib version...: %r" % sqlite3.sqlite_version)
-                self.stdout.write("sqlite module version: %r" % sqlite3.version)
+                self.stdout.write(f"sqlite lib version...: {sqlite3.sqlite_version!r}")
+                self.stdout.write(f"sqlite module version: {sqlite3.version!r}")
 
-            self.stdout.write("name.................: %r" % settings_dict["NAME"])
-            self.stdout.write("user.................: %r" % settings_dict["USER"])
-            self.stdout.write("host.................: %r" % settings_dict["HOST"])
-            self.stdout.write("port.................: %r" % settings_dict["PORT"])
+            self.stdout.write(f"name.................: {settings_dict['NAME']!r}")
+            self.stdout.write(f"user.................: {settings_dict['USER']!r}")
+            self.stdout.write(f"host.................: {settings_dict['HOST']!r}")
+            self.stdout.write(f"port.................: {settings_dict['PORT']!r}")
 
         connection_list = connections.all()
 
@@ -67,8 +65,8 @@ class Command(BaseCommand):
 
         for no, conn in enumerate(connection_list, 1):
             self.stdout.write("")
-            self.stdout.write("connection %i alias: %r settings_dict:" % (no, conn.alias))
+            self.stdout.write(f"connection {no:d} alias: {conn.alias!r} settings_dict:")
             pprint(conn.settings_dict)
 
         self.stdout.write("")
-        self.stdout.write("-"*79)
+        self.stdout.write("-" * 79)

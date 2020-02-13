@@ -7,7 +7,6 @@ import os
 from django.http import Http404
 from django.test import SimpleTestCase
 from django.test.utils import override_settings
-from django.utils import six
 
 # https://github.com/jedie/django-tools
 import django_tools
@@ -26,23 +25,26 @@ class TestFilesystemBrowser(SimpleTestCase):
 
     def test_directory_traversal_attack1(self):
         try:
-            BaseFilesystemBrowser(request=None, absolute_path=self.BASE_PATH, base_url="bar", rest_url="../")
+            BaseFilesystemBrowser(
+                request=None, absolute_path=self.BASE_PATH, base_url="bar", rest_url="../"
+            )
         except Http404 as err:
-            assert_pformat_equal(six.text_type(err), "Directory doesn't exist!")
+            assert_pformat_equal(str(err), "Directory doesn't exist!")
 
     @override_settings(DEBUG=True)
     def test_debug_message(self):
         sub_path = os.path.normpath(os.path.join(self.BASE_PATH, ".."))
         try:
-            BaseFilesystemBrowser(request=None, absolute_path=self.BASE_PATH, base_url="bar", rest_url="../")
+            BaseFilesystemBrowser(
+                request=None, absolute_path=self.BASE_PATH, base_url="bar", rest_url="../"
+            )
         except Http404 as err:
             assert_pformat_equal(
-                err.args[0].message, "Directory '%s' is not in base path ('%s')" % (sub_path, self.BASE_PATH)
+                err.args[0].message,
+                f"Directory '{sub_path}' is not in base path ('{self.BASE_PATH}')"
             )
 
     def test_directory_traversal_attack_encodings(self):
-        base_path = os.path.abspath(os.path.dirname(django_tools.__file__))
-
         rest_urls = (
             "/etc/passwd",
             "..",
@@ -62,6 +64,8 @@ class TestFilesystemBrowser(SimpleTestCase):
         for rest_url in rest_urls:
             # print(rest_url)
             try:
-                BaseFilesystemBrowser(request=None, absolute_path=self.BASE_PATH, base_url="bar", rest_url=rest_url)
+                BaseFilesystemBrowser(
+                    request=None, absolute_path=self.BASE_PATH, base_url="bar", rest_url=rest_url
+                )
             except Http404 as err:
-                assert_pformat_equal(six.text_type(err), "Directory doesn't exist!")
+                assert_pformat_equal(str(err), "Directory doesn't exist!")

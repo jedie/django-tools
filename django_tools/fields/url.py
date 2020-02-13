@@ -1,6 +1,3 @@
-# coding:utf-8
-
-
 """
     url form/model field
     ~~~~~~~~~~~~~~~~~~~~
@@ -10,8 +7,6 @@
     :copyleft: 2011-2016 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
-from __future__ import absolute_import, division, print_function
 
 
 from django.db.models.fields import CharField as OriginModelCharField
@@ -58,10 +53,10 @@ class URLFormField2(OriginFormsCharField):
     }
 
     def __init__(self, max_length=None, min_length=None, verify_exists=False,
-            allow_schemes=("http", "https"), allow_all_schemes=False, allow_netloc=True,
-            allow_query=True, allow_fragment=True, *args, **kwargs):
+                 allow_schemes=("http", "https"), allow_all_schemes=False, allow_netloc=True,
+                 allow_query=True, allow_fragment=True, **kwargs):
 
-        super(URLFormField2, self).__init__(max_length, min_length, *args, **kwargs)
+        super().__init__(max_length=max_length, min_length=min_length, **kwargs)
 
         self.validators.append(
             URLValidator2(
@@ -69,7 +64,6 @@ class URLFormField2(OriginFormsCharField):
                 allow_query=allow_query, allow_fragment=allow_fragment
             )
         )
-
 
 
 class URLModelField2(OriginModelCharField):
@@ -108,8 +102,8 @@ class URLModelField2(OriginModelCharField):
     description = _("URL")
 
     def __init__(self, verbose_name=None, name=None, verify_exists=True,
-            allow_schemes=("http", "https"), allow_all_schemes=False, allow_netloc=True,
-            allow_query=True, allow_fragment=True, **kwargs):
+                 allow_schemes=("http", "https"), allow_all_schemes=False, allow_netloc=True,
+                 allow_query=True, allow_fragment=True, **kwargs):
 
         kwargs['max_length'] = kwargs.get('max_length', 200)
         OriginModelCharField.__init__(self, verbose_name, name, **kwargs)
@@ -132,12 +126,11 @@ class URLModelField2(OriginModelCharField):
         defaults = {
             'form_class': URLFormField2,
 
-            "allow_schemes":self.allow_schemes,
-            "allow_all_schemes":self.allow_all_schemes,
-            "allow_netloc":self.allow_netloc,
-            "allow_query":self.allow_query,
-            "allow_fragment":self.allow_fragment,
+            "allow_schemes": self.allow_schemes,
+            "allow_all_schemes": self.allow_all_schemes,
+            "allow_netloc": self.allow_netloc,
+            "allow_query": self.allow_query,
+            "allow_fragment": self.allow_fragment,
         }
         defaults.update(kwargs)
-        return super(URLModelField2, self).formfield(**defaults)
-
+        return super().formfield(**defaults)

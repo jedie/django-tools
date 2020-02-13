@@ -24,6 +24,9 @@ class ModelTestGeneratorAdminTestCase(TestUserMixin, BaseTestCase, TestCase):
     def test_generate_code_action_exists(self):
         self.login(usertype="superuser")
 
+        from django.conf import settings
+        assert settings.MEDIA_ROOT != settings.STATIC_ROOT
+
         response = self.client.get("/admin/auth/user/")
 
         self.assertResponse(
