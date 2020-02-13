@@ -118,79 +118,101 @@ class TestUserFixtures(TestUserMixin, BaseTestCase):
         assert_equal_dedent(
             output,
             """
-            Display effective user permissions in the same format as user.has_perm() argument: <appname>.<codename>
-            All permissions for user 'testuser':
-            is_active    : yes
-            is_staff     : yes
-            is_superuser : no
-            [ ] admin.add_logentry
-            [ ] admin.change_logentry
-            [ ] admin.delete_logentry
-            [*] auth.add_group
-            [*] auth.change_group
-            [ ] auth.delete_group
-            [*] auth.add_permission
-            [*] auth.change_permission
-            [*] auth.delete_permission
-            [*] auth.add_user
-            [*] auth.change_user
-            [ ] auth.delete_user
-            [ ] contenttypes.add_contenttype
-            [*] contenttypes.change_contenttype
-            [ ] contenttypes.delete_contenttype
-            [*] django_tools_test_app.add_limittousergroupstestmodel
-            [*] django_tools_test_app.change_limittousergroupstestmodel
-            [*] django_tools_test_app.delete_limittousergroupstestmodel
-            [*] django_tools_test_app.add_overwritefilesystemstoragemodel
-            [*] django_tools_test_app.change_overwritefilesystemstoragemodel
-            [*] django_tools_test_app.delete_overwritefilesystemstoragemodel
-            [*] django_tools_test_app.add_permissiontestmodel
-            [*] django_tools_test_app.change_permissiontestmodel
-            [*] django_tools_test_app.delete_permissiontestmodel
-            [*] django_tools_test_app.extra_permission
-            [*] django_tools_test_app.add_simpleparlermodel
-            [*] django_tools_test_app.change_simpleparlermodel
-            [*] django_tools_test_app.delete_simpleparlermodel
-            [*] easy_thumbnails.add_source
-            [*] easy_thumbnails.change_source
-            [*] easy_thumbnails.delete_source
-            [*] easy_thumbnails.add_thumbnail
-            [*] easy_thumbnails.change_thumbnail
-            [*] easy_thumbnails.delete_thumbnail
-            [*] easy_thumbnails.add_thumbnaildimensions
-            [*] easy_thumbnails.change_thumbnaildimensions
-            [*] easy_thumbnails.delete_thumbnaildimensions
-            [*] filer.add_clipboard
-            [*] filer.change_clipboard
-            [*] filer.delete_clipboard
-            [*] filer.add_clipboarditem
-            [*] filer.change_clipboarditem
-            [*] filer.delete_clipboarditem
-            [*] filer.add_file
-            [*] filer.change_file
-            [*] filer.delete_file
-            [*] filer.add_folder
-            [*] filer.can_use_directory_listing
-            [*] filer.change_folder
-            [*] filer.delete_folder
-            [*] filer.add_folderpermission
-            [*] filer.change_folderpermission
-            [*] filer.delete_folderpermission
-            [*] filer.add_image
-            [*] filer.change_image
-            [*] filer.delete_image
-            [*] filer.add_thumbnailoption
-            [*] filer.change_thumbnailoption
-            [*] filer.delete_thumbnailoption
-            [*] flatpages.add_flatpage
-            [*] flatpages.change_flatpage
-            [*] flatpages.delete_flatpage
-            [ ] sessions.add_session
-            [ ] sessions.change_session
-            [ ] sessions.delete_session
-            [ ] sites.add_site
-            [ ] sites.change_site
-            [ ] sites.delete_site
+                Display effective user permissions in the same format as user.has_perm() argument: <appname>.<codename>
+                All permissions for user 'testuser':
+                is_active    : yes
+                is_staff     : yes
+                is_superuser : no
+                [ ] admin.add_logentry
+                [ ] admin.change_logentry
+                [ ] admin.delete_logentry
+                [ ] admin.view_logentry
+                [*] auth.add_group
+                [*] auth.change_group
+                [ ] auth.delete_group
+                [*] auth.view_group
+                [*] auth.add_permission
+                [*] auth.change_permission
+                [*] auth.delete_permission
+                [*] auth.view_permission
+                [*] auth.add_user
+                [*] auth.change_user
+                [ ] auth.delete_user
+                [*] auth.view_user
+                [ ] contenttypes.add_contenttype
+                [*] contenttypes.change_contenttype
+                [ ] contenttypes.delete_contenttype
+                [*] contenttypes.view_contenttype
+                [*] django_tools_test_app.add_limittousergroupstestmodel
+                [*] django_tools_test_app.change_limittousergroupstestmodel
+                [*] django_tools_test_app.delete_limittousergroupstestmodel
+                [*] django_tools_test_app.view_limittousergroupstestmodel
+                [*] django_tools_test_app.add_overwritefilesystemstoragemodel
+                [*] django_tools_test_app.change_overwritefilesystemstoragemodel
+                [*] django_tools_test_app.delete_overwritefilesystemstoragemodel
+                [*] django_tools_test_app.view_overwritefilesystemstoragemodel
+                [*] django_tools_test_app.add_permissiontestmodel
+                [*] django_tools_test_app.change_permissiontestmodel
+                [*] django_tools_test_app.delete_permissiontestmodel
+                [*] django_tools_test_app.extra_permission
+                [*] django_tools_test_app.view_permissiontestmodel
+                [*] django_tools_test_app.add_simpleparlermodel
+                [*] django_tools_test_app.change_simpleparlermodel
+                [*] django_tools_test_app.delete_simpleparlermodel
+                [*] django_tools_test_app.view_simpleparlermodel
+                [*] easy_thumbnails.add_source
+                [*] easy_thumbnails.change_source
+                [*] easy_thumbnails.delete_source
+                [*] easy_thumbnails.view_source
+                [*] easy_thumbnails.add_thumbnail
+                [*] easy_thumbnails.change_thumbnail
+                [*] easy_thumbnails.delete_thumbnail
+                [*] easy_thumbnails.view_thumbnail
+                [*] easy_thumbnails.add_thumbnaildimensions
+                [*] easy_thumbnails.change_thumbnaildimensions
+                [*] easy_thumbnails.delete_thumbnaildimensions
+                [*] easy_thumbnails.view_thumbnaildimensions
+                [*] filer.add_clipboard
+                [*] filer.change_clipboard
+                [*] filer.delete_clipboard
+                [*] filer.view_clipboard
+                [*] filer.add_clipboarditem
+                [*] filer.change_clipboarditem
+                [*] filer.delete_clipboarditem
+                [*] filer.view_clipboarditem
+                [*] filer.add_file
+                [*] filer.change_file
+                [*] filer.delete_file
+                [*] filer.view_file
+                [*] filer.add_folder
+                [*] filer.can_use_directory_listing
+                [*] filer.change_folder
+                [*] filer.delete_folder
+                [*] filer.view_folder
+                [*] filer.add_folderpermission
+                [*] filer.change_folderpermission
+                [*] filer.delete_folderpermission
+                [*] filer.view_folderpermission
+                [*] filer.add_image
+                [*] filer.change_image
+                [*] filer.delete_image
+                [*] filer.view_image
+                [*] filer.add_thumbnailoption
+                [*] filer.change_thumbnailoption
+                [*] filer.delete_thumbnailoption
+                [*] filer.view_thumbnailoption
+                [*] flatpages.add_flatpage
+                [*] flatpages.change_flatpage
+                [*] flatpages.delete_flatpage
+                [*] flatpages.view_flatpage
+                [ ] sessions.add_session
+                [ ] sessions.change_session
+                [ ] sessions.delete_session
+                [ ] sessions.view_session
+                [ ] sites.add_site
+                [ ] sites.change_site
+                [ ] sites.delete_site
+                [ ] sites.view_site
         """,
         )
 
@@ -236,12 +258,14 @@ class TestUserFixtures(TestUserMixin, BaseTestCase):
             remove permission: sessions | session | Can add session
             remove permission: sessions | session | Can change session
             remove permission: sessions | session | Can delete session
+            remove permission: sessions | session | Can view session
             remove permission: sites | site | Can add site
             remove permission: sites | site | Can change site
             remove permission: sites | site | Can delete site
-            Add 55 permissions to 'testgroup'
-            Group testgroup has 55 permissions
-        """,
+            remove permission: sites | site | Can view site
+            Add 74 permissions to 'testgroup'
+            Group testgroup has 74 permissions
+            """,
         )
 
     def test_update_existing_user(self):

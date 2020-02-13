@@ -9,10 +9,11 @@
 
 import warnings
 
+from django.conf import settings
 from django.core.files import File as DjangoFile
 
 # https://github.com/jedie/django-tools
-from django_tools.unittest_utils.assertments import assert_pformat_equal
+from django_tools.unittest_utils.assertments import assert_pformat_equal, assert_endswith
 from django_tools.unittest_utils.mockup import ImageDummy
 from django_tools.unittest_utils.unittest_base import BaseTestCase
 from django_tools.unittest_utils.user import TestUserMixin
@@ -49,12 +50,18 @@ class TestMockupImage(TestUserMixin, BaseTestCase):
             assert_pformat_equal(len(w), 0)  # No warnings created
 
     def test_create_temp_filer_info_image(self):
+        assert_endswith(
+            settings.MEDIA_ROOT,
+            "/django_tools_test_project/media"
+        )
         user = self.login(usertype="normal")
 
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")  # trigger all warnings
 
-            filer_info_image = ImageDummy(width=500, height=300, format="png").create_temp_filer_info_image(
+            filer_info_image = ImageDummy(
+                width=500, height=300, format="png"
+            ).create_temp_filer_info_image(
                 text="A test image", user=user
             )
             assert_pformat_equal(filer_info_image.width, 500)
@@ -66,7 +73,7 @@ class TestMockupImage(TestUserMixin, BaseTestCase):
             path = filer_info_image.path
             path = path.replace("-", "_")  # e.g.: /django-tools/ -> /django_tools/
 
-            self.assertIn("/django_tools/django_tools_test_project/media/filer_public/", path)
+            self.assertIn("/django_tools_test_project/media/filer_public/", path)
 
             assert_pformat_equal(len(w), 0)  # No warnings created
 
