@@ -25,7 +25,7 @@ class URLFormField2(OriginFormsCharField):
 
     To allow only local domains, disallow scheme and netloc:
     >>> URLFormField2(allow_schemes=None, allow_netloc=False).clean("/path/?query#fragment")
-    u'/path/?query#fragment'
+    '/path/?query#fragment'
 
     >>> try:
     ...     URLFormField2(allow_schemes=None, allow_netloc=False).clean("http://domain.tld/path/?query#fragment")
@@ -35,11 +35,11 @@ class URLFormField2(OriginFormsCharField):
 
     **Note:** this is also a valid "local" path (more info in URLValidator2 DocString):
     >>> URLFormField2(allow_schemes=None, allow_netloc=False).clean("domain.tld/path/?query#fragment")
-    u'domain.tld/path/?query#fragment'
+    'domain.tld/path/?query#fragment'
 
 
     >>> URLFormField2(allow_schemes=("svn",)).clean("svn://domain.tld")
-    u'svn://domain.tld'
+    'svn://domain.tld'
 
     >>> try:
     ...     URLFormField2(allow_schemes=("http","ftp")).clean("svn://domain.tld")
@@ -76,8 +76,8 @@ class URLModelField2(OriginModelCharField):
     >>> f = URLModelField2(verify_exists=False).formfield()
     >>> isinstance(f, URLFormField2)
     True
-    >>> f.clean(u"http://www.domain.tld/path?query#fragment")
-    u'http://www.domain.tld/path?query#fragment'
+    >>> f.clean("http://www.domain.tld/path?query#fragment")
+    'http://www.domain.tld/path?query#fragment'
 
     >>> f = URLModelField2().formfield()
 
@@ -90,7 +90,7 @@ class URLModelField2(OriginModelCharField):
 
     >>> f = URLModelField2(allow_query=False).formfield()
     >>> f.clean("http://www.domain.tld/without/query/")
-    u'http://www.domain.tld/without/query/'
+    'http://www.domain.tld/without/query/'
 
     >>> try:
     ...     f.clean("http://www.domain.tld/with/?query")

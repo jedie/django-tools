@@ -4,16 +4,16 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from django.test import LiveServerTestCase
 
-# https://github.com/jedie/django-tools
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+
 from django_tools.selenium.chromedriver import SeleniumChromiumTestCase
 from django_tools.selenium.geckodriver import SeleniumFirefoxTestCase
 
 
-class SeleniumChromiumStaticLiveServerTestCase(LiveServerTestCase, SeleniumChromiumTestCase):
+class SeleniumChromiumStaticLiveServerTestCase(StaticLiveServerTestCase, SeleniumChromiumTestCase):
     pass
 
 
-class SeleniumFirefoxStaticLiveServerTestCase(LiveServerTestCase, SeleniumFirefoxTestCase):
+class SeleniumFirefoxStaticLiveServerTestCase(StaticLiveServerTestCase, SeleniumFirefoxTestCase):
     pass

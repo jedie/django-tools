@@ -24,6 +24,7 @@ jobs:
         make install-poetry
         source $HOME/.poetry/env
         make install
+        pip3 install tox-gh-actions
 
     - name: 'List installed packages'
       run: |
@@ -38,7 +39,10 @@ jobs:
     - name: 'Run tests with Python v${{ matrix.python-version }}'
       run: |
         source $HOME/.poetry/env
-        make pytest
+        make tox
+
+    - name: 'Upload coverage report'
+      run: bash <(curl -s https://codecov.io/bash)
 
     - name: 'Run linters'
       if: matrix.python-version == '3.8'
@@ -46,5 +50,4 @@ jobs:
         source $HOME/.poetry/env
         make lint
 
-    - name: 'Upload coverage report'
-      run: bash <(curl -s https://codecov.io/bash)
+

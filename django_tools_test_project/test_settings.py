@@ -1,6 +1,6 @@
 import logging
-import os
 import warnings
+from pathlib import Path
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -11,7 +11,7 @@ from django_tools.unittest_utils.logging_utils import CutPathnameLogRecordFactor
 print("Use settings:", __file__)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = Path(__file__).parent
 
 DEBUG = True
 
@@ -23,7 +23,7 @@ ALLOWED_HOSTS = ["*"]  # Allow any domain/subdomain
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "..", "test_project_db.sqlite3"),
+        "NAME": str(Path(BASE_DIR.parent, "test_project_db.sqlite3")),
         # 'NAME': ":memory:",
         'OPTIONS': {
             # https://docs.djangoproject.com/en/2.2/ref/databases/#database-is-locked-errors
@@ -76,12 +76,15 @@ INSTALLED_APPS = (
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, "templates/")],
+        "DIRS": [Path(BASE_DIR, "templates")],
         "OPTIONS": {
             "loaders": [
                 (
                     "django_tools.template.loader.DebugCacheLoader",
-                    ("django.template.loaders.filesystem.Loader", "django.template.loaders.app_directories.Loader"),
+                    (
+                        "django.template.loaders.filesystem.Loader",
+                        "django.template.loaders.app_directories.Loader"
+                    ),
                 )
             ],
             "context_processors": [
@@ -137,10 +140,12 @@ EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = str(Path(BASE_DIR, "static"))
+assert str(STATIC_ROOT).endswith('/django_tools_test_project/static')
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = str(Path(BASE_DIR, "media"))
+assert str(MEDIA_ROOT).endswith('/django_tools_test_project/media')
 
 # ==============================================================================
 
