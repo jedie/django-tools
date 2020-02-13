@@ -25,18 +25,18 @@ install-poetry: ## install or update poetry
 		curl -sSL "https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py" | python3 ; \
 	fi
 
-install: check-poetry ## install python-creole via poetry
+install: check-poetry ## install django-tools via poetry
 	poetry install
 
 lint: ## Run code formatters and linter
-	poetry run flynt --fail-on-change --line_length=${MAX_LINE_LENGTH} creole
-	poetry run isort --check-only --recursive creole
-	poetry run flake8 creole
+	poetry run flynt --fail-on-change --line_length=${MAX_LINE_LENGTH} django_tools django_tools_test_project django_tools_tests
+	poetry run isort --check-only --recursive django_tools django_tools_test_project django_tools_tests
+	poetry run flake8 django_tools django_tools_test_project django_tools_tests
 
 fix-code-style: ## Fix code formatting
-	poetry run flynt --line_length=${MAX_LINE_LENGTH} creole
-	poetry run isort --apply --recursive creole
-	poetry run autopep8 --ignore-local-config --max-line-length=${MAX_LINE_LENGTH} --aggressive --aggressive --in-place --recursive creole
+	poetry run flynt --line_length=${MAX_LINE_LENGTH} django_tools django_tools_test_project django_tools_tests
+	poetry run isort --apply --recursive django_tools django_tools_test_project django_tools_tests
+	poetry run autopep8 --ignore-local-config --max-line-length=${MAX_LINE_LENGTH} --aggressive --aggressive --in-place --recursive django_tools django_tools_test_project django_tools_tests
 
 tox-listenvs: check-poetry ## List all tox test environments
 	poetry run tox --listenvs
