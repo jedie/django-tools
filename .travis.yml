@@ -30,7 +30,7 @@ install:
 script:
   - if [ "$TOXENV" == "" ]; then make pytest; fi
   - if [ "$TOXENV" != "" ]; then make tox; fi
-#  - if [ "$TOXENV" != "" ]; then make lint; fi
+  - if [ "$TOXENV" != "" ]; then make lint; fi
 
 after_success:
   - coveralls
