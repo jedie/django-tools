@@ -20,7 +20,7 @@ from django_tools.selenium.django import (
 )
 from django_tools.selenium.geckodriver import SeleniumFirefoxTestCase, firefox_available
 from django_tools.selenium.utils import find_executable
-from django_tools.unittest_utils.assertments import assert_pformat_equal
+from django_tools.unittest_utils.assertments import assert_is_file, assert_pformat_equal
 from django_tools.unittest_utils.user import TestUserMixin
 
 
@@ -123,6 +123,10 @@ class SeleniumTestsMixin:
     def test_admin_static_files(self):
         self.driver.get(self.live_server_url + "/admin/login/?next=/admin/")
         self.assert_in_page_source('href="/static/admin/css/base.css"')
+
+        css_path = Path(settings.STATIC_ROOT, "admin/css/base.css")
+        assert str(css_path).endswith('/django_tools_test_project/static/admin/css/base.css')
+        assert_is_file(css_path)
 
         self.driver.get(self.live_server_url + "/static/admin/css/base.css")
         self.assert_in_page_source("margin: 0;")

@@ -58,18 +58,18 @@ class SignSeparatedInput(forms.widgets.Input):
 
 class SignSeparatedFormField(forms.CharField):
     """
-    >>> SignSeparatedFormField().clean(u"one, two")
-    (u'one', u'two')
+    >>> SignSeparatedFormField().clean("one, two")
+    ('one', 'two')
 
-    >>> SignSeparatedFormField().to_python(u"one , two, 3,4")
-    (u'one', u'two', u'3', u'4')
-    >>> SignSeparatedFormField(strip_items=False).clean(u"one , two, 3,4")
-    (u'one ', u' two', u' 3', u'4')
+    >>> SignSeparatedFormField().to_python("one , two, 3,4")
+    ('one', 'two', '3', '4')
+    >>> SignSeparatedFormField(strip_items=False).clean("one , two, 3,4")
+    ('one ', ' two', ' 3', '4')
 
-    >>> SignSeparatedFormField(separator=" ").clean(u"one  two 3")
-    (u'one', u'two', u'3')
-    >>> SignSeparatedFormField(separator=" ", skip_empty=False).clean(u"one  two 3")
-    (u'one', u'', u'two', u'3')
+    >>> SignSeparatedFormField(separator=" ").clean("one  two 3")
+    ('one', 'two', '3')
+    >>> SignSeparatedFormField(separator=" ", skip_empty=False).clean("one  two 3")
+    ('one', '', 'two', '3')
 
     >>> try:
     ...     SignSeparatedFormField().clean(None)
@@ -113,8 +113,8 @@ class SignSeparatedModelField(models.TextField):
     >>> f = SignSeparatedModelField().formfield()
     >>> isinstance(f, SignSeparatedFormField)
     True
-    >>> f.clean(u"one , two, 3,4")
-    (u'one', u'two', u'3', u'4')
+    >>> f.clean("one , two, 3,4")
+    ('one', 'two', '3', '4')
 
     kwargs would be pass to the widget:
     >>> f = SignSeparatedModelField(separator="x", strip_items=False, skip_empty=False).formfield()
