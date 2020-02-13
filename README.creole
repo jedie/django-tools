@@ -757,6 +757,7 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.45.3...master|compare v0.45.3...master]]
+** {{{dynamic_site}}} was removed. Please use e.g.: [[https://github.com/jazzband/django-hosts|django-hosts]]
 ** modernize project setup and use {{{poetry}}}
 ** remove {{{lxml}}} decency by using [[https://github.com/mozilla/bleach|bleach]] for {{{html_utils.html2text}}}
 * TBC
