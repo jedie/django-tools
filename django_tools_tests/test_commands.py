@@ -67,8 +67,8 @@ class TestListModelsCommand(DjangoCommandMixin, TestCase):
             22 - sessions.Session
             23 - sites.Site
 
-            INSTALLED_APPS....: 13
-            Apps with models..: 13
+            INSTALLED_APPS....: 14
+            Apps with models..: 14
         """,
         )
 

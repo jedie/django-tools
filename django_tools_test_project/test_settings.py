@@ -24,7 +24,11 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": os.path.join(BASE_DIR, "..", "test_project_db.sqlite3"),
-        # 'NAME': ":memory:"
+        # 'NAME': ":memory:",
+        'OPTIONS': {
+            # https://docs.djangoproject.com/en/2.2/ref/databases/#database-is-locked-errors
+            'timeout': 20,
+        }
     }
 }
 
@@ -38,7 +42,6 @@ MIDDLEWARE = (
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.auth.middleware.SessionAuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.security.SecurityMiddleware",
@@ -56,6 +59,7 @@ INSTALLED_APPS = (
     "django.contrib.staticfiles",
     "django.contrib.admindocs",
     "django.contrib.flatpages",
+    "django.contrib.messages",
     "easy_thumbnails",
     "filer",  # for django_tools.unittest_utils.mockup
     # TODO:
@@ -66,7 +70,6 @@ INSTALLED_APPS = (
     # 'publisher',
     "django_tools",
     "django_tools.local_sync_cache",
-    # 'django_tools.dynamic_site',
     "django_tools_test_project.django_tools_test_app",
 )
 

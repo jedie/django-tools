@@ -144,7 +144,7 @@ class CacheMiddlewareBase(object):
             logger.debug("Don't cache response with status code: %s (%s)" % (response.status_code, request.get_full_path()))
             return False
 
-        if CACHE_MIDDLEWARE_ANONYMOUS_ONLY and request.user.is_authenticated():
+        if CACHE_MIDDLEWARE_ANONYMOUS_ONLY and request.user.is_authenticated:
             logger.debug("Don't cache requests from authenticated users.")
             return False
 

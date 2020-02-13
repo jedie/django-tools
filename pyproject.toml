@@ -51,6 +51,7 @@ colorlog = "^4.1.0"
 easy_thumbnails = "^2.7"
 django-filer = "^1.6.0"
 django-parler = "^2.0.1"
+django-debug-toolbar = "^2.2"
 selenium = "^3.141.0"
 
 [tool.poetry.scripts]

@@ -59,9 +59,9 @@ class URLFormField2(OriginFormsCharField):
 
     def __init__(self, max_length=None, min_length=None, verify_exists=False,
             allow_schemes=("http", "https"), allow_all_schemes=False, allow_netloc=True,
-            allow_query=True, allow_fragment=True, *args, **kwargs):
+            allow_query=True, allow_fragment=True, **kwargs):
 
-        super(URLFormField2, self).__init__(max_length, min_length, *args, **kwargs)
+        super().__init__(max_length=max_length, min_length=min_length, **kwargs)
 
         self.validators.append(
             URLValidator2(

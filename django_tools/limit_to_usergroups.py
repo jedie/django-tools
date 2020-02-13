@@ -79,11 +79,11 @@ def has_permission(item, **kwargs):
         if limit_permission_value == UsergroupsModelField.ANONYMOUS_USERS:
             continue
 
-        if user.is_anonymous():
+        if user.is_anonymous:
             return False
 
         if limit_permission_value == UsergroupsModelField.NORMAL_USERS:
-            if user.is_authenticated():
+            if user.is_authenticated:
                 continue
             else:
                 return False

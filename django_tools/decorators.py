@@ -48,7 +48,7 @@ def check_permissions(superuser_only, permissions=()):
         def _check_permissions(request, *args, **kwargs):
             user = request.user
 
-            if not user.is_authenticated():
+            if not user.is_authenticated:
                 # FIXME: HttpResponseRedirect to admin login?
                 msg = _("Permission denied for anonymous user. Please log in.")
                 if settings.DEBUG:  # Usefull??

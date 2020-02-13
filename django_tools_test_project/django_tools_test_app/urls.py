@@ -20,7 +20,7 @@ admin.autodiscover()
 
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
 
     url(r'^display_site/$', display_site),
     url(r'^get_current_get_parameters/$', get_current_get_parameters),
