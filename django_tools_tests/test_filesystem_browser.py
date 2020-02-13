@@ -28,7 +28,7 @@ class TestFilesystemBrowser(SimpleTestCase):
         try:
             BaseFilesystemBrowser(request=None, absolute_path=self.BASE_PATH, base_url="bar", rest_url="../")
         except Http404 as err:
-            assert_pformat_equal(six.text_type(err), "Directory doesn't exist!")
+            assert_pformat_equal(str(err), "Directory doesn't exist!")
 
     @override_settings(DEBUG=True)
     def test_debug_message(self):
@@ -37,7 +37,7 @@ class TestFilesystemBrowser(SimpleTestCase):
             BaseFilesystemBrowser(request=None, absolute_path=self.BASE_PATH, base_url="bar", rest_url="../")
         except Http404 as err:
             assert_pformat_equal(
-                err.args[0].message, "Directory '%s' is not in base path ('%s')" % (sub_path, self.BASE_PATH)
+                err.args[0].message, f"Directory '{sub_path}' is not in base path ('{self.BASE_PATH}')"
             )
 
     def test_directory_traversal_attack_encodings(self):
@@ -64,4 +64,4 @@ class TestFilesystemBrowser(SimpleTestCase):
             try:
                 BaseFilesystemBrowser(request=None, absolute_path=self.BASE_PATH, base_url="bar", rest_url=rest_url)
             except Http404 as err:
-                assert_pformat_equal(six.text_type(err), "Directory doesn't exist!")
+                assert_pformat_equal(str(err), "Directory doesn't exist!")

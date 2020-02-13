@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     some additional template filters
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -8,7 +6,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 import datetime
 
@@ -106,6 +103,6 @@ def human_duration(t):
         if count >= 1:
             count = round(count, 1)
             break
-    return "%(number).1f %(type)s" % {'number': count, 'type': name}
+    return f"{count:.1f} {name}"
 human_duration.is_safe = True
 

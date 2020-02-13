@@ -110,7 +110,7 @@ class SeleniumBaseTestCase(unittest.TestCase):
         try:
             check = WebDriverWait(self.driver, timeout).until(conditions)
         except TimeoutException as err:
-            print("\nError: %s\n%s\npage source:\n%s\n" % (msg, err, self.driver.page_source))
+            print(f"\nError: {msg}\n{err}\npage source:\n{self.driver.page_source}\n")
             raise
         else:
             self.assertTrue(check)

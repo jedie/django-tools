@@ -86,7 +86,7 @@ class LoggingBuffer:
 
     def assert_messages(self, reference):
         messages = self.get_message_list()
-        assert messages == reference, "%r != %r" % (messages, reference)
+        assert messages == reference, f"{messages!r} != {reference!r}"
 
 
 class CutPathnameLogRecordFactory:
@@ -171,7 +171,7 @@ class FilterAndLogWarnings:
             level=logging.WARNING,
             fn=filename,
             lno=lineno,
-            msg="%s:%s" % (category.__name__, message),
+            msg=f"{category.__name__}:{message}",
             args=args,
             exc_info=exc_info,
         )

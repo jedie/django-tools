@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     static path selection
     ~~~~~~~~~~~~~~~~~~~~
@@ -15,7 +13,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 
 import os
@@ -52,8 +49,7 @@ def directory_walk(path):
 
     for dir in dirs:
         sub_path = os.path.join(path, dir)
-        for x in directory_walk(sub_path):
-            yield x
+        yield from directory_walk(sub_path)
 
 
 
@@ -68,7 +64,7 @@ class StaticPathWidget(forms.Select):
     [('__pycache__', '__pycache__'), ('admin_tools', 'admin_tools')]
     """
     def __init__(self, attrs=None):
-        super(StaticPathWidget, self).__init__(attrs)
+        super().__init__(attrs)
 
         self._base_path = os.path.abspath(os.path.normpath(settings.STATIC_ROOT))
 
@@ -105,7 +101,7 @@ class StaticPathModelField(models.TextField):
         """ Use always own widget and form field. """
         kwargs["widget"] = StaticPathWidget
 #        kwargs["form_class"] = SignSeparatedFormField
-        return super(StaticPathModelField, self).formfield(**kwargs)
+        return super().formfield(**kwargs)
 
 
 if __name__ == "__main__":

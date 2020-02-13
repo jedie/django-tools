@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     unittest base
     ~~~~~~~~~~~~~
@@ -73,12 +71,12 @@ class BaseUnittestCase(TestCase):
         """
         exception_text = context_manager.exception.args[0]
         if not exception_text.startswith(text):
-            msg = "%r doesn't starts with %r" % (exception_text, text)
+            msg = f"{exception_text!r} doesn't starts with {text!r}"
             raise self.failureException(msg)
 
     def get_admin_url(self, obj, suffix):
         opts = obj._meta
-        change_url = reverse("admin:%s_%s_%s" % (opts.app_label, opts.model_name, suffix), args=(obj.pk,))
+        change_url = reverse(f"admin:{opts.app_label}_{opts.model_name}_{suffix}", args=(obj.pk,))
         return change_url
 
     def get_admin_change_url(self, obj):
@@ -96,7 +94,7 @@ class BaseUnittestCase(TestCase):
             "/admin/<app_name>/<model_name>/add/"
         """
         opts = obj._meta
-        change_url = reverse("admin:%s_%s_add" % (opts.app_label, opts.model_name))
+        change_url = reverse(f"admin:{opts.app_label}_{opts.model_name}_add")
         return change_url
 
     def get_messages(self, response):
@@ -121,7 +119,7 @@ class BaseTestCase(BaseUnittestCase):
         """
         if response.status_code == excepted_code:
             return  # Status code is ok.
-        msg = 'assertStatusCode error: "%s" != "%s"' % (response.status_code, excepted_code)
+        msg = f'assertStatusCode error: "{response.status_code}" != "{excepted_code}"'
         self.raise_browser_traceback(response, msg)
 
     # def _assert_and_parse_html(self, html, user_msg, msg):
@@ -190,7 +188,7 @@ class BaseTestCase(BaseUnittestCase):
                     self.assertContains(response, must_contain_snippet, status_code=status_code, html=html)
                 except AssertionError as err:
                     if browser_traceback:
-                        msg = 'Text not in response: "%s": %s' % (must_contain_snippet, err)
+                        msg = f'Text not in response: "{must_contain_snippet}": {err}'
                         debug_response(response, self.browser_traceback, msg, display_tb=True)
                     raise
 
@@ -200,7 +198,7 @@ class BaseTestCase(BaseUnittestCase):
                     self.assertNotContains(response, must_not_contain_snippet, status_code=status_code, html=html)
                 except AssertionError as err:
                     if browser_traceback:
-                        msg = 'Text should not be in response: "%s": %s' % (must_not_contain_snippet, err)
+                        msg = f'Text should not be in response: "{must_not_contain_snippet}": {err}'
                         debug_response(response, self.browser_traceback, msg, display_tb=True)
                     raise
 

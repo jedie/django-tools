@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     filemanager
     ~~~~~~~~~~~
@@ -8,7 +6,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 import os
 import posixpath
@@ -30,7 +27,7 @@ STOP_PARTS = (
     "%c0%ae", # %c0%af can be translated to .
 )
 
-class BaseFilesystemBrowser(object):
+class BaseFilesystemBrowser:
     """
     Base class for a django app like a filemanager, which contains only
     the base functionality to browse to a base path of the filesystem.
@@ -146,6 +143,6 @@ class BaseFilesystemBrowser(object):
         assert path.endswith(os.sep), "'path' must ended with a slash!"
 
         if not path.startswith(base_path):
-            raise DirectoryTraversalAttack("%r doesn't start with %r" % (path, base_path))
+            raise DirectoryTraversalAttack(f"{path!r} doesn't start with {base_path!r}")
 
 

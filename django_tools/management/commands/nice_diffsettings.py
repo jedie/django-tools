@@ -62,6 +62,6 @@ class Command(BaseCommand):
                     # e.g.: https://github.com/andymccurdy/redis-py/issues/995
                     pformated = "<Error: %s>" % err
 
-                self.stdout.write("%s = %s\n\n" % (key, pformated))
+                self.stdout.write(f"{key} = {pformated}\n\n")
 
         self.stdout.write("-" * 79)

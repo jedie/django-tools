@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     template render
     ~~~~~~~~~~~~~~
@@ -10,7 +8,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 from django.template import Context, Template
 from django.template.loader import get_template

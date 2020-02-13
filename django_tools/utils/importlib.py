@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     django-tools import helper
     ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -10,7 +8,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 import logging
 from importlib import import_module
@@ -32,17 +29,17 @@ def get_attr_from_string(path, obj_name=""):
     try:
         module_name, class_name = path.rsplit('.', 1)
     except ValueError:
-        raise ImproperlyConfigured("%s isn't a %s module" % (path, obj_name))
+        raise ImproperlyConfigured(f"{path} isn't a {obj_name} module")
 
     try:
         mod = import_module(module_name)
     except ImportError as e:
-        raise ImproperlyConfigured('Error importing %s module %s: "%s"' % (obj_name, module_name, e))
+        raise ImproperlyConfigured(f'Error importing {obj_name} module {module_name}: "{e}"')
 
     try:
         attr = getattr(mod, class_name)
     except AttributeError:
-        raise ImproperlyConfigured('%s module "%s" does not define a "%s" class' % (obj_name, module_name, class_name))
+        raise ImproperlyConfigured(f'{obj_name} module "{module_name}" does not define a "{class_name}" class')
 
     return attr
 

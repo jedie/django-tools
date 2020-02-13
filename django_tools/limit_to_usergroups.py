@@ -1,5 +1,3 @@
-# coding:utf-8
-
 """
     Limit to usergroups
     ~~~~~~~~~~~~~~~~~~~
@@ -52,7 +50,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 
 from django.db import models
@@ -142,7 +139,7 @@ def get_user_groups():
 
 def get_limit_dict():
     # use unicode() to evaluate ugettext_lazy:
-    limit_dict = dict([(k, six.text_type(v)) for k, v in list(UsergroupsModelField.USER_TYPES_DICT.items())])
+    limit_dict = {k: str(v) for k, v in list(UsergroupsModelField.USER_TYPES_DICT.items())}
 
     groups = get_user_groups()
     limit_dict.update(dict(groups))
@@ -178,7 +175,7 @@ class UsergroupsModelField(models.IntegerField):
         """
         kwargs["choices"] = self.USER_TYPES_CHOICES
 
-        super(UsergroupsModelField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_choices(self, *args, **kwargs):
         """

@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     smooth cache backends
     ~~~~~~~~~~~~~~~~~~~~~
@@ -10,7 +8,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 import logging
 import os
@@ -86,12 +83,12 @@ class SmoothCacheTime(int):
         return i
 
 
-class _SmoothCache(object):
+class _SmoothCache:
     __CHANGE_TIME = None # Timestamp of the "last update"
     __NEXT_SYNC = None # Point in the future to update the __CHANGE_TIME
 
     def __init__(self, *args, **kwargs):
-        super(_SmoothCache, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._smooth_clear = None
 
     def __get_change_time(self):
@@ -127,7 +124,7 @@ class _SmoothCache(object):
         if last_change_time < create_time:
             # Item was added to the cache after the last clear() time.
             logger.debug(
-                "%r not out-dated: added %ssec before clear()" % (
+                "{!r} not out-dated: added {}sec before clear()".format(
                     key, (create_time - last_change_time)
             ))
             return False
@@ -136,12 +133,12 @@ class _SmoothCache(object):
         load_average = os.getloadavg()[0] # load over last minute
         max_age = get_max_age(load_average)
         if outdate_age > max_age:
-            logger.debug("Out-dated %r (added %ssec after clear() - age: %s, max age: %s, load: %s)" % (
+            logger.debug("Out-dated {!r} (added {}sec after clear() - age: {}, max age: {}, load: {})".format(
                 key, (last_change_time - create_time), outdate_age, max_age, load_average
             ))
             return True
         else:
-            logger.debug("Keep %r by load (out-dated age: %.1fsec, max age: %s, load: %s)" % (
+            logger.debug("Keep {!r} by load (out-dated age: {:.1f}sec, max age: {}, load: {})".format(
                 key, outdate_age, max_age, load_average
             ))
             return False
@@ -159,7 +156,7 @@ class _SmoothCache(object):
     #--------------------------------------------------------------------------
 
     def get(self, key, default=None, version=None, raw=False):
-        value = super(_SmoothCache, self).get(key, default, version)
+        value = super().get(key, default, version)
         if raw:
             return value
         if value is None or value is default:
@@ -173,7 +170,7 @@ class _SmoothCache(object):
             )
         except Exception as err:
             # e.g: entry is saved before smooth cache used.
-            logger.error("Can't get 'create_time' from: %s (Maybe %r is a old cache entry?)" % (err, key))
+            logger.error(f"Can't get 'create_time' from: {err} (Maybe {key!r} is a old cache entry?)")
             self.delete(key, version)
             return default
 
@@ -187,11 +184,11 @@ class _SmoothCache(object):
     def set(self, key, value, timeout=None, version=None, raw=False):
         if not raw:
             value = (SmoothCacheTime(), value)
-        super(_SmoothCache, self).set(key, value, timeout, version)
+        super().set(key, value, timeout, version)
 
     def clear(self):
         logger.debug("SmoothCache clear called!")
-        super(_SmoothCache, self).clear()
+        super().clear()
         self.smooth_update()
 
 

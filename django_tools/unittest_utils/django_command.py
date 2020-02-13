@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     DjangoCommandMixin
     ~~~~~~~~~~~~~~~~~~
@@ -8,7 +6,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import unicode_literals, print_function
 
 import os
 import pprint
@@ -17,7 +14,7 @@ import subprocess
 import sys
 
 
-class DjangoCommandMixin(object):
+class DjangoCommandMixin:
     def subprocess_getstatusoutput(self, cmd, debug=False, excepted_exit_code=0, **kwargs):
         """
         Return (status, output) of executing cmd in a shell.

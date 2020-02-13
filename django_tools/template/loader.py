@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     Add HTML comments with the template name/path
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -23,7 +21,6 @@
 """
 
 
-from __future__ import absolute_import, print_function
 
 from django.template.base import TextNode
 from django.template.loaders.cached import Loader as CachedLoader
@@ -70,7 +67,7 @@ class DebugCacheLoader(CachedLoader):
     but we add the START/END comments to every cached template.
     """
     def __init__(self, *args, **kwargs):
-        super(DebugCacheLoader, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Change the cache to our own dict classes
         self.get_template_cache = GetDebugTemplateCache()

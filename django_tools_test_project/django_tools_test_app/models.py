@@ -60,7 +60,7 @@ class OverwriteFileSystemStorageModel(models.Model):
     file = models.FileField(storage=OverwriteFileSystemStorage(location=temp_storage_location, create_backups=True))
 
     def __str__(self):
-        return "pk:%r - %r" % (self.pk, self.file)
+        return f"pk:{self.pk!r} - {self.file!r}"
 
 
 # -----------------------------------------------------------------------------

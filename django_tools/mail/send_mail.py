@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     mail util
     ~~~~~~~~~
@@ -8,7 +6,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
@@ -20,7 +17,7 @@ from django.utils import six
 log = logging.getLogger(__name__)
 
 
-class SendMail(object):
+class SendMail:
     fail_silently = False
 
     def __init__(
@@ -52,7 +49,7 @@ class SendMail(object):
         self.subject = subject
 
         assert recipient_list, "No recipient given: %r" % recipient_list
-        if isinstance(recipient_list, six.string_types):
+        if isinstance(recipient_list, str):
             self.recipient_list = [recipient_list]
         else:
             self.recipient_list = recipient_list

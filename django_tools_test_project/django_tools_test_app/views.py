@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     Dynamic SITE ID unittests
     ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -33,7 +31,7 @@ def display_site(request):
     current_site = Site.objects.get_current()
     current_id = current_site.id
 
-    txt = "ID from settings: %r - id from get_current(): %r" % (
+    txt = "ID from settings: {!r} - id from get_current(): {!r}".format(
         settings_id, current_id
     )
     log.debug("display_site(): %s", txt)

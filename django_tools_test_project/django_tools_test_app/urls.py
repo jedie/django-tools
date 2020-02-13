@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     Dynamic SITE ID unittests
     ~~~~~~~~~~~~~~~~~~~~~~~~~

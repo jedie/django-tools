@@ -34,4 +34,4 @@ def find_executable(filename, extra_search_paths=None):
                 raise FileNotFoundError("%s exists, but it's not executable!" % path)
             return path
 
-    raise FileNotFoundError("Can't find %r in PATH or %s!" % (filename, extra_search_paths))
+    raise FileNotFoundError(f"Can't find {filename!r} in PATH or {extra_search_paths}!")

@@ -1,4 +1,3 @@
-
 """
     :created: 24.04.2018 by Jens Diemer
     :copyleft: 2018 by the django-tools team, see AUTHORS for more details.

@@ -1,5 +1,3 @@
-# coding:utf-8
-
 """
     utils around django messages
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -10,7 +8,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 
 import inspect
@@ -28,7 +25,7 @@ STACK_LIMIT = 6 # Display only the last X stack lines
 MAX_FILEPATH_LEN = 50 # Cut filepath in stack info message
 
 
-class FileLikeMessages(object):
+class FileLikeMessages:
     """
     Simple layer around messages, to get a file-like object.
     
@@ -79,7 +76,7 @@ class StackInfoStorage(FallbackStorage):
 
     def add(self, *args, **kwargs):
         """ Add stackinfo to the message """
-        super(StackInfoStorage, self).add(*args, **kwargs)
+        super().add(*args, **kwargs)
 
         if self._add_stackinfo:
             # info: self._queued_messages is a normal list, defined in BaseStorage()

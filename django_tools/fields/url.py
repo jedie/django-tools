@@ -1,6 +1,3 @@
-# coding:utf-8
-
-
 """
     url form/model field
     ~~~~~~~~~~~~~~~~~~~~
@@ -11,7 +8,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 
 from django.db.models.fields import CharField as OriginModelCharField
@@ -139,5 +135,5 @@ class URLModelField2(OriginModelCharField):
             "allow_fragment":self.allow_fragment,
         }
         defaults.update(kwargs)
-        return super(URLModelField2, self).formfield(**defaults)
+        return super().formfield(**defaults)
 

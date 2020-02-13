@@ -1,6 +1,4 @@
-
-
-class DisableMigrations(object):
+class DisableMigrations:
     """
     Speedup test run start by disable migrations, just create the database tables ;)
 

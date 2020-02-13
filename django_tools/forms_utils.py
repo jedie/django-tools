@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     forms utils
     ~~~~~~~~~~~
@@ -14,13 +12,12 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 
 from django import forms
 
 
-class LimitManyToManyFields(object):
+class LimitManyToManyFields:
     """
     Limit ManyToMany fields in forms. Hide the field, if only one item can be selected.
     
@@ -63,7 +60,7 @@ class LimitManyToManyFields(object):
         assert isinstance(m2m_limit, dict), \
             "%s error: first argument must be the m2m limit dict!" % self.__class__.__name__
 
-        super(LimitManyToManyFields, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         for field_name, limits in m2m_limit.items():
             if len(limits) == 1:

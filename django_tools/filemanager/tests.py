@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     unittests for filemanager
     ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -8,7 +6,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 
 import os
@@ -36,7 +33,7 @@ class FilemanagerBaseTestCase(unittest.TestCase):
     """
     @classmethod
     def setUpClass(cls):
-        super(FilemanagerBaseTestCase, cls).setUpClass()
+        super().setUpClass()
         cls.BASE_PATH = "%s/" % tempfile.mkdtemp(prefix="filemanager-unittests_")
 
         # For dir traversal attack tests
@@ -78,7 +75,7 @@ class FilemanagerBaseTestCase(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        super(FilemanagerBaseTestCase, cls).tearDownClass()
+        super().tearDownClass()
         tempdir = tempfile.gettempdir()
         if cls.BASE_PATH.startswith(tempdir):
             for root, dirs, files in os.walk(cls.BASE_PATH, topdown=False):
@@ -90,7 +87,7 @@ class FilemanagerBaseTestCase(unittest.TestCase):
                     os.rmdir(path)
             os.rmdir(cls.BASE_PATH)
         else:
-            cls.fail("Cleanup error: %s not in %s" % (cls.BASE_PATH, tempdir))
+            cls.fail(f"Cleanup error: {cls.BASE_PATH} not in {tempdir}")
 
     def test_setup(self):
         """ if this tests fails, all other may fail, too. """

@@ -59,7 +59,7 @@ class SeleniumHelperTests(unittest.TestCase):
             old_path = os.environ["PATH"]
             try:
                 # File is in PATH, but not executable:
-                os.environ["PATH"] += "%s%s" % (os.pathsep, path)
+                os.environ["PATH"] += f"{os.pathsep}{path}"
                 with self.assertRaises(FileNotFoundError) as context_manager:
                     find_executable(name)
 

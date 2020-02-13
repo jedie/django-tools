@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     permission_info manage command
 
@@ -77,13 +75,13 @@ class Command(BaseCommand):
         try:
             user = UserModel.objects.get(username=username)
         except UserModel.DoesNotExist as err:
-            self.stderr.write("Username %r doesn't exists: %s" % (username, err))
+            self.stderr.write(f"Username {username!r} doesn't exists: {err}")
             self.list_usernames()
             return
 
         for attr_name in ("is_active", "is_staff", "is_superuser"):
             info = "yes" if getattr(user, attr_name) else "no"
-            self.stdout.write("\t%-13s: %s" % (attr_name, info))
+            self.stdout.write(f"\t{attr_name:<13}: {info}")
 
         if user.is_superuser:
             self.stdout.write("Don't list permissions: Superusers has all permissions ;)")
@@ -104,7 +102,7 @@ class Command(BaseCommand):
             seen_permissions.add(perm_name)
 
             contains = "[*]" if user.has_perm(perm_name) else "[ ]"
-            self.stdout.write("%s %s" % (contains, perm_name))
+            self.stdout.write(f"{contains} {perm_name}")
 
         # We should never miss a permission, but we can still try it out:
         not_seen = all_permissions - seen_permissions

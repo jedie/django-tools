@@ -29,7 +29,7 @@ class QueryLogMiddleware(MiddlewareMixin):
             print("Duplicate Queries: %s" % duplicates)
             print()
             for query, count in list(queries.items()):
-                print("%s x %s" % (count, query))
+                print(f"{count} x {query}")
             print("------------------------------------------------------")
         return response
 

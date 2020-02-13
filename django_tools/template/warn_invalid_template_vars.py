@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     Send warnings if a template variable does not exist in the content.
 
@@ -32,7 +30,7 @@ def add_warning():
 
     class WarnVariableDoesNotExist(template.VariableDoesNotExist):
         def __init__(self, *args, **kwargs):
-            super(WarnVariableDoesNotExist, self).__init__(*args, **kwargs)
+            super().__init__(*args, **kwargs)
 
             warn_msg = str(self) # get the complete message encoded in UTF-8
             if len(warn_msg) > MAX_LEN:

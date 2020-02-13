@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     filemanager
     ~~~~~~~~~~~
@@ -11,7 +9,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 
 
@@ -35,7 +32,7 @@ from django_tools.filemanager.filesystem_browser import BaseFilesystemBrowser
 from django_tools.filemanager.utils import symbolic_notation
 
 
-class BaseFilesystemObject(object):
+class BaseFilesystemObject:
     def __init__(self, base_path, name, abs_path, link_path=None):
         self.base_path = base_path # path in which this item exists
         self.name = name # The name of the directory item
@@ -56,7 +53,7 @@ class BaseFilesystemObject(object):
         self.groupname = grp.getgrgid(self.gid).gr_name
 
     def __repr__(self):
-        return "%s '%s' in %s" % (self.item_type, self.name, self.base_path)
+        return f"{self.item_type} '{self.name}' in {self.base_path}"
 
 
 class BaseFileItem(BaseFilesystemObject):
@@ -73,12 +70,12 @@ class BaseDirItem(BaseFilesystemObject):
 
 class BaseFileLinkItem(BaseFileItem):
     def __init__(self, *args, **kwargs):
-        super(BaseFileLinkItem, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.item_type = "file link to %s" % self.link_path
 
 class BaseDirLinkItem(BaseDirItem):
     def __init__(self, *args, **kwargs):
-        super(BaseDirLinkItem, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.item_type = "dir link to %s" % self.link_path
 
 
@@ -95,7 +92,7 @@ class BaseFilemanager(BaseFilesystemBrowser):
     FILE_LINK_ITEM = BaseFileLinkItem
 
     def __init__(self, request, absolute_path, base_url, rest_url, allow_upload=False):
-        super(BaseFilemanager, self).__init__(request, absolute_path, base_url, rest_url)
+        super().__init__(request, absolute_path, base_url, rest_url)
 
         self.allow_upload = allow_upload
         self.dir_items = self.read_dir(self.absolute_path)

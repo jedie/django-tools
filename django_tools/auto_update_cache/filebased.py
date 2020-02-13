@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     Auto update Filebased cache
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~    
@@ -8,7 +6,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 import logging
 import time
@@ -67,7 +64,7 @@ class AutoUpdateFileBasedCache(FileBasedCache):
     NEXT_SYNC = None # Point in the future to update the CHANGE_TIME
 
     def __init__(self, *args, **kwargs):
-        super(AutoUpdateFileBasedCache, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         import warnings
         warnings.warn(
             "django-tools AutoUpdateFileBasedCache is deprecated, use new SmoothCacheBackends!",
@@ -95,7 +92,7 @@ class AutoUpdateFileBasedCache(FileBasedCache):
             # Update timestamp we must look for a new change time from cache:
             self.NEXT_SYNC = now + AUTOUPDATECACHE_UPDATE_TIMESTAMP
 
-            change_time = super(AutoUpdateFileBasedCache, self).get(AUTOUPDATECACHE_CHANGE_TIME)
+            change_time = super().get(AUTOUPDATECACHE_CHANGE_TIME)
             if change_time is None:
                 logger.debug("CHANGE_TIME is None")
                 self.save_change_time() # save change time into cache             
@@ -121,12 +118,12 @@ class AutoUpdateFileBasedCache(FileBasedCache):
         load_average = os.getloadavg()[0] # load over last minute
         max_age = get_max_age(load_average)
         if outdate_age > max_age:
-            logger.debug("Out-dated %r (age: %s, max age: %s, load: %s)" % (
+            logger.debug("Out-dated {!r} (age: {}, max age: {}, load: {})".format(
                 key, outdate_age, max_age, load_average
             ))
             return True
 
-        logger.debug("Keep %r by load (out-dated age: %s, max age: %s, load: %s)" % (
+        logger.debug("Keep {!r} by load (out-dated age: {}, max age: {}, load: {})".format(
             key, outdate_age, max_age, load_average
         ))
         return False
@@ -159,7 +156,7 @@ class AutoUpdateFileBasedCache(FileBasedCache):
                     #----------------------------------------------------------
             finally:
                 f.close()
-        except (IOError, OSError, EOFError, pickle.PickleError):
+        except (OSError, EOFError, pickle.PickleError):
             pass
         return default
 

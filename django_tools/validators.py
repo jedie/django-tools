@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     need full validators
     ~~~~~~~~~~~~~~~~~~~~
@@ -8,7 +6,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 
 
@@ -31,7 +28,7 @@ validate_language_code = RegexValidator(
 )
 
 
-class ExistingDirValidator(object):
+class ExistingDirValidator:
     def __init__(self, base_path=settings.MEDIA_ROOT):
         self.base_path = os.path.normpath(os.path.abspath(base_path))
 
@@ -40,7 +37,7 @@ class ExistingDirValidator(object):
 
         if not abs_path.startswith(self.base_path):
             if settings.DEBUG:
-                msg = _("Directory %r is not in base path ('%s')" % (abs_path, self.base_path))
+                msg = _(f"Directory {abs_path!r} is not in base path ('{self.base_path}')")
             else:
                 msg = _("Directory is not in base path!")
             raise ValidationError(msg)
@@ -66,7 +63,7 @@ class URLValidator2(URLValidator):
     regex = re.compile(r'^.+$', re.IGNORECASE)
 
     def __init__(self, allow_schemes=("http", "https"), allow_all_schemes=False, allow_netloc=True, allow_query=True, allow_fragment=True):
-        super(URLValidator2, self).__init__()
+        super().__init__()
 
         if __debug__ and (allow_schemes or allow_all_schemes) and not allow_netloc:
             raise AssertionError("Can't allow schemes without netloc!")

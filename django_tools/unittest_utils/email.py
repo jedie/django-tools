@@ -51,7 +51,7 @@ def print_mailbox(outbox, max_length=120):
                         data = attachment.get_payload(decode=True)
                     else:
                         filename, data, mine_type = attachment
-                        line = " * %s (%s)" % (filename, mine_type)
+                        line = f" * {filename} ({mine_type})"
 
                     print(line, end=" ")
                     print(cutted_bytes(data, num=(max_length - len(line))))

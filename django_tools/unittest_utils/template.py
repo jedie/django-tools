@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 from copy import deepcopy
 
 from django.conf import settings
@@ -26,4 +22,4 @@ class set_string_if_invalid(override_settings):
         for template_settings in TEMPLATES:
             template_settings['OPTIONS']['string_if_invalid'] = string_if_invalid
 
-        super(set_string_if_invalid, self).__init__(TEMPLATES=TEMPLATES)
+        super().__init__(TEMPLATES=TEMPLATES)

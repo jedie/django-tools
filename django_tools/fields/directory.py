@@ -1,6 +1,3 @@
-# coding: utf-8
-
-
 """
     directory selection
     ~~~~~~~~~~~~~~~~~~~~
@@ -9,7 +6,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 
 import os
@@ -33,13 +29,13 @@ class DirectoryWidget(forms.TextInput):
 
 class DirectoryFormField(forms.CharField):
     def __init__(self, base_path=settings.MEDIA_ROOT, *args, **kwargs):
-        super(DirectoryFormField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.validators.append(
             validators.ExistingDirValidator(base_path=base_path)
         )
 
     def clean(self, value):
-        value = super(DirectoryFormField, self).clean(value)
+        value = super().clean(value)
         value = os.path.normpath(value)
         return value
 
@@ -72,7 +68,7 @@ class DirectoryModelField(models.CharField):#, with_metaclass(models.SubfieldBas
     description = _("A existing/accessible directory")
 
     def __init__(self, max_length=256, base_path=settings.MEDIA_ROOT, *args, **kwargs):
-        super(DirectoryModelField, self).__init__(*args, max_length=max_length, **kwargs)
+        super().__init__(*args, max_length=max_length, **kwargs)
         self.validators.append(
             validators.ExistingDirValidator(base_path=base_path)
         )
@@ -81,4 +77,4 @@ class DirectoryModelField(models.CharField):#, with_metaclass(models.SubfieldBas
         """ Use always own widget and form field. """
         kwargs["widget"] = DirectoryWidget
         kwargs['form_class'] = DirectoryFormField
-        return super(DirectoryModelField, self).formfield(**kwargs)
+        return super().formfield(**kwargs)

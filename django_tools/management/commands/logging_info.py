@@ -39,6 +39,6 @@ class Command(BaseCommand):
             else:
                 prefix = "\t[ ]"
 
-            self.stdout.write("%s%r" % (prefix, log_name))
+            self.stdout.write(f"{prefix}{log_name!r}")
 
         self.stdout.write('[ ] -> not configured in settings.LOGGING["loggers"]')

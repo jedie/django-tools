@@ -25,7 +25,7 @@ class TestRequestUtils(unittest.TestCase):
         self.assertIsInstance(fake_request.user, AnonymousUser)
 
     def test_change_defaults(self):
-        class MockUser(object):
+        class MockUser:
             pass
 
         mock_user = MockUser()

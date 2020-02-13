@@ -9,7 +9,7 @@ class StringBuffer(io.StringIO):
     def write(self, data):
         # origin_stderr.write("\nwrite to StringBuffer:\n%s\n\n" % repr(data))
         data = smart_text(data)
-        super(StringBuffer, self).write(data)
+        super().write(data)
 
 
 class StdoutStderrBuffer():

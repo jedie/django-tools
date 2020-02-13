@@ -35,7 +35,7 @@ class UpdateTimeBaseModel(models.Model):
 
     def save(self, *args, **kwargs):
         self.lastupdatetime = now()
-        return super(UpdateTimeBaseModel, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     class Meta:
         abstract = True
@@ -82,7 +82,7 @@ class UpdateUserBaseModel(models.Model):
                     self.createby = current_user
                 self.lastupdateby = current_user
 
-        return super(UpdateUserBaseModel, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     class Meta:
         abstract = True

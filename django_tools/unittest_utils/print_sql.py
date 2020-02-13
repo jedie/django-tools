@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """   
     print SQL
     ~~~~~~~~~
@@ -8,7 +6,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 from django.db import connections, DEFAULT_DB_ALIAS
 from django.utils import six
 from django.test.utils import CaptureQueriesContext
@@ -60,10 +57,10 @@ class PrintQueries(CaptureQueriesContext):
             using = kwargs.pop("using", DEFAULT_DB_ALIAS)
             kwargs["connection"] = connections[using]
 
-        super(PrintQueries, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def __exit__(self, exc_type, exc_value, traceback):
-        super(PrintQueries, self).__exit__(exc_type, exc_value, traceback)
+        super().__exit__(exc_type, exc_value, traceback)
         if exc_type is not None:
             return
 

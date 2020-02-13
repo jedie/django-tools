@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     database_info manage command
 

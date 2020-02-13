@@ -37,7 +37,7 @@ class LimitToUsergroupsTest1(TestCase):
 
 class LimitToUsergroupsTest2(TestUserMixin, BaseTestCase, TestCase):
     def _pre_setup(self):
-        super(LimitToUsergroupsTest2, self)._pre_setup()
+        super()._pre_setup()
         self.create_testusers()
 
     def setUp(self):

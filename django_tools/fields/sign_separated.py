@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     sign separated
     ~~~~~~~~~~~~~~
@@ -12,7 +10,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 
 if __name__ == "__main__":
@@ -58,11 +55,11 @@ class SignSeparatedInput(forms.widgets.Input):
 
     def __init__(self, separator=",", *args, **kwargs):
         self.separator = separator
-        super(SignSeparatedInput, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def render(self, name, value, attrs=None):
         value = _join(value, self.separator)
-        return super(SignSeparatedInput, self).render(name, value, attrs)
+        return super().render(name, value, attrs)
 
 
 class SignSeparatedFormField(forms.CharField):
@@ -99,7 +96,7 @@ class SignSeparatedFormField(forms.CharField):
 
         self.widget = SignSeparatedInput(separator)
 
-        super(SignSeparatedFormField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def to_python(self, value):
         values = _split(value, self.separator, self.strip_items, self.skip_empty)
@@ -165,7 +162,7 @@ class SignSeparatedModelField(models.TextField):
         self.separator = separator
         self.strip_items = strip_items
         self.skip_empty = skip_empty
-        super(SignSeparatedModelField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def to_python(self, value):
         """
@@ -189,7 +186,7 @@ class SignSeparatedModelField(models.TextField):
 
         kwargs["widget"] = SignSeparatedInput
         kwargs["form_class"] = SignSeparatedFormField
-        return super(SignSeparatedModelField, self).formfield(**kwargs)
+        return super().formfield(**kwargs)
 
 
 

@@ -49,15 +49,15 @@ class isolated_filesystem(TestContextDecorator):
         os.chdir(str(self.cwd)) # str() needed for older python <=3.5
         try:
             shutil.rmtree(self.temp_path)
-        except (OSError, IOError):
+        except OSError:
             pass
 
     def decorate_class(self, cls):
         self.prefix_candidate = cls.__name__
-        print("prefix from class %r: %r" % (cls, self.prefix_candidate))
+        print(f"prefix from class {cls!r}: {self.prefix_candidate!r}")
         return super().decorate_class(cls)
 
     def decorate_callable(self, func):
         self.prefix_candidate = func.__name__
-        print("prefix from func %r: %r" % (func, self.prefix_candidate))
+        print(f"prefix from func {func!r}: {self.prefix_candidate!r}")
         return super().decorate_callable(func)

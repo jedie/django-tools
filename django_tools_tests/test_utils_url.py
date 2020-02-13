@@ -26,7 +26,7 @@ class TestGetDict(SimpleTestCase):
         assert_pformat_equal(q.urlencode(), "another_empty&this_is_empty")
 
     def test_multi(self):
-        q = GetDict(str("vote=yes&vote=no"))
+        q = GetDict("vote=yes&vote=no")
         assert_pformat_equal(q.urlencode(), "vote=no&vote=yes")
         q["empty"] = None
         assert_pformat_equal(q.urlencode(), "empty&vote=no&vote=yes")

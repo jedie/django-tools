@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     some utils around url
     ~~~~~~~~~~~~~~~~~~~~~
@@ -9,7 +7,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 from django.http import QueryDict
 from django.utils.encoding import force_bytes
@@ -24,7 +21,7 @@ class GetDict(QueryDict):
     """
     def __init__(self, *args, **kwargs):
         kwargs["mutable"]=True
-        super(GetDict, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def _encode(self, k, v, safe=None):
         if safe is None:
@@ -34,7 +31,7 @@ class GetDict(QueryDict):
             return quote(k, safe)
 
         v = force_bytes(v, self.encoding)
-        return '%s=%s' % ((quote(k, safe), quote(v, safe)))
+        return '{}={}'.format(quote(k, safe), quote(v, safe))
 
     def urlencode(self, safe=None):
         """

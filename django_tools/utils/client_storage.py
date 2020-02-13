@@ -1,5 +1,3 @@
-# coding:utf-8
-
 """
     Client storage
     ~~~~~~~~~~~~~~
@@ -33,7 +31,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 import os
 import warnings
@@ -45,7 +42,7 @@ class SignedCookieStorageError(signing.BadSignature):
     pass
 
 
-class SignedCookieStorage(object):
+class SignedCookieStorage:
     """  
     see:
         django_tools_tests.test_signed_cookie.TestSignedCookieStorage
@@ -77,7 +74,7 @@ class SignedCookieStorage(object):
 
 
 
-class ClientCookieStorage(object):
+class ClientCookieStorage:
     """
     Support the old API
 

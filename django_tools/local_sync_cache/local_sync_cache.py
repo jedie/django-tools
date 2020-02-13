@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     Local sync cache
     ~~~~~~~~~~~~~~~~
@@ -80,7 +78,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 import logging
 import sys
@@ -116,7 +113,7 @@ def _get_cache():
         logger.critical(msg)
 
     django_cache = caches[cache_name]
-    logger.debug("Use django '%s' cache: %r" % (cache_name, django_cache))
+    logger.debug(f"Use django '{cache_name}' cache: {django_cache!r}")
     return django_cache
 
 
@@ -137,7 +134,7 @@ class LocalSyncCache(dict):
             for existing_cache in self.CACHES:
                 if id == existing_cache.id:
                     logger.error(
-                        "ID %r was already used! It must be unique! (Existing ids are: %s)" % (
+                        "ID {!r} was already used! It must be unique! (Existing ids are: {})".format(
                             id, repr([i.id for i in self.CACHES])
                         )
                     )
@@ -176,7 +173,7 @@ class LocalSyncCache(dict):
         elif self.last_reset < global_update_time:
             # We have out-dated data -> reset dict
             self.ext_clear_counter += 1
-            logger.info("%r out-dated data -> reset (global_update_time: %r - self.last_reset: %r)" % (self.id, global_update_time, self.last_reset))
+            logger.info(f"{self.id!r} out-dated data -> reset (global_update_time: {global_update_time!r} - self.last_reset: {self.last_reset!r})")
             dict.clear(self)
             self.last_reset = time.time()
 
@@ -196,7 +193,7 @@ class LocalSyncCache(dict):
         dict.clear(self)
         self.last_reset = time.time()
         self.django_cache.set(self.id, self.last_reset)
-        logger.info("%r - dict.clear - Set global_update_time to %r" % (self.id, self.last_reset))
+        logger.info(f"{self.id!r} - dict.clear - Set global_update_time to {self.last_reset!r}")
 
         # Save reset time in this thread for re-adding it to cache in check_state()
         self._OWN_RESET_TIMES[self.id] = self.last_reset
@@ -204,7 +201,7 @@ class LocalSyncCache(dict):
         # Check if cache worked
         cached_value = self.django_cache.get(self.id)
         if cached_value != self.last_reset:
-            logger.error("Cache seems not to work: %r != %r" % (cached_value, self.last_reset))
+            logger.error(f"Cache seems not to work: {cached_value!r} != {self.last_reset!r}")
 
     @staticmethod
     def get_cache_information():
@@ -251,9 +248,9 @@ class LocalSyncCache(dict):
             instance = item["instance"]
 
             for attr in attributes:
-                output.append("%22s: %s" % (attr, getattr(instance, attr)))
+                output.append("{:>22}: {}".format(attr, getattr(instance, attr)))
 
             for key, value in item.items():
-                output.append("%22s: %r" % (key, value))
+                output.append(f"{key:>22}: {value!r}")
 
         return "\n".join(output)

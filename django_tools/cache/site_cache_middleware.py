@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     per-site cache middleware
     ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -10,7 +8,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 import logging
 import sys
@@ -91,7 +88,7 @@ init_cache_counting()
 
 
 def build_cache_key(url, language_code, site_id):
-    cache_key = "%s:%s:%s" % (url, language_code, site_id)
+    cache_key = f"{url}:{language_code}:{site_id}"
     if EXTRA_DEBUG:
         logger.debug("Cache key: %r" % cache_key)
     return cache_key
@@ -129,10 +126,10 @@ def delete_cache_item(url, language_code, site_id=None):
     cache.delete(cache_key)
 
 
-class CacheMiddlewareBase(object):
+class CacheMiddlewareBase:
     def use_cache(self, request, response=None):
         if not request.method in ('GET', 'HEAD'):
-            logger.debug("Don't cache %r (%s)" % (request.method, request.get_full_path()))
+            logger.debug("Don't cache {!r} ({})".format(request.method, request.get_full_path()))
             return False
 
         if RUN_WITH_DEV_SERVER and request.path.startswith(settings.STATIC_URL):
@@ -141,7 +138,7 @@ class CacheMiddlewareBase(object):
             return False
 
         if response and response.status_code != 200:
-            logger.debug("Don't cache response with status code: %s (%s)" % (response.status_code, request.get_full_path()))
+            logger.debug("Don't cache response with status code: {} ({})".format(response.status_code, request.get_full_path()))
             return False
 
         if CACHE_MIDDLEWARE_ANONYMOUS_ONLY and request.user.is_authenticated:

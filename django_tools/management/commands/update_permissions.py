@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     update_permissions manage command
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

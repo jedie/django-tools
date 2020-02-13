@@ -1,8 +1,3 @@
-# coding: utf-8
-
-
-from __future__ import print_function, unicode_literals
-
 import logging
 import pprint
 
@@ -32,14 +27,14 @@ log = logging.getLogger(__name__)
 class TestPermissions(TestUserMixin, BaseTestCase):
     @classmethod
     def setUpTestData(cls):
-        super(TestPermissions, cls).setUpTestData()
+        super().setUpTestData()
 
         cls.extra_permission = get_permission_by_string(permission="django_tools_test_app.extra_permission")
 
         cls.instance = PermissionTestModel.objects.create(foo="bar")
 
     def setUp(self):
-        super(TestPermissions, self).setUp()
+        super().setUp()
 
         users = User.objects.all()
         usernames = users.values_list("username", flat=True).order_by("username")
@@ -95,7 +90,7 @@ class TestPermissions(TestUserMixin, BaseTestCase):
             },
         )
 
-        all_permissions = ["%s.%s" % (entry.content_type, entry.codename) for entry in Permission.objects.all()]
+        all_permissions = [f"{entry.content_type}.{entry.codename}" for entry in Permission.objects.all()]
         pprint.pprint(all_permissions)
 
         # Default mode permissions:

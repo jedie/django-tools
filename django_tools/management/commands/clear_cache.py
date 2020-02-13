@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     'clear django cache' manage command
 
