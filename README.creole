@@ -752,10 +752,12 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.46.0...master|compare v0.46.0...master]]
-** NEW: {{{"django_tools.middlewares.LogHeaders.LogRequestHeadersMiddleware"}}}
-** less restricted dependency specification
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.46.1...master|compare v0.46.1...master]]
 * TBC
+* v0.46.1 - 19.02.2020 - [[https://github.com/jedie/django-tools/compare/v0.46.0...v0.46.1|compare v0.46.0...v0.46.1]]
+** less restricted dependency specification
+** NEW: {{{"django_tools.middlewares.LogHeaders.LogRequestHeadersMiddleware"}}}
+** SeleniumChromiumTestCase: set "accept_languages" and disable "headless" mode, see also: https://github.com/jedie/django-tools/issues/21
 * v0.46.0 - 13.02.2020 - [[https://github.com/jedie/django-tools/compare/v0.45.3...v0.46.0|compare v0.45.3...v0.46.0]]
 ** {{{dynamic_site}}} was removed. Please use e.g.: [[https://github.com/jazzband/django-hosts|django-hosts]]
 ** modernize project setup and use {{{poetry}}}

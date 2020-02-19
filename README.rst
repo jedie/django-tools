@@ -873,13 +873,17 @@ Django compatibility
 history
 -------
 
-* *dev* - `compare v0.46.0...master <https://github.com/jedie/django-tools/compare/v0.46.0...master>`_ 
+* *dev* - `compare v0.46.1...master <https://github.com/jedie/django-tools/compare/v0.46.1...master>`_
 
-    * NEW: ``"django_tools.middlewares.LogHeaders.LogRequestHeadersMiddleware"``
+* TBC
+
+* v0.46.1 - 19.02.2020 - `compare v0.46.0...v0.46.1 <https://github.com/jedie/django-tools/compare/v0.46.0...v0.46.1>`_ 
 
     * less restricted dependency specification
 
-* TBC
+    * NEW: ``"django_tools.middlewares.LogHeaders.LogRequestHeadersMiddleware"``
+
+    * SeleniumChromiumTestCase: set "accept_languages" and disable "headless" mode, see also: `https://github.com/jedie/django-tools/issues/21 <https://github.com/jedie/django-tools/issues/21>`_
 
 * v0.46.0 - 13.02.2020 - `compare v0.45.3...v0.46.0 <https://github.com/jedie/django-tools/compare/v0.45.3...v0.46.0>`_ 
 
@@ -1612,4 +1616,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-02-19 11:42:05 with "python-creole"``
+``Note: this file is generated from README.creole 2020-02-19 14:33:41 with "python-creole"``
