@@ -3,14 +3,15 @@
     :copyleft: 2015-2020 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
+
 import logging
+import shutil
 
 from selenium import webdriver
 from selenium.webdriver import DesiredCapabilities
 
 # https://github.com/jedie/django-tools
 from django_tools.selenium.base import SeleniumBaseTestCase
-from django_tools.selenium.utils import find_executable
 
 
 log = logging.getLogger(__name__)
@@ -40,11 +41,7 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
 
     see also: django_tools_tests/test_unittest_selenium.py
     """
-
     filename = "chromedriver"
-
-    # Overwrite this in sub class, if needed:
-    extra_search_paths = ("/usr/lib/chromium-browser",)
 
     options = ("--no-sandbox", "--headless", "--disable-gpu")
     desired_capabilities = {
@@ -66,7 +63,7 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
             options.add_argument(argument)
 
         try:
-            executable = find_executable(cls.filename, cls.extra_search_paths)
+            executable = shutil.which(cls.filename)
         except FileNotFoundError:
             cls.driver = None
         else:
@@ -108,7 +105,7 @@ def chromium_available(filename=None):
         filename = SeleniumChromiumTestCase.filename
 
     try:
-        executable = find_executable(filename, SeleniumChromiumTestCase.extra_search_paths)
+        executable = shutil.which(filename)
     except FileNotFoundError as err:
         log.error("Chromium is no available: %s", err)
         return False
