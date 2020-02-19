@@ -111,10 +111,9 @@ def chromium_available(filename=None):
     if filename is None:
         filename = SeleniumChromiumTestCase.filename
 
-    try:
-        executable = shutil.which(filename)
-    except FileNotFoundError as err:
-        log.error("Chromium is no available: %s", err)
+    executable = shutil.which(filename)
+    if not executable:
+        log.error("Chromium is no available!")
         return False
 
     log.debug(f"Chromium found here: {executable}")
