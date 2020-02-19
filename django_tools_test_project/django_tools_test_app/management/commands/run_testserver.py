@@ -4,15 +4,14 @@ import os
 import sys
 
 from django.contrib.auth import get_user_model
-from django.contrib.staticfiles.management.commands.runserver import Command as RunServerCommand
-from django.core.management import call_command
+from django.core.management import BaseCommand, call_command
 
 
 print("sys.real_prefix:", getattr(sys, "real_prefix", "-"))
 print("sys.prefix:", sys.prefix)
 
 
-class Command(RunServerCommand):
+class Command(BaseCommand):
     """
     Expand django.contrib.staticfiles runserver
     """
@@ -38,5 +37,4 @@ class Command(RunServerCommand):
             if qs.count() == 0:
                 self.verbose_call("createsuperuser")
 
-        options["insecure_serving"] = True
-        super().handle(*args, **options)
+        self.verbose_call("runserver", use_threading=False, use_reloader=True, verbosity=2)
