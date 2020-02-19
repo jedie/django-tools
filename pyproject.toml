@@ -32,27 +32,27 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.6"
-icdiff = "^1.9.1"  # https://github.com/jeffkaufman/icdiff
-pprintpp = "^0.4.0"  # https://github.com/wolever/pprintpp
-bleach = "^3.1.0"
-django = "^2.2"
+icdiff = "*"  # https://github.com/jeffkaufman/icdiff
+pprintpp = "*"  # https://github.com/wolever/pprintpp
+bleach = "*"
+django = "*"
 
 [tool.poetry.dev-dependencies]
-poetry-publish = "^0.3.0"
-tox = "^3.14.3"
-pytest = "^4.6"
-pytest-django = "^3.8.0"
-pytest-cov = "^2.8.1"
-isort = "^4.3.21"
-flake8 = "^3.7.9"
-flynt = "^0.40.1"
-autopep8 = "^1.4.4"
-colorlog = "^4.1.0"
-easy_thumbnails = "^2.7"
-django-filer = "^1.6.0"
-django-parler = "^2.0.1"
-django-debug-toolbar = "^2.2"
-selenium = "^3.141.0"
+poetry-publish = "*"
+tox = "*"
+pytest = "*"
+pytest-django = "*"
+pytest-cov = "*"
+isort = "*"
+flake8 = "*"
+flynt = "*"
+autopep8 = "*"
+colorlog = "*"
+easy_thumbnails = "*"
+django-filer = "*"
+django-parler = "*"
+django-debug-toolbar = "*"
+selenium = "*"
 
 [tool.poetry.scripts]
 update_rst_readme = "django_tools.publish:update_readme"

@@ -873,7 +873,9 @@ Django compatibility
 history
 -------
 
-* *dev* - `compare v0.46.0...master <https://github.com/jedie/django-tools/compare/v0.46.0...master>`_
+* *dev* - `compare v0.46.0...master <https://github.com/jedie/django-tools/compare/v0.46.0...master>`_ 
+
+    * less restricted dependency specification
 
 * TBC
 
@@ -1608,4 +1610,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-02-13 14:57:58 with "python-creole"``
+``Note: this file is generated from README.creole 2020-02-19 09:51:41 with "python-creole"``
