@@ -43,7 +43,11 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
     """
     filename = "chromedriver"
 
-    options = ("--no-sandbox", "--headless", "--disable-gpu")
+    options = (
+        "--no-sandbox",
+        # "--headless", ## see: https://bugs.chromium.org/p/chromedriver/issues/detail?id=3358
+        "--disable-gpu"
+    )
     desired_capabilities = {
         "loggingPrefs": {
             "browser": "ALL",
@@ -53,12 +57,15 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
             "server": "ALL"
         }
     }
+    accept_languages = 'en'
 
     @classmethod
     def setUpClass(cls):
 
         options = webdriver.ChromeOptions()
         options.add_experimental_option('w3c', False)  # needed to get browser logs
+        options.add_experimental_option('prefs', {'intl.accept_languages': cls.accept_languages})
+
         for argument in cls.options:
             options.add_argument(argument)
 
