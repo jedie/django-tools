@@ -35,6 +35,7 @@ DATABASES = {
 CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache", "LOCATION": "unique-snowflake"}}
 
 MIDDLEWARE = (
+    "django_tools.middlewares.LogHeaders.LogRequestHeadersMiddleware",
     # https://github.com/jazzband/django-debug-toolbar/
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -182,6 +183,8 @@ LOGGING = {
     },
     "handlers": {"console": {"class": "colorlog.StreamHandler", "formatter": "colored"}},
     "loggers": {
+        "django": {"handlers": ["console"], "level": "WARNING", "propagate": False},
+        "django.request": {"handlers": ["console"], "level": "DEBUG", "propagate": False},
         "django_tools": {"handlers": ["console"], "level": "DEBUG", "propagate": False},
         "django_tools.DynamicSite": {"handlers": ["console"], "level": "DEBUG", "propagate": False},
     },

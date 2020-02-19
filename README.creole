@@ -753,6 +753,7 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.46.0...master|compare v0.46.0...master]]
+** NEW: {{{"django_tools.middlewares.LogHeaders.LogRequestHeadersMiddleware"}}}
 ** less restricted dependency specification
 * TBC
 * v0.46.0 - 13.02.2020 - [[https://github.com/jedie/django-tools/compare/v0.45.3...v0.46.0|compare v0.45.3...v0.46.0]]
