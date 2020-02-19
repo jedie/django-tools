@@ -37,13 +37,15 @@ class TestDjangoCommand(DjangoCommandMixin, TestCase):
         env["DJANGO_SETTINGS_MODULE"] = "does-not-exist"
 
         with self.assertRaises(AssertionError) as cm:
-            self.call_manage_py(["diffsettings"], manage_dir=MANAGE_DIR, env=env)
+            self.call_manage_py(
+                ["diffsettings"], manage_dir=MANAGE_DIR, env=env
+            )
 
         output = "\n".join(cm.exception.args)
-        # print(output)
+        print(output)
 
         self.assertIn("subprocess exist status == 1", output)
-        self.assertIn("ModuleNotFoundError: No module named 'does-not-exist'", output)
+        self.assertIn('Do not set DJANGO_SETTINGS_MODULE !', output)
 
     def test_excepted_exit_code(self):
         output = self.call_manage_py(
