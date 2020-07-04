@@ -1,11 +1,13 @@
-============
-django-tools
-============
+|django-tools|
+
+.. |django-tools| image:: https://raw.githubusercontent.com/jedie/django-tools/master/logo/logo.svg
 
 Miscellaneous tools for django.
 
 Look also at the siblings project: `django-cms-tools <https://github.com/jedie/django-cms-tools>`_ (Tools/helpers around Django-CMS).
 
++-----------------------------------+--------------------------------------------------+
+| |Build Status on github|          | `github.com/jedie/django-tools/actions`_         |
 +-----------------------------------+--------------------------------------------------+
 | |Build Status on travis-ci.org|   | `travis-ci.org/jedie/django-tools`_              |
 +-----------------------------------+--------------------------------------------------+
@@ -16,6 +18,8 @@ Look also at the siblings project: `django-cms-tools <https://github.com/jedie/d
 | |Status on landscape.io|          | `landscape.io/github/jedie/django-tools/master`_ |
 +-----------------------------------+--------------------------------------------------+
 
+.. |Build Status on github| image:: https://github.com/jedie/django-tools/workflows/test/badge.svg?branch=master
+.. _github.com/jedie/django-tools/actions: https://github.com/jedie/django-tools/actions
 .. |Build Status on travis-ci.org| image:: https://travis-ci.org/jedie/django-tools.svg
 .. _travis-ci.org/jedie/django-tools: https://travis-ci.org/jedie/django-tools/
 .. |Coverage Status on codecov.io| image:: https://codecov.io/gh/jedie/django-tools/branch/master/graph/badge.svg
@@ -24,6 +28,8 @@ Look also at the siblings project: `django-cms-tools <https://github.com/jedie/d
 .. _coveralls.io/r/jedie/django-tools: https://coveralls.io/r/jedie/django-tools
 .. |Status on landscape.io| image:: https://landscape.io/github/jedie/django-tools/master/landscape.svg
 .. _landscape.io/github/jedie/django-tools/master: https://landscape.io/github/jedie/django-tools/master
+
+(Logo contributed by `@reallinfo <https://github.com/reallinfo>`_ see `#16 <https://github.com/jedie/django-tools/pull/16>`_)
 
 -------
 try-out
@@ -1616,4 +1622,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-02-19 14:33:41 with "python-creole"``
+``Note: this file is generated from README.creole 2020-07-04 20:28:03 with "python-creole"``
