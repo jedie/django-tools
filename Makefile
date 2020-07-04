@@ -28,6 +28,11 @@ install-poetry: ## install or update poetry
 install: check-poetry ## install django-tools via poetry
 	poetry install
 
+update: check-poetry ## update the sources and installation
+	git fetch --all
+	git pull origin master
+	poetry update
+
 lint: ## Run code formatters and linter
 	poetry run flynt --fail-on-change --line_length=${MAX_LINE_LENGTH} django_tools django_tools_test_project django_tools_tests
 	poetry run isort --check-only --recursive django_tools django_tools_test_project django_tools_tests
