@@ -4,6 +4,7 @@ Miscellaneous tools for django.
 
 Look also at the siblings project: [[https://github.com/jedie/django-cms-tools|django-cms-tools]] (Tools/helpers around Django-CMS).
 
+| {{https://github.com/jedie/django-tools/workflows/test/badge.svg?branch=master|Build Status on github}} | [[https://github.com/jedie/django-tools/actions|github.com/jedie/django-tools/actions]] |
 | {{https://travis-ci.org/jedie/django-tools.svg|Build Status on travis-ci.org}} | [[https://travis-ci.org/jedie/django-tools/|travis-ci.org/jedie/django-tools]] |
 | {{https://codecov.io/gh/jedie/django-tools/branch/master/graph/badge.svg|Coverage Status on codecov.io}} | [[https://codecov.io/gh/jedie/django-tools|codecov.io/gh/jedie/django-tools]] |
 | {{https://coveralls.io/repos/jedie/django-tools/badge.svg|Coverage Status on coveralls.io}} | [[https://coveralls.io/r/jedie/django-tools|coveralls.io/r/jedie/django-tools]] |
