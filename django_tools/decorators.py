@@ -4,7 +4,7 @@
 
     from PyLucid decorators.
 
-    :copyleft: 2009-2018 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2009-2020 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -18,7 +18,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
 
@@ -122,8 +122,8 @@ def render_to(template_name=None, debug=False, **response_kwargs):
                 " or 'template_name' must be inserted into context!"
             )
 
-            response = render_to_response(
-                template_name2, context, context_instance=RequestContext(request), **response_kwargs
+            response = render(
+                template_name2, context, context=RequestContext(request), **response_kwargs
             )
 
             if debug:
