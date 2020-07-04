@@ -53,10 +53,9 @@ def check_permissions(superuser_only, permissions=()):
                 raise PermissionDenied(msg)
 
             if not user.has_perms(permissions):
-                msg = "User {!r} has not all permissions: {!r} (existing permissions: {!r})".format(
-                    user,
-                    permissions,
-                    user.get_all_permissions(),
+                msg = (
+                    f"User {user!r} has not all permissions: {permissions!r}"
+                    f" (existing permissions: {user.get_all_permissions()!r})"
                 )
                 if settings.DEBUG:  # Usefull??
                     warnings.warn(msg)
@@ -107,11 +106,10 @@ def render_to(template_name=None, debug=False, **response_kwargs):
 
             if not isinstance(context, dict):
                 if debug:
-                    msg = ("renter_to info: %s (template: %r)" " has not return a dict, has return: %r (%r)") % (
-                        function.__name__,
-                        template_name,
-                        type(context),
-                        function.__code__,
+                    msg = (
+                        f"renter_to info: {function.__name__}"
+                        f" (template: {template_name!r}) has not return a dict,"
+                        f" has return: {type(context)!r} ({function.__code__!r})"
                     )
                     messages.info(request, msg)
                 return context
@@ -127,7 +125,10 @@ def render_to(template_name=None, debug=False, **response_kwargs):
             )
 
             if debug:
-                messages.info(request, f"render debug for {function.__name__!r} (template: {template_name2!r}):")
+                messages.info(
+                    request,
+                    f"render debug for {function.__name__!r} (template: {template_name2!r}):"
+                )
                 messages.info(request, "local view context:", context)
                 messages.info(request, "response:", response.content)
 
