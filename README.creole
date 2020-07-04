@@ -1,4 +1,4 @@
-= django-tools
+{{https://raw.githubusercontent.com/jedie/django-tools/master/logo/logo.svg|django-tools}}
 
 Miscellaneous tools for django.
 
@@ -9,6 +9,7 @@ Look also at the siblings project: [[https://github.com/jedie/django-cms-tools|d
 | {{https://coveralls.io/repos/jedie/django-tools/badge.svg|Coverage Status on coveralls.io}} | [[https://coveralls.io/r/jedie/django-tools|coveralls.io/r/jedie/django-tools]] |
 | {{https://landscape.io/github/jedie/django-tools/master/landscape.svg|Status on landscape.io}} | [[https://landscape.io/github/jedie/django-tools/master|landscape.io/github/jedie/django-tools/master]] |
 
+(Logo contributed by [[https://github.com/reallinfo|@reallinfo]] see [[https://github.com/jedie/django-tools/pull/16|#16]])
 
 == try-out
 
