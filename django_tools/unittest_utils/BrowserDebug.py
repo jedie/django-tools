@@ -21,10 +21,18 @@ from collections import OrderedDict
 from pprint import pformat
 from xml.sax.saxutils import escape
 
+from django import VERSION as django_version
 from django.contrib import messages
 from django.utils.encoding import force_text
 from django.utils.html import strip_tags
-from django.views.debug import get_safe_settings
+
+
+if django_version < "3.1":
+    from django.views.debug import get_safe_settings
+else:
+    from django.views.debug import get_default_exception_reporter_filter
+    get_safe_settings = get_default_exception_reporter_filter().get_safe_settings
+
 
 # https://github.com/jedie/django-tools
 from django_tools.utils.stack_info import get_stack_info
