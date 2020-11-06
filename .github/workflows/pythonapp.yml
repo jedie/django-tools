@@ -4,6 +4,7 @@ on:
   schedule:
     - cron: '0 8 * * *'
   push:
+  pull_request:
 
 jobs:
   test:
