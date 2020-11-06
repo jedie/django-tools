@@ -27,7 +27,7 @@ from django.utils.encoding import force_text
 from django.utils.html import strip_tags
 
 
-if django_version < "3.1":
+if django_version < (3, 1):
     from django.views.debug import get_safe_settings
 else:
     from django.views.debug import get_default_exception_reporter_filter
