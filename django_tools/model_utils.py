@@ -8,9 +8,9 @@
 
 
 from django.conf import settings
+from django.core.exceptions import FieldDoesNotExist
 from django.db import IntegrityError
 from django.db.models import signals
-from django.db.models.fields import FieldDoesNotExist
 from django.utils.text import get_text_list
 from django.utils.translation import ugettext as _
 
