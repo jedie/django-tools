@@ -98,7 +98,7 @@ class TestPermissions(TestUserMixin, BaseTestCase):
             },
         )
 
-        all_permissions = [f"{entry.content_type}.{entry.codename}" for entry in Permission.objects.all()]
+        all_permissions = [f"{entry.content_type.name}.{entry.codename}" for entry in Permission.objects.all()]
         pprint.pprint(all_permissions)
 
         # Default mode permissions:
