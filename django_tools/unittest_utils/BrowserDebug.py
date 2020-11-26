@@ -21,10 +21,10 @@ from collections import OrderedDict
 from pprint import pformat
 from xml.sax.saxutils import escape
 
-from django import VERSION as django_version
 from django.contrib import messages
-from django.utils.encoding import force_str
+from django.utils.encoding import force_text
 from django.utils.html import strip_tags
+
 
 try:
     from django.views.debug import get_default_exception_reporter_filter
@@ -34,8 +34,6 @@ except ImportError:
     # Old Django version
     from django.views.debug import get_safe_settings
 
-
-# https://github.com/jedie/django-tools
 from django_tools.utils.stack_info import get_stack_info
 
 
@@ -158,10 +156,10 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True, di
         value = pformat(value)
 
         try:
-            value = force_str(value, errors="strict")
+            value = force_text(value, errors="strict")
         except UnicodeDecodeError:
             log.exception(f"decode error in attr {attr!r}:")
-            value = force_str(value, errors="replace")
+            value = force_text(value, errors="replace")
 
         value = escape(value)
         response_info += f"\t<dd><pre>{value}</pre></dd>\n"

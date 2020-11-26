@@ -12,7 +12,14 @@ from django.core.exceptions import FieldDoesNotExist
 from django.db import IntegrityError
 from django.db.models import signals
 from django.utils.text import get_text_list
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
+
+
+try:
+    from django.core.exceptions import FieldDoesNotExist
+except ImportError:
+    # Old Django version
+    from django.db.models.fields import FieldDoesNotExist
 
 
 def check_unique_together(sender, **kwargs):
