@@ -5,7 +5,7 @@ import sys
 
 
 def cli():
-    os.environ["DJANGO_SETTINGS_MODULE"] = "django_tools_test_project.test_settings"
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "django_tools_test_project.test_settings")
     print(f"\nUse DJANGO_SETTINGS_MODULE={os.environ['DJANGO_SETTINGS_MODULE']!r}")
     from django.core.management import execute_from_command_line
 
