@@ -36,10 +36,12 @@ class TestListModelsCommand(DjangoCommandMixin, TestCase):
         self.assertNotIn("ERROR", output)
 
     def test_list_models(self):
-        output = self.call_manage_py(["list_models"], manage_dir=MANAGE_DIR)
-        print(output)
+        output = self.call_manage_py(
+            ["list_models"], manage_dir=MANAGE_DIR,  # debug=True
+        )
         assert "existing models in app_label.ModelName format:" in output
         output = output.split("existing models in app_label.ModelName format:", 1)[1]
+
         assert_equal_dedent(
             output,
             """
@@ -102,7 +104,9 @@ class TestPermissionInfoCommand(TestUserMixin, DjangoCommandMixin, TestCase):
         assert_pformat_equal(usernames, "normal_test_user,staff_test_user,superuser")
 
     def test_help(self):
-        output = self.call_manage_py(["--help"], manage_dir=MANAGE_DIR)
+        output = self.call_manage_py(
+            ["--help"], manage_dir=MANAGE_DIR, debug=True
+        )
 
         self.assertIn("[django]", output)
         self.assertIn("permission_info", output)

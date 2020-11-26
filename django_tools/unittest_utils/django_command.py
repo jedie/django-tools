@@ -11,6 +11,7 @@ import os
 import pprint
 import subprocess
 import sys
+from shlex import quote
 
 
 class DjangoCommandMixin:
@@ -20,6 +21,7 @@ class DjangoCommandMixin:
 
         similar to subprocess.getstatusoutput but pass though kwargs
         """
+        assert isinstance(cmd, (list, tuple))
 
         # Assume that DJANGO_SETTINGS_MODULE not in environment
         # e.g:
@@ -43,7 +45,7 @@ class DjangoCommandMixin:
             if debug:
                 print(f"DEBUG: cwd {cwd!r}, ok")
 
-        cmd = " ".join(cmd)  # FIXME: Why?!?
+        cmd = ' '.join(quote(arg) for arg in cmd)
         try:
             output = subprocess.check_output(cmd, **subprocess_kwargs)
             status = 0
@@ -51,8 +53,7 @@ class DjangoCommandMixin:
             output = ex.output
             status = ex.returncode
 
-        if output[-1:] == '\n':
-            output = output[:-1]
+        output = output.rstrip('\n\x1b[0m')
 
         if status != excepted_exit_code or debug:
             msg = (
