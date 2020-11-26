@@ -14,6 +14,7 @@ classifiers = [
     "Intended Audience :: End Users/Desktop",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -35,7 +36,7 @@ packages = [
 readme='README.rst'
 
 [tool.poetry.dependencies]
-python = ">=3.7,<4.0.0"
+python = ">=3.6,<4.0.0"
 icdiff = "*"  # https://github.com/jeffkaufman/icdiff
 pprintpp = "*"  # https://github.com/wolever/pprintpp
 bleach = "*"
@@ -49,7 +50,6 @@ pytest = "*"
 pytest-randomly = "*"
 pytest-cov = "*"
 pytest-django = "*"
-pytest-parallel = "*"
 coveralls = "*"
 isort = "*"
 flake8 = "*"
@@ -131,7 +131,7 @@ addopts = """
 legacy_tox_ini = """
 [tox]
 isolated_build = True
-envlist = py39,py38,py37-django{2.2,3.0,3.1}
+envlist = py39-django{2.2,3.0,3.1},py38-django{2.2,3.0,3.1},py37-django{2.2,3.0,3.1},py36-django{2.2,3.0,3.1}
 skip_missing_interpreters = True
 
 [testenv]
@@ -142,5 +142,5 @@ deps =
     django3.0: django~=3.0.0
     django3.1: django~=3.1.0
 commands =
-    pytest --workers auto --tests-per-worker 1 --pyargs django_tools django_tools_test_project django_tools_tests
+    pytest
 """
