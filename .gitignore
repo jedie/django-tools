@@ -3,7 +3,6 @@
 !.github
 !.editorconfig
 !.flake8
-!.isort.cfg
 !.travis.yml
 
 /.git
@@ -14,7 +13,7 @@
 /build
 /publish.log
 
-/coverage_html/
+/htmlcov/
 coverage.xml
 
 /poetry.lock
@@ -26,5 +25,6 @@ django_tools_test_project/media/*
 !django_tools_test_project/media/.gitkeep
 django_tools_test_project/static/*
 !django_tools_test_project/static/.gitkeep
+
 
 
