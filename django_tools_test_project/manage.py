@@ -5,7 +5,6 @@ import sys
 
 
 def cli():
-    assert "DJANGO_SETTINGS_MODULE" not in os.environ, 'Do not set DJANGO_SETTINGS_MODULE !'
     os.environ["DJANGO_SETTINGS_MODULE"] = "django_tools_test_project.test_settings"
     print(f"\nUse DJANGO_SETTINGS_MODULE={os.environ['DJANGO_SETTINGS_MODULE']!r}")
     from django.core.management import execute_from_command_line
