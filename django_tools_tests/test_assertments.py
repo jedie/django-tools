@@ -5,6 +5,7 @@
 """
 
 import unittest
+import warnings
 from pathlib import Path
 
 from django.test import SimpleTestCase
@@ -17,9 +18,11 @@ from django_tools.unittest_utils.assertments import (
     assert_is_file,
     assert_language_code,
     assert_locmem_mail_backend,
+    assert_no_warnings,
     assert_path_not_exists,
     assert_pformat_equal,
     assert_startswith,
+    assert_warnings,
 )
 
 
@@ -43,6 +46,20 @@ class TestStringAssertments(unittest.TestCase):
             assert_endswith("foo", "bar")
 
         assert_pformat_equal(cm.exception.args[0], "'foo' doesn't ends with 'bar'")
+
+    def test_assert_warnings(self):
+        with warnings.catch_warnings(record=True) as w:
+            assert_no_warnings(w)
+
+            warnings.simplefilter("always")  # trigger all warnings
+            warnings.warn('test')
+            warnings.warn("deprecated", DeprecationWarning)
+
+            assert_warnings(
+                messages=w,
+                reference=["UserWarning('test')", "DeprecationWarning('deprecated')"]
+            )
+            self.assertRaises(AssertionError, assert_no_warnings, messages=w)
 
 
 class TestMailAssertments(SimpleTestCase):

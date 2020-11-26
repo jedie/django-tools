@@ -738,7 +738,7 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 == Django compatibility
 
 |= django-tools    |= django version |= python         |
-| >= v0.46.2       | 2.2, 3.0, 3.1   | >= 3.6, pypy3   |
+| >= v0.47.0       | 2.2, 3.0, 3.1   | >= 3.6, pypy3   |
 | >= v0.39         | 1.11, 2.0       | 3.5, 3.6, pypy3 |
 | >= v0.38.1       | 1.8, 1.11       | 3.5, 3.6, pypy3 |
 | >= v0.38.0       | 1.8, 1.11       | 3.5, 3.6        |
@@ -756,7 +756,11 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.46.1...master|compare v0.46.1...master]]
-* TBC
+* v0.47.dev0
+** updates for newer django versions
+** NEW: assert_warnings(), assert_no_warnings() and assert_in_logs()
+** remove broken LoggingBuffer()
+** TBC
 * v0.46.1 - 19.02.2020 - [[https://github.com/jedie/django-tools/compare/v0.46.0...v0.46.1|compare v0.46.0...v0.46.1]]
 ** less restricted dependency specification
 ** NEW: {{{"django_tools.middlewares.LogHeaders.LogRequestHeadersMiddleware"}}}

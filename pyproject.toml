@@ -1,48 +1,56 @@
 [tool.poetry]
 name = "django-tools"
-version = "0.46.2"
+version = "0.47.dev0"
 description = "miscellaneous tools for django"
-
-# Will be generated from README.creole with: "poetry run update_rst_readme"
-readme="README.rst"
-
 license = "GPL-3.0-or-later"
 authors = ["Jens Diemer <django-tools@jensdiemer.de>"]
 homepage = "https://github.com/jedie/django-tools/"
 keywords=["django", "helpers"]
 classifiers = [
     # http://pypi.python.org/pypi?%3Aaction=list_classifiers
-    "Development Status :: 5 - Production/Stable",
+    "Development Status :: 4 - Beta",
+    #"Development Status :: 5 - Production/Stable",
     "Environment :: Web Environment",
+    "Intended Audience :: End Users/Desktop",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: GNU General Public License (GPL)",
-    "Programming Language :: Python",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: Implementation :: PyPy",
-    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3 :: Only",
+    'Framework :: Django',
+    "Topic :: Database :: Front-Ends",
+    "Topic :: Documentation",
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Internet :: WWW/HTTP :: Site Management",
+    "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
+    "Operating System :: OS Independent",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Utilities",
 ]
 packages = [
     { include = "django_tools" },
 ]
+# Will be generated from README.creole with: 'poetry run update_rst_readme'
+readme='README.rst'
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = ">=3.6,<4.0.0"
 icdiff = "*"  # https://github.com/jeffkaufman/icdiff
 pprintpp = "*"  # https://github.com/wolever/pprintpp
 bleach = "*"
 django = "*"
 
 [tool.poetry.dev-dependencies]
-poetry-publish = "*"
+poetry-publish = "*"  # https://github.com/jedie/poetry-publish
+python-creole = "*"  # https://github.com/jedie/python-creole
 tox = "*"
 pytest = "*"
-pytest-django = "*"
+pytest-randomly = "*"
 pytest-cov = "*"
+pytest-django = "*"
+coveralls = "*"
 isort = "*"
 flake8 = "*"
 flynt = "*"
@@ -53,6 +61,10 @@ django-filer = "*"
 django-parler = "*"
 django-debug-toolbar = "*"
 selenium = "*"
+pyupgrade = "*"
+model_bakery = "*"  # https://github.com/model-bakers/model_bakery
+requests-mock = "*"
+django-override-storage = "*"  # https://github.com/danifus/django-override-storage
 
 [tool.poetry.scripts]
 update_rst_readme = "django_tools.publish:update_readme"
@@ -63,3 +75,72 @@ dev_server = "django_tools_test_project.manage:start_test_server"
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
 
+
+[tool.autopep8]
+# https://github.com/hhatto/autopep8#pyprojecttoml
+max_line_length = 120
+exclude="*/htmlcov/*,*/migrations/*,*/volumes/*"
+
+
+[tool.isort]
+# https://pycqa.github.io/isort/docs/configuration/config_files/#pyprojecttoml-preferred-format
+atomic=true
+line_length=120
+case_sensitive=false
+skip_glob=["*/htmlcov/*","*/migrations/*"]
+multi_line_output=3
+include_trailing_comma=true
+known_first_party=["django_tools","django_tools_test_project"]
+no_lines_before="LOCALFOLDER"
+default_section="THIRDPARTY"
+sections=["FUTURE","STDLIB","THIRDPARTY","FIRSTPARTY","LOCALFOLDER"]
+lines_after_imports=2
+
+
+[tool.pytest.ini_options]
+# https://docs.pytest.org/en/latest/customize.html#pyproject-toml
+minversion = "6.0"
+DJANGO_SETTINGS_MODULE="django_tools_test_project.test_settings"
+norecursedirs = ".* .git __pycache__ coverage* dist htmlcov"
+# sometimes helpfull "addopts" arguments:
+#    -vv
+#    --verbose
+#    --capture=no
+#    --trace-config
+#    --full-trace
+#    -p no:warnings
+addopts = """
+    --import-mode=importlib
+    --reuse-db
+    --nomigrations
+    --cov=.
+    --cov-report term-missing
+    --cov-report html
+    --cov-report xml
+    --no-cov-on-fail
+    --showlocals
+    --doctest-modules
+    --failed-first
+    --last-failed-no-failures all
+    --new-first
+"""
+
+
+[tool.tox]
+# https://tox.readthedocs.io/en/latest/example/basic.html#pyproject-toml-tox-legacy-ini
+legacy_tox_ini = """
+[tox]
+isolated_build = True
+envlist = py39-django{2.2,3.0,3.1},py38-django{2.2,3.0,3.1},py37-django{2.2,3.0,3.1},py36-django{2.2,3.0,3.1}
+skip_missing_interpreters = True
+
+[testenv]
+passenv = *
+whitelist_externals = pytest
+deps =
+    django2.2: django~=2.2.0
+    django3.0: django~=3.0.0
+    django3.1: django~=3.1.0
+commands =
+    pytest
+"""

@@ -21,7 +21,6 @@ from django_tools.permissions import (
     pprint_filtered_permissions,
 )
 from django_tools.unittest_utils.assertments import assert_equal_dedent, assert_pformat_equal
-from django_tools.unittest_utils.logging_utils import LoggingBuffer
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 from django_tools.unittest_utils.unittest_base import BaseTestCase
 from django_tools.unittest_utils.user import TestUserMixin
@@ -98,16 +97,15 @@ class TestPermissions(TestUserMixin, BaseTestCase):
             },
         )
 
-        all_permissions = [f"{entry.content_type.name}.{entry.codename}" for entry in Permission.objects.all()]
-        pprint.pprint(all_permissions)
+        all_permissions = [f"{entry.content_type.app_label}.{entry.codename}" for entry in Permission.objects.all()]
 
         # Default mode permissions:
-        self.assertIn("permission test model.add_permissiontestmodel", all_permissions)
-        self.assertIn("permission test model.change_permissiontestmodel", all_permissions)
-        self.assertIn("permission test model.delete_permissiontestmodel", all_permissions)
+        self.assertIn("django_tools_test_app.add_permissiontestmodel", all_permissions)
+        self.assertIn("django_tools_test_app.change_permissiontestmodel", all_permissions)
+        self.assertIn("django_tools_test_app.delete_permissiontestmodel", all_permissions)
 
         # Own permission defined via Meta.permissions:
-        self.assertIn("permission test model.extra_permission", all_permissions)
+        self.assertIn("django_tools_test_app.extra_permission", all_permissions)
 
     # -------------------------------------------------------------------------
 
@@ -262,64 +260,52 @@ class TestPermissions(TestUserMixin, BaseTestCase):
         self.assertTrue(has_perm(self.staff_user, "django_tools_test_app.change_permissiontestmodel"))
 
     def test_has_perm_log(self):
-        with LoggingBuffer(name="django_tools.permissions", level=logging.DEBUG) as log:
+        with self.assertLogs(logger="django_tools.permissions", level=logging.DEBUG) as log:
             assert_pformat_equal(has_perm(self.normal_user, "foo.bar1"), False)
 
-        assert_pformat_equal(
-            log.get_messages(), "DEBUG:django_tools.permissions:" "User normal_test_user has not foo.bar1"
-        )
+        assert log.output == [
+            "DEBUG:django_tools.permissions:" "User normal_test_user has not foo.bar1"
+        ]
 
     def test_log_user_permissions1(self):
-        with LoggingBuffer(name="django_tools.permissions", level=logging.DEBUG) as log:
+        with self.assertLogs(logger="django_tools.permissions", level=logging.DEBUG) as log:
             log_user_permissions(self.normal_user)
 
-        assert_pformat_equal(
-            log.get_messages(), "DEBUG:django_tools.permissions:User 'normal_test_user' has no permission!"
-        )
+        assert log.output == [
+            "DEBUG:django_tools.permissions:User 'normal_test_user' has no permission!"
+        ]
 
     def test_log_user_permissions2(self):
-        with LoggingBuffer(name="django_tools.permissions", level=logging.DEBUG) as log:
+        with self.assertLogs(logger="django_tools.permissions", level=logging.DEBUG) as log:
             log_user_permissions(self.staff_user)
 
-        messages = [line.strip() for line in log.get_messages().splitlines()]
-        pprint.pprint(messages)
-
-        assert_pformat_equal(
-            messages,
-            [
-                "DEBUG:django_tools.permissions:User 'staff_test_user' has permissions:",
-                "* django_tools_test_app.add_permissiontestmodel",
-                "* django_tools_test_app.change_permissiontestmodel",
-                "* django_tools_test_app.delete_permissiontestmodel",
-                "* django_tools_test_app.extra_permission",
-            ],
-        )
+        assert log.output == [
+            "DEBUG:django_tools.permissions:User 'staff_test_user' has permissions:\n"
+            '* django_tools_test_app.add_permissiontestmodel\n'
+            '* django_tools_test_app.change_permissiontestmodel\n'
+            '* django_tools_test_app.delete_permissiontestmodel\n'
+            '* django_tools_test_app.extra_permission',
+        ]
 
     def test_log_group_permissions1(self):
-        with LoggingBuffer(name="django_tools.permissions", level=logging.DEBUG) as log:
+        with self.assertLogs(logger="django_tools.permissions", level=logging.DEBUG) as log:
             log_group_permissions(self.normal_group)
 
-        assert_pformat_equal(
-            log.get_messages(), "DEBUG:django_tools.permissions:User group 'Normal User Group' has no permission!"
-        )
+        assert log.output == [
+            "DEBUG:django_tools.permissions:User group 'Normal User Group' has no permission!"
+        ]
 
     def test_log_group_permissions2(self):
-        with LoggingBuffer(name="django_tools.permissions", level=logging.DEBUG) as log:
+        with self.assertLogs(logger="django_tools.permissions", level=logging.DEBUG) as log:
             log_group_permissions(self.staff_group)
 
-        messages = [line.strip() for line in log.get_messages().splitlines()]
-        pprint.pprint(messages)
-
-        assert_pformat_equal(
-            messages,
-            [
-                "DEBUG:django_tools.permissions:User group 'Staff User Group' has permissions:",
-                "* django_tools_test_app.add_permissiontestmodel",
-                "* django_tools_test_app.change_permissiontestmodel",
-                "* django_tools_test_app.delete_permissiontestmodel",
-                "* django_tools_test_app.extra_permission",
-            ],
-        )
+        assert log.output == [
+            "DEBUG:django_tools.permissions:User group 'Staff User Group' has permissions:\n"
+            '* django_tools_test_app.add_permissiontestmodel\n'
+            '* django_tools_test_app.change_permissiontestmodel\n'
+            '* django_tools_test_app.delete_permissiontestmodel\n'
+            '* django_tools_test_app.extra_permission',
+        ]
 
     def test_superuser_check(self):
         self.assertTrue(check_permission(self.superuser, permission="superuser check ignores this completely!"))
@@ -342,13 +328,12 @@ class TestPermissions(TestUserMixin, BaseTestCase):
         permissions = permissions2list(permissions)
         assert_pformat_equal(permissions, [])
 
-        with LoggingBuffer(name="django_tools.permissions", level=logging.DEBUG) as log_buffer:
+        with self.assertLogs(logger="django_tools.permissions", level=logging.DEBUG) as logs:
             add_app_permissions(permission_obj=self.normal_group, app_label="django_tools_test_app")
 
-        assert_pformat_equal(
-            log_buffer.get_messages(),
+        assert logs.output == [
             "DEBUG:django_tools.permissions:Add 17 permissions from app 'django_tools_test_app'",
-        )
+        ]
 
         permissions = self.normal_group.permissions.all()
         permissions = permissions2list(permissions)

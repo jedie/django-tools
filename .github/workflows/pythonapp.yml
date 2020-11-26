@@ -4,7 +4,6 @@ on:
   schedule:
     - cron: '0 8 * * *'
   push:
-  pull_request:
 
 jobs:
   test:
@@ -12,7 +11,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.8, 3.7, 3.6, pypy3]
+        python-version: [3.9, 3.8, 3.7, 3.6, pypy3]
       fail-fast: false
     steps:
     - uses: actions/checkout@v1
@@ -23,27 +22,20 @@ jobs:
 
     - name: 'Install package'
       run: |
-        make install-poetry
-        source $HOME/.poetry/env
-        poetry lock
-        poetry show --tree
+        pip3 install poetry tox-gh-actions
         make install
-        pip3 install tox-gh-actions
 
     - name: 'List installed packages'
       run: |
-        source $HOME/.poetry/env
         poetry run pip freeze
 
     - name: 'List all tox test environments'
       run: |
-        source $HOME/.poetry/env
         make tox-listenvs
 
     - name: 'Run tests with Python v${{ matrix.python-version }}'
       run: |
-        source $HOME/.poetry/env
-        make tox
+        poetry run tox
 
     - name: 'Upload coverage report'
       run: bash <(curl -s https://codecov.io/bash)
@@ -51,7 +43,4 @@ jobs:
     - name: 'Run linters'
       if: matrix.python-version == '3.8'
       run: |
-        source $HOME/.poetry/env
         make lint
-
-

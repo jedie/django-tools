@@ -10,7 +10,7 @@
 import datetime
 
 from django.template.defaultfilters import stringfilter
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 
 CHMOD_TRANS_DATA = (

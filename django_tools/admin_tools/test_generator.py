@@ -6,7 +6,7 @@
 
 from django.contrib import messages
 from django.http import HttpResponse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 # https://github.com/jedie/django-tools
 from django_tools.unittest_utils.model_test_code_generator import ModelTestGenerator

@@ -852,6 +852,8 @@ Django compatibility
 +------------------+----------------+-----------------+
 | django-tools     | django version | python          |
 +==================+================+=================+
+| >= v0.47.0       | 2.2, 3.0, 3.1  | >= 3.6, pypy3   |
++------------------+----------------+-----------------+
 | >= v0.39         | 1.11, 2.0      | 3.5, 3.6, pypy3 |
 +------------------+----------------+-----------------+
 | >= v0.38.1       | 1.8, 1.11      | 3.5, 3.6, pypy3 |
@@ -881,7 +883,15 @@ history
 
 * *dev* - `compare v0.46.1...master <https://github.com/jedie/django-tools/compare/v0.46.1...master>`_
 
-* TBC
+* v0.47.dev0
+
+    * updates for newer django versions
+
+    * NEW: assert_warnings(), assert_no_warnings() and assert_in_logs()
+
+    * remove broken LoggingBuffer()
+
+    * TBC
 
 * v0.46.1 - 19.02.2020 - `compare v0.46.0...v0.46.1 <https://github.com/jedie/django-tools/compare/v0.46.0...v0.46.1>`_ 
 
@@ -1622,4 +1632,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-07-04 20:28:03 with "python-creole"``
+``Note: this file is generated from README.creole 2020-11-26 19:14:08 with "python-creole"``

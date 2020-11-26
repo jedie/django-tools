@@ -53,7 +53,7 @@
 
 from django.contrib.auth.models import Group
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 def has_permission(item, **kwargs):
@@ -135,7 +135,7 @@ def get_user_groups():
 
 
 def get_limit_dict():
-    # use unicode() to evaluate ugettext_lazy:
+    # use unicode() to evaluate gettext_lazy:
     limit_dict = {k: str(v) for k, v in list(UsergroupsModelField.USER_TYPES_DICT.items())}
 
     groups = get_user_groups()
