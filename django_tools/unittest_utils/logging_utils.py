@@ -1,92 +1,15 @@
 """
+
+    TODO: Move this!
+    from: django_tools/unittest_utils/logging_utils.py
+    to..: django_tools/logging_utils.py
+
     :created: 2015 by Jens Diemer
     :copyleft: 2015-2019 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 import logging
-from logging.handlers import MemoryHandler
-
-
-class LoggingBuffer:
-    def __init__(self, name=None, level=logging.DEBUG, formatter=None):
-        """
-        To get the logger name, execute this in `./manage.py shell` e.g.:
-
-        import logging;print("\n".join(sorted(logging.Logger.manager.loggerDict.keys())))
-        """
-        self.buffer = []
-        self.level = level
-        if formatter is None:
-            self.formatter = logging.Formatter(logging.BASIC_FORMAT)
-        else:
-            self.formatter = formatter
-
-        self.log = logging.getLogger(name)
-        self.old_handlers = self.log.handlers[:]  # .copy()
-        self.old_level = self.log.level
-        self.log.setLevel(level)
-        self.log.handlers.append(MemoryHandler(capacity=0, flushLevel=level, target=self))
-
-    def handle(self, record):
-        self.buffer.append(record)
-
-    def clear(self):
-        self.buffer = []
-
-    def add_record(
-        self,
-        *,
-        msg,
-        name="LoggingBuffer.add_record()",
-        level=logging.DEBUG,
-        pathname=None,
-        lineno=None,
-        args=None,
-        exc_info=None,
-        func=None,
-        sinfo=None,
-        **kwargs
-    ):
-        """
-        Helper to add log entries, e.g.:
-
-            with LoggingBuffer("foo.bar") as log:
-                for i in range(10):
-                    log.add_record(msg = "Create %i" % i)
-                    call_something(...)
-        """
-        self.buffer.append(
-            logging.LogRecord(
-                name=name,
-                level=level,
-                pathname=pathname,
-                lineno=lineno,
-                msg=msg,
-                args=args,
-                exc_info=exc_info,
-                func=func,
-                sinfo=sinfo,
-                **kwargs
-            )
-        )
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        self.log.handlers = self.old_handlers
-        self.log.level = self.old_level
-
-    def get_message_list(self):
-        return [self.formatter.format(record) for record in self.buffer]
-
-    def get_messages(self):
-        return "\n".join(self.get_message_list())
-
-    def assert_messages(self, reference):
-        messages = self.get_message_list()
-        assert messages == reference, f"{messages!r} != {reference!r}"
 
 
 class CutPathnameLogRecordFactory:
@@ -118,7 +41,7 @@ class CutPathnameLogRecordFactory:
     def cut_path(self, pathname):
         if len(pathname) <= self.max_length:
             return pathname
-        return "...%s" % pathname[-(self.max_length - 3):]
+        return f"...{pathname[-(self.max_length - 3):]}"
 
     def __call__(self, *args, **kwargs):
         record = self.origin_factory(*args, **kwargs)
