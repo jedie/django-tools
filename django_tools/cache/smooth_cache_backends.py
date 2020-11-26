@@ -162,7 +162,7 @@ class _SmoothCache:
         try:
             create_time, value = value
             assert isinstance(create_time, SmoothCacheTime), (
-                "create_time is not SmoothCacheTime instance, it's: %s" % type(create_time)
+                f"create_time is not SmoothCacheTime instance, it's: {type(create_time)}"
             )
         except Exception as err:
             # e.g: entry is saved before smooth cache used.

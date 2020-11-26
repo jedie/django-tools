@@ -32,7 +32,7 @@ COUNT_UPDATE_CACHE = getattr(settings, "COUNT_UPDATE_CACHE", False)
 COUNT_IN_CACHE = getattr(settings, "COUNT_IN_CACHE", False)
 
 cache_callback = get_attr_from_settings("CACHE_CALLBACK", "DjangoTools cache callback")
-logger.debug("Use cache callback: %s" % repr(cache_callback))
+logger.debug(f"Use cache callback: {cache_callback!r}")
 
 
 CACHE_REQUESTS = "DJANGOTOOLS_CACHE_REQUESTS_COUNT"
@@ -199,7 +199,7 @@ class FetchFromCacheMiddleware(CacheMiddlewareBase):
 
         if not self.use_cache(request):
             if EXTRA_DEBUG:
-                logger.debug("Don't fetch from cache: %s" % request.get_full_path())
+                logger.debug(f"Don't fetch from cache: {request.get_full_path()}")
             return
 
         cache_key = get_cache_key(request)
@@ -242,7 +242,7 @@ class UpdateCacheMiddleware(CacheMiddlewareBase):
 
         if not self.use_cache(request, response):
             if EXTRA_DEBUG:
-                logger.debug("Don't put to cache: %s" % request.get_full_path())
+                logger.debug(f"Don't put to cache: {request.get_full_path()}")
             return response
 
         # get the timeout from the "max-age" section of the "Cache-Control" header

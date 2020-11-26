@@ -13,7 +13,6 @@ from django.test import RequestFactory, SimpleTestCase, override_settings
 
 # https://github.com/jedie/django-tools
 from django_tools.debug.delay import CacheDelay
-
 from django_tools.unittest_utils.unittest_base import BaseTestCase
 from django_tools.unittest_utils.user import TestUserMixin
 

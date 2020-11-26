@@ -34,7 +34,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, **options):
-        from django.conf import settings, global_settings
+        from django.conf import global_settings, settings
 
         # Because settings are imported lazily, we need to explicitly load them.
         settings._setup()

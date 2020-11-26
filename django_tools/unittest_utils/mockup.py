@@ -145,7 +145,7 @@ class ImageDummy:
         usable to attach this to: models.ImageField()
         """
         if filename is None:
-            filename = "dummy.%s" % self.format.lower()
+            filename = f"dummy.{self.format.lower()}"
 
         pil_image = self.create_info_image(text)
 

@@ -47,7 +47,7 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
         "--no-sandbox",
         # "--headless", ## see: https://bugs.chromium.org/p/chromedriver/issues/detail?id=3358
         "--disable-gpu",
-        "--disable-dev-shm-usage", # https://bugs.chromium.org/p/chromedriver/issues/detail?id=2473
+        "--disable-dev-shm-usage",  # https://bugs.chromium.org/p/chromedriver/issues/detail?id=2473
     )
     desired_capabilities = {
         "loggingPrefs": {

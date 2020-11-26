@@ -47,7 +47,7 @@ def print_mailbox(outbox, max_length=120):
                 print("\n")
                 for attachment in attr:
                     if isinstance(attachment, MIMEImage):
-                        line = " * %s" % repr(attachment)
+                        line = f" * {attachment!r}"
                         data = attachment.get_payload(decode=True)
                     else:
                         filename, data, mine_type = attachment

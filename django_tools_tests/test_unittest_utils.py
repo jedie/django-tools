@@ -82,7 +82,7 @@ class TestBaseUnittestCase(BaseUnittestCase):
             assert_equal_dedent(first="foo bar", second="foo X bar")
 
         err_msg = "\n".join([line.strip() for line in cm.exception.args[0].splitlines()])
-        print("***\n%s\n***" % repr(err_msg))
+        print(f"***\n{err_msg!r}\n***")
 
         assert "\x1b[0;34mfirst\x1b[m" in err_msg
         assert "foo bar" in err_msg

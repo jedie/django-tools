@@ -109,7 +109,7 @@ class BaseTestCase(BaseUnittestCase):
 
     def raise_browser_traceback(self, response, msg):
         debug_response(response, self.browser_traceback, msg, display_tb=False)
-        msg += ' (url: "%s")' % response.request.get("PATH_INFO", "???")
+        msg += f" (url: \"{response.request.get('PATH_INFO', '???')}\")"
         raise self.failureException(msg)
 
     def assertStatusCode(self, response, excepted_code=200):

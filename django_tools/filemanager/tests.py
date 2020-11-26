@@ -33,7 +33,7 @@ class FilemanagerBaseTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.BASE_PATH = "%s/" % tempfile.mkdtemp(prefix="filemanager-unittests_")
+        cls.BASE_PATH = f"{tempfile.mkdtemp(prefix='filemanager-unittests_')}/"
 
         # For dir traversal attack tests
         cls.SUB_BASE_PATH = os.path.join(cls.BASE_PATH, "subdir1")
@@ -69,7 +69,7 @@ class FilemanagerBaseTestCase(unittest.TestCase):
         # Create files:
         for file_info in cls.FILES:
             path = os.path.join(*file_info)
-            content = "File content for: %s" % repr(file_info[-1])
+            content = f"File content for: {file_info[-1]!r}"
 #            print "Create file %s with %s" % (repr(path), repr(content))
             with open(path, "w") as f:
                 f.write(content)
