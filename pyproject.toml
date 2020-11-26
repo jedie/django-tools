@@ -113,7 +113,7 @@ addopts = """
     --import-mode=importlib
     --reuse-db
     --nomigrations
-    --cov=src
+    --cov=.
     --cov-report term-missing
     --cov-report html
     --cov-report xml
@@ -131,12 +131,16 @@ addopts = """
 legacy_tox_ini = """
 [tox]
 isolated_build = True
-envlist = py39,py38,py37
+envlist = py39,py38,py37-django{2.2,3.0,3.1}
 skip_missing_interpreters = True
 
 [testenv]
 passenv = *
 whitelist_externals = pytest
+deps =
+    django2.2: django~=2.2.0
+    django3.0: django~=3.0.0
+    django3.1: django~=3.1.0
 commands =
-    pytest --workers auto --tests-per-worker 1 --pyargs for_runners for_runners_project
+    pytest --workers auto --tests-per-worker 1 --pyargs django_tools django_tools_test_project django_tools_tests
 """
