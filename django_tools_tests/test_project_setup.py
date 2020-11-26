@@ -24,13 +24,15 @@ def test_version():
     assert_version(package_root=PACKAGE_ROOT, version=__version__)
 
 
-def test_assert_rst_readme():
-    """
-    Check if own README.rst is up-to-date with README.creole
-    """
-    update_rst_readme(
-        package_root=PACKAGE_ROOT, version=__version__, filename='README.creole'
+def test_update_rst_readme(capsys):
+    rest_readme_path = update_rst_readme(
+        package_root=PACKAGE_ROOT, filename='README.creole'
     )
+    captured = capsys.readouterr()
+    assert captured.out == 'Generate README.rst from README.creole...nothing changed, ok.\n'
+    assert captured.err == ''
+    assert isinstance(rest_readme_path, Path)
+    assert str(rest_readme_path).endswith('/README.rst')
 
 
 def test_poetry_check():
