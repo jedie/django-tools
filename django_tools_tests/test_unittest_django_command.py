@@ -38,14 +38,13 @@ class TestDjangoCommand(DjangoCommandMixin, TestCase):
 
         with self.assertRaises(AssertionError) as cm:
             self.call_manage_py(
-                ["diffsettings"], manage_dir=MANAGE_DIR, env=env
+                ["diffsettings"], manage_dir=MANAGE_DIR, env=env,  # debug=True
             )
 
         output = "\n".join(cm.exception.args)
         print(output)
 
         self.assertIn("subprocess exist status == 1", output)
-        self.assertIn('Do not set DJANGO_SETTINGS_MODULE !', output)
 
     def test_excepted_exit_code(self):
         output = self.call_manage_py(
