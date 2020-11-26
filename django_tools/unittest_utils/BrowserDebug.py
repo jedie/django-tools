@@ -26,12 +26,13 @@ from django.contrib import messages
 from django.utils.encoding import force_str
 from django.utils.html import strip_tags
 
-
-if django_version < (3, 1):
-    from django.views.debug import get_safe_settings
-else:
+try:
     from django.views.debug import get_default_exception_reporter_filter
+
     get_safe_settings = get_default_exception_reporter_filter().get_safe_settings
+except ImportError:
+    # Old Django version
+    from django.views.debug import get_safe_settings
 
 
 # https://github.com/jedie/django-tools
