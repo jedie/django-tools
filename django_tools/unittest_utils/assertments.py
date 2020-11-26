@@ -5,6 +5,7 @@
 """
 import textwrap
 from pathlib import Path
+from warnings import WarningMessage
 
 import icdiff
 import pprintpp
@@ -169,3 +170,40 @@ def assert_filenames_and_content(*, path, reference, fromfile="current", tofile=
         pprintpp.pprint(current_data, **pformat_kwargs)
 
     assert_pformat_equal(current_data, reference, fromfile=fromfile, tofile=tofile, **pformat_kwargs)
+
+
+def assert_warnings(messages, reference):
+    """
+    e.g.:
+        with warnings.catch_warnings(record=True) as w:
+            warnings.warn('test')
+            assert_warnings(
+                messages=w,
+                reference=["UserWarning('test')"]
+            )
+    """
+    msg_text = []
+    for message in messages:
+        assert isinstance(message, WarningMessage)
+        msg_text.append(repr(message.message))
+
+    assert_pformat_equal(msg_text, reference)
+
+
+def assert_no_warnings(messages):
+    """
+    Check that there are no warning created.
+    e.g.:
+        with warnings.catch_warnings(record=True) as w:
+            # ...do something...
+            assert_no_warnings(w)
+    """
+    if not messages:
+        return
+
+    msg_text = []
+    for message in messages:
+        assert isinstance(message, WarningMessage)
+        msg_text.append(str(message))
+
+    raise AssertionError(msg_text)
