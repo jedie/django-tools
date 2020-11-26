@@ -11,7 +11,7 @@
 
 from django.db.models.fields import CharField as OriginModelCharField
 from django.forms.fields import CharField as OriginFormsCharField
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from django_tools.validators import URLValidator2
 
