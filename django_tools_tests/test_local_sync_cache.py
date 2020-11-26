@@ -17,8 +17,7 @@ from django.core.cache import cache
 # https://github.com/jedie/django-tools
 from django_tools.local_sync_cache.local_sync_cache import LocalSyncCache
 from django_tools.local_sync_cache.LocalSyncCacheMiddleware import LocalSyncCacheMiddleware
-from django_tools.unittest_utils.assertments import assert_pformat_equal
-from django_tools.unittest_utils.logging_utils import LoggingBuffer
+from django_tools.unittest_utils.assertments import assert_in_logs, assert_pformat_equal
 
 
 class LocalSyncCacheTest(unittest.TestCase):
@@ -44,13 +43,15 @@ class LocalSyncCacheTest(unittest.TestCase):
         assert_pformat_equal(len(cache_information), 1)
 
     def testUniqueID(self):
-        with LoggingBuffer("django_tools.local_sync_cache") as log:
+        LocalSyncCache(id="test1")
+        with self.assertLogs(logger="django_tools.local_sync_cache") as logs:
             LocalSyncCache(id="test1")
-            log.clear()
-            LocalSyncCache(id="test1")
-            self.assertIn(
-                "ID 'test1' was already used! It must be unique! (Existing ids are: ['test1'])",
-                log.get_messages()
+            assert_in_logs(
+                logs,
+                line=(
+                    "ERROR:django_tools.local_sync_cache:"
+                    "ID 'test1' was already used! It must be unique! (Existing ids are: ['test1'])"
+                )
             )
 
     def testEmptyPformatCacheInfo(self):

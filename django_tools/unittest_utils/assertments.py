@@ -207,3 +207,14 @@ def assert_no_warnings(messages):
         msg_text.append(str(message))
 
     raise AssertionError(msg_text)
+
+
+def assert_in_logs(logs, line):
+    """
+    e.g.:
+        with self.assertLogs(logger="django_tools.local_sync_cache") as logs:
+            # ...do something...
+            assert_in_logs(logs, line="ERROR:foo.bar:Foo Bar!")
+    """
+    output = [str(entry) for entry in logs.output]
+    assert line in output
