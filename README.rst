@@ -845,6 +845,11 @@ v0.44
 
 * remove old mockup image API (it was deprecated since v0.35)
 
+v0.47
+=====
+
+``LoggingBuffer()`` was removed. (Use ``self.assertLogs()`` from Django)
+
 --------------------
 Django compatibility
 --------------------
@@ -881,9 +886,11 @@ Django compatibility
 history
 -------
 
-* *dev* - `compare v0.46.1...master <https://github.com/jedie/django-tools/compare/v0.46.1...master>`_
+* *dev* - `compare v0.47.0...master <https://github.com/jedie/django-tools/compare/v0.47.0...master>`_ 
 
-* v0.47.dev0
+    * TBC
+
+* v0.47.0 - 26.11.2020 - `compare v0.46.1...v0.47.0 <https://github.com/jedie/django-tools/compare/v0.46.1...v0.47.0>`_ 
 
     * updates for newer django versions
 
@@ -891,7 +898,7 @@ history
 
     * remove broken LoggingBuffer()
 
-    * TBC
+    * update project setup, fix tests and pipelines
 
 * v0.46.1 - 19.02.2020 - `compare v0.46.0...v0.46.1 <https://github.com/jedie/django-tools/compare/v0.46.0...v0.46.1>`_ 
 
@@ -1632,4 +1639,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-11-26 19:14:08 with "python-creole"``
+``Note: this file is generated from README.creole 2020-11-26 19:41:18 with "python-creole"``

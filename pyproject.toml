@@ -1,15 +1,14 @@
 [tool.poetry]
 name = "django-tools"
-version = "0.47.dev0"
+version = "0.47.0"
 description = "miscellaneous tools for django"
 license = "GPL-3.0-or-later"
 authors = ["Jens Diemer <django-tools@jensdiemer.de>"]
 homepage = "https://github.com/jedie/django-tools/"
-keywords=["django", "helpers"]
+keywords=["django", "helpers", "tools", "utilities"]
 classifiers = [
     # http://pypi.python.org/pypi?%3Aaction=list_classifiers
-    "Development Status :: 4 - Beta",
-    #"Development Status :: 5 - Production/Stable",
+    "Development Status :: 5 - Production/Stable",
     "Environment :: Web Environment",
     "Intended Audience :: End Users/Desktop",
     "Intended Audience :: Developers",
