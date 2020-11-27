@@ -62,6 +62,13 @@ e.g.:
 existing stuff
 --------------
 
+Serve User Media File
+=====================
+
+Serve ``settings.MEDIA_ROOT`` files only for allowed users.
+
+See separate README here: `django_tools/serve_media_app <https://github.com/jedie/django-tools/tree/master/django_tools/serve_media_app>`_
+
 OverwriteFileSystemStorage
 ==========================
 
@@ -528,6 +535,11 @@ Usage, e.g.:
 
 You can also decorate the test method ;)
 
+unittest_utils/signals.py
+=========================
+
+* ``SignalsContextManager`` connect/disconnet signal callbacks via with statement
+
 unittest_utils/assertments.py
 =============================
 
@@ -887,6 +899,10 @@ history
 -------
 
 * *dev* - `compare v0.47.0...master <https://github.com/jedie/django-tools/compare/v0.47.0...master>`_ 
+
+    * NEW: "Serve User Media File" reuseable app
+
+    * NEW: django_tools.unittest_utils.signals.SignalsContextManager
 
     * TBC
 
@@ -1639,4 +1655,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-11-26 19:41:18 with "python-creole"``
+``Note: this file is generated from README.creole 2020-11-27 10:39:13 with "python-creole"``

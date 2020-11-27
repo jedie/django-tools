@@ -38,6 +38,13 @@ start-dev-server     Start Django dev. server with the test project
 
 == existing stuff
 
+=== Serve User Media File
+
+Serve {{{settings.MEDIA_ROOT}}} files only for allowed users.
+
+See separate README here: [[https://github.com/jedie/django-tools/tree/master/django_tools/serve_media_app|django_tools/serve_media_app]]
+
+
 === OverwriteFileSystemStorage
 
 A django filesystem storage that will overwrite existing files and can create backups, if content changed.
@@ -467,6 +474,11 @@ class TestMyTemplate(SimpleTestCase):
 You can also decorate the test method ;)
 
 
+=== unittest_utils/signals.py
+
+* {{{SignalsContextManager}}} connect/disconnet signal callbacks via with statement
+
+
 === unittest_utils/assertments.py
 
 
@@ -760,6 +772,8 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.47.0...master|compare v0.47.0...master]]
+** NEW: "Serve User Media File" reuseable app
+** NEW: django_tools.unittest_utils.signals.SignalsContextManager
 ** TBC
 * v0.47.0 - 26.11.2020 - [[https://github.com/jedie/django-tools/compare/v0.46.1...v0.47.0|compare v0.46.1...v0.47.0]]
 ** updates for newer django versions
