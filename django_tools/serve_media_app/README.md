@@ -1,9 +1,9 @@
 # Django-Tools - Serve User Media File
 
-About ```django_tools.serve_media_app``` django app:
+The `django_tools.serve_media_app` django app serves `settings.MEDIA_ROOT` file requests only for allowed users. So you can limit the access to these files.
 
-* Serve ```settings.MEDIA_ROOT``` only for allowed users
-* Works currently for ```FileSystemStorage```
+The idea is, that `settings.STATIC_ROOT` is for public files (css, js etc) and should be served by the web server.
+`settings.MEDIA_ROOT` is not public and served by the django application to restrict the access to active user session.
 
 Files are stored in these file path:
 
@@ -17,12 +17,17 @@ Example:
 /media/w7tytv3lyupc/fm4kf9hp0c_vfx3onskrffw1/filename.ext
 ```
 
+The `{random-user-token}` will be created automatically via signals and stored into `django_tools.serve_media_app.models.UserMediaTokenModel` to identify the owner of the requested file. 
 
-Note: The files served by streaming HTTP response. But serve files from the application is slow.
-It's faster to use ```sendfile``` from the web server.
-This is on the TODO:
 
-* Support ```sendfile``` via https://pypi.org/project/django-sendfile2/
+Limitations:
+
+* Works currently only for `FileSystemStorage`
+* Dosen't support faster `sendfile` solution
+
+The files served by streaming HTTP response. But serve files from the application is slow.
+It's faster to use `sendfile` from the web server.
+Maybe use https://pypi.org/project/django-sendfile2/
 
 
 ## usage
