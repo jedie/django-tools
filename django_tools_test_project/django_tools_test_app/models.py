@@ -7,6 +7,7 @@
 """
 import tempfile
 
+from django.conf import settings
 from django.db import models
 from parler.models import TranslatableModel, TranslatedFields
 
@@ -15,6 +16,7 @@ from django_tools import limit_to_usergroups
 from django_tools.file_storage.file_system_storage import OverwriteFileSystemStorage
 from django_tools.parler_utils.parler_fixtures import ParlerDummyGenerator
 from django_tools.permissions import ModelPermissionMixin, check_permission
+from django_tools.serve_media_app.models import user_directory_path
 
 
 class LimitToUsergroupsTestModel(models.Model):
@@ -60,6 +62,20 @@ class OverwriteFileSystemStorageModel(models.Model):
 
     def __str__(self):
         return f"pk:{self.pk!r} - {self.file!r}"
+
+
+# -----------------------------------------------------------------------------
+# for django_tools.serve_media_app
+
+
+class UserMediaFiles(models.Model):
+    user = models.ForeignKey(  # "Owner" of this entry
+        settings.AUTH_USER_MODEL,
+        related_name='+',
+        on_delete=models.CASCADE,
+    )
+    file = models.FileField(upload_to=user_directory_path)
+    image = models.ImageField(upload_to=user_directory_path)
 
 
 # -----------------------------------------------------------------------------

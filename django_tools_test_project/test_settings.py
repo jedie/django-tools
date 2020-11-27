@@ -72,6 +72,7 @@ INSTALLED_APPS = (
     "django_tools",
     "django_tools.local_sync_cache",
     "django_tools_test_project.django_tools_test_app",
+    'django_tools.serve_media_app.apps.UserMediaFilesConfig',
 )
 
 TEMPLATES = [

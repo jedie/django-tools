@@ -127,16 +127,17 @@ class ImageDummy:
         self.fill_image(image)
         return image
 
-    def create_info_image(self, text):
+    def create_info_image(self, text=None):
         """
         return a 'filled' PIL image with >text<
         """
         image = self.create_pil_image()
         draw = ImageDraw.Draw(image)
-        draw.multiline_text((10, 10), text, fill=self.text_color, align=self.text_align)
+        if text:
+            draw.multiline_text((10, 10), text, fill=self.text_color, align=self.text_align)
         return image
 
-    def create_django_file_info_image(self, text, filename=None):
+    def create_django_file_info_image(self, text=None, filename=None):
         """
         Create a django.core.files.base.File instance:
             1. fill a PIL image with a colorful gradient
