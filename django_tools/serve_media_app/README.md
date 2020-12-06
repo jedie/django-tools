@@ -17,7 +17,7 @@ Example:
 /media/w7tytv3lyupc/fm4kf9hp0c_vfx3onskrffw1/filename.ext
 ```
 
-The `{random-user-token}` will be created automatically via signals and stored into `django_tools.serve_media_app.models.UserMediaTokenModel` to identify the owner of the requested file. 
+The `{random-user-token}` will be created automatically via signals and stored into `django_tools.serve_media_app.models.UserMediaTokenModel` to identify the owner of the requested file.
 
 
 Limitations:
@@ -45,14 +45,13 @@ INSTALLED_APPS = (
 
 urls:
 ```
-from django_tools import serve_media_app
-
 urlpatterns = [
     # ...
-    path(settings.MEDIA_URL.lstrip('/'), include(serve_media_app.urls)),
+    path(settings.MEDIA_URL.lstrip('/'), include('django_tools.serve_media_app.urls')),
     # ...
 ]
 ```
+(See: `django_tools_test_project/urls.py`)
 
 
 You can use it in models like this (optional):
