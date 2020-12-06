@@ -155,7 +155,7 @@ SITE_ID = 1
 
 USE_DYNAMIC_SITE_MIDDLEWARE = True
 
-ROOT_URLCONF = "django_tools_test_project.django_tools_test_app.urls"
+ROOT_URLCONF = "django_tools_test_project.urls"
 
 PASSWORD_HASHERS = ("django.contrib.auth.hashers.MD5PasswordHasher",)  # Speedup tests
 
