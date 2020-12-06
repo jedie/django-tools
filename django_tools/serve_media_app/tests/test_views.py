@@ -4,13 +4,13 @@ from unittest import mock
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from django.core.files import File
 from django.core.files.storage import DefaultStorage
 from django.http import FileResponse
-from django.test import TestCase, override_settings
+from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 from model_bakery import baker
-from override_storage import locmem_stats_override_storage
 
 from django_tools.serve_media_app.models import UserMediaTokenModel, generate_media_path
 from django_tools.unittest_utils.mockup import ImageDummy
@@ -20,12 +20,14 @@ from django_tools_test_project.django_tools_test_app.models import UserMediaFile
 class UserMediaViewsTestCase(TestCase):
     def test_basic(self):
         assert settings.MEDIA_URL == '/media/'
+        assert get_user_model() == User
+
         url = reverse('serve_media_app:serve-media', kwargs={'user_token': 'foo', 'path': 'bar'})
         assert url == '/media/foo/bar'
 
         with tempfile.TemporaryDirectory() as temp:
             with override_settings(MEDIA_ROOT=temp):
-                user = baker.make(get_user_model())
+                user = baker.make(User, username='owner')
                 file_path = generate_media_path(user, filename='foobar.txt')
 
                 storage = DefaultStorage()
@@ -40,7 +42,7 @@ class UserMediaViewsTestCase(TestCase):
                 assert response.status_code == 403
 
                 # Can't access with wrong user:
-                other_user = baker.make(get_user_model())
+                other_user = baker.make(User, username='not-owner')
                 self.client.force_login(other_user)
                 response = self.client.get(url)
                 assert response.status_code == 403
@@ -59,65 +61,63 @@ class UserMediaViewsTestCase(TestCase):
 
     def test_via_model(self):
         with mock.patch('secrets.token_urlsafe', return_value='ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
-            user = baker.make(get_user_model())
+            user = baker.make(User, username='owner')
 
-            token_instance = UserMediaTokenModel.objects.get(user=user)
-            assert repr(token_instance) == (
-                f"<UserMediaTokenModel: user:{user.pk} token:'abcdefghijkl' ({token_instance.pk})>"
-            )
+        other_user = baker.make(User, username='not-owner')
 
-            user_token = UserMediaTokenModel.objects.get_user_token(user)
-            assert user_token == 'abcdefghijkl'
+        with tempfile.TemporaryDirectory() as temp:
+            with override_settings(MEDIA_ROOT=temp):
+                with mock.patch('secrets.token_urlsafe', return_value='12345678901234567890'):
+                    instance = UserMediaFiles.objects.create(
+                        user=user,
+                        file=File(io.BytesIO('Test äöüß !'.encode()), name='filename.ext'),
+                        image=ImageDummy(width=1, height=1).create_django_file_info_image(text=None),
+                    )
 
-        with mock.patch('secrets.token_urlsafe', return_value='12345678901234567890'), \
-                locmem_stats_override_storage() as storage_stats:
+                token_instance = UserMediaTokenModel.objects.get(user=user)
+                assert repr(token_instance) == (
+                    f"<UserMediaTokenModel: user:{user.pk} token:'abcdefghijkl' ({token_instance.pk})>"
+                )
 
-            instance = UserMediaFiles.objects.create(
-                user=user,
-                file=File(io.BytesIO('Test äöüß !'.encode()), name='filename.ext'),
-                image=ImageDummy(width=1, height=1).create_django_file_info_image(text=None),
-            )
-            urls = (
-                '/media/abcdefghijkl/12345678901234567890/filename.ext',
-                '/media/abcdefghijkl/12345678901234567890/dummy.jpeg'
-            )
+                user_token = UserMediaTokenModel.objects.get_user_token(user)
+                assert user_token == 'abcdefghijkl'
+                other_user_token = UserMediaTokenModel.objects.get_user_token(other_user)
+                assert other_user_token != user_token
 
-            assert instance.file.url == urls[0]
-            assert instance.image.url == urls[1]
+                urls = (
+                    '/media/abcdefghijkl/12345678901234567890/filename.ext',
+                    '/media/abcdefghijkl/12345678901234567890/dummy.jpeg'
+                )
 
-            assert storage_stats.saves_by_field == {
-                ('django_tools_test_app', 'usermediafiles', 'file'): 'abcdefghijkl/12345678901234567890/filename.ext',
-                ('django_tools_test_app', 'usermediafiles', 'image'): 'abcdefghijkl/12345678901234567890/dummy.jpeg'
-            }
+                assert instance.file.url == urls[0]
+                assert instance.image.url == urls[1]
 
-            # Anonymous has no access:
-            for url in urls:
-                response = self.client.get(url)
-                assert response.status_code == 403
+                # Anonymous has no access:
+                for url in urls:
+                    response = self.client.get(url)
+                    assert response.status_code == 403
 
-            # Can't access with wrong user:
-            other_user = baker.make(get_user_model())
-            self.client.force_login(other_user)
-            for url in urls:
-                response = self.client.get(url)
-                assert response.status_code == 403
+                # Can't access with wrong user:
+                self.client = Client()
+                self.client.force_login(other_user)
+                for url in urls:
+                    response = self.client.get(url)
+                    assert response.status_code == 403
 
-            # Can access with the right user:
-            self.client.force_login(user)
-            response = self.client.get('/media/abcdefghijkl/12345678901234567890/filename.ext')
-            assert response.status_code == 200
-            assert isinstance(response, FileResponse)
-            assert response.getvalue().decode('UTF-8') == 'Test äöüß !'
-            response = self.client.get('/media/abcdefghijkl/12345678901234567890/dummy.jpeg')
-            assert response.status_code == 200
-            assert isinstance(response, FileResponse)
-            assert len(response.getvalue())
+                # Can access with the right user:
+                self.client = Client()
+                self.client.force_login(user)
+                response = self.client.get('/media/abcdefghijkl/12345678901234567890/filename.ext')
+                assert response.status_code == 200
+                assert isinstance(response, FileResponse)
+                assert response.getvalue().decode('UTF-8') == 'Test äöüß !'
+                response = self.client.get('/media/abcdefghijkl/12345678901234567890/dummy.jpeg')
+                assert response.status_code == 200
+                assert isinstance(response, FileResponse)
+                assert len(response.getvalue())
 
-            # Test whats happen, if token was deleted
-            UserMediaTokenModel.objects.all().delete()
-            for url in urls:
-                response = self.client.get(url)
-                assert response.status_code == 400  # SuspiciousOperation -> HttpResponseBadRequest
-
-        for i in range(10):
-            print(generate_media_path(user, filename='foo.bar'))
+                # Test whats happen, if token was deleted
+                UserMediaTokenModel.objects.all().delete()
+                for url in urls:
+                    response = self.client.get(url)
+                    assert response.status_code == 400  # SuspiciousOperation -> HttpResponseBadRequest
