@@ -904,6 +904,8 @@ history
 
     * NEW: django_tools.unittest_utils.signals.SignalsContextManager
 
+    * Update ``installed_apps_utils.get_filtered_apps()`` and support app config entries in ``settings.INSTALLED_APPS``
+
     * TBC
 
 * v0.47.0 - 26.11.2020 - `compare v0.46.1...v0.47.0 <https://github.com/jedie/django-tools/compare/v0.46.1...v0.47.0>`_ 
@@ -1655,4 +1657,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-11-27 10:39:13 with "python-creole"``
+``Note: this file is generated from README.creole 2020-12-06 13:17:48 with "python-creole"``
