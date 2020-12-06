@@ -771,9 +771,10 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.48.1..master|compare v0.48.1...master]]
-** Bugfix "Serve User Media File": Create tokens via migrations and handle if tokens not exists
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.48.2..master|compare v0.48.2...master]]
 ** TBC
+* v0.48.2 - 06.12.2020 - [[https://github.com/jedie/django-tools/compare/v0.47.1...v0.48.2|compare v0.47.1...v0.48.2]]
+** Bugfix "Serve User Media File": Create tokens via migrations and handle if tokens not exists
 * v0.48.1 - 06.12.2020 - [[https://github.com/jedie/django-tools/compare/v0.47.0...v0.48.1|compare v0.47.0...v0.48.1]]
 ** Add migration file to "Serve User Media File"
 * v0.48.0 - 06.12.2020 - [[https://github.com/jedie/django-tools/compare/v0.47.0...v0.48.0|compare v0.47.0...v0.48.0]]
