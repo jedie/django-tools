@@ -159,6 +159,10 @@ class TestUserFixtures(TestUserMixin, BaseTestCase):
                 [*] django_tools_test_app.change_simpleparlermodel
                 [*] django_tools_test_app.delete_simpleparlermodel
                 [*] django_tools_test_app.view_simpleparlermodel
+                [*] django_tools_test_app.add_usermediafiles
+                [*] django_tools_test_app.change_usermediafiles
+                [*] django_tools_test_app.delete_usermediafiles
+                [*] django_tools_test_app.view_usermediafiles
                 [*] easy_thumbnails.add_source
                 [*] easy_thumbnails.change_source
                 [*] easy_thumbnails.delete_source
@@ -204,6 +208,10 @@ class TestUserFixtures(TestUserMixin, BaseTestCase):
                 [*] flatpages.change_flatpage
                 [*] flatpages.delete_flatpage
                 [*] flatpages.view_flatpage
+                [*] serve_media_app.add_usermediatokenmodel
+                [*] serve_media_app.change_usermediatokenmodel
+                [*] serve_media_app.delete_usermediatokenmodel
+                [*] serve_media_app.view_usermediatokenmodel
                 [ ] sessions.add_session
                 [ ] sessions.change_session
                 [ ] sessions.delete_session
@@ -262,8 +270,8 @@ class TestUserFixtures(TestUserMixin, BaseTestCase):
             remove permission: sites | site | Can change site
             remove permission: sites | site | Can delete site
             remove permission: sites | site | Can view site
-            Add 74 permissions to 'testgroup'
-            Group testgroup has 74 permissions
+            Add 82 permissions to 'testgroup'
+            Group testgroup has 82 permissions
             """,
         )
 

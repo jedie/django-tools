@@ -898,13 +898,17 @@ Django compatibility
 history
 -------
 
-* *dev* - `compare v0.47.0...master <https://github.com/jedie/django-tools/compare/v0.47.0...master>`_ 
+* *dev* - `compare v0.48.0...master <https://github.com/jedie/django-tools/compare/v0.48.0...master>`_ 
+
+    * TBC
+
+* v0.48.0 - 06.12.2020 - `compare v0.47.0...v0.48.0 <https://github.com/jedie/django-tools/compare/v0.47.0...v0.48.0>`_ 
 
     * NEW: "Serve User Media File" reuseable app
 
     * NEW: django_tools.unittest_utils.signals.SignalsContextManager
 
-    * TBC
+    * Update ``installed_apps_utils.get_filtered_apps()`` and support app config entries in ``settings.INSTALLED_APPS``
 
 * v0.47.0 - 26.11.2020 - `compare v0.46.1...v0.47.0 <https://github.com/jedie/django-tools/compare/v0.46.1...v0.47.0>`_ 
 
@@ -1655,4 +1659,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-11-27 10:39:13 with "python-creole"``
+``Note: this file is generated from README.creole 2020-12-06 14:24:46 with "python-creole"``

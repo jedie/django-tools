@@ -3,7 +3,6 @@ from django.conf.urls import include, static, url
 from django.contrib import admin
 from django.urls import path
 
-from django_tools import serve_media_app
 from django_tools_test_project.django_tools_test_app.views import (
     TemplateDoesNotExists,
     create_message_normal_response,
@@ -31,7 +30,8 @@ urlpatterns = [
 
     url(r'^delay/$', delay_view),
 
-    path(settings.MEDIA_URL.lstrip('/'), include(serve_media_app.urls)),
+    # Serve user files only for authorized users:
+    path(settings.MEDIA_URL.lstrip('/'), include('django_tools.serve_media_app.urls')),
 ]
 
 

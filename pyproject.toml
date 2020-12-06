@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-tools"
-version = "0.47.0"
+version = "0.48.0"
 description = "miscellaneous tools for django"
 license = "GPL-3.0-or-later"
 authors = ["Jens Diemer <django-tools@jensdiemer.de>"]
@@ -108,8 +108,12 @@ norecursedirs = ".* .git __pycache__ coverage* dist htmlcov"
 #    --trace-config
 #    --full-trace
 #    -p no:warnings
+# Add this to local test runs:
+#    -x -p no:randomly
 addopts = """
-    --import-mode=importlib
+    --failed-first
+    --last-failed-no-failures all
+    --new-first
     --reuse-db
     --nomigrations
     --cov=.
@@ -119,9 +123,6 @@ addopts = """
     --no-cov-on-fail
     --showlocals
     --doctest-modules
-    --failed-first
-    --last-failed-no-failures all
-    --new-first
 """
 
 

@@ -55,22 +55,24 @@ class TestListModelsCommand(DjangoCommandMixin, TestCase):
             08 - django_tools_test_app.PermissionTestModel
             09 - django_tools_test_app.SimpleParlerModel
             10 - django_tools_test_app.SimpleParlerModelTranslation
-            11 - easy_thumbnails.Source
-            12 - easy_thumbnails.Thumbnail
-            13 - easy_thumbnails.ThumbnailDimensions
-            14 - filer.Clipboard
-            15 - filer.ClipboardItem
-            16 - filer.File
-            17 - filer.Folder
-            18 - filer.FolderPermission
-            19 - filer.Image
-            20 - filer.ThumbnailOption
-            21 - flatpages.FlatPage
-            22 - sessions.Session
-            23 - sites.Site
+            11 - django_tools_test_app.UserMediaFiles
+            12 - easy_thumbnails.Source
+            13 - easy_thumbnails.Thumbnail
+            14 - easy_thumbnails.ThumbnailDimensions
+            15 - filer.Clipboard
+            16 - filer.ClipboardItem
+            17 - filer.File
+            18 - filer.Folder
+            19 - filer.FolderPermission
+            20 - filer.Image
+            21 - filer.ThumbnailOption
+            22 - flatpages.FlatPage
+            23 - serve_media_app.UserMediaTokenModel
+            24 - sessions.Session
+            25 - sites.Site
 
-            INSTALLED_APPS....: 14
-            Apps with models..: 14
+            INSTALLED_APPS....: 15
+            Apps with models..: 15
         """,
         )
 

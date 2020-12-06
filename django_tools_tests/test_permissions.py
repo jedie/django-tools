@@ -328,11 +328,11 @@ class TestPermissions(TestUserMixin, BaseTestCase):
         permissions = permissions2list(permissions)
         assert_pformat_equal(permissions, [])
 
-        with self.assertLogs(logger="django_tools.permissions", level=logging.DEBUG) as logs:
-            add_app_permissions(permission_obj=self.normal_group, app_label="django_tools_test_app")
+        with self.assertLogs(logger='django_tools.permissions', level=logging.DEBUG) as logs:
+            add_app_permissions(permission_obj=self.normal_group, app_label='django_tools_test_app')
 
         assert logs.output == [
-            "DEBUG:django_tools.permissions:Add 17 permissions from app 'django_tools_test_app'",
+            "DEBUG:django_tools.permissions:Add 21 permissions from app 'django_tools_test_app'",
         ]
 
         permissions = self.normal_group.permissions.all()
@@ -340,23 +340,27 @@ class TestPermissions(TestUserMixin, BaseTestCase):
         assert_pformat_equal(
             permissions,
             [
-                "django_tools_test_app.add_limittousergroupstestmodel",
-                "django_tools_test_app.change_limittousergroupstestmodel",
-                "django_tools_test_app.delete_limittousergroupstestmodel",
-                "django_tools_test_app.view_limittousergroupstestmodel",
-                "django_tools_test_app.add_overwritefilesystemstoragemodel",
-                "django_tools_test_app.change_overwritefilesystemstoragemodel",
-                "django_tools_test_app.delete_overwritefilesystemstoragemodel",
-                "django_tools_test_app.view_overwritefilesystemstoragemodel",
-                "django_tools_test_app.add_permissiontestmodel",
-                "django_tools_test_app.change_permissiontestmodel",
-                "django_tools_test_app.delete_permissiontestmodel",
-                "django_tools_test_app.extra_permission",
-                "django_tools_test_app.view_permissiontestmodel",
-                "django_tools_test_app.add_simpleparlermodel",
-                "django_tools_test_app.change_simpleparlermodel",
-                "django_tools_test_app.delete_simpleparlermodel",
-                "django_tools_test_app.view_simpleparlermodel",
+                'django_tools_test_app.add_limittousergroupstestmodel',
+                'django_tools_test_app.change_limittousergroupstestmodel',
+                'django_tools_test_app.delete_limittousergroupstestmodel',
+                'django_tools_test_app.view_limittousergroupstestmodel',
+                'django_tools_test_app.add_overwritefilesystemstoragemodel',
+                'django_tools_test_app.change_overwritefilesystemstoragemodel',
+                'django_tools_test_app.delete_overwritefilesystemstoragemodel',
+                'django_tools_test_app.view_overwritefilesystemstoragemodel',
+                'django_tools_test_app.add_permissiontestmodel',
+                'django_tools_test_app.change_permissiontestmodel',
+                'django_tools_test_app.delete_permissiontestmodel',
+                'django_tools_test_app.extra_permission',
+                'django_tools_test_app.view_permissiontestmodel',
+                'django_tools_test_app.add_simpleparlermodel',
+                'django_tools_test_app.change_simpleparlermodel',
+                'django_tools_test_app.delete_simpleparlermodel',
+                'django_tools_test_app.view_simpleparlermodel',
+                'django_tools_test_app.add_usermediafiles',
+                'django_tools_test_app.change_usermediafiles',
+                'django_tools_test_app.delete_usermediafiles',
+                'django_tools_test_app.view_usermediafiles',
             ],
         )
 
@@ -374,51 +378,59 @@ class TestPermissions(TestUserMixin, BaseTestCase):
 
     def test_get_filtered_permissions(self):
         permissions = get_filtered_permissions(
-            exclude_app_labels=("easy_thumbnails", "filer"),
+            exclude_app_labels=('easy_thumbnails', 'filer'),
             exclude_models=(LimitToUsergroupsTestModel, PermissionTestModel),
-            exclude_codenames=("delete_group", "delete_user"),
-            exclude_permissions=((ContentType, "add_contenttype"), (ContentType, "delete_contenttype")),
+            exclude_codenames=('delete_group', 'delete_user'),
+            exclude_permissions=((ContentType, 'add_contenttype'), (ContentType, 'delete_contenttype')),
         )
         permissions = permissions2list(permissions)
         assert_pformat_equal(
             permissions,
             [
-                "admin.add_logentry",
-                "admin.change_logentry",
-                "admin.delete_logentry",
-                "admin.view_logentry",
-                "auth.add_group",
-                "auth.change_group",
-                "auth.view_group",
-                "auth.add_permission",
-                "auth.change_permission",
-                "auth.delete_permission",
-                "auth.view_permission",
-                "auth.add_user",
-                "auth.change_user",
-                "auth.view_user",
-                "contenttypes.change_contenttype",
-                "contenttypes.view_contenttype",
-                "django_tools_test_app.add_overwritefilesystemstoragemodel",
-                "django_tools_test_app.change_overwritefilesystemstoragemodel",
-                "django_tools_test_app.delete_overwritefilesystemstoragemodel",
-                "django_tools_test_app.view_overwritefilesystemstoragemodel",
-                "django_tools_test_app.add_simpleparlermodel",
-                "django_tools_test_app.change_simpleparlermodel",
-                "django_tools_test_app.delete_simpleparlermodel",
-                "django_tools_test_app.view_simpleparlermodel",
-                "flatpages.add_flatpage",
-                "flatpages.change_flatpage",
-                "flatpages.delete_flatpage",
-                "flatpages.view_flatpage",
-                "sessions.add_session",
-                "sessions.change_session",
-                "sessions.delete_session",
-                "sessions.view_session",
-                "sites.add_site",
-                "sites.change_site",
-                "sites.delete_site",
-                "sites.view_site",
+                'admin.add_logentry',
+                'admin.change_logentry',
+                'admin.delete_logentry',
+                'admin.view_logentry',
+                'auth.add_group',
+                'auth.change_group',
+                'auth.view_group',
+                'auth.add_permission',
+                'auth.change_permission',
+                'auth.delete_permission',
+                'auth.view_permission',
+                'auth.add_user',
+                'auth.change_user',
+                'auth.view_user',
+                'contenttypes.change_contenttype',
+                'contenttypes.view_contenttype',
+                'django_tools_test_app.add_overwritefilesystemstoragemodel',
+                'django_tools_test_app.change_overwritefilesystemstoragemodel',
+                'django_tools_test_app.delete_overwritefilesystemstoragemodel',
+                'django_tools_test_app.view_overwritefilesystemstoragemodel',
+                'django_tools_test_app.add_simpleparlermodel',
+                'django_tools_test_app.change_simpleparlermodel',
+                'django_tools_test_app.delete_simpleparlermodel',
+                'django_tools_test_app.view_simpleparlermodel',
+                'django_tools_test_app.add_usermediafiles',
+                'django_tools_test_app.change_usermediafiles',
+                'django_tools_test_app.delete_usermediafiles',
+                'django_tools_test_app.view_usermediafiles',
+                'flatpages.add_flatpage',
+                'flatpages.change_flatpage',
+                'flatpages.delete_flatpage',
+                'flatpages.view_flatpage',
+                'serve_media_app.add_usermediatokenmodel',
+                'serve_media_app.change_usermediatokenmodel',
+                'serve_media_app.delete_usermediatokenmodel',
+                'serve_media_app.view_usermediatokenmodel',
+                'sessions.add_session',
+                'sessions.change_session',
+                'sessions.delete_session',
+                'sessions.view_session',
+                'sites.add_site',
+                'sites.change_site',
+                'sites.delete_site',
+                'sites.view_site',
             ],
         )
 
@@ -439,8 +451,9 @@ class TestPermissions(TestUserMixin, BaseTestCase):
         with StdoutStderrBuffer() as buffer:
             pprint_filtered_permissions(permissions)
 
+        output = buffer.get_output()
         assert_equal_dedent(
-            buffer.get_output(),
+            output,
             """
                 [*] admin.add_logentry
                 [*] admin.change_logentry
@@ -479,6 +492,10 @@ class TestPermissions(TestUserMixin, BaseTestCase):
                 [*] django_tools_test_app.change_simpleparlermodel
                 [ ] django_tools_test_app.delete_simpleparlermodel
                 [*] django_tools_test_app.view_simpleparlermodel
+                [*] django_tools_test_app.add_usermediafiles
+                [*] django_tools_test_app.change_usermediafiles
+                [ ] django_tools_test_app.delete_usermediafiles
+                [*] django_tools_test_app.view_usermediafiles
                 [ ] easy_thumbnails.add_source
                 [ ] easy_thumbnails.change_source
                 [ ] easy_thumbnails.delete_source
@@ -524,6 +541,10 @@ class TestPermissions(TestUserMixin, BaseTestCase):
                 [*] flatpages.change_flatpage
                 [ ] flatpages.delete_flatpage
                 [*] flatpages.view_flatpage
+                [*] serve_media_app.add_usermediatokenmodel
+                [*] serve_media_app.change_usermediatokenmodel
+                [ ] serve_media_app.delete_usermediatokenmodel
+                [*] serve_media_app.view_usermediatokenmodel
                 [*] sessions.add_session
                 [*] sessions.change_session
                 [ ] sessions.delete_session

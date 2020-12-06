@@ -22,14 +22,16 @@ class UserMediaView(View):
             logger.error('Anonymous try to access user media files')
             raise PermissionDenied
 
-        token = UserMediaTokenModel.objects.get_user_token(user=request.user)
+        user = request.user
+
+        token = UserMediaTokenModel.objects.get_user_token(user=user)
         if token is None:
-            logger.error('Current user %s has no token!', request.user.pk)
+            logger.error('Current user %s has no token!', user)
             raise SuspiciousOperation('No user token!')
 
         if token != user_token:
             # A user tries to access a file from a other user?
-            logger.error(f'Wrong user token!')
+            logger.error(f'Wrong user (%s) token: %r is not %r', user, token, user_token)
             raise PermissionDenied
 
     def get(self, request, user_token, path):
