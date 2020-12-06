@@ -1,16 +1,18 @@
 import logging
 
+import django.dispatch
 from django.conf import settings
 from django.core.exceptions import PermissionDenied, SuspiciousOperation
 from django.views.generic.base import View
 from django.views.static import serve
 
 from django_tools.serve_media_app.models import UserMediaTokenModel
-import django.dispatch
+
 
 logger = logging.getLogger(__name__)
 
 serve_file_request = django.dispatch.Signal()
+
 
 class UserMediaView(View):
     """
