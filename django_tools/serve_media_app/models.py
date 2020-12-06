@@ -2,11 +2,13 @@ import logging
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.exceptions import SuspiciousOperation
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from django_tools.serve_media_app.constants import PATH_TOKEN_LENGTH, USER_TOKEN_LENGTH
+from django_tools.serve_media_app.exceptions import NoUserToken
 from django_tools.serve_media_app.utils import clean_filename, get_random_string
 
 
@@ -42,12 +44,15 @@ def user_directory_path(instance, filename):
 
 
 class UserMediaTokenQuerySet(models.QuerySet):
-    def get_from_user(self, instance):
-        qs = self.filter(user_id=instance.pk)
-        return qs.first()
+    def get_from_user(self, user):
+        instance = self.filter(user_id=user.pk).first()
+        if not instance:
+            # Should be created via migrations/signals for all users
+            raise NoUserToken(user=user)  # -> SuspiciousOperation -> HttpResponseBadRequest
+        return instance
 
     def get_user_token(self, user):
-        instance = self.get_from_user(instance=user)
+        instance = self.get_from_user(user=user)
         if instance is not None:
             return instance.token
 

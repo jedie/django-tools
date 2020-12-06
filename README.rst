@@ -900,6 +900,8 @@ history
 
 * *dev* - `compare v0.48.1...master <https://github.com/jedie/django-tools/compare/v0.48.1..master>`_ 
 
+    * Bugfix "Serve User Media File": Create tokens via migrations and handle if tokens not exists
+
     * TBC
 
 * v0.48.1 - 06.12.2020 - `compare v0.47.0...v0.48.1 <https://github.com/jedie/django-tools/compare/v0.47.0...v0.48.1>`_ 
@@ -1663,4 +1665,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-12-06 15:25:12 with "python-creole"``
+``Note: this file is generated from README.creole 2020-12-06 18:44:41 with "python-creole"``
