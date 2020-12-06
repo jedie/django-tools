@@ -2,7 +2,7 @@ import logging
 
 import django.dispatch
 from django.conf import settings
-from django.core.exceptions import PermissionDenied, SuspiciousOperation
+from django.core.exceptions import PermissionDenied
 from django.views.generic.base import View
 from django.views.static import serve
 
@@ -27,10 +27,6 @@ class UserMediaView(View):
         user = request.user
 
         token = UserMediaTokenModel.objects.get_user_token(user=user)
-        if token is None:
-            logger.error('Current user %s has no token!', user)
-            raise SuspiciousOperation('No user token!')
-
         if token != user_token:
             # A user tries to access a file from a other user?
             logger.error(f'Wrong user (%s) token: %r is not %r', user, token, user_token)

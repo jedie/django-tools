@@ -1,4 +1,5 @@
 import io
+import logging
 import tempfile
 from unittest import mock
 
@@ -12,12 +13,30 @@ from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 from model_bakery import baker
 
+from django_tools.serve_media_app.exceptions import NoUserToken
 from django_tools.serve_media_app.models import UserMediaTokenModel, generate_media_path
 from django_tools.unittest_utils.mockup import ImageDummy
 from django_tools_test_project.django_tools_test_app.models import UserMediaFiles
 
 
 class UserMediaViewsTestCase(TestCase):
+    def test_generate_media_path(self):
+        with mock.patch('secrets.token_urlsafe', return_value='ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
+            user = baker.make(User, username='owner')
+
+        with mock.patch('secrets.token_urlsafe', return_value='12345678901234567890'):
+            media_path = generate_media_path(user=user, filename='Foo Bar!.ext')
+            assert media_path == 'abcdefghijkl/12345678901234567890/foo_bar.ext'
+
+        # Test whats happen, if token was deleted
+        UserMediaTokenModel.objects.all().delete()
+        with self.assertLogs(logger='django_tools', level=logging.ERROR) as log:
+            with self.assertRaises(NoUserToken):
+                generate_media_path(user=user, filename='Foo Bar!.ext')
+        assert log.output == [
+            'ERROR:django_tools.serve_media_app.exceptions:Current user "owner" has no token!'
+        ]
+
     def test_basic(self):
         assert settings.MEDIA_URL == '/media/'
         assert get_user_model() == User
@@ -56,8 +75,12 @@ class UserMediaViewsTestCase(TestCase):
 
                 # Test whats happen, if token was deleted
                 UserMediaTokenModel.objects.all().delete()
-                response = self.client.get(url)
+                with self.assertLogs(logger='django_tools', level=logging.ERROR) as log:
+                    response = self.client.get(url)
                 assert response.status_code == 400  # SuspiciousOperation -> HttpResponseBadRequest
+                assert log.output == [
+                    'ERROR:django_tools.serve_media_app.exceptions:Current user "owner" has no token!'
+                ]
 
     def test_via_model(self):
         with mock.patch('secrets.token_urlsafe', return_value='ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
