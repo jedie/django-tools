@@ -898,9 +898,13 @@ Django compatibility
 history
 -------
 
-* *dev* - `compare v0.48.2...master <https://github.com/jedie/django-tools/compare/v0.48.2..master>`_ 
+* *dev* - `compare v0.48.3...master <https://github.com/jedie/django-tools/compare/v0.48.3..master>`_ 
 
     * TBC
+
+* v0.48.3 - 20.12.2020 - `compare v0.47.2...v0.48.3 <https://github.com/jedie/django-tools/compare/v0.47.2...v0.48.3>`_ 
+
+    * NEW: ``ImageDummy().in_memory_image_file()`` useful for e.g.: POST a image upload via Django's test client
 
 * v0.48.2 - 06.12.2020 - `compare v0.47.1...v0.48.2 <https://github.com/jedie/django-tools/compare/v0.47.1...v0.48.2>`_ 
 
@@ -1667,4 +1671,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-12-06 19:05:28 with "python-creole"``
+``Note: this file is generated from README.creole 2020-12-20 18:00:44 with "python-creole"``
