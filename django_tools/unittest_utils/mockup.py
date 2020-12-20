@@ -57,10 +57,24 @@ class ImageDummy:
     text_align = "center"
     temp_prefix = "dummy_"
 
-    def __init__(self, width, height, format="jpeg"):
+    def __init__(self, width=1, height=1, format='jpeg'):
         self.width = width
         self.height = height
         self.format = format
+
+    def in_memory_image_file(self, filename=None):
+        """
+        In-memory bytes object of a image,
+        useful for e.g.: POST a image upload via Django's test client
+        """
+        pil_image = Image.new("RGB", (self.width, self.height))
+        img = io.BytesIO()
+        pil_image.save(img, format=self.format)
+        if not filename:
+            filename = f'image.{self.format}'
+        img.name = filename
+        img.seek(0)
+        return img
 
     def fill_image(self, image):
         """
@@ -171,3 +185,4 @@ class ImageDummy:
         image.save(f, format=self.format)
         filer_image = create_filer_image(f, user)
         return filer_image
+

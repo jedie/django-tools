@@ -5,7 +5,7 @@
     :copyleft: 2018-2019 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
+import io
 
 from django.conf import settings
 from django.core.files import File as DjangoFile
@@ -63,3 +63,10 @@ class TestMockupImage(TestUserMixin, BaseTestCase):
         django_file = ImageDummy(width=100, height=50).create_django_file_info_image(text="foo bar")
 
         self.assertIsInstance(django_file, DjangoFile)
+
+    def test_in_memory_image_file(self):
+        img = ImageDummy(width=1, height=1, format='png').in_memory_image_file(filename='test.png')
+        assert isinstance(img, io.BytesIO)
+        assert img.name == 'test.png'
+        assert img.tell() == 0
+        assert img.read().startswith(b'\x89PNG\r\n')
