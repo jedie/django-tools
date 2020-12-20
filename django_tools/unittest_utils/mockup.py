@@ -185,4 +185,3 @@ class ImageDummy:
         image.save(f, format=self.format)
         filer_image = create_filer_image(f, user)
         return filer_image
-
