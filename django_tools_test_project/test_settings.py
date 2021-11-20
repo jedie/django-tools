@@ -31,6 +31,7 @@ DATABASES = {
         }
     }
 }
+print(f'Test DB: {DATABASES["default"]["NAME"]}')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
