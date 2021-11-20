@@ -1,6 +1,7 @@
 import logging
 import pprint
 
+from bx_py_utils.test_utils.snapshot import assert_snapshot, assert_text_snapshot
 from django.contrib.auth.models import Group, Permission, User
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
@@ -200,61 +201,11 @@ class TestPermissions(TestUserMixin, BaseTestCase):
     def test_get_admin_permissions(self):
         permissions = get_admin_permissions()
         permissions = permissions2list(permissions)
-        assert_pformat_equal(
-            permissions,
-            [
-                "auth.add_group",
-                "auth.change_group",
-                "auth.delete_group",
-                "auth.view_group",
-                "auth.add_user",
-                "auth.change_user",
-                "auth.delete_user",
-                "auth.view_user",
-                "django_tools_test_app.add_overwritefilesystemstoragemodel",
-                "django_tools_test_app.change_overwritefilesystemstoragemodel",
-                "django_tools_test_app.delete_overwritefilesystemstoragemodel",
-                "django_tools_test_app.view_overwritefilesystemstoragemodel",
-                "django_tools_test_app.add_permissiontestmodel",
-                "django_tools_test_app.change_permissiontestmodel",
-                "django_tools_test_app.delete_permissiontestmodel",
-                "django_tools_test_app.extra_permission",
-                "django_tools_test_app.view_permissiontestmodel",
-                "filer.add_clipboard",
-                "filer.change_clipboard",
-                "filer.delete_clipboard",
-                "filer.view_clipboard",
-                "filer.add_file",
-                "filer.change_file",
-                "filer.delete_file",
-                "filer.view_file",
-                "filer.add_folder",
-                "filer.can_use_directory_listing",
-                "filer.change_folder",
-                "filer.delete_folder",
-                "filer.view_folder",
-                "filer.add_folderpermission",
-                "filer.change_folderpermission",
-                "filer.delete_folderpermission",
-                "filer.view_folderpermission",
-                "filer.add_image",
-                "filer.change_image",
-                "filer.delete_image",
-                "filer.view_image",
-                "filer.add_thumbnailoption",
-                "filer.change_thumbnailoption",
-                "filer.delete_thumbnailoption",
-                "filer.view_thumbnailoption",
-                "flatpages.add_flatpage",
-                "flatpages.change_flatpage",
-                "flatpages.delete_flatpage",
-                "flatpages.view_flatpage",
-                "sites.add_site",
-                "sites.change_site",
-                "sites.delete_site",
-                "sites.view_site",
-            ],
-        )
+        assert permissions
+        assert 'auth.add_user' in permissions
+        assert 'django_tools_test_app.change_overwritefilesystemstoragemodel' in permissions
+        assert 'django_tools_test_app.extra_permission' in permissions
+        assert_snapshot(got=permissions)
 
     def test_has_perm(self):
         self.assertTrue(has_perm(self.staff_user, "django_tools_test_app.change_permissiontestmodel"))
@@ -331,40 +282,17 @@ class TestPermissions(TestUserMixin, BaseTestCase):
         with self.assertLogs(logger='django_tools.permissions', level=logging.DEBUG) as logs:
             add_app_permissions(permission_obj=self.normal_group, app_label='django_tools_test_app')
 
-        assert logs.output == [
-            "DEBUG:django_tools.permissions:Add 21 permissions from app 'django_tools_test_app'",
-        ]
+        assert_pformat_equal(
+            logs.output,
+            ["DEBUG:django_tools.permissions:Add 21 permissions from app 'django_tools_test_app'"]
+        )
 
         permissions = self.normal_group.permissions.all()
         permissions = permissions2list(permissions)
-        assert_pformat_equal(
-            permissions,
-            [
-                'django_tools_test_app.add_limittousergroupstestmodel',
-                'django_tools_test_app.change_limittousergroupstestmodel',
-                'django_tools_test_app.delete_limittousergroupstestmodel',
-                'django_tools_test_app.view_limittousergroupstestmodel',
-                'django_tools_test_app.add_overwritefilesystemstoragemodel',
-                'django_tools_test_app.change_overwritefilesystemstoragemodel',
-                'django_tools_test_app.delete_overwritefilesystemstoragemodel',
-                'django_tools_test_app.view_overwritefilesystemstoragemodel',
-                'django_tools_test_app.add_permissiontestmodel',
-                'django_tools_test_app.change_permissiontestmodel',
-                'django_tools_test_app.delete_permissiontestmodel',
-                'django_tools_test_app.extra_permission',
-                'django_tools_test_app.view_permissiontestmodel',
-                'django_tools_test_app.add_simpleparlermodel',
-                'django_tools_test_app.change_simpleparlermodel',
-                'django_tools_test_app.delete_simpleparlermodel',
-                'django_tools_test_app.view_simpleparlermodel',
-                'django_tools_test_app.add_usermediafiles',
-                'django_tools_test_app.change_usermediafiles',
-                'django_tools_test_app.delete_usermediafiles',
-                'django_tools_test_app.view_usermediafiles',
-            ],
-        )
-
-    # -------------------------------------------------------------------------
+        assert permissions
+        assert 'django_tools_test_app.add_limittousergroupstestmodel' in permissions
+        assert 'auth.add_user' not in permissions
+        assert_snapshot(got=permissions)
 
     def test_get_filtered_permissions_without_any_filter(self):
         permissions = sorted(permissions2list(
@@ -384,55 +312,13 @@ class TestPermissions(TestUserMixin, BaseTestCase):
             exclude_permissions=((ContentType, 'add_contenttype'), (ContentType, 'delete_contenttype')),
         )
         permissions = permissions2list(permissions)
-        assert_pformat_equal(
-            permissions,
-            [
-                'admin.add_logentry',
-                'admin.change_logentry',
-                'admin.delete_logentry',
-                'admin.view_logentry',
-                'auth.add_group',
-                'auth.change_group',
-                'auth.view_group',
-                'auth.add_permission',
-                'auth.change_permission',
-                'auth.delete_permission',
-                'auth.view_permission',
-                'auth.add_user',
-                'auth.change_user',
-                'auth.view_user',
-                'contenttypes.change_contenttype',
-                'contenttypes.view_contenttype',
-                'django_tools_test_app.add_overwritefilesystemstoragemodel',
-                'django_tools_test_app.change_overwritefilesystemstoragemodel',
-                'django_tools_test_app.delete_overwritefilesystemstoragemodel',
-                'django_tools_test_app.view_overwritefilesystemstoragemodel',
-                'django_tools_test_app.add_simpleparlermodel',
-                'django_tools_test_app.change_simpleparlermodel',
-                'django_tools_test_app.delete_simpleparlermodel',
-                'django_tools_test_app.view_simpleparlermodel',
-                'django_tools_test_app.add_usermediafiles',
-                'django_tools_test_app.change_usermediafiles',
-                'django_tools_test_app.delete_usermediafiles',
-                'django_tools_test_app.view_usermediafiles',
-                'flatpages.add_flatpage',
-                'flatpages.change_flatpage',
-                'flatpages.delete_flatpage',
-                'flatpages.view_flatpage',
-                'serve_media_app.add_usermediatokenmodel',
-                'serve_media_app.change_usermediatokenmodel',
-                'serve_media_app.delete_usermediatokenmodel',
-                'serve_media_app.view_usermediatokenmodel',
-                'sessions.add_session',
-                'sessions.change_session',
-                'sessions.delete_session',
-                'sessions.view_session',
-                'sites.add_site',
-                'sites.change_site',
-                'sites.delete_site',
-                'sites.view_site',
-            ],
-        )
+        assert permissions
+        assert 'admin.add_logentry' in permissions
+        assert 'auth.delete_group' not in permissions
+        assert 'filer.add_image' not in permissions
+        assert 'contenttypes.change_contenttype' in permissions
+        assert 'contenttypes.add_contenttype' not in permissions
+        assert_snapshot(got=permissions)
 
     def test_pprint_filtered_permissions_wrong_arguments(self):
         with self.assertRaises(AssertionError) as cm:
@@ -452,106 +338,7 @@ class TestPermissions(TestUserMixin, BaseTestCase):
             pprint_filtered_permissions(permissions)
 
         output = buffer.get_output()
-        assert_equal_dedent(
-            output,
-            """
-                [*] admin.add_logentry
-                [*] admin.change_logentry
-                [ ] admin.delete_logentry
-                [*] admin.view_logentry
-                [*] auth.add_group
-                [ ] auth.change_group
-                [ ] auth.delete_group
-                [*] auth.view_group
-                [*] auth.add_permission
-                [*] auth.change_permission
-                [ ] auth.delete_permission
-                [*] auth.view_permission
-                [*] auth.add_user
-                [ ] auth.change_user
-                [ ] auth.delete_user
-                [*] auth.view_user
-                [ ] contenttypes.add_contenttype
-                [*] contenttypes.change_contenttype
-                [ ] contenttypes.delete_contenttype
-                [*] contenttypes.view_contenttype
-                [ ] django_tools_test_app.add_limittousergroupstestmodel
-                [ ] django_tools_test_app.change_limittousergroupstestmodel
-                [ ] django_tools_test_app.delete_limittousergroupstestmodel
-                [ ] django_tools_test_app.view_limittousergroupstestmodel
-                [*] django_tools_test_app.add_overwritefilesystemstoragemodel
-                [*] django_tools_test_app.change_overwritefilesystemstoragemodel
-                [ ] django_tools_test_app.delete_overwritefilesystemstoragemodel
-                [*] django_tools_test_app.view_overwritefilesystemstoragemodel
-                [ ] django_tools_test_app.add_permissiontestmodel
-                [ ] django_tools_test_app.change_permissiontestmodel
-                [ ] django_tools_test_app.delete_permissiontestmodel
-                [ ] django_tools_test_app.extra_permission
-                [ ] django_tools_test_app.view_permissiontestmodel
-                [*] django_tools_test_app.add_simpleparlermodel
-                [*] django_tools_test_app.change_simpleparlermodel
-                [ ] django_tools_test_app.delete_simpleparlermodel
-                [*] django_tools_test_app.view_simpleparlermodel
-                [*] django_tools_test_app.add_usermediafiles
-                [*] django_tools_test_app.change_usermediafiles
-                [ ] django_tools_test_app.delete_usermediafiles
-                [*] django_tools_test_app.view_usermediafiles
-                [ ] easy_thumbnails.add_source
-                [ ] easy_thumbnails.change_source
-                [ ] easy_thumbnails.delete_source
-                [ ] easy_thumbnails.view_source
-                [ ] easy_thumbnails.add_thumbnail
-                [ ] easy_thumbnails.change_thumbnail
-                [ ] easy_thumbnails.delete_thumbnail
-                [ ] easy_thumbnails.view_thumbnail
-                [ ] easy_thumbnails.add_thumbnaildimensions
-                [ ] easy_thumbnails.change_thumbnaildimensions
-                [ ] easy_thumbnails.delete_thumbnaildimensions
-                [ ] easy_thumbnails.view_thumbnaildimensions
-                [ ] filer.add_clipboard
-                [ ] filer.change_clipboard
-                [ ] filer.delete_clipboard
-                [ ] filer.view_clipboard
-                [ ] filer.add_clipboarditem
-                [ ] filer.change_clipboarditem
-                [ ] filer.delete_clipboarditem
-                [ ] filer.view_clipboarditem
-                [ ] filer.add_file
-                [ ] filer.change_file
-                [ ] filer.delete_file
-                [ ] filer.view_file
-                [ ] filer.add_folder
-                [ ] filer.can_use_directory_listing
-                [ ] filer.change_folder
-                [ ] filer.delete_folder
-                [ ] filer.view_folder
-                [ ] filer.add_folderpermission
-                [ ] filer.change_folderpermission
-                [ ] filer.delete_folderpermission
-                [ ] filer.view_folderpermission
-                [ ] filer.add_image
-                [ ] filer.change_image
-                [ ] filer.delete_image
-                [ ] filer.view_image
-                [ ] filer.add_thumbnailoption
-                [ ] filer.change_thumbnailoption
-                [ ] filer.delete_thumbnailoption
-                [ ] filer.view_thumbnailoption
-                [*] flatpages.add_flatpage
-                [*] flatpages.change_flatpage
-                [ ] flatpages.delete_flatpage
-                [*] flatpages.view_flatpage
-                [*] serve_media_app.add_usermediatokenmodel
-                [*] serve_media_app.change_usermediatokenmodel
-                [ ] serve_media_app.delete_usermediatokenmodel
-                [*] serve_media_app.view_usermediatokenmodel
-                [*] sessions.add_session
-                [*] sessions.change_session
-                [ ] sessions.delete_session
-                [*] sessions.view_session
-                [*] sites.add_site
-                [*] sites.change_site
-                [ ] sites.delete_site
-                [*] sites.view_site
-            """,
-        )
+        assert '[*] admin.add_logentry' in output
+        assert '[ ] admin.delete_logentry' in output
+        assert '[ ] filer.add_image' in output
+        assert_text_snapshot(got=output)

@@ -1,0 +1,142 @@
+
+Use DJANGO_SETTINGS_MODULE='django_tools_test_project.test_settings'
+manage.py nice_diffsettings
+Use settings: /home/jens/repos/django-tools/django_tools_test_project/test_settings.py
+-------------------------------------------------------------------------------
+ALLOWED_HOSTS = ['*']
+
+BASE_DIR = PosixPath('/home/jens/repos/django-tools/django_tools_test_project')
+
+CACHES = {'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+             'LOCATION': 'unique-snowflake'}}
+
+DATABASES = {'default': {'ATOMIC_REQUESTS': False,
+             'AUTOCOMMIT': True,
+             'CONN_MAX_AGE': 0,
+             'ENGINE': 'django.db.backends.sqlite3',
+             'HOST': '',
+             'NAME': '/home/jens/repos/django-tools/test_project_db.sqlite3',
+             'OPTIONS': {'timeout': 20},
+             'PASSWORD': '',
+             'PORT': '',
+             'TEST': {'CHARSET': None,
+                      'COLLATION': None,
+                      'MIGRATE': True,
+                      'MIRROR': None,
+                      'NAME': None},
+             'TIME_ZONE': None,
+             'USER': ''}}
+
+DEBUG = True
+
+EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+
+INSTALLED_APPS = ('django.contrib.auth',
+ 'django.contrib.contenttypes',
+ 'django.contrib.sessions',
+ 'django.contrib.sites',
+ 'django.contrib.admin',
+ 'django.contrib.staticfiles',
+ 'django.contrib.admindocs',
+ 'django.contrib.flatpages',
+ 'django.contrib.messages',
+ 'easy_thumbnails',
+ 'filer',
+ 'django_tools.apps.DjangoToolsConfig',
+ 'django_tools.local_sync_cache',
+ 'django_tools_test_project.django_tools_test_app',
+ 'django_tools.serve_media_app.apps.UserMediaFilesConfig')
+
+LANGUAGES = (('de', 'German'), ('en', 'English'))
+
+LANGUAGE_CODE = 'en'
+
+LANGUAGE_DICT = {'de': 'German', 'en': 'English'}
+
+LOGGING = {'disable_existing_loggers': True,
+ 'formatters': {'colored': {'()': 'colorlog.ColoredFormatter',
+                            'format': '%(log_color)s%(asctime)s %(levelname)8s '
+                                      '%(cut_path)s:%(lineno)-3s %(name)s '
+                                      '%(message)s'}},
+ 'handlers': {'console': {'class': 'colorlog.StreamHandler',
+                          'formatter': 'colored'}},
+ 'loggers': {'django': {'handlers': ['console'],
+                        'level': 'WARNING',
+                        'propagate': False},
+             'django.request': {'handlers': ['console'],
+                                'level': 'DEBUG',
+                                'propagate': False},
+             'django_tools': {'handlers': ['console'],
+                              'level': 'DEBUG',
+                              'propagate': False},
+             'django_tools.DynamicSite': {'handlers': ['console'],
+                                          'level': 'DEBUG',
+                                          'propagate': False}},
+ 'version': 1}
+
+MEDIA_ROOT = '/home/jens/repos/django-tools/django_tools_test_project/media'
+
+MEDIA_URL = '/media/'
+
+MIDDLEWARE = ('django_tools.middlewares.LogHeaders.LogRequestHeadersMiddleware',
+ 'debug_toolbar.middleware.DebugToolbarMiddleware',
+ 'django.contrib.sessions.middleware.SessionMiddleware',
+ 'django.middleware.locale.LocaleMiddleware',
+ 'django.middleware.common.CommonMiddleware',
+ 'django.middleware.csrf.CsrfViewMiddleware',
+ 'django.contrib.auth.middleware.AuthenticationMiddleware',
+ 'django.contrib.messages.middleware.MessageMiddleware',
+ 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+ 'django.middleware.security.SecurityMiddleware',
+ 'django_tools.middlewares.ThreadLocal.ThreadLocalMiddleware',
+ 'django_tools.middlewares.TracebackLogMiddleware.TracebackLogMiddleware')
+
+PARLER_DEFAULT_LANGUAGE_CODE = 'en'
+
+PARLER_LANGUAGES = {1: [{'code': 'de',
+      'fallbacks': ['en'],
+      'hide_untranslated': False,
+      'name': 'German',
+      'redirect_on_fallback': False},
+     {'code': 'en',
+      'fallbacks': ['de'],
+      'hide_untranslated': False,
+      'name': 'English',
+      'redirect_on_fallback': False}],
+ 'default': {'code': 'en',
+             'fallbacks': ['en'],
+             'hide_untranslated': False,
+             'redirect_on_fallback': False}}
+
+PASSWORD_HASHERS = ('django.contrib.auth.hashers.MD5PasswordHasher',)
+
+ROOT_URLCONF = 'django_tools_test_project.urls'
+
+SECRET_KEY = 'Unittests'
+
+SETTINGS_MODULE = 'django_tools_test_project.test_settings'
+
+SITE_ID = 1
+
+STATIC_ROOT = '/home/jens/repos/django-tools/django_tools_test_project/static'
+
+STATIC_URL = '/static/'
+
+TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates',
+  'DIRS': [PosixPath('/home/jens/repos/django-tools/django_tools_test_project/templates')],
+  'OPTIONS': {'context_processors': ['django.contrib.auth.context_processors.auth',
+                                     'django.contrib.messages.context_processors.messages',
+                                     'django.template.context_processors.i18n',
+                                     'django.template.context_processors.debug',
+                                     'django.template.context_processors.request',
+                                     'django.template.context_processors.media',
+                                     'django.template.context_processors.csrf',
+                                     'django.template.context_processors.tz',
+                                     'django.template.context_processors.static'],
+              'loaders': [('django_tools.template.loader.DebugCacheLoader',
+                           ('django.template.loaders.filesystem.Loader',
+                            'django.template.loaders.app_directories.Loader'))]}}]
+
+USE_DYNAMIC_SITE_MIDDLEWARE = True
+
+-------------------------------------------------------------------------------

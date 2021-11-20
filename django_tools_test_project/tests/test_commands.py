@@ -9,6 +9,7 @@
 from pathlib import Path
 
 import pytest
+from bx_py_utils.test_utils.snapshot import assert_text_snapshot
 from django.core.cache import cache
 from django.core.management import call_command
 from django.test import TestCase
@@ -42,39 +43,10 @@ class TestListModelsCommand(DjangoCommandMixin, TestCase):
         assert "existing models in app_label.ModelName format:" in output
         output = output.split("existing models in app_label.ModelName format:", 1)[1]
 
-        assert_equal_dedent(
-            output,
-            """
-            01 - admin.LogEntry
-            02 - auth.Group
-            03 - auth.Permission
-            04 - auth.User
-            05 - contenttypes.ContentType
-            06 - django_tools_test_app.LimitToUsergroupsTestModel
-            07 - django_tools_test_app.OverwriteFileSystemStorageModel
-            08 - django_tools_test_app.PermissionTestModel
-            09 - django_tools_test_app.SimpleParlerModel
-            10 - django_tools_test_app.SimpleParlerModelTranslation
-            11 - django_tools_test_app.UserMediaFiles
-            12 - easy_thumbnails.Source
-            13 - easy_thumbnails.Thumbnail
-            14 - easy_thumbnails.ThumbnailDimensions
-            15 - filer.Clipboard
-            16 - filer.ClipboardItem
-            17 - filer.File
-            18 - filer.Folder
-            19 - filer.FolderPermission
-            20 - filer.Image
-            21 - filer.ThumbnailOption
-            22 - flatpages.FlatPage
-            23 - serve_media_app.UserMediaTokenModel
-            24 - sessions.Session
-            25 - sites.Site
-
-            INSTALLED_APPS....: 15
-            Apps with models..: 15
-        """,
-        )
+        assert '01 - admin.LogEntry' in output
+        assert 'INSTALLED_APPS....:' in output
+        assert 'Apps with models..:' in output
+        assert_text_snapshot(got=output)
 
 
 class TestNiceDiffSettingsCommand(DjangoCommandMixin, TestCase):
@@ -88,15 +60,18 @@ class TestNiceDiffSettingsCommand(DjangoCommandMixin, TestCase):
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
 
+        assert_text_snapshot(got=output)
+
     def test_nice_diffsettings(self):
         output = self.call_manage_py(["nice_diffsettings"], manage_dir=MANAGE_DIR)
-        print(output)
 
         self.assertIn("\n\nSETTINGS_MODULE = 'django_tools_test_project.test_settings'\n\n", output)
         self.assertIn("\n\nINSTALLED_APPS = ('django.contrib.auth',\n", output)
 
         self.assertNotIn("Traceback ", output)  # Space after Traceback is important ;)
         self.assertNotIn("ERROR", output)
+
+        assert_text_snapshot(got=output)
 
 
 @pytest.mark.django_db
@@ -116,11 +91,12 @@ class TestPermissionInfoCommand(TestUserMixin, DjangoCommandMixin, TestCase):
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
 
+        assert_text_snapshot(got=output)
+
     def test_no_username_given(self):
         with StdoutStderrBuffer() as buff:
             call_command("permission_info")
         output = buff.get_output()
-        print(output)
 
         self.assertIn("All existing users are:", output)
         self.assertIn("normal_test_user, staff_test_user, superuser", output)
@@ -129,22 +105,24 @@ class TestPermissionInfoCommand(TestUserMixin, DjangoCommandMixin, TestCase):
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
 
+        assert_text_snapshot(got=output)
+
     def test_wrong_username_given(self):
         with StdoutStderrBuffer() as buff:
             call_command("permission_info", "not existing username")
         output = buff.get_output()
-        print(output)
 
         self.assertIn("Username 'not existing username' doesn't exists", output)
 
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
 
+        assert_text_snapshot(got=output)
+
     def test_normal_test_user(self):
         with StdoutStderrBuffer() as buff:
             call_command("permission_info", "normal_test_user")
         output = buff.get_output()
-        print(output)
 
         self.assertIn("Display effective user permissions", output)
         self.assertIn("is_active    : yes", output)
@@ -159,6 +137,8 @@ class TestPermissionInfoCommand(TestUserMixin, DjangoCommandMixin, TestCase):
 
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
+
+        assert_text_snapshot(got=output)
 
 
 class TestUpdatePermissionCommand(TestUserMixin, DjangoCommandMixin, TestCase):
@@ -176,11 +156,12 @@ class TestUpdatePermissionCommand(TestUserMixin, DjangoCommandMixin, TestCase):
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
 
+        assert_text_snapshot(got=output)
+
     def test_update_permissions(self):
         with StdoutStderrBuffer() as buff:
             call_command("update_permissions")
         output = buff.get_output()
-        print(output)
 
         self.assertIn("Create permissions for:", output)
         self.assertIn(" * auth", output)
@@ -188,6 +169,8 @@ class TestUpdatePermissionCommand(TestUserMixin, DjangoCommandMixin, TestCase):
 
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
+
+        assert_text_snapshot(got=output)
 
 
 class TestClearCacheCommand(DjangoCommandMixin, TestCase):
@@ -205,6 +188,8 @@ class TestClearCacheCommand(DjangoCommandMixin, TestCase):
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
 
+        assert_text_snapshot(got=output)
+
     def test_clear_cache(self):
 
         cache.set("key_foo", "bar", 30)
@@ -213,7 +198,6 @@ class TestClearCacheCommand(DjangoCommandMixin, TestCase):
         with StdoutStderrBuffer() as buff:
             call_command("clear_cache")
         output = buff.get_output()
-        print(output)
 
         assert_pformat_equal(cache.get("key_foo"), None)
 
@@ -223,3 +207,5 @@ class TestClearCacheCommand(DjangoCommandMixin, TestCase):
 
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
+
+        assert_text_snapshot(got=output)

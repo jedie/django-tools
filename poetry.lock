@@ -83,6 +83,14 @@ six = ">=1.9.0"
 webencodings = "*"
 
 [[package]]
+name = "bx-py-utils"
+version = "50"
+description = "Various Python utility functions"
+category = "main"
+optional = false
+python-versions = ">=3.6,<4.0.0"
+
+[[package]]
 name = "certifi"
 version = "2021.10.8"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -1040,7 +1048,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.6,<4.0.0"
-content-hash = "e09f6e8b78ffdfb9e84987cced2165cdba387cfc0aaa07d16c6ebfbed9452792"
+content-hash = "9240030d5cacc34691f6f4ba9a71ebe605f49fef1b233ea811067c12ffd09345"
 
 [metadata.files]
 asgiref = [
@@ -1070,6 +1078,10 @@ autopep8 = [
 bleach = [
     {file = "bleach-4.1.0-py2.py3-none-any.whl", hash = "sha256:4d2651ab93271d1129ac9cbc679f524565cc8a1b791909c4a51eac4446a15994"},
     {file = "bleach-4.1.0.tar.gz", hash = "sha256:0900d8b37eba61a802ee40ac0061f8c2b5dee29c1927dd1d233e075ebf5a71da"},
+]
+bx-py-utils = [
+    {file = "bx_py_utils-50-py3-none-any.whl", hash = "sha256:3713ee75904c061eb934d2ab7a842760a8e0fb99db3b69ff5bd6841aa9ef04ae"},
+    {file = "bx_py_utils-50.tar.gz", hash = "sha256:8799ffd2a12f5aff9654cafd486990ee1a3e5a7be4d00c35f6b0449843568316"},
 ]
 certifi = [
     {file = "certifi-2021.10.8-py2.py3-none-any.whl", hash = "sha256:d62a0163eb4c2344ac042ab2bdf75399a71a2d8c7d47eac2e2ee91b9d6339569"},

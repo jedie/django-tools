@@ -6,28 +6,20 @@ Miscellaneous tools for django.
 
 Look also at the siblings project: `django-cms-tools <https://github.com/jedie/django-cms-tools>`_ (Tools/helpers around Django-CMS).
 
-+-----------------------------------+--------------------------------------------------+
-| |Build Status on github|          | `github.com/jedie/django-tools/actions`_         |
-+-----------------------------------+--------------------------------------------------+
-| |Build Status on travis-ci.org|   | `travis-ci.org/jedie/django-tools`_              |
-+-----------------------------------+--------------------------------------------------+
-| |Coverage Status on codecov.io|   | `codecov.io/gh/jedie/django-tools`_              |
-+-----------------------------------+--------------------------------------------------+
-| |Coverage Status on coveralls.io| | `coveralls.io/r/jedie/django-tools`_             |
-+-----------------------------------+--------------------------------------------------+
-| |Status on landscape.io|          | `landscape.io/github/jedie/django-tools/master`_ |
-+-----------------------------------+--------------------------------------------------+
++-----------------------------------+------------------------------------------+
+| |Build Status on github|          | `github.com/jedie/django-tools/actions`_ |
++-----------------------------------+------------------------------------------+
+| |Coverage Status on codecov.io|   | `codecov.io/gh/jedie/django-tools`_      |
++-----------------------------------+------------------------------------------+
+| |Coverage Status on coveralls.io| | `coveralls.io/r/jedie/django-tools`_     |
++-----------------------------------+------------------------------------------+
 
 .. |Build Status on github| image:: https://github.com/jedie/django-tools/workflows/test/badge.svg?branch=master
 .. _github.com/jedie/django-tools/actions: https://github.com/jedie/django-tools/actions
-.. |Build Status on travis-ci.org| image:: https://travis-ci.org/jedie/django-tools.svg
-.. _travis-ci.org/jedie/django-tools: https://travis-ci.org/jedie/django-tools/
 .. |Coverage Status on codecov.io| image:: https://codecov.io/gh/jedie/django-tools/branch/master/graph/badge.svg
 .. _codecov.io/gh/jedie/django-tools: https://codecov.io/gh/jedie/django-tools
 .. |Coverage Status on coveralls.io| image:: https://coveralls.io/repos/jedie/django-tools/badge.svg
 .. _coveralls.io/r/jedie/django-tools: https://coveralls.io/r/jedie/django-tools
-.. |Status on landscape.io| image:: https://landscape.io/github/jedie/django-tools/master/landscape.svg
-.. _landscape.io/github/jedie/django-tools/master: https://landscape.io/github/jedie/django-tools/master
 
 (Logo contributed by `@reallinfo <https://github.com/reallinfo>`_ see `#16 <https://github.com/jedie/django-tools/pull/16>`_)
 
@@ -1671,4 +1663,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-12-20 18:00:44 with "python-creole"``
+``Note: this file is generated from README.creole 2021-11-20 13:02:28 with "python-creole"``
