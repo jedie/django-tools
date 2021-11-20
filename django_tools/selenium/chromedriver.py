@@ -45,7 +45,7 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
 
     options = (
         "--no-sandbox",
-        # "--headless", ## see: https://bugs.chromium.org/p/chromedriver/issues/detail?id=3358
+        "--headless",
         "--disable-gpu",
         "--disable-dev-shm-usage",  # https://bugs.chromium.org/p/chromedriver/issues/detail?id=2473
     )

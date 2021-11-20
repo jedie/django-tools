@@ -126,6 +126,7 @@ addopts = """
     --failed-first
     --last-failed-no-failures all
     --new-first
+    --maxfail 3
     -p no:randomly
 """
 
