@@ -70,9 +70,19 @@ class ModelTestGeneratorAdminTestCase(TestUserMixin, BaseTestCase, TestCase):
             html=False,
             browser_traceback=True,
         )
-        headers = response._headers
-        pprint(headers)
-        assert_pformat_equal(
-            headers["content-disposition"], ("Content-Disposition", "attachment; filename=auth.User.py")
-        )
-        assert_pformat_equal(headers["content-type"], ("Content-Type", "text/python"))
+
+        try:
+            headers = response.headers  # New Django version
+        except AttributeError:
+            headers = response._headers  # Old Django version
+            assert_pformat_equal(
+                headers['content-disposition'],
+                ('Content-Disposition', 'attachment; filename=auth.User.py')
+            )
+            assert_pformat_equal(headers['content-type'], ('Content-Type', 'text/python'))
+        else:
+            assert_pformat_equal(
+                headers['content-disposition'],
+                'attachment; filename=auth.User.py'
+            )
+            assert_pformat_equal(headers['content-type'], 'text/python')

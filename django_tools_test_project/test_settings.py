@@ -32,6 +32,8 @@ DATABASES = {
     }
 }
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache", "LOCATION": "unique-snowflake"}}
 
 MIDDLEWARE = (
@@ -69,7 +71,7 @@ INSTALLED_APPS = (
     #
     # # https://pypi.org/project/django-ya-model-publisher/
     # 'publisher',
-    "django_tools",
+    "django_tools.apps.DjangoToolsConfig",
     "django_tools.local_sync_cache",
     "django_tools_test_project.django_tools_test_app",
     'django_tools.serve_media_app.apps.UserMediaFilesConfig',
