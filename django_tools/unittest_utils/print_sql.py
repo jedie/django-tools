@@ -8,7 +8,7 @@
 
 from django.db import DEFAULT_DB_ALIAS, connections
 from django.test.utils import CaptureQueriesContext
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 
 
 PFORMAT_SQL_KEYWORDS = ("FROM", "WHERE", "ORDER BY", "VALUES")
@@ -22,7 +22,7 @@ def pformat_sql(sql):
     for keyword in PFORMAT_SQL_KEYWORDS:
         sql = sql.replace(f' {keyword} ', f'\n\t{keyword} ')
 
-    return smart_text(sql)
+    return smart_str(sql)
 
 
 class PrintQueries(CaptureQueriesContext):
@@ -72,6 +72,6 @@ class PrintQueries(CaptureQueriesContext):
             print(f" *** {self.headline} ***")
         for no, q in enumerate(self.captured_queries, 1):
             sql = pformat_sql(q["sql"])
-            msg = smart_text(f"{no:d} - {sql}\n")
+            msg = smart_str(f"{no:d} - {sql}\n")
             print(msg)
         print("-" * 79)
