@@ -87,7 +87,7 @@ def firefox_available(filename=None):
     try:
         executable = find_executable(filename, SeleniumFirefoxTestCase.extra_search_paths)
     except FileNotFoundError as err:
-        log.error("Firefox is no available: %s", err)
+        log.error("Firefox is not available: %s", err)
         return False
 
     log.debug(f"Firefox found here: {executable}")

@@ -114,7 +114,7 @@ def chromium_available(filename=None):
 
     executable = shutil.which(filename)
     if not executable:
-        log.error("Chromium is no available!")
+        log.error("Chromium is not available!")
         return False
 
     log.debug(f"Chromium found here: {executable}")
