@@ -81,14 +81,13 @@ class TestBaseUnittestCase(BaseUnittestCase):
         with self.assertRaises(AssertionError) as cm:
             assert_equal_dedent(first="foo bar", second="foo X bar")
 
-        err_msg = "\n".join([line.strip() for line in cm.exception.args[0].splitlines()])
-        print(f"***\n{err_msg!r}\n***")
-
-        assert "\x1b[0;34mfirst\x1b[m" in err_msg
-        assert "foo bar" in err_msg
-
-        assert "\x1b[0;34msecond\x1b[m" in err_msg
-        assert "foo \x1b[7;32mX \x1b[mbar" in err_msg
+        error_message = cm.exception.args[0]
+        assert error_message == (
+            '\x1b[0;34mfirst\x1b[m                                             '
+            '\x1b[0;34msecond\x1b[m                                           \n'
+            'foo bar                                           foo \x1b[7;1;32mX '
+            '\x1b[mbar                                        '
+        )
 
     def test_assertIn_dedent(self):
         self.assertIn_dedent(member="foo", container="The foo is here!")
