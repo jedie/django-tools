@@ -1,0 +1,336 @@
+<!-- START 'admin/change_form.html' -->
+<!-- START 'admin/base_site.html' -->
+<!-- START 'admin/base.html' -->
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+ <head>
+  <title>
+   Add versioning test model | Django site admin
+  </title>
+  <link href="/static/admin/css/base.css" rel="stylesheet" type="text/css"/>
+  <link href="/static/admin/css/nav_sidebar.css" rel="stylesheet" type="text/css"/>
+  <script defer="" src="/static/admin/js/nav_sidebar.js">
+  </script>
+  <link href="/static/admin/css/forms.css" rel="stylesheet" type="text/css"/>
+  <script src="/admin/jsi18n/">
+  </script>
+  <script src="/static/admin/js/vendor/jquery/jquery.min.js">
+  </script>
+  <script src="/static/admin/js/jquery.init.js">
+  </script>
+  <script src="/static/admin/js/core.js">
+  </script>
+  <script src="/static/admin/js/admin/RelatedObjectLookups.js">
+  </script>
+  <script src="/static/admin/js/actions.js">
+  </script>
+  <script src="/static/admin/js/urlify.js">
+  </script>
+  <script src="/static/admin/js/prepopulate.js">
+  </script>
+  <script src="/static/admin/js/vendor/xregexp/xregexp.min.js">
+  </script>
+  <meta content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" name="viewport"/>
+  <link href="/static/admin/css/responsive.css" rel="stylesheet" type="text/css"/>
+  <meta content="NONE,NOARCHIVE" name="robots"/>
+ </head>
+ <body class="app-django_tools_test_app model-versioningtestmodel change-form" data-admin-utc-offset="-21600">
+  <!-- Container -->
+  <div id="container">
+   <!-- Header -->
+   <div id="header">
+    <div id="branding">
+     <h1 id="site-name">
+      <a href="/admin/">
+       Django administration
+      </a>
+     </h1>
+    </div>
+    <div id="user-tools">
+     Welcome,
+     <strong>
+      TestUser
+     </strong>
+     .
+     <a href="/">
+      View site
+     </a>
+     /
+     <a href="/admin/password_change/">
+      Change password
+     </a>
+     /
+     <a href="/admin/logout/">
+      Log out
+     </a>
+    </div>
+   </div>
+   <!-- END Header -->
+   <div class="breadcrumbs">
+    <a href="/admin/">
+     Home
+    </a>
+    ›
+    <a href="/admin/django_tools_test_app/">
+     Django_Tools_Test_App
+    </a>
+    ›
+    <a href="/admin/django_tools_test_app/versioningtestmodel/">
+     Versioning test models
+    </a>
+    › Add versioning test model
+   </div>
+   <div class="main shifted" id="main">
+    <!-- START 'admin/nav_sidebar.html' -->
+    <button aria-label="Toggle navigation" class="sticky toggle-nav-sidebar" id="toggle-nav-sidebar">
+    </button>
+    <nav class="sticky" id="nav-sidebar">
+     <!-- START 'admin/app_list.html' -->
+     <div class="app-auth module">
+      <table>
+       <caption>
+        <a class="section" href="/admin/auth/" title="Models in the Authentication and Authorization application">
+         Authentication and Authorization
+        </a>
+       </caption>
+       <tr class="model-group">
+        <th scope="row">
+         <a href="/admin/auth/group/">
+          Groups
+         </a>
+        </th>
+        <td>
+         <a class="addlink" href="/admin/auth/group/add/">
+          Add
+         </a>
+        </td>
+       </tr>
+       <tr class="model-user">
+        <th scope="row">
+         <a href="/admin/auth/user/">
+          Users
+         </a>
+        </th>
+        <td>
+         <a class="addlink" href="/admin/auth/user/add/">
+          Add
+         </a>
+        </td>
+       </tr>
+      </table>
+     </div>
+     <div class="app-django_tools_test_app module current-app">
+      <table>
+       <caption>
+        <a class="section" href="/admin/django_tools_test_app/" title="Models in the Django_Tools_Test_App application">
+         Django_Tools_Test_App
+        </a>
+       </caption>
+       <tr class="model-overwritefilesystemstoragemodel">
+        <th scope="row">
+         <a href="/admin/django_tools_test_app/overwritefilesystemstoragemodel/">
+          Overwrite file system storage models
+         </a>
+        </th>
+        <td>
+         <a class="addlink" href="/admin/django_tools_test_app/overwritefilesystemstoragemodel/add/">
+          Add
+         </a>
+        </td>
+       </tr>
+       <tr class="model-permissiontestmodel">
+        <th scope="row">
+         <a href="/admin/django_tools_test_app/permissiontestmodel/">
+          Permission test models
+         </a>
+        </th>
+        <td>
+         <a class="addlink" href="/admin/django_tools_test_app/permissiontestmodel/add/">
+          Add
+         </a>
+        </td>
+       </tr>
+       <tr class="model-versioningtestmodel current-model">
+        <th scope="row">
+         <a aria-current="page" href="/admin/django_tools_test_app/versioningtestmodel/">
+          Versioning test models
+         </a>
+        </th>
+        <td>
+         <a class="addlink" href="/admin/django_tools_test_app/versioningtestmodel/add/">
+          Add
+         </a>
+        </td>
+       </tr>
+      </table>
+     </div>
+     <div class="app-filer module">
+      <table>
+       <caption>
+        <a class="section" href="/admin/filer/" title="Models in the Filer application">
+         Filer
+        </a>
+       </caption>
+       <tr class="model-folder">
+        <th scope="row">
+         <a href="/admin/filer/folder/">
+          Folders
+         </a>
+        </th>
+        <td>
+        </td>
+       </tr>
+       <tr class="model-thumbnailoption">
+        <th scope="row">
+         <a href="/admin/filer/thumbnailoption/">
+          Thumbnail options
+         </a>
+        </th>
+        <td>
+         <a class="addlink" href="/admin/filer/thumbnailoption/add/">
+          Add
+         </a>
+        </td>
+       </tr>
+      </table>
+     </div>
+     <div class="app-flatpages module">
+      <table>
+       <caption>
+        <a class="section" href="/admin/flatpages/" title="Models in the Flat Pages application">
+         Flat Pages
+        </a>
+       </caption>
+       <tr class="model-flatpage">
+        <th scope="row">
+         <a href="/admin/flatpages/flatpage/">
+          Flat pages
+         </a>
+        </th>
+        <td>
+         <a class="addlink" href="/admin/flatpages/flatpage/add/">
+          Add
+         </a>
+        </td>
+       </tr>
+      </table>
+     </div>
+     <div class="app-sites module">
+      <table>
+       <caption>
+        <a class="section" href="/admin/sites/" title="Models in the Sites application">
+         Sites
+        </a>
+       </caption>
+       <tr class="model-site">
+        <th scope="row">
+         <a href="/admin/sites/site/">
+          Sites
+         </a>
+        </th>
+        <td>
+         <a class="addlink" href="/admin/sites/site/add/">
+          Add
+         </a>
+        </td>
+       </tr>
+      </table>
+     </div>
+     <!-- END 'admin/app_list.html' -->
+    </nav>
+    <!-- END 'admin/nav_sidebar.html' -->
+    <div class="content">
+     <!-- Content -->
+     <div class="colM" id="content">
+      <h1>
+       Add versioning test model
+      </h1>
+      <div id="content-main">
+       <form id="versioningtestmodel_form" method="post" novalidate="">
+        MockedCsrfTokenNode
+        <div>
+         <!-- START 'admin/includes/fieldset.html' -->
+         <fieldset class="module aligned">
+          <div class="form-row field-id field-version">
+           <div class="fieldBox field-id">
+            <label>
+             ID:
+            </label>
+            <div class="readonly">
+             -
+            </div>
+           </div>
+           <div class="fieldBox field-version">
+            <label class="required inline" for="id_version">
+             Version:
+            </label>
+            <input id="id_version" name="version" required="" type="hidden" value="0"/>
+            0
+            <div class="help">
+             Internal version number of this entry. Used to protect the overwriting of an older entry.
+            </div>
+           </div>
+          </div>
+          <div class="form-row field-user">
+           <div>
+            <label class="required" for="id_user">
+             User:
+            </label>
+            <div class="related-widget-wrapper">
+             <select id="id_user" name="user" required="">
+              <option selected="" value="">
+               ---------
+              </option>
+              <option value="1">
+               TestUser
+              </option>
+             </select>
+             <a class="related-widget-wrapper-link change-related" data-href-template="/admin/auth/user/__fk__/change/?_to_field=id&_popup=1" id="change_id_user" title="Change selected user">
+              <img alt="Change" src="/static/admin/img/icon-changelink.svg"/>
+             </a>
+             <a class="related-widget-wrapper-link add-related" href="/admin/auth/user/add/?_to_field=id&_popup=1" id="add_id_user" title="Add another user">
+              <img alt="Add" src="/static/admin/img/icon-addlink.svg"/>
+             </a>
+            </div>
+           </div>
+          </div>
+          <div class="form-row field-name">
+           <div>
+            <label class="required" for="id_name">
+             Name:
+            </label>
+            <input class="vTextField" id="id_name" maxlength="100" name="name" required="" type="text"/>
+           </div>
+          </div>
+         </fieldset>
+         <!-- END 'admin/includes/fieldset.html' -->
+         <!-- START 'admin/submit_line.html' -->
+         <div class="submit-row">
+          <input class="default" name="_save" type="submit" value="Save"/>
+          <input name="_addanother" type="submit" value="Save and add another"/>
+          <input name="_continue" type="submit" value="Save and continue editing"/>
+         </div>
+         <!-- END 'admin/submit_line.html' -->
+         <script async="" data-model-name="versioningtestmodel" id="django-admin-form-add-constants" src="/static/admin/js/change_form.js">
+         </script>
+         <!-- START 'admin/prepopulated_fields_js.html' -->
+         <script data-prepopulated-fields="[]" id="django-admin-prepopulated-fields-constants" src="/static/admin/js/prepopulate_init.js">
+         </script>
+         <!-- END 'admin/prepopulated_fields_js.html' -->
+        </div>
+       </form>
+      </div>
+      <br class="clear"/>
+     </div>
+     <!-- END Content -->
+     <div id="footer">
+     </div>
+    </div>
+   </div>
+  </div>
+  <!-- END Container -->
+ </body>
+</html>
+<!-- END 'admin/base.html' -->
+<!-- END 'admin/base_site.html' -->
+<!-- END 'admin/change_form.html' -->

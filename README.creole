@@ -44,6 +44,13 @@ Serve {{{settings.MEDIA_ROOT}}} files only for allowed users.
 See separate README here: [[https://github.com/jedie/django-tools/tree/master/django_tools/serve_media_app|django_tools/serve_media_app]]
 
 
+=== Mode Version Protect
+
+Protect a model against overwriting a newer entry with an older one, by adding a auto increment version number.
+
+See separate README here: [[https://github.com/jedie/django-tools/tree/master/django_tools/model_version_protect|django_tools/model_version_protect]]
+
+
 === OverwriteFileSystemStorage
 
 A django filesystem storage that will overwrite existing files and can create backups, if content changed.
@@ -738,6 +745,7 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 == Django compatibility
 
 |= django-tools    |= django version |= python         |
+| >= v0.49.0       | 2.2, 3.0, 3.1   | >= 3.6, pypy3   |
 | >= v0.47.0       | 2.2, 3.0, 3.1   | >= 3.6, pypy3   |
 | >= v0.39         | 1.11, 2.0       | 3.5, 3.6, pypy3 |
 | >= v0.38.1       | 1.8, 1.11       | 3.5, 3.6, pypy3 |
@@ -755,11 +763,13 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.48.3..master|compare v0.48.3...master]]
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.49.0..master|compare v0.49.0...master]]
+** TBC
+* v0.49.0.rc1 - 21.11.2021 - [[https://github.com/jedie/django-tools/compare/v0.48.3...v0.49.0.rc1|compare v0.48.3...v0.49.0.rc1]]
+** NEW: {{{VersionProtectBaseModel}}} - Protect a model against overwriting a newer entry with an older one, by adding a auto increment version number.
 ** NEW: {{{AlwaysLoggedInAsSuperUserMiddleware}}} useful for local dev server run to auto login into Django Admin
 ** Enhance Selenium test helpers
 ** Update project: Tests, code-style etc.
-** TBC
 * v0.48.3 - 20.12.2020 - [[https://github.com/jedie/django-tools/compare/v0.47.2...v0.48.3|compare v0.47.2...v0.48.3]]
 ** NEW: {{{ImageDummy().in_memory_image_file()}}} useful for e.g.: POST a image upload via Django's test client
 * v0.48.2 - 06.12.2020 - [[https://github.com/jedie/django-tools/compare/v0.47.1...v0.48.2|compare v0.47.1...v0.48.2]]

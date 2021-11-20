@@ -164,8 +164,8 @@ class TestUserFixtures(TestUserMixin, BaseTestCase):
             remove permission: sites | site | Can change site
             remove permission: sites | site | Can delete site
             remove permission: sites | site | Can view site
-            Add 82 permissions to 'testgroup'
-            Group testgroup has 82 permissions
+            Add 86 permissions to 'testgroup'
+            Group testgroup has 86 permissions
             """,
         )
 

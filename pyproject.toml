@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "django-tools"
-version = "0.48.3"
-description = "miscellaneous tools for django"
+version = "0.49.0.rc1"
+description = "miscellaneous tools for Django based projects"
 license = "GPL-3.0-or-later"
 authors = ["Jens Diemer <django-tools@jensdiemer.de>"]
 homepage = "https://github.com/jedie/django-tools/"
@@ -45,6 +45,8 @@ django = "*"
 [tool.poetry.dev-dependencies]
 poetry-publish = "*"  # https://github.com/jedie/poetry-publish
 python-creole = "*"  # https://github.com/jedie/python-creole
+bx_django_utils = "*"  # https://github.com/boxine/bx_django_utils
+beautifulsoup4 = "*"
 tox = "*"
 tox-poetry = "*"  # https://github.com/tkukushkin/tox-poetry
 poetry = "*"

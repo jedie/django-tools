@@ -14,3 +14,4 @@ Create permissions for:
  * local_sync_cache
  * django_tools_test_app
  * serve_media_app
+ * model_version_protect

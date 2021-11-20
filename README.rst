@@ -43,9 +43,9 @@ e.g.:
     fix-code-style       Fix code formatting
     tox-listenvs         List all tox test environments
     tox                  Run pytest via tox with all environments
+    tox-py36             Run pytest via tox with *python v3.6*
     tox-py37             Run pytest via tox with *python v3.7*
     tox-py38             Run pytest via tox with *python v3.8*
-    tox-py39             Run pytest via tox with *python v3.9*
     pytest               Run pytest
     update-rst-readme    update README.rst from README.creole
     publish              Release new version to PyPi
@@ -61,6 +61,13 @@ Serve User Media File
 Serve ``settings.MEDIA_ROOT`` files only for allowed users.
 
 See separate README here: `django_tools/serve_media_app <https://github.com/jedie/django-tools/tree/master/django_tools/serve_media_app>`_
+
+Mode Version Protect
+====================
+
+Protect a model against overwriting a newer entry with an older one, by adding a auto increment version number.
+
+See separate README here: `django_tools/model_version_protect <https://github.com/jedie/django-tools/tree/master/django_tools/model_version_protect>`_
 
 OverwriteFileSystemStorage
 ==========================
@@ -869,13 +876,15 @@ Django compatibility
 | v0.25            | <=1.4          |                 |
 +------------------+----------------+-----------------+
 
-(See also combinations in `tox.ini <https://github.com/jedie/django-tools/blob/master/tox.ini>`_)
+(See also combinations in `.travis.yml <https://github.com/jedie/django-tools/blob/master/.travis.yml>`_ and `tox.ini <https://github.com/jedie/django-tools/blob/master/tox.ini>`_)
 
 -------
 history
 -------
 
 * *dev* - `compare v0.48.3...master <https://github.com/jedie/django-tools/compare/v0.48.3..master>`_ 
+
+    * NEW: ``VersionProtectBaseModel`` - Protect a model against overwriting a newer entry with an older one, by adding a auto increment version number.
 
     * NEW: ``AlwaysLoggedInAsSuperUserMiddleware`` useful for local dev server run to auto login into Django Admin
 
@@ -1654,4 +1663,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2021-11-21 10:51:11 with "python-creole"``
+``Note: this file is generated from README.creole 2021-11-21 15:18:53 with "python-creole"``

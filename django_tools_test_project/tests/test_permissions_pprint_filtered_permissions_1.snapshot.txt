@@ -39,6 +39,10 @@
 [*] django_tools_test_app.change_usermediafiles
 [ ] django_tools_test_app.delete_usermediafiles
 [*] django_tools_test_app.view_usermediafiles
+[*] django_tools_test_app.add_versioningtestmodel
+[*] django_tools_test_app.change_versioningtestmodel
+[ ] django_tools_test_app.delete_versioningtestmodel
+[*] django_tools_test_app.view_versioningtestmodel
 [ ] easy_thumbnails.add_source
 [ ] easy_thumbnails.change_source
 [ ] easy_thumbnails.delete_source

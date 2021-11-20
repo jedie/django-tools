@@ -11,20 +11,21 @@
 09 - django_tools_test_app.SimpleParlerModel
 10 - django_tools_test_app.SimpleParlerModelTranslation
 11 - django_tools_test_app.UserMediaFiles
-12 - easy_thumbnails.Source
-13 - easy_thumbnails.Thumbnail
-14 - easy_thumbnails.ThumbnailDimensions
-15 - filer.Clipboard
-16 - filer.ClipboardItem
-17 - filer.File
-18 - filer.Folder
-19 - filer.FolderPermission
-20 - filer.Image
-21 - filer.ThumbnailOption
-22 - flatpages.FlatPage
-23 - serve_media_app.UserMediaTokenModel
-24 - sessions.Session
-25 - sites.Site
+12 - django_tools_test_app.VersioningTestModel
+13 - easy_thumbnails.Source
+14 - easy_thumbnails.Thumbnail
+15 - easy_thumbnails.ThumbnailDimensions
+16 - filer.Clipboard
+17 - filer.ClipboardItem
+18 - filer.File
+19 - filer.Folder
+20 - filer.FolderPermission
+21 - filer.Image
+22 - filer.ThumbnailOption
+23 - flatpages.FlatPage
+24 - serve_media_app.UserMediaTokenModel
+25 - sessions.Session
+26 - sites.Site
 
-INSTALLED_APPS....: 15
-Apps with models..: 15
+INSTALLED_APPS....: 16
+Apps with models..: 16

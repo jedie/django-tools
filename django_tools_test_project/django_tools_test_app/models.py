@@ -2,18 +2,20 @@
     django-tools test models
     ~~~~~~~~~~~~~~~~~~~~~~~~
 
-    :copyleft: 2012-2018 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2012-2021 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 import tempfile
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db import models
 from parler.models import TranslatableModel, TranslatedFields
 
 # https://github.com/jedie/django-tools
 from django_tools import limit_to_usergroups
 from django_tools.file_storage.file_system_storage import OverwriteFileSystemStorage
+from django_tools.model_version_protect.models import VersionProtectBaseModel
 from django_tools.parler_utils.parler_fixtures import ParlerDummyGenerator
 from django_tools.permissions import ModelPermissionMixin, check_permission
 from django_tools.serve_media_app.models import user_directory_path
@@ -64,7 +66,7 @@ class OverwriteFileSystemStorageModel(models.Model):
         return f"pk:{self.pk!r} - {self.file!r}"
 
 
-# -----------------------------------------------------------------------------
+# _____________________________________________________________________________
 # for django_tools.serve_media_app
 
 
@@ -76,6 +78,17 @@ class UserMediaFiles(models.Model):
     )
     file = models.FileField(upload_to=user_directory_path)
     image = models.ImageField(upload_to=user_directory_path)
+
+# _____________________________________________________________________________
+# for django_tools.model_version_protect
+
+
+class VersioningTestModel(VersionProtectBaseModel):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f'{self.name} (pk:{self.pk})'
 
 
 # -----------------------------------------------------------------------------
