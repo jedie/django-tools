@@ -15,14 +15,23 @@ from django.core.management import call_command
 from django.test import TestCase
 
 # https://github.com/jedie/django-tools
+import django_tools
 import django_tools_test_project
-from django_tools.unittest_utils.assertments import assert_equal_dedent, assert_pformat_equal
+from django_tools.unittest_utils.assertments import assert_pformat_equal
 from django_tools.unittest_utils.django_command import DjangoCommandMixin
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 from django_tools.unittest_utils.user import TestUserMixin
 
 
+REPO_PATH = str(Path(django_tools.__file__).parent.parent.parent)
 MANAGE_DIR = Path(django_tools_test_project.__file__).parent
+
+
+def assert_manage_command_output(output):
+    assert 'Use settings: ' in output
+    assert REPO_PATH in output
+    output = output.replace(REPO_PATH, '...')
+    assert_text_snapshot(got=output)
 
 
 class TestListModelsCommand(DjangoCommandMixin, TestCase):
@@ -46,6 +55,8 @@ class TestListModelsCommand(DjangoCommandMixin, TestCase):
         assert '01 - admin.LogEntry' in output
         assert 'INSTALLED_APPS....:' in output
         assert 'Apps with models..:' in output
+
+        assert REPO_PATH not in output
         assert_text_snapshot(got=output)
 
 
@@ -60,7 +71,7 @@ class TestNiceDiffSettingsCommand(DjangoCommandMixin, TestCase):
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
 
-        assert_text_snapshot(got=output)
+        assert_manage_command_output(output)
 
     def test_nice_diffsettings(self):
         output = self.call_manage_py(["nice_diffsettings"], manage_dir=MANAGE_DIR)
@@ -71,7 +82,7 @@ class TestNiceDiffSettingsCommand(DjangoCommandMixin, TestCase):
         self.assertNotIn("Traceback ", output)  # Space after Traceback is important ;)
         self.assertNotIn("ERROR", output)
 
-        assert_text_snapshot(got=output)
+        assert_manage_command_output(output)
 
 
 @pytest.mark.django_db
@@ -91,7 +102,7 @@ class TestPermissionInfoCommand(TestUserMixin, DjangoCommandMixin, TestCase):
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
 
-        assert_text_snapshot(got=output)
+        assert_manage_command_output(output)
 
     def test_no_username_given(self):
         with StdoutStderrBuffer() as buff:
@@ -105,6 +116,7 @@ class TestPermissionInfoCommand(TestUserMixin, DjangoCommandMixin, TestCase):
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
 
+        assert REPO_PATH not in output
         assert_text_snapshot(got=output)
 
     def test_wrong_username_given(self):
@@ -117,6 +129,7 @@ class TestPermissionInfoCommand(TestUserMixin, DjangoCommandMixin, TestCase):
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
 
+        assert REPO_PATH not in output
         assert_text_snapshot(got=output)
 
     def test_normal_test_user(self):
@@ -138,6 +151,7 @@ class TestPermissionInfoCommand(TestUserMixin, DjangoCommandMixin, TestCase):
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
 
+        assert REPO_PATH not in output
         assert_text_snapshot(got=output)
 
 
@@ -156,7 +170,7 @@ class TestUpdatePermissionCommand(TestUserMixin, DjangoCommandMixin, TestCase):
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
 
-        assert_text_snapshot(got=output)
+        assert_manage_command_output(output)
 
     def test_update_permissions(self):
         with StdoutStderrBuffer() as buff:
@@ -170,6 +184,7 @@ class TestUpdatePermissionCommand(TestUserMixin, DjangoCommandMixin, TestCase):
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
 
+        assert REPO_PATH not in output
         assert_text_snapshot(got=output)
 
 
@@ -188,7 +203,7 @@ class TestClearCacheCommand(DjangoCommandMixin, TestCase):
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
 
-        assert_text_snapshot(got=output)
+        assert_manage_command_output(output)
 
     def test_clear_cache(self):
 
@@ -208,4 +223,5 @@ class TestClearCacheCommand(DjangoCommandMixin, TestCase):
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
 
+        assert REPO_PATH not in output
         assert_text_snapshot(got=output)
