@@ -37,6 +37,7 @@ readme='README.rst'
 
 [tool.poetry.dependencies]
 python = ">=3.6,<4.0.0"
+bx_py_utils = "*"  # https://github.com/boxine/bx_py_utils
 icdiff = "*"  # https://github.com/jeffkaufman/icdiff
 pprintpp = "*"  # https://github.com/wolever/pprintpp
 bleach = "*"

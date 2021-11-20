@@ -1,0 +1,10 @@
+
+_______________________________________________________________________________
+Display effective user permissions in the same format as user.has_perm() argument: <appname>.<codename>
+
+No username given!
+
+All existing users are:
+normal_test_user, staff_test_user, superuser
+(3 users)
+
