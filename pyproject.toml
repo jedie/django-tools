@@ -30,6 +30,7 @@ classifiers = [
 ]
 packages = [
     { include = "django_tools" },
+    { include = "django_tools_test_project" },
 ]
 # Will be generated from README.creole with: 'poetry run update_rst_readme'
 readme='README.rst'
@@ -111,9 +112,7 @@ norecursedirs = ".* .git __pycache__ coverage* dist htmlcov"
 # Add this to local test runs:
 #    -x -p no:randomly
 addopts = """
-    --failed-first
-    --last-failed-no-failures all
-    --new-first
+    --import-mode=importlib
     --reuse-db
     --nomigrations
     --cov=.
@@ -123,6 +122,10 @@ addopts = """
     --no-cov-on-fail
     --showlocals
     --doctest-modules
+    --failed-first
+    --last-failed-no-failures all
+    --new-first
+    -p no:randomly
 """
 
 

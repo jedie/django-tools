@@ -16,8 +16,6 @@
 /htmlcov/
 coverage.xml
 
-/poetry.lock
-
 # Test project:
 test_project_db.sqlite3
 filer_public/
