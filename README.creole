@@ -756,6 +756,9 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.48.3..master|compare v0.48.3...master]]
+** NEW: {{{AlwaysLoggedInAsSuperUserMiddleware}}} useful for local dev server run to auto login into Django Admin
+** Enhance Selenium test helpers
+** Update project: Tests, code-style etc.
 ** TBC
 * v0.48.3 - 20.12.2020 - [[https://github.com/jedie/django-tools/compare/v0.47.2...v0.48.3|compare v0.47.2...v0.48.3]]
 ** NEW: {{{ImageDummy().in_memory_image_file()}}} useful for e.g.: POST a image upload via Django's test client

@@ -877,6 +877,12 @@ history
 
 * *dev* - `compare v0.48.3...master <https://github.com/jedie/django-tools/compare/v0.48.3..master>`_ 
 
+    * NEW: ``AlwaysLoggedInAsSuperUserMiddleware`` useful for local dev server run to auto login into Django Admin
+
+    * Enhance Selenium test helpers
+
+    * Update project: Tests, code-style etc.
+
     * TBC
 
 * v0.48.3 - 20.12.2020 - `compare v0.47.2...v0.48.3 <https://github.com/jedie/django-tools/compare/v0.47.2...v0.48.3>`_ 
@@ -1648,4 +1654,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2021-11-20 13:02:28 with "python-creole"``
+``Note: this file is generated from README.creole 2021-11-21 05:39:33 with "python-creole"``

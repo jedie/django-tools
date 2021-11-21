@@ -36,6 +36,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache", "LOCATION": "unique-snowflake"}}
 
+
 MIDDLEWARE = (
     "django_tools.middlewares.LogHeaders.LogRequestHeadersMiddleware",
     # https://github.com/jazzband/django-debug-toolbar/
@@ -51,6 +52,7 @@ MIDDLEWARE = (
     # 'django_tools.dynamic_site.middleware.DynamicSiteMiddleware',
     "django_tools.middlewares.ThreadLocal.ThreadLocalMiddleware",
     "django_tools.middlewares.TracebackLogMiddleware.TracebackLogMiddleware",
+    "django_tools.middlewares.local_auto_login.AlwaysLoggedInAsSuperUserMiddleware",
 )
 
 INSTALLED_APPS = (
@@ -124,7 +126,7 @@ PARLER_LANGUAGES = {
 
 # https://docs.djangoproject.com/en/1.8/ref/settings/#languages
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGES = tuple([(d["code"], d["name"]) for d in PARLER_LANGUAGES[1]])
+LANGUAGES = tuple((d["code"], d["name"]) for d in PARLER_LANGUAGES[1])
 
 LANGUAGE_DICT = dict(LANGUAGES)  # useful to get translated name by language code
 
