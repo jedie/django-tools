@@ -2,12 +2,13 @@
     models utils
     ~~~~~~~~~~~~
 
-    :copyleft: 2009-2012 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2009-2021 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 
 from django.conf import settings
+from django.core.serializers import serialize
 from django.db import IntegrityError
 from django.db.models import signals
 from django.utils.text import get_text_list
@@ -82,3 +83,26 @@ def auto_add_check_unique_together(model_class):
 
     if "sqlite3" in engine:  # 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
         signals.pre_save.connect(check_unique_together, sender=model_class)
+
+
+def serialize_instance(instance) -> dict:
+    """
+    returns a dict of all field/values from the given model instance
+    """
+    # FIXME: How to collect relations, too?!?
+    data = serialize('python', [instance])
+    instance_data = data[0]
+    field_data = instance_data['fields']
+    return field_data
+
+
+def compare_model_instance(instance1, instance2):
+    """
+    yield the changed fields of two model instances
+    """
+    field_data1 = serialize_instance(instance=instance1)
+    field_data2 = serialize_instance(instance=instance2)
+    for model_field, value1 in field_data1.items():
+        value2 = field_data2[model_field]
+        if value1 != value2:
+            yield model_field, value1, value2

@@ -284,7 +284,7 @@ class TestPermissions(TestUserMixin, BaseTestCase):
 
         assert_pformat_equal(
             logs.output,
-            ["DEBUG:django_tools.permissions:Add 21 permissions from app 'django_tools_test_app'"]
+            ["DEBUG:django_tools.permissions:Add 25 permissions from app 'django_tools_test_app'"]
         )
 
         permissions = self.normal_group.permissions.all()
