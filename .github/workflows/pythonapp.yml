@@ -10,6 +10,8 @@ on:
 
 jobs:
   test:
+    env:
+      PY_COLORS: "1"
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
