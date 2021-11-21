@@ -1,7 +1,8 @@
 
-Use DJANGO_SETTINGS_MODULE='django_tools_test_project.test_settings'
+Use DJANGO_SETTINGS_MODULE='django_tools_test_project.settings.test'
 manage.py --help
-Use settings: .../django-tools/django_tools_test_project/test_settings.py
+Test DB: .../django-tools/.test/test_project_db.sqlite3
+Use settings: .../django-tools/django_tools_test_project/settings/test.py
 
 Type 'manage.py help <subcommand>' for help on a specific subcommand.
 

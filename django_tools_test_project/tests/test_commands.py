@@ -1,20 +1,18 @@
 """
     Test django_tools.unittest_utils.django_command
 
-    :copyleft: 2017-2020 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2017-2021 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 
 from pathlib import Path
 
-import pytest
 from bx_py_utils.test_utils.snapshot import assert_text_snapshot
 from django.core.cache import cache
 from django.core.management import call_command
 from django.test import TestCase
 
-# https://github.com/jedie/django-tools
 import django_tools
 import django_tools_test_project
 from django_tools.unittest_utils.assertments import assert_pformat_equal
@@ -27,23 +25,21 @@ REPO_PATH = str(Path(django_tools.__file__).parent.parent.parent)
 MANAGE_DIR = Path(django_tools_test_project.__file__).parent
 
 
-def assert_manage_command_output(output):
-    assert 'Use settings: ' in output
-    assert REPO_PATH in output
-    output = output.replace(REPO_PATH, '...')
-    assert_text_snapshot(got=output)
-
-
-class TestListModelsCommand(DjangoCommandMixin, TestCase):
+class CommandTestCase(TestUserMixin, DjangoCommandMixin, TestCase):
     def test_help(self):
         output = self.call_manage_py(["--help"], manage_dir=MANAGE_DIR)
 
         self.assertIn("[django]", output)
         self.assertIn("[django_tools]", output)
-        self.assertIn("list_models", output)
+        self.assertIn("nice_diffsettings", output)
 
         self.assertNotIn("Traceback", output)
         self.assertNotIn("ERROR", output)
+
+        assert 'Use settings: ' in output
+        assert REPO_PATH in output
+        output = output.replace(REPO_PATH, '...')
+        assert_text_snapshot(got=output)
 
     def test_list_models(self):
         output = self.call_manage_py(
@@ -59,50 +55,23 @@ class TestListModelsCommand(DjangoCommandMixin, TestCase):
         assert REPO_PATH not in output
         assert_text_snapshot(got=output)
 
-
-class TestNiceDiffSettingsCommand(DjangoCommandMixin, TestCase):
-    def test_help(self):
-        output = self.call_manage_py(["--help"], manage_dir=MANAGE_DIR)
-
-        self.assertIn("[django]", output)
-        self.assertIn("[django_tools]", output)
-        self.assertIn("nice_diffsettings", output)
-
-        self.assertNotIn("Traceback", output)
-        self.assertNotIn("ERROR", output)
-
-        assert_manage_command_output(output)
-
     def test_nice_diffsettings(self):
         output = self.call_manage_py(["nice_diffsettings"], manage_dir=MANAGE_DIR)
 
-        self.assertIn("\n\nSETTINGS_MODULE = 'django_tools_test_project.test_settings'\n\n", output)
+        self.assertIn("\n\nSETTINGS_MODULE = 'django_tools_test_project.settings.test'\n\n", output)
         self.assertIn("\n\nINSTALLED_APPS = ('django.contrib.auth',\n", output)
 
         self.assertNotIn("Traceback ", output)  # Space after Traceback is important ;)
         self.assertNotIn("ERROR", output)
 
-        assert_manage_command_output(output)
+        assert 'Use settings: ' in output
+        assert REPO_PATH in output
+        output = output.replace(REPO_PATH, '...')
+        assert_text_snapshot(got=output)
 
-
-@pytest.mark.django_db
-class TestPermissionInfoCommand(TestUserMixin, DjangoCommandMixin, TestCase):
     def test_environment(self):
         usernames = ",".join(self.UserModel.objects.values_list("username", flat=True).order_by("username"))
         assert_pformat_equal(usernames, "normal_test_user,staff_test_user,superuser")
-
-    def test_help(self):
-        output = self.call_manage_py(
-            ["--help"], manage_dir=MANAGE_DIR, debug=True
-        )
-
-        self.assertIn("[django]", output)
-        self.assertIn("permission_info", output)
-
-        self.assertNotIn("Traceback", output)
-        self.assertNotIn("ERROR", output)
-
-        assert_manage_command_output(output)
 
     def test_no_username_given(self):
         with StdoutStderrBuffer() as buff:
@@ -154,24 +123,6 @@ class TestPermissionInfoCommand(TestUserMixin, DjangoCommandMixin, TestCase):
         assert REPO_PATH not in output
         assert_text_snapshot(got=output)
 
-
-class TestUpdatePermissionCommand(TestUserMixin, DjangoCommandMixin, TestCase):
-    """
-    Test for:
-    django_tools.management.commands.update_permissions.Command
-    """
-
-    def test_help(self):
-        output = self.call_manage_py(["--help"], manage_dir=MANAGE_DIR)
-
-        self.assertIn("[django]", output)
-        self.assertIn("update_permissions", output)
-
-        self.assertNotIn("Traceback", output)
-        self.assertNotIn("ERROR", output)
-
-        assert_manage_command_output(output)
-
     def test_update_permissions(self):
         with StdoutStderrBuffer() as buff:
             call_command("update_permissions")
@@ -186,24 +137,6 @@ class TestUpdatePermissionCommand(TestUserMixin, DjangoCommandMixin, TestCase):
 
         assert REPO_PATH not in output
         assert_text_snapshot(got=output)
-
-
-class TestClearCacheCommand(DjangoCommandMixin, TestCase):
-    """
-    Test for:
-    django_tools.management.commands.clear_cache.Command
-    """
-
-    def test_help(self):
-        output = self.call_manage_py(["--help"], manage_dir=MANAGE_DIR)
-
-        self.assertIn("[django]", output)
-        self.assertIn("clear_cache", output)
-
-        self.assertNotIn("Traceback", output)
-        self.assertNotIn("ERROR", output)
-
-        assert_manage_command_output(output)
 
     def test_clear_cache(self):
 

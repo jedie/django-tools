@@ -34,13 +34,13 @@ update: check-poetry ## update the sources and installation
 	poetry update
 
 lint: ## Run code formatters and linter
-	poetry run flynt --exclude ".*" --fail-on-change --line_length=${MAX_LINE_LENGTH} django_tools django_tools_test_project
+	poetry run flynt --exclude ".*" --exclude "migrations" --fail-on-change --line_length=${MAX_LINE_LENGTH} django_tools django_tools_test_project
 	poetry run isort --check-only django_tools django_tools_test_project
 	poetry run flake8 django_tools django_tools_test_project
 
 fix-code-style: ## Fix code formatting
-	poetry run flynt --exclude ".*" --line_length=${MAX_LINE_LENGTH} django_tools django_tools_test_project
-	poetry run autopep8 --exclude ".*" --ignore-local-config --max-line-length=${MAX_LINE_LENGTH} --aggressive --aggressive --in-place --recursive django_tools django_tools_test_project
+	poetry run flynt --exclude ".*" --exclude "migrations" --line_length=${MAX_LINE_LENGTH} django_tools django_tools_test_project
+	poetry run autopep8 --exclude ".*" --exclude "migrations" --ignore-local-config --max-line-length=${MAX_LINE_LENGTH} --aggressive --aggressive --in-place --recursive django_tools django_tools_test_project
 	poetry run isort django_tools django_tools_test_project
 	poetry run flake8 django_tools django_tools_test_project
 
@@ -69,7 +69,7 @@ publish: ## Release new version to PyPi
 	poetry run publish
 
 start-dev-server: ## Start Django dev. server with the test project
-	poetry run dev_server
+	DJANGO_SETTINGS_MODULE=django_tools_test_project.settings.local poetry run dev_server
 
 
 .PHONY: help install lint fix test publish

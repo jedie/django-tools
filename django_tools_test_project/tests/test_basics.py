@@ -24,7 +24,7 @@ MANAGE_DIR = Path(django_tools_test_project.__file__).parent
 class SettingsTests(SimpleTestCase):
 
     def test_settings_module(self):
-        self.assertIn('django_tools_test_project.test_settings', settings.SETTINGS_MODULE)
+        self.assertIn('django_tools_test_project.settings.test', settings.SETTINGS_MODULE)
 
     def test_diffsettings(self):
         """
@@ -34,7 +34,7 @@ class SettingsTests(SimpleTestCase):
             call_command('diffsettings')
         output = buff.get_output()
         print(output)
-        self.assertIn('django_tools_test_project.test_settings', output)  # SETTINGS_MODULE
+        self.assertIn('django_tools_test_project.settings.test', output)  # SETTINGS_MODULE
 
 
 class ManageCommandTests(DjangoCommandMixin, TestCase):
@@ -48,23 +48,6 @@ class ManageCommandTests(DjangoCommandMixin, TestCase):
         self.assertNotIn('ERROR', output)
         self.assertIn('[django]', output)
         self.assertIn('Type \'manage.py help <subcommand>\' for help on a specific subcommand.', output)
-
-    # def test_unapplied_migrations(self):
-    #     output = self.call_manage_py(["showmigrations"], manage_dir=MANAGE_DIR)
-    #     print(output)
-    #
-    #     # We didn't have any migrations, yet:
-    #     # self.assertIn('[X]', output) # applied migration
-    #
-    #     self.assertNotIn("[ ]", output) # unapplied migration
-
-    def test_missing_migrations(self):
-        output = self.call_manage_py(["makemigrations", "--dry-run"], manage_dir=MANAGE_DIR)
-        print(output)
-        self.assertIn("No changes detected", output)
-        self.assertNotIn("Migrations for", output)  # output like: """Migrations for 'appname':"""
-        self.assertNotIn("SystemCheckError", output)
-        self.assertNotIn("ERRORS", output)
 
 
 class ManageCheckTests(SimpleTestCase):
