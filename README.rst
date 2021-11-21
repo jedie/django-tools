@@ -38,6 +38,7 @@ e.g.:
     help                 List all commands
     install-poetry       install or update poetry
     install              install django-tools via poetry
+    update               update the sources and installation
     lint                 Run code formatters and linter
     fix-code-style       Fix code formatting
     tox-listenvs         List all tox test environments
@@ -782,22 +783,6 @@ Just list all existing models in app_label.ModelName format. Useful to use this 
 =============
 
 There exist many miscellaneous stuff. Look in the source, luke!
-
-------------------------------
-running django-tools unittests
-------------------------------
-
-Run all tests in all environment combinations via tox:
-
-::
-
-    .../django-tools $ python3 setup.py tox
-
-Run all tests in current environment via pytest:
-
-::
-
-    .../django-tools $ python3 setup.py test
 
 ------------------------------
 Backwards-incompatible changes
