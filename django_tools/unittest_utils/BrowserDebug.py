@@ -119,7 +119,7 @@ def debug_response(response, browser_traceback=True, msg="", display_tb=True, di
     response_info += "\t<dt><h3>messages</h3></dt>\n"
     msg = messages.get_messages(response.request)
     if msg:
-        msg = "".join(["%s\n" % x for x in msg])
+        msg = "".join([f"{x}\n" for x in msg])
     else:
         msg = "---"
     response_info += f"\t<dd><pre>{msg}</pre></dd>\n"

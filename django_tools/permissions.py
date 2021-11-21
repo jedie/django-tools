@@ -125,7 +125,7 @@ def log_user_permissions(user, log_callable=None):
     if not permissions:
         log_callable("User '%s' has no permission!", user.username)
     else:
-        permissions = "\n".join(["* %s" % p for p in permissions])
+        permissions = "\n".join([f"* {p}" for p in permissions])
         log_callable("User '%s' has permissions:\n%s", user.username, permissions)
 
 
@@ -147,7 +147,7 @@ def log_group_permissions(group, log_callable=None):
         log_callable("User group '%s' has no permission!", group.name)
     else:
         permissions = "\n".join([
-            "* %s" % pformat_permission(permission)
+            f"* {pformat_permission(permission)}"
             for permission in permissions
         ])
         log_callable("User group '%s' has permissions:\n%s", group.name, permissions)

@@ -56,5 +56,3 @@ class TestIsolatedFilesystem(TestCase):
 
         in_isolated_filesystem()
         self.assert_after()
-
-
