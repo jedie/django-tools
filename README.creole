@@ -750,7 +750,7 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 | v0.26            | <=1.6           |                 |
 | v0.25            | <=1.4           |                 |
 
-(See also combinations in [[https://github.com/jedie/django-tools/blob/master/.travis.yml|.travis.yml]] and [[https://github.com/jedie/django-tools/blob/master/tox.ini|tox.ini]])
+(See also combinations in [[https://github.com/jedie/django-tools/blob/master/tox.ini|tox.ini]])
 
 
 == history
