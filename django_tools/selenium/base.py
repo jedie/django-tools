@@ -5,12 +5,9 @@
 """
 import logging
 import pprint
-import shutil
 import sys
-import tempfile
 import traceback
 import unittest
-from pathlib import Path
 
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
@@ -93,26 +90,11 @@ class SeleniumBaseTestCase(unittest.TestCase):
     driver = None
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
-        prefix = f'{cls.__name__}_'
-        cls.temp_user_data_dir = tempfile.mkdtemp(prefix=prefix)
-        log.debug('Use %s as browser user data dir', cls.temp_user_data_dir)
-
-    @classmethod
     def tearDownClass(cls):
         if cls.driver is not None:
             cls.driver.quit()
 
         super().tearDownClass()
-
-        if Path(cls.temp_user_data_dir).exists():
-            log.debug('Remove user data dir: "&s"', cls.temp_user_data_dir)
-            try:
-                shutil.rmtree(cls.temp_user_data_dir)
-            except OSError as err:
-                log.exception('Cleanup error: %s', err)
 
     def setUp(self):
         super().setUp()
