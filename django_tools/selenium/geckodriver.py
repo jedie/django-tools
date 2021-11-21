@@ -46,7 +46,13 @@ class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
 
     options = ("-headless",)
     desired_capabilities = {
-        "loggingPrefs": {"browser": "ALL", "client": "ALL", "driver": "ALL", "performance": "ALL", "server": "ALL"}
+        "loggingPrefs": {
+            "browser": "ALL",
+            "client": "ALL",
+            "driver": "ALL",
+            "performance": "ALL",
+            "server": "ALL"
+        }
     }
 
     @classmethod
