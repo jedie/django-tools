@@ -2,7 +2,7 @@
     :copyleft: 2020 by django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
+import subprocess
 from pathlib import Path
 
 from creole.setup_utils import update_rst_readme
@@ -40,3 +40,7 @@ def test_poetry_check():
     Test 'poetry check' output.
     """
     assert_poetry_check(package_root=PACKAGE_ROOT)
+
+
+def test_lint():
+    subprocess.check_call(['make', 'fix-code-style'], cwd=PACKAGE_ROOT)
