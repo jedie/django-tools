@@ -21,7 +21,7 @@ from django_tools.permissions import (
     permissions2list,
     pprint_filtered_permissions,
 )
-from django_tools.unittest_utils.assertments import assert_equal_dedent, assert_pformat_equal
+from django_tools.unittest_utils.assertments import assert_pformat_equal
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 from django_tools.unittest_utils.unittest_base import BaseTestCase
 from django_tools.unittest_utils.user import TestUserMixin
