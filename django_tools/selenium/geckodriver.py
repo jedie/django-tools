@@ -60,7 +60,7 @@ class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
         except FileNotFoundError:
             cls.driver = None
         else:
-            desired = DesiredCapabilities.FIREFOX
+            desired = DesiredCapabilities.FIREFOX.copy()
             for key, value in cls.desired_capabilities.items():
                 desired[key] = value
 

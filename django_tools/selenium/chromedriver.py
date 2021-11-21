@@ -75,7 +75,7 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
         except FileNotFoundError:
             cls.driver = None
         else:
-            desired = DesiredCapabilities.CHROME
+            desired = DesiredCapabilities.CHROME.copy()
             for key, value in cls.desired_capabilities.items():
                 desired[key] = value
 
