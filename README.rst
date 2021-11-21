@@ -38,6 +38,7 @@ e.g.:
     help                 List all commands
     install-poetry       install or update poetry
     install              install django-tools via poetry
+    update               update the sources and installation
     lint                 Run code formatters and linter
     fix-code-style       Fix code formatting
     tox-listenvs         List all tox test environments
@@ -784,22 +785,6 @@ Just list all existing models in app_label.ModelName format. Useful to use this 
 There exist many miscellaneous stuff. Look in the source, luke!
 
 ------------------------------
-running django-tools unittests
-------------------------------
-
-Run all tests in all environment combinations via tox:
-
-::
-
-    .../django-tools $ python3 setup.py tox
-
-Run all tests in current environment via pytest:
-
-::
-
-    .../django-tools $ python3 setup.py test
-
-------------------------------
 Backwards-incompatible changes
 ------------------------------
 
@@ -891,6 +876,12 @@ history
 -------
 
 * *dev* - `compare v0.48.3...master <https://github.com/jedie/django-tools/compare/v0.48.3..master>`_ 
+
+    * NEW: ``AlwaysLoggedInAsSuperUserMiddleware`` useful for local dev server run to auto login into Django Admin
+
+    * Enhance Selenium test helpers
+
+    * Update project: Tests, code-style etc.
 
     * TBC
 
@@ -1663,4 +1654,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2021-11-20 13:02:28 with "python-creole"``
+``Note: this file is generated from README.creole 2021-11-21 05:39:33 with "python-creole"``
