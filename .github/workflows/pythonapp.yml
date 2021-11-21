@@ -23,12 +23,9 @@ jobs:
       with:
         python-version: '${{ matrix.python-version }}'
 
-    - name: Install chromedriver and geckodriver (Firefox Webdriver) via seleniumbase
+    - name: Install Selenium requirements
       run: |
         sudo apt install google-chrome-stable firefox
-        pip3 install seleniumbase
-        seleniumbase install chromedriver
-        seleniumbase install geckodriver
 
     - name: 'Install package'
       run: |
