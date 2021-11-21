@@ -96,9 +96,13 @@ class DjangoCommandMixin:
             ) % test_path
             raise AssertionError(msg)
 
+        if 'env' not in kwargs:
+            # e.g.: transfer DJANGO_SETTINGS_MODULE ;)
+            kwargs['env'] = os.environ.copy()
+
         cmd = [sys.executable, manage_py] + list(cmd)
         kwargs.update({
-            "cwd": manage_dir,
+            'cwd': manage_dir,
             # "debug": True,
         })
         return self.subprocess_getstatusoutput(cmd, **kwargs)
