@@ -44,3 +44,4 @@ def test_poetry_check():
 
 def test_lint():
     subprocess.check_call(['make', 'fix-code-style'], cwd=PACKAGE_ROOT)
+    1 / 0

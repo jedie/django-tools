@@ -29,7 +29,7 @@ class UserMediaView(View):
         token = UserMediaTokenModel.objects.get_user_token(user=user)
         if token != user_token:
             # A user tries to access a file from a other user?
-            logger.error(f'Wrong user (%s) token: %r is not %r', user, token, user_token)
+            logger.error('Wrong user (%s) token: %r is not %r', user, token, user_token)
             raise PermissionDenied
 
     def get(self, request, user_token, path):

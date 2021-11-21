@@ -1,4 +1,4 @@
 [flake8]
-exclude = .pytest_cache, *.egg-info
+exclude = .*, dist, htmlcov
 #ignore = E402
 max-line-length = 119

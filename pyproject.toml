@@ -80,7 +80,7 @@ build-backend = "poetry.masonry.api"
 [tool.autopep8]
 # https://github.com/hhatto/autopep8#pyprojecttoml
 max_line_length = 120
-exclude="*/htmlcov/*,*/migrations/*,*/volumes/*"
+exclude=".*,*/htmlcov/*,*/migrations/*,*/volumes/*"
 
 
 [tool.isort]
@@ -88,7 +88,7 @@ exclude="*/htmlcov/*,*/migrations/*,*/volumes/*"
 atomic=true
 line_length=120
 case_sensitive=false
-skip_glob=["*/htmlcov/*","*/migrations/*"]
+skip_glob=[".*","*/htmlcov/*","*/migrations/*"]
 multi_line_output=3
 include_trailing_comma=true
 known_first_party=["django_tools","django_tools_test_project"]
