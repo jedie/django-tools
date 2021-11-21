@@ -5,13 +5,13 @@
 """
 
 import logging
+import pprint
 import shutil
 
 from selenium import webdriver
-from selenium.webdriver import DesiredCapabilities
 
-# https://github.com/jedie/django-tools
-from django_tools.selenium.base import SeleniumBaseTestCase
+from django_tools.selenium.base import LocalStorage, SeleniumBaseTestCase, assert_browser_language
+from django_tools.unittest_utils.assertments import assert_is_dir
 
 
 log = logging.getLogger(__name__)
@@ -41,52 +41,61 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
 
     see also: django_tools_tests/test_unittest_selenium.py
     """
-    filename = "chromedriver"
+    filename = 'chromedriver'
 
     options = (
-        "--no-sandbox",
-        "--headless",
-        "--disable-gpu",
-        "--disable-dev-shm-usage",  # https://bugs.chromium.org/p/chromedriver/issues/detail?id=2473
+        '--no-sandbox',
+        '--headless',
+        '--incognito',
+        '--disable-gpu',
+        '--disable-dev-shm-usage',  # https://bugs.chromium.org/p/chromedriver/issues/detail?id=2473
+        '--lang=en-US'
     )
     desired_capabilities = {
-        "loggingPrefs": {
-            "browser": "ALL",
-            "client": "ALL",
-            "driver": "ALL",
-            "performance": "ALL",
-            "server": "ALL"
+        'loggingPrefs': {
+            'browser': 'ALL',
+            'client': 'ALL',
+            'driver': 'ALL',
+            'performance': 'ALL',
+            'server': 'ALL'
         }
     }
-    accept_languages = 'en'
+    accept_languages = 'en-US,en;q=0.8'
 
     @classmethod
     def setUpClass(cls):
-
-        options = webdriver.ChromeOptions()
-        options.add_experimental_option('w3c', False)  # needed to get browser logs
-        options.add_experimental_option('prefs', {'intl.accept_languages': cls.accept_languages})
-
-        for argument in cls.options:
-            options.add_argument(argument)
+        super().setUpClass()
 
         try:
             executable = shutil.which(cls.filename)
-        except FileNotFoundError:
-            cls.driver = None
+        except FileNotFoundError as err:
+            log.exception('"%r" not found: %s', cls.filename, err)
         else:
-            desired = DesiredCapabilities.CHROME
-            for key, value in cls.desired_capabilities.items():
-                desired[key] = value
+            options = webdriver.ChromeOptions()
+            options.add_experimental_option('w3c', False)  # needed to get browser logs
+            options.add_experimental_option('prefs', {'intl.accept_languages': cls.accept_languages})
+            options.add_argument(f'--accept-language="{cls.accept_languages}"')
 
+            assert_is_dir(cls.temp_user_data_dir)
+            options.add_argument(f'--user-data-dir={cls.temp_user_data_dir}')
+
+            for argument in cls.options:
+                options.add_argument(argument)
+
+            for key, value in cls.desired_capabilities.items():
+                options.set_capability(key, value)
+
+            log.debug('Browser options:\n%s', pprint.pformat(options.to_capabilities()))
             cls.driver = webdriver.Chrome(
                 options=options,
                 executable_path=str(executable),  # Path() instance -> str()
-                desired_capabilities=desired,
             )
-            cls.driver.implicitly_wait(10)
 
-        super().setUpClass()
+            # Test may fail, if a other language is activated.
+            # So check this after startup:
+            assert_browser_language(driver=cls.driver, languages=('en', 'en-US'))
+
+            cls.local_storage = LocalStorage(cls.driver)
 
     def get_browser_log(self):
         assert "browser" in self.driver.log_types

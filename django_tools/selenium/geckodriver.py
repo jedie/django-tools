@@ -4,13 +4,13 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 import logging
+import pprint
 
 from selenium import webdriver
-from selenium.webdriver import DesiredCapabilities
 
-# https://github.com/jedie/django-tools
-from django_tools.selenium.base import SeleniumBaseTestCase
+from django_tools.selenium.base import LocalStorage, SeleniumBaseTestCase, assert_browser_language
 from django_tools.selenium.utils import find_executable
+from django_tools.unittest_utils.assertments import assert_is_dir
 
 
 log = logging.getLogger(__name__)
@@ -46,32 +46,46 @@ class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
 
     options = ("-headless",)
     desired_capabilities = {
-        "loggingPrefs": {"browser": "ALL", "client": "ALL", "driver": "ALL", "performance": "ALL", "server": "ALL"}
+        "loggingPrefs": {
+            "browser": "ALL",
+            "client": "ALL",
+            "driver": "ALL",
+            "performance": "ALL",
+            "server": "ALL"
+        }
     }
 
     @classmethod
     def setUpClass(cls):
-        options = webdriver.FirefoxOptions()
-        for argument in cls.options:
-            options.add_argument(argument)
+        super().setUpClass()
 
         try:
             executable = find_executable(cls.filename, cls.extra_search_paths)
-        except FileNotFoundError:
-            cls.driver = None
+        except FileNotFoundError as err:
+            log.exception('"%r" not found: %s', cls.filename, err)
         else:
-            desired = DesiredCapabilities.FIREFOX
-            for key, value in cls.desired_capabilities.items():
-                desired[key] = value
+            options = webdriver.FirefoxOptions()
 
+            assert_is_dir(cls.temp_user_data_dir)
+            options.add_argument(f'--user-data-dir={cls.temp_user_data_dir}')
+
+            for argument in cls.options:
+                options.add_argument(argument)
+
+            for key, value in cls.desired_capabilities.items():
+                options.set_capability(key, value)
+
+            log.debug('Browser options:\n%s', pprint.pformat(options.to_capabilities()))
             cls.driver = webdriver.Firefox(
                 firefox_options=options,
                 executable_path=str(executable),  # Path() instance -> str()
-                desired_capabilities=desired,
             )
-            cls.driver.implicitly_wait(10)
 
-        super().setUpClass()
+            # Test may fail, if a other language is activated.
+            # So check this after startup:
+            assert_browser_language(driver=cls.driver, languages=('en', 'en-US'))
+
+            cls.local_storage = LocalStorage(cls.driver)
 
 
 def firefox_available(filename=None):
