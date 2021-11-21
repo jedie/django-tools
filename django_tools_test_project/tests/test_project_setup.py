@@ -33,8 +33,17 @@ def test_version():
 
 
 def test_make_help_up2date():
-    help_text = subprocess.check_output(['make'], cwd=PACKAGE_ROOT, text=True)
-    help_text = strip_style(help_text.strip())
+    completed_process = subprocess.run(
+        ['make'], cwd=PACKAGE_ROOT, text=True, capture_output=True,
+        check=True, timeout=5,
+    )
+    help_text = strip_style(completed_process.stdout.strip())
+
+    lines = help_text.splitlines()
+    if '/django-tools' in lines[0]:
+        # make output if not in same directory ;)
+        help_text = '\n'.join(lines[1:-1])
+
     readme_content = Path(PACKAGE_ROOT, 'README.creole').read_text()
     if help_text not in readme_content:
         print('-' * 100)

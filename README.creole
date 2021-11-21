@@ -745,7 +745,7 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 == Django compatibility
 
 |= django-tools    |= django version |= python         |
-| >= v0.49.0       | 2.2, 3.0, 3.1   | >= 3.6, pypy3   |
+| >= v0.49.0.rc1   | 2.2, 3.1, 3.2   | 3.7, 3.8, 3.9   |
 | >= v0.47.0       | 2.2, 3.0, 3.1   | >= 3.6, pypy3   |
 | >= v0.39         | 1.11, 2.0       | 3.5, 3.6, pypy3 |
 | >= v0.38.1       | 1.8, 1.11       | 3.5, 3.6, pypy3 |
@@ -758,7 +758,7 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 | v0.26            | <=1.6           |                 |
 | v0.25            | <=1.4           |                 |
 
-(See also combinations in [[https://github.com/jedie/django-tools/blob/master/tox.ini|tox.ini]])
+(See also combinations for [[https://github.com/jedie/django-tools/blob/master/pyproject.toml|tox in pyproject.toml]])
 
 
 == history

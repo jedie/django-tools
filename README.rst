@@ -43,9 +43,9 @@ e.g.:
     fix-code-style       Fix code formatting
     tox-listenvs         List all tox test environments
     tox                  Run pytest via tox with all environments
-    tox-py36             Run pytest via tox with *python v3.6*
     tox-py37             Run pytest via tox with *python v3.7*
     tox-py38             Run pytest via tox with *python v3.8*
+    tox-py39             Run pytest via tox with *python v3.9*
     pytest               Run pytest
     update-rst-readme    update README.rst from README.creole
     publish              Release new version to PyPi
@@ -853,6 +853,8 @@ Django compatibility
 +------------------+----------------+-----------------+
 | django-tools     | django version | python          |
 +==================+================+=================+
+| >= v0.49.0.rc1   | 2.2, 3.1, 3.2  | 3.7, 3.8, 3.9   |
++------------------+----------------+-----------------+
 | >= v0.47.0       | 2.2, 3.0, 3.1  | >= 3.6, pypy3   |
 +------------------+----------------+-----------------+
 | >= v0.39         | 1.11, 2.0      | 3.5, 3.6, pypy3 |
@@ -876,13 +878,17 @@ Django compatibility
 | v0.25            | <=1.4          |                 |
 +------------------+----------------+-----------------+
 
-(See also combinations in `.travis.yml <https://github.com/jedie/django-tools/blob/master/.travis.yml>`_ and `tox.ini <https://github.com/jedie/django-tools/blob/master/tox.ini>`_)
+(See also combinations for `tox in pyproject.toml <https://github.com/jedie/django-tools/blob/master/pyproject.toml>`_)
 
 -------
 history
 -------
 
-* *dev* - `compare v0.48.3...master <https://github.com/jedie/django-tools/compare/v0.48.3..master>`_ 
+* *dev* - `compare v0.49.0...master <https://github.com/jedie/django-tools/compare/v0.49.0..master>`_ 
+
+    * TBC
+
+* v0.49.0.rc1 - 21.11.2021 - `compare v0.48.3...v0.49.0.rc1 <https://github.com/jedie/django-tools/compare/v0.48.3...v0.49.0.rc1>`_ 
 
     * NEW: ``VersionProtectBaseModel`` - Protect a model against overwriting a newer entry with an older one, by adding a auto increment version number.
 
@@ -891,8 +897,6 @@ history
     * Enhance Selenium test helpers
 
     * Update project: Tests, code-style etc.
-
-    * TBC
 
 * v0.48.3 - 20.12.2020 - `compare v0.47.2...v0.48.3 <https://github.com/jedie/django-tools/compare/v0.47.2...v0.48.3>`_ 
 
@@ -1663,4 +1667,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2021-11-21 15:18:53 with "python-creole"``
+``Note: this file is generated from README.creole 2021-11-21 18:36:04 with "python-creole"``
