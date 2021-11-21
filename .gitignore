@@ -24,5 +24,8 @@ django_tools_test_project/media/*
 django_tools_test_project/static/*
 !django_tools_test_project/static/.gitkeep
 
+# Migration of test app are always generated on-the-fly, so ignore them:
+django_tools_test_project/django_tools_test_app/migrations/*
+!django_tools_test_project/django_tools_test_app/migrations/__init__.py
 
 
