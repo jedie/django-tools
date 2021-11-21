@@ -24,7 +24,7 @@ MANAGE_DIR = Path(django_tools_test_project.__file__).parent
 class SettingsTests(SimpleTestCase):
 
     def test_settings_module(self):
-        self.assertIn('django_tools_test_project.test_settings', settings.SETTINGS_MODULE)
+        self.assertIn('django_tools_test_project.settings.test', settings.SETTINGS_MODULE)
 
     def test_diffsettings(self):
         """
@@ -34,7 +34,7 @@ class SettingsTests(SimpleTestCase):
             call_command('diffsettings')
         output = buff.get_output()
         print(output)
-        self.assertIn('django_tools_test_project.test_settings', output)  # SETTINGS_MODULE
+        self.assertIn('django_tools_test_project.settings.test', output)  # SETTINGS_MODULE
 
 
 class ManageCommandTests(DjangoCommandMixin, TestCase):

@@ -39,7 +39,7 @@ class TestMockupImage(TestUserMixin, BaseTestCase):
     def test_create_temp_filer_info_image(self):
         assert_endswith(
             settings.MEDIA_ROOT,
-            "/django_tools_test_project/media"
+            '/django-tools/.test/media'
         )
         user = self.login(usertype="normal")
 
@@ -55,9 +55,7 @@ class TestMockupImage(TestUserMixin, BaseTestCase):
         self.assertIn(".png", filer_info_image.path)
 
         path = filer_info_image.path
-        path = path.replace("-", "_")  # e.g.: /django-tools/ -> /django_tools/
-
-        self.assertIn("/django_tools_test_project/media/filer_public/", path)
+        self.assertIn("/django-tools/.test/media/filer_public/", path)
 
     def test_create_django_file_info_image(self):
         django_file = ImageDummy(width=100, height=50).create_django_file_info_image(text="foo bar")

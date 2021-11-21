@@ -1,4 +1,4 @@
 [flake8]
-exclude = .*, dist, htmlcov
+exclude = .*, dist, htmlcov, migrations
 #ignore = E402
 max-line-length = 119

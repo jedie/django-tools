@@ -4,14 +4,14 @@ from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
 
-# https://github.com/jedie/django-tools
+import django_tools
 from django_tools.unittest_utils.logging_utils import CutPathnameLogRecordFactory, FilterAndLogWarnings
 
 
-print("Use settings:", __file__)
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = Path(__file__).parent
+# Store all test files into: .../django-tools/.test/
+BASE_DIR = Path(django_tools.__file__).parent.parent / '.test'
+assert str(BASE_DIR).endswith('/django-tools/.test'), BASE_DIR
+BASE_DIR.mkdir(exist_ok=True)
 
 DEBUG = True
 
@@ -23,7 +23,7 @@ ALLOWED_HOSTS = ["*"]  # Allow any domain/subdomain
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": str(Path(BASE_DIR.parent, "test_project_db.sqlite3")),
+        "NAME": str(BASE_DIR / "test_project_db.sqlite3"),
         # 'NAME': ":memory:",
         'OPTIONS': {
             # https://docs.djangoproject.com/en/2.2/ref/databases/#database-is-locked-errors
@@ -53,7 +53,6 @@ MIDDLEWARE = (
     # 'django_tools.dynamic_site.middleware.DynamicSiteMiddleware',
     "django_tools.middlewares.ThreadLocal.ThreadLocalMiddleware",
     "django_tools.middlewares.TracebackLogMiddleware.TracebackLogMiddleware",
-    "django_tools.middlewares.local_auto_login.AlwaysLoggedInAsSuperUserMiddleware",
 )
 
 INSTALLED_APPS = (
@@ -83,7 +82,7 @@ INSTALLED_APPS = (
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [Path(BASE_DIR, "templates")],
+        "DIRS": [BASE_DIR / "templates"],
         "OPTIONS": {
             "loaders": [
                 (
@@ -147,12 +146,12 @@ EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = "/static/"
-STATIC_ROOT = str(Path(BASE_DIR, "static"))
-assert str(STATIC_ROOT).endswith('/django_tools_test_project/static')
+STATIC_ROOT = str(BASE_DIR / "static")
+assert str(STATIC_ROOT).endswith('/django-tools/.test/static'), STATIC_ROOT
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = str(Path(BASE_DIR, "media"))
-assert str(MEDIA_ROOT).endswith('/django_tools_test_project/media')
+MEDIA_ROOT = str(BASE_DIR / "media")
+assert str(MEDIA_ROOT).endswith('/django-tools/.test/media'), MEDIA_ROOT
 
 # ==============================================================================
 
