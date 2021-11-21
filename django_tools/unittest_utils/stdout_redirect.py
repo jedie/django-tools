@@ -1,7 +1,7 @@
 import io
 import sys
 
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 
 
 # origin_stderr = sys.stderr
@@ -9,7 +9,7 @@ from django.utils.encoding import smart_text
 class StringBuffer(io.StringIO):
     def write(self, data):
         # origin_stderr.write("\nwrite to StringBuffer:\n%s\n\n" % repr(data))
-        data = smart_text(data)
+        data = smart_str(data)
         super().write(data)
 
 
@@ -20,7 +20,7 @@ class StdoutStderrBuffer():
     contextlib.redirect_stdout is new in Python 3.4!
     and we redirect stderr, too.
 
-    We use django.utils.encoding.smart_text in StringBuffer()
+    We use django.utils.encoding.smart_str in StringBuffer()
     So output of bytes will only work, if there are encoded in UTF-8!
 
     e.g:

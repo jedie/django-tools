@@ -45,7 +45,7 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
 
     options = (
         "--no-sandbox",
-        # "--headless", ## see: https://bugs.chromium.org/p/chromedriver/issues/detail?id=3358
+        "--headless",
         "--disable-gpu",
         "--disable-dev-shm-usage",  # https://bugs.chromium.org/p/chromedriver/issues/detail?id=2473
     )
@@ -114,7 +114,7 @@ def chromium_available(filename=None):
 
     executable = shutil.which(filename)
     if not executable:
-        log.error("Chromium is no available!")
+        log.error("Chromium is not available!")
         return False
 
     log.debug(f"Chromium found here: {executable}")

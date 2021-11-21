@@ -1,11 +1,11 @@
 
 Use DJANGO_SETTINGS_MODULE='django_tools_test_project.test_settings'
 manage.py nice_diffsettings
-Use settings: /home/jens/repos/django-tools/django_tools_test_project/test_settings.py
+Use settings: .../django-tools/django_tools_test_project/test_settings.py
 -------------------------------------------------------------------------------
 ALLOWED_HOSTS = ['*']
 
-BASE_DIR = PosixPath('/home/jens/repos/django-tools/django_tools_test_project')
+BASE_DIR = PosixPath('.../django-tools/django_tools_test_project')
 
 CACHES = {'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
              'LOCATION': 'unique-snowflake'}}
@@ -15,7 +15,7 @@ DATABASES = {'default': {'ATOMIC_REQUESTS': False,
              'CONN_MAX_AGE': 0,
              'ENGINE': 'django.db.backends.sqlite3',
              'HOST': '',
-             'NAME': '/home/jens/repos/django-tools/test_project_db.sqlite3',
+             'NAME': '.../django-tools/test_project_db.sqlite3',
              'OPTIONS': {'timeout': 20},
              'PASSWORD': '',
              'PORT': '',
@@ -74,7 +74,7 @@ LOGGING = {'disable_existing_loggers': True,
                                           'propagate': False}},
  'version': 1}
 
-MEDIA_ROOT = '/home/jens/repos/django-tools/django_tools_test_project/media'
+MEDIA_ROOT = '.../django-tools/django_tools_test_project/media'
 
 MEDIA_URL = '/media/'
 
@@ -118,12 +118,12 @@ SETTINGS_MODULE = 'django_tools_test_project.test_settings'
 
 SITE_ID = 1
 
-STATIC_ROOT = '/home/jens/repos/django-tools/django_tools_test_project/static'
+STATIC_ROOT = '.../django-tools/django_tools_test_project/static'
 
 STATIC_URL = '/static/'
 
 TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates',
-  'DIRS': [PosixPath('/home/jens/repos/django-tools/django_tools_test_project/templates')],
+  'DIRS': [PosixPath('.../django-tools/django_tools_test_project/templates')],
   'OPTIONS': {'context_processors': ['django.contrib.auth.context_processors.auth',
                                      'django.contrib.messages.context_processors.messages',
                                      'django.template.context_processors.i18n',

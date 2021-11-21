@@ -1,7 +1,7 @@
 
 Use DJANGO_SETTINGS_MODULE='django_tools_test_project.test_settings'
 manage.py --help
-Use settings: /home/jens/repos/django-tools/django_tools_test_project/test_settings.py
+Use settings: .../django-tools/django_tools_test_project/test_settings.py
 
 Type 'manage.py help <subcommand>' for help on a specific subcommand.
 

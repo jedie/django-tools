@@ -5,8 +5,6 @@ on:
     branches:
       - master
   pull_request:
-      branches:
-      - master
   schedule:
     - cron: '0 8 * * *'
 
@@ -16,7 +14,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.9, 3.8, 3.7, 3.6, pypy3]
+        python-version: [3.9, 3.8, 3.7]
       fail-fast: false
     steps:
     - uses: actions/checkout@v2
@@ -24,6 +22,13 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '${{ matrix.python-version }}'
+
+    - name: Install chromedriver and geckodriver (Firefox Webdriver) via seleniumbase
+      run: |
+        sudo apt install google-chrome-stable firefox
+        pip3 install seleniumbase
+        seleniumbase install chromedriver
+        seleniumbase install geckodriver
 
     - name: 'Install package'
       run: |
