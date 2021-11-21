@@ -54,7 +54,6 @@ class isolated_filesystem(TestContextDecorator):
             shutil.rmtree(self.temp_path)
         except OSError as err:
             logger.exception('Cleanup error: %s', err)
-            pass
 
     def __exit__(self, exc_type, exc_value, traceback):
         temp_path = Path(self.temp_path)
