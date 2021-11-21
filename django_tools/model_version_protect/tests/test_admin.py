@@ -14,7 +14,13 @@ class ModelVersionProtectAdminTestCase(HtmlAssertionMixin, TestCase):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
-        cls.super_user = baker.make(get_user_model(), username='TestUser', is_staff=True, is_superuser=True)
+        cls.super_user = baker.make(
+            get_user_model(),
+            id=1,
+            username='TestUser',
+            is_staff=True,
+            is_superuser=True
+        )
 
     def reset_client(self):
         self.client = self.client_class()
