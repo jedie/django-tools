@@ -9,9 +9,9 @@ import pprint
 import shutil
 
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 
 from django_tools.selenium.base import LocalStorage, SeleniumBaseTestCase, assert_browser_language
-from django_tools.unittest_utils.assertments import assert_is_dir
 
 
 log = logging.getLogger(__name__)
@@ -54,10 +54,8 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
     desired_capabilities = {
         'loggingPrefs': {
             'browser': 'ALL',
-            'client': 'ALL',
             'driver': 'ALL',
             'performance': 'ALL',
-            'server': 'ALL'
         }
     }
     accept_languages = 'en-US,en;q=0.8'
@@ -76,9 +74,6 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
             options.add_experimental_option('prefs', {'intl.accept_languages': cls.accept_languages})
             options.add_argument(f'--accept-language="{cls.accept_languages}"')
 
-            assert_is_dir(cls.temp_user_data_dir)
-            options.add_argument(f'--user-data-dir={cls.temp_user_data_dir}')
-
             for argument in cls.options:
                 options.add_argument(argument)
 
@@ -86,9 +81,13 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
                 options.set_capability(key, value)
 
             log.debug('Browser options:\n%s', pprint.pformat(options.to_capabilities()))
+            service = Service(
+                executable_path=str(executable),
+                log_path=f'{cls.filename}.log'
+            )
             cls.driver = webdriver.Chrome(
                 options=options,
-                executable_path=str(executable),  # Path() instance -> str()
+                service=service,
             )
 
             # Test may fail, if a other language is activated.

@@ -148,10 +148,12 @@ EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 STATIC_URL = "/static/"
 STATIC_ROOT = str(BASE_DIR / "static")
 assert str(STATIC_ROOT).endswith('/django-tools/.test/static'), STATIC_ROOT
+Path(STATIC_ROOT).mkdir(parents=True, exist_ok=True)
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = str(BASE_DIR / "media")
 assert str(MEDIA_ROOT).endswith('/django-tools/.test/media'), MEDIA_ROOT
+Path(MEDIA_ROOT).mkdir(parents=True, exist_ok=True)
 
 # ==============================================================================
 

@@ -44,11 +44,6 @@ class ExampleFirefoxTests(SeleniumFirefoxStaticLiveServerTestCase):
     def test_admin_login_page(self):
         self.driver.get(self.live_server_url + "/admin/login/")
 
-        # FIXME: Depends on version?!?
-        languages = self.driver.execute_script('return window.navigator.languages')
-        language = languages[0]
-        assert language in ('en', 'en-US')
-
         self.assert_equal_page_title("Log in | Django site admin")
         self.assert_in_page_source('<form action="/admin/login/" method="post" id="login-form">')
         self.assert_no_javascript_alert()

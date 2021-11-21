@@ -7,10 +7,12 @@ import logging
 import pprint
 
 from selenium import webdriver
+from selenium.webdriver import FirefoxOptions
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.firefox.webdriver import DEFAULT_EXECUTABLE_PATH
 
 from django_tools.selenium.base import LocalStorage, SeleniumBaseTestCase, assert_browser_language
 from django_tools.selenium.utils import find_executable
-from django_tools.unittest_utils.assertments import assert_is_dir
 
 
 log = logging.getLogger(__name__)
@@ -39,12 +41,14 @@ class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
     see also: django_tools_tests/test_unittest_selenium.py
     """
 
-    filename = "geckodriver"
+    filename = DEFAULT_EXECUTABLE_PATH
 
     # Overwrite this in sub class, if needed:
     extra_search_paths = ()
 
-    options = ("-headless",)
+    options = (
+        "-headless",
+    )
     desired_capabilities = {
         "loggingPrefs": {
             "browser": "ALL",
@@ -64,10 +68,7 @@ class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
         except FileNotFoundError as err:
             log.exception('"%r" not found: %s', cls.filename, err)
         else:
-            options = webdriver.FirefoxOptions()
-
-            assert_is_dir(cls.temp_user_data_dir)
-            options.add_argument(f'--user-data-dir={cls.temp_user_data_dir}')
+            options = FirefoxOptions()
 
             for argument in cls.options:
                 options.add_argument(argument)
@@ -75,10 +76,16 @@ class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
             for key, value in cls.desired_capabilities.items():
                 options.set_capability(key, value)
 
+            options.set_preference('intl.accept_languages', 'en-US, en')
+
             log.debug('Browser options:\n%s', pprint.pformat(options.to_capabilities()))
+            service = Service(
+                executable_path=str(executable),
+                log_path=f'{cls.filename}.log'
+            )
             cls.driver = webdriver.Firefox(
-                firefox_options=options,
-                executable_path=str(executable),  # Path() instance -> str()
+                options=options,
+                service=service,
             )
 
             # Test may fail, if a other language is activated.

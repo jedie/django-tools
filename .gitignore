@@ -11,7 +11,7 @@
 *.egg-info
 /dist
 /build
-/publish.log
+*.log
 
 /htmlcov/
 coverage.xml
