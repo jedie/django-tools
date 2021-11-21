@@ -5,12 +5,16 @@
 """
 import logging
 import pprint
+import shutil
 import sys
+import tempfile
 import traceback
 import unittest
+from pathlib import Path
 
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -77,19 +81,38 @@ class LocalStorage:
         return self.items().__str__()
 
 
+def assert_browser_language(driver: RemoteWebDriver, languages: [list, tuple]):
+    browser_languages = driver.execute_script('return window.navigator.languages')
+    browser_language = browser_languages[0]
+    assert browser_language in languages, (
+        f'Browser language "{browser_language}" is not in {languages}'
+    )
+
+
 class SeleniumBaseTestCase(unittest.TestCase):
+    driver = None
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        if cls.driver is not None:
-            cls.local_storage = LocalStorage(cls.driver)
+        prefix = f'{cls.__name__}_'
+        cls.temp_user_data_dir = tempfile.mkdtemp(prefix=prefix)
+        log.debug('Use %s as browser user data dir', cls.temp_user_data_dir)
 
     @classmethod
     def tearDownClass(cls):
         if cls.driver is not None:
             cls.driver.quit()
+
         super().tearDownClass()
+
+        if Path(cls.temp_user_data_dir).exists():
+            log.debug('Remove user data dir: "&s"', cls.temp_user_data_dir)
+            try:
+                shutil.rmtree(cls.temp_user_data_dir)
+            except OSError as err:
+                log.exception('Cleanup error: %s', err)
 
     def setUp(self):
         super().setUp()
@@ -229,3 +252,6 @@ class SeleniumBaseTestCase(unittest.TestCase):
         print("local_storage:", pprint.pformat(self.local_storage))
         is_value = self.local_storage[key]
         self.assertEqual(value, is_value)
+
+    def assert_browser_language(self, languages: [list, tuple]):
+        assert_browser_language(driver=self.driver, languages=languages)
