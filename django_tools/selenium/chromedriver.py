@@ -69,7 +69,6 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
             log.exception('"%r" not found: %s', cls.filename, err)
         else:
             options = webdriver.ChromeOptions()
-            options.add_experimental_option('w3c', False)  # needed to get browser logs
 
             # Note: accept_languages will be ignored in headless mode!
             # See: https://github.com/jedie/django-tools/issues/21
