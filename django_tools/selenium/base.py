@@ -78,10 +78,10 @@ class LocalStorage:
         return self.items().__str__()
 
 
-def assert_browser_language(driver: RemoteWebDriver, language: str):
+def assert_browser_language(driver: RemoteWebDriver, languages: list):
     browser_languages = driver.execute_script('return window.navigator.languages')
-    assert browser_languages == [language], (
-        f'Browser language "{browser_languages}" is not in {[language]}'
+    assert browser_languages == languages, (
+        f'Browser language {browser_languages!r} is not in {languages!r}'
     )
 
 
@@ -105,6 +105,12 @@ class SeleniumBaseTestCase(unittest.TestCase):
         if self.driver is not None:
             # we clear window.localStorage here and not in setUp(), because
             # access "window.localStorage" works only *after* a request
+            url = self.driver.current_url
+            if url.startswith('data:'):
+                # We can't execute 'window.localStorage.clear();'
+                # because Storage is disabled inside 'data:' URLs
+                return
+
             self.local_storage.clear()
 
     def _wait(self, conditions, timeout=5, msg="wait timeout"):

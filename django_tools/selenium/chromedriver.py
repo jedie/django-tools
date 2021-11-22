@@ -1,20 +1,45 @@
 """
     :created: 2015 by Jens Diemer
-    :copyleft: 2015-2020 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2015-2021 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 import logging
 import pprint
-import shutil
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 
 from django_tools.selenium.base import LocalStorage, SeleniumBaseTestCase
+from django_tools.selenium.utils import find_executable
+
+
+WEBDRIVER_BINARY_NAME = 'chromedriver'
+BROWSER_BINARY_NAMES = ['chrome', 'chromium']
 
 
 log = logging.getLogger(__name__)
+
+
+def get_chromium_webdriver_path():
+    return find_executable(WEBDRIVER_BINARY_NAME)
+
+
+def get_chromium_browser_path():
+    for name in BROWSER_BINARY_NAMES:
+        path = find_executable(name)
+        if path:
+            return path
+
+
+def chromium_available():
+    """
+    :return: True/False if Chromium WebDriver + Browser is available
+    """
+    if get_chromium_webdriver_path() and get_chromium_browser_path():
+        return True
+    else:
+        return False
 
 
 class SeleniumChromiumTestCase(SeleniumBaseTestCase):
@@ -41,8 +66,6 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
 
     see also: django_tools_tests/test_unittest_selenium.py
     """
-    filename = 'chromedriver'
-
     options = (
         '--no-sandbox',
         '--headless',
@@ -59,47 +82,56 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
     }
     accept_languages = 'en-US'
 
+    # Start a W3C compliant browser?
+    # Note: If you would like to access browser console log, then it must be: False!
+    # But in False mode, some silenoum conditions will not work!
+    # See: https://github.com/SeleniumHQ/selenium/issues/10071
+    w3c = True
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        try:
-            executable = shutil.which(cls.filename)
-        except FileNotFoundError as err:
-            log.exception('"%r" not found: %s', cls.filename, err)
-        else:
-            log.debug('Use executable: "%s"', executable)
-            options = webdriver.ChromeOptions()
+        chromium_webdriver_path = get_chromium_webdriver_path()
+        if not chromium_webdriver_path:
+            return
 
-            # Note: accept_languages will be ignored in headless mode!
-            # See: https://github.com/jedie/django-tools/issues/21
-            # Work-a-round: set via "env" in Service() below
-            options.add_experimental_option('prefs', {'intl.accept_languages': cls.accept_languages})
+        if not get_chromium_browser_path():
+            return
 
-            for argument in cls.options:
-                options.add_argument(argument)
+        options = webdriver.ChromeOptions()
 
-            for key, value in cls.desired_capabilities.items():
-                options.set_capability(key, value)
+        options.add_experimental_option('w3c', cls.w3c)
 
-            log.debug('Browser options:\n%s', pprint.pformat(options.to_capabilities()))
-            service = Service(
-                executable_path=str(executable),
-                log_path=f'{cls.filename}.log',
+        # Note: accept_languages will be ignored in headless mode!
+        # See: https://github.com/jedie/django-tools/issues/21
+        # Work-a-round: set via "env" in Service() below
+        options.add_experimental_option('prefs', {'intl.accept_languages': cls.accept_languages})
 
-                # accept_languages doesn't work in headless mode
-                # Set browser language via environment:
-                env={  # noqa -> https://github.com/SeleniumHQ/selenium/pull/10072
-                    'LANG': 'en_US.UTF-8',
-                    'LANGUAGE': 'en_US.UTF-8',
-                }
-            )
-            cls.driver = webdriver.Chrome(
-                options=options,
-                service=service,
-            )
+        for argument in cls.options:
+            options.add_argument(argument)
 
-            cls.local_storage = LocalStorage(cls.driver)
+        for key, value in cls.desired_capabilities.items():
+            options.set_capability(key, value)
+
+        log.debug('Browser options:\n%s', pprint.pformat(options.to_capabilities()))
+        service = Service(
+            executable_path=chromium_webdriver_path,
+            log_path=f'chromedriver {cls.__name__}.log',
+
+            # accept_languages doesn't work in headless mode
+            # Set browser language via environment:
+            env={  # noqa -> https://github.com/SeleniumHQ/selenium/pull/10072
+                'LANG': 'en_US.UTF-8',
+                'LANGUAGE': 'en_US.UTF-8',
+            }
+        )
+        cls.driver = webdriver.Chrome(
+            options=options,
+            service=service,
+        )
+
+        cls.local_storage = LocalStorage(cls.driver)
 
     def get_browser_log(self):
         assert "browser" in self.driver.log_types
@@ -113,22 +145,3 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
         log = self.get_browser_log()
         print(log)
         self.assertIn(text, log)
-
-
-def chromium_available(filename=None):
-    """
-    :return: True/False if 'chromium-chromedriver' executable can be found
-
-    >>> chromium_available("doesn't exists")
-    False
-    """
-    if filename is None:
-        filename = SeleniumChromiumTestCase.filename
-
-    executable = shutil.which(filename)
-    if not executable:
-        log.error("Chromium is not available!")
-        return False
-
-    log.debug(f"Chromium found here: {executable}")
-    return True

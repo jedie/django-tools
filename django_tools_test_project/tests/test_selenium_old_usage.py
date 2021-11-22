@@ -39,8 +39,7 @@ class TestWarnDecorators(unittest.TestCase):
     def test_find_executable(self):
 
         with self.assertWarns(DeprecationWarning) as cm:
-            with self.assertRaises(FileNotFoundError):
-                find_executable("foobar")
+            find_executable("foobar")
 
         assert_pformat_equal(str(cm.warning), "Use 'from django_tools.selenium.utils import find_executable' !")
 
