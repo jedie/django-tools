@@ -68,6 +68,7 @@ class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
         except FileNotFoundError as err:
             log.exception('"%r" not found: %s', cls.filename, err)
         else:
+            log.debug('Use executable: "%s"', executable)
             options = FirefoxOptions()
 
             for argument in cls.options:

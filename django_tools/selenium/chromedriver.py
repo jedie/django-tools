@@ -68,6 +68,7 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
         except FileNotFoundError as err:
             log.exception('"%r" not found: %s', cls.filename, err)
         else:
+            log.debug('Use executable: "%s"', executable)
             options = webdriver.ChromeOptions()
 
             # Note: accept_languages will be ignored in headless mode!
