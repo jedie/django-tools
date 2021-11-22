@@ -1,8 +1,9 @@
 """
     :created: 13.06.2018 by Jens Diemer
-    :copyleft: 2018-2019 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2018-2021 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
+import logging
 import os
 import tempfile
 import unittest
@@ -32,11 +33,11 @@ class ExampleChromiumTests(SeleniumChromiumStaticLiveServerTestCase):
 
         # We can't check the page content, if the browser send wrong accept languages to server.
         # Check this:
-        assert_browser_language(driver=self.driver, language='en-US')
+        assert_browser_language(driver=self.driver, languages=['en-US'])
 
         # Following tests will fail if server response with other translations:
         self.assert_equal_page_title("Log in | Django site admin")
-        self.assert_in_page_source(f' lang="en"')
+        self.assert_in_page_source(' lang="en"')
         self.assert_in_page_source('<form action="/admin/login/" method="post" id="login-form">')
 
         self.assert_no_javascript_alert()
@@ -49,11 +50,11 @@ class ExampleFirefoxTests(SeleniumFirefoxStaticLiveServerTestCase):
 
         # We can't check the page content, if the browser send wrong accept languages to server.
         # Check this:
-        assert_browser_language(driver=self.driver, language='en-US')
+        assert_browser_language(driver=self.driver, languages=['en-US', 'en'])
 
         # Following tests will fail if server response with other translations:
         self.assert_equal_page_title("Log in | Django site admin")
-        self.assert_in_page_source(f' lang="en"')
+        self.assert_in_page_source(' lang="en"')
         self.assert_in_page_source('<form action="/admin/login/" method="post" id="login-form">')
 
         self.assert_no_javascript_alert()
@@ -68,32 +69,26 @@ class SeleniumHelperTests(unittest.TestCase):
             path = filepath.parent
 
             # File is not in PATH:
-            with self.assertRaises(FileNotFoundError) as context_manager:
-                find_executable(name)
-
-            assert_pformat_equal(context_manager.exception.args, (f"Can't find '{name}' in PATH or None!",))
+            assert find_executable(name) is None
 
             old_path = os.environ["PATH"]
             try:
                 # File is in PATH, but not executable:
                 os.environ["PATH"] += f"{os.pathsep}{path}"
-                with self.assertRaises(FileNotFoundError) as context_manager:
-                    find_executable(name)
 
-                assert_pformat_equal(
-                    context_manager.exception.args, (f"{filepath} exists, but it's not executable!",)
-                )
+                with self.assertLogs('django_tools', level=logging.DEBUG) as logs:
+                    assert find_executable(name) == str(filepath)
+
+                assert logs.output == [
+                    f'INFO:django_tools.selenium.utils:{name} found: "{filepath}"',
+                    f'WARNING:django_tools.selenium.utils:{filepath} is not executeable!'
+                ]
 
                 # File is in PATH and executable:
                 filepath.chmod(0x777)
-                result = find_executable(name)
-                assert_pformat_equal(result, filepath)
+                assert find_executable(name) == str(filepath)
             finally:
                 os.environ["PATH"] = old_path
-
-            # Executable file is not in PATH, but can be found via extra_search_paths:
-            result = find_executable(name, extra_search_paths=(path,))
-            assert_pformat_equal(result, filepath)
 
 
 class SeleniumTestsMixin:
@@ -179,17 +174,22 @@ class SeleniumTestsMixin:
         assert_pformat_equal(self.local_storage.items(), {})
 
 
-@override_settings(DEBUG=True)
 @unittest.skipUnless(chromium_available(), "Skip because Chromium is not available!")
-class SeleniumChromiumAdminTests(TestUserMixin, SeleniumChromiumStaticLiveServerTestCase, SeleniumTestsMixin):
-    def test_console(self):
-        self.driver.get(self.live_server_url + "/")
+class SeleniumChromiumConsoleTests(SeleniumChromiumTestCase):
+    w3c = False  # Disable W3C to access logs: https://github.com/SeleniumHQ/selenium/issues/10071
 
+    def test_console(self):
         self.driver.execute_script("console.log('test console output 1');")
         self.assert_in_browser_log("test console output 1")
 
         self.driver.execute_script("console.log('test console output 2');")
         self.assert_in_browser_log("test console output 2")
+
+
+@override_settings(DEBUG=True)
+@unittest.skipUnless(chromium_available(), "Skip because Chromium is not available!")
+class SeleniumChromiumAdminTests(TestUserMixin, SeleniumChromiumStaticLiveServerTestCase, SeleniumTestsMixin):
+    pass
 
 
 @override_settings(DEBUG=True)
