@@ -13,6 +13,7 @@ from django.test import override_settings
 from selenium.common.exceptions import NoSuchElementException
 
 # https://github.com/jedie/django-tools
+from django_tools.selenium.base import assert_browser_language
 from django_tools.selenium.chromedriver import SeleniumChromiumTestCase, chromium_available
 from django_tools.selenium.django import (
     SeleniumChromiumStaticLiveServerTestCase,
@@ -29,13 +30,15 @@ class ExampleChromiumTests(SeleniumChromiumStaticLiveServerTestCase):
     def test_admin_login_page(self):
         self.driver.get(self.live_server_url + "/admin/login/")
 
-        # FIXME: Depends on version?!?
-        languages = self.driver.execute_script('return window.navigator.languages')
-        language = languages[0]
-        assert language in ('en', 'en-US')
+        # We can't check the page content, if the browser send wrong accept languages to server.
+        # Check this:
+        assert_browser_language(driver=self.driver, language='en-US')
 
+        # Following tests will fail if server response with other translations:
         self.assert_equal_page_title("Log in | Django site admin")
+        self.assert_in_page_source(f' lang="en"')
         self.assert_in_page_source('<form action="/admin/login/" method="post" id="login-form">')
+
         self.assert_no_javascript_alert()
 
 
@@ -44,8 +47,15 @@ class ExampleFirefoxTests(SeleniumFirefoxStaticLiveServerTestCase):
     def test_admin_login_page(self):
         self.driver.get(self.live_server_url + "/admin/login/")
 
+        # We can't check the page content, if the browser send wrong accept languages to server.
+        # Check this:
+        assert_browser_language(driver=self.driver, language='en-US')
+
+        # Following tests will fail if server response with other translations:
         self.assert_equal_page_title("Log in | Django site admin")
+        self.assert_in_page_source(f' lang="en"')
         self.assert_in_page_source('<form action="/admin/login/" method="post" id="login-form">')
+
         self.assert_no_javascript_alert()
 
 

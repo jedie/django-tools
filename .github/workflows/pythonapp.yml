@@ -29,7 +29,11 @@ jobs:
 
     - name: Install Selenium requirements
       run: |
-        sudo apt install google-chrome-stable firefox
+        sudo apt-get -y install chromium-browser chromium-chromedriver firefox firefox-geckodriver
+        chromium --version
+        chromedriver -version
+        geckodriver --version
+        firefox --version
 
     - name: 'Install package'
       run: |

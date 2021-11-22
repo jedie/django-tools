@@ -105,14 +105,14 @@ Put this into your settings, e.g.:
 ::
 
     from django_tools.unittest_utils.logging_utils import CutPathnameLogRecordFactory, FilterAndLogWarnings
-    
+
     # Filter warnings and pipe them to logging system
     # Warnings of external packages are displayed only once and only the file path.
     warnings.showwarning = FilterAndLogWarnings()
-    
+
     # Adds 'cut_path' attribute on log record. So '%(cut_path)s' can be used in log formatter.
     logging.setLogRecordFactory(CutPathnameLogRecordFactory(max_length=50))
-    
+
     LOGGING = {
         # ...
         'formatters': {
@@ -194,7 +194,7 @@ Send via Celery task:
 
     # settings.py
     SEND_MAIL_CELERY_TASK_NAME="mail:send_task"
-    
+
     from django_tools.mail.send_mail import SendMailCelery
     SendMailCelery(
         template_base="mail_test.{ext}",
@@ -332,7 +332,7 @@ Chromium + StaticLiveServer example:
 
     from django_tools.selenium.chromedriver import chromium_available
     from django_tools.selenium.django import SeleniumChromiumStaticLiveServerTestCase
-    
+
     @unittest.skipUnless(chromium_available(), "Skip because Chromium is not available!")
     class ExampleChromiumTests(SeleniumChromiumStaticLiveServerTestCase):
         def test_admin_login_page(self):
@@ -347,7 +347,7 @@ Firefox + StaticLiveServer example:
 
     from django_tools.selenium.django import SeleniumFirefoxStaticLiveServerTestCase
     from django_tools.selenium.geckodriver import firefox_available
-    
+
     @unittest.skipUnless(firefox_available(), "Skip because Firefox is not available!")
     class ExampleFirefoxTests(SeleniumFirefoxStaticLiveServerTestCase):
         def test_admin_login_page(self):
@@ -457,7 +457,7 @@ usage e.g.:
 ::
 
     from django_tools.unittest_utils.isolated_filesystem import isolated_filesystem
-    
+
     with isolated_filesystem(prefix="temp_dir_prefix"):
         open("foo.txt", "w").write("bar")
 
@@ -477,7 +477,7 @@ Note: assert methods will be migrated to: ``django_tools.unittest_utils.assertme
     with TempDir(prefix="foo_") as tempfolder:
         # create a file:
         open(os.path.join(tempfolder, "bar"), "w").close()
-    
+
     # the created temp folder was deleted with shutil.rmtree()
 
 usage/tests:
@@ -526,7 +526,7 @@ Usage, e.g.:
 
     from django.test import SimpleTestCase
     from django_tools.unittest_utils.template import TEMPLATE_INVALID_PREFIX, set_string_if_invalid
-    
+
     @set_string_if_invalid()
     class TestMyTemplate(SimpleTestCase):
         def test_valid_tag(self):
@@ -651,13 +651,13 @@ usage e.g.:
 ::
 
     from django_tools.unittest_utils.print_sql import PrintQueries
-    
+
     # e.g. use in unittests:
     class MyTests(TestCase):
         def test_foobar(self):
             with PrintQueries("Create object"):
                 FooBar.objects.create("name"=foo)
-    
+
     # e.g. use in views:
     def my_view(request):
         with PrintQueries("Create object"):
@@ -701,7 +701,7 @@ settings.py e.g.:
 ::
 
     from django_tools.settings_utils import FnMatchIps
-    
+
     INTERNAL_IPS = FnMatchIps(["127.0.0.1", "::1", "192.168.*.*", "10.0.*.*"])
     ALLOWED_HOSTS = FnMatchIps(["127.0.0.1", "::1", "192.168.*.*", "10.0.*.*"])
 
@@ -713,7 +713,7 @@ redirect stdout + stderr to a string buffer. e.g.:
 ::
 
     from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
-    
+
     with StdoutStderrBuffer() as buffer:
         print("foo")
     output = buffer.get_output() # contains "foo\n"
@@ -733,10 +733,10 @@ e.g.:
 
     $ ./manage.py permission_info
     No username given!
-    
+
     All existing users are:
     foo, bar, john, doe
-    
+
     $ ./manage.py permission_info foo
     All permissions for user 'test_editor':
     	is_active    : yes
@@ -853,7 +853,7 @@ Django compatibility
 +------------------+----------------+-----------------+
 | django-tools     | django version | python          |
 +==================+================+=================+
-| >= v0.49.0.rc1   | 2.2, 3.1, 3.2  | 3.7, 3.8, 3.9   |
+| >= v0.49.0.rc2   | 2.2, 3.1, 3.2  | 3.7, 3.8, 3.9   |
 +------------------+----------------+-----------------+
 | >= v0.47.0       | 2.2, 3.0, 3.1  | >= 3.6, pypy3   |
 +------------------+----------------+-----------------+
@@ -884,33 +884,33 @@ Django compatibility
 history
 -------
 
-* *dev* - `compare v0.49.0...master <https://github.com/jedie/django-tools/compare/v0.49.0..master>`_ 
+* *dev* - `compare v0.49.0...master <https://github.com/jedie/django-tools/compare/v0.49.0..master>`_
 
     * TBC
 
-* v0.49.0.rc1 - 21.11.2021 - `compare v0.48.3...v0.49.0.rc1 <https://github.com/jedie/django-tools/compare/v0.48.3...v0.49.0.rc1>`_ 
+* v0.49.0.rc2 - 21.11.2021 - `compare v0.48.3...v0.49.0.rc2 <https://github.com/jedie/django-tools/compare/v0.48.3...v0.49.0.rc2>`_
 
     * NEW: ``VersionProtectBaseModel`` - Protect a model against overwriting a newer entry with an older one, by adding a auto increment version number.
 
     * NEW: ``AlwaysLoggedInAsSuperUserMiddleware`` useful for local dev server run to auto login into Django Admin
 
-    * Enhance Selenium test helpers
+    * Enhance Selenium test helpers and `fix #21: Set chrome accept_languages in headless mode <https://github.com/jedie/django-tools/issues/21>`_
 
     * Update project: Tests, code-style etc.
 
-* v0.48.3 - 20.12.2020 - `compare v0.47.2...v0.48.3 <https://github.com/jedie/django-tools/compare/v0.47.2...v0.48.3>`_ 
+* v0.48.3 - 20.12.2020 - `compare v0.47.2...v0.48.3 <https://github.com/jedie/django-tools/compare/v0.47.2...v0.48.3>`_
 
     * NEW: ``ImageDummy().in_memory_image_file()`` useful for e.g.: POST a image upload via Django's test client
 
-* v0.48.2 - 06.12.2020 - `compare v0.47.1...v0.48.2 <https://github.com/jedie/django-tools/compare/v0.47.1...v0.48.2>`_ 
+* v0.48.2 - 06.12.2020 - `compare v0.47.1...v0.48.2 <https://github.com/jedie/django-tools/compare/v0.47.1...v0.48.2>`_
 
     * Bugfix "Serve User Media File": Create tokens via migrations and handle if tokens not exists
 
-* v0.48.1 - 06.12.2020 - `compare v0.47.0...v0.48.1 <https://github.com/jedie/django-tools/compare/v0.47.0...v0.48.1>`_ 
+* v0.48.1 - 06.12.2020 - `compare v0.47.0...v0.48.1 <https://github.com/jedie/django-tools/compare/v0.47.0...v0.48.1>`_
 
     * Add migration file to "Serve User Media File"
 
-* v0.48.0 - 06.12.2020 - `compare v0.47.0...v0.48.0 <https://github.com/jedie/django-tools/compare/v0.47.0...v0.48.0>`_ 
+* v0.48.0 - 06.12.2020 - `compare v0.47.0...v0.48.0 <https://github.com/jedie/django-tools/compare/v0.47.0...v0.48.0>`_
 
     * NEW: "Serve User Media File" reuseable app
 
@@ -918,7 +918,7 @@ history
 
     * Update ``installed_apps_utils.get_filtered_apps()`` and support app config entries in ``settings.INSTALLED_APPS``
 
-* v0.47.0 - 26.11.2020 - `compare v0.46.1...v0.47.0 <https://github.com/jedie/django-tools/compare/v0.46.1...v0.47.0>`_ 
+* v0.47.0 - 26.11.2020 - `compare v0.46.1...v0.47.0 <https://github.com/jedie/django-tools/compare/v0.46.1...v0.47.0>`_
 
     * updates for newer django versions
 
@@ -928,7 +928,7 @@ history
 
     * update project setup, fix tests and pipelines
 
-* v0.46.1 - 19.02.2020 - `compare v0.46.0...v0.46.1 <https://github.com/jedie/django-tools/compare/v0.46.0...v0.46.1>`_ 
+* v0.46.1 - 19.02.2020 - `compare v0.46.0...v0.46.1 <https://github.com/jedie/django-tools/compare/v0.46.0...v0.46.1>`_
 
     * less restricted dependency specification
 
@@ -936,7 +936,7 @@ history
 
     * SeleniumChromiumTestCase: set "accept_languages" and disable "headless" mode, see also: `https://github.com/jedie/django-tools/issues/21 <https://github.com/jedie/django-tools/issues/21>`_
 
-* v0.46.0 - 13.02.2020 - `compare v0.45.3...v0.46.0 <https://github.com/jedie/django-tools/compare/v0.45.3...v0.46.0>`_ 
+* v0.46.0 - 13.02.2020 - `compare v0.45.3...v0.46.0 <https://github.com/jedie/django-tools/compare/v0.45.3...v0.46.0>`_
 
     * ``dynamic_site`` was removed. Please use e.g.: `django-hosts <https://github.com/jazzband/django-hosts>`_
 
@@ -946,19 +946,19 @@ history
 
     * update code and code style
 
-* v0.45.3 - 25.08.2019 - `compare v0.45.2...v0.45.3 <https://github.com/jedie/django-tools/compare/v0.45.2...v0.45.3>`_ 
+* v0.45.3 - 25.08.2019 - `compare v0.45.2...v0.45.3 <https://github.com/jedie/django-tools/compare/v0.45.2...v0.45.3>`_
 
     * Add ``excepted_exit_code`` to ``django_tools.unittest_utils.django_command.DjangoCommandMixin`` to it's possible to test errors in manage commands
 
-* v0.45.2 - 26.06.2019 - `compare v0.45.1...v0.45.2 <https://github.com/jedie/django-tools/compare/v0.45.1...v0.45.2>`_ 
+* v0.45.2 - 26.06.2019 - `compare v0.45.1...v0.45.2 <https://github.com/jedie/django-tools/compare/v0.45.1...v0.45.2>`_
 
     * NEW: ``django_tools.log_utils.throttle_admin_email_handler.ThrottledAdminEmailHandler``
 
-* v0.45.1 - 03.04.2019 - `compare v0.45.0...v0.45.1 <https://github.com/jedie/django-tools/compare/v0.45.0...v0.45.1>`_ 
+* v0.45.1 - 03.04.2019 - `compare v0.45.0...v0.45.1 <https://github.com/jedie/django-tools/compare/v0.45.0...v0.45.1>`_
 
     * Bugfix ValueError in ``django_tools.unittest_utils.email.print_mailbox``
 
-* v0.45.0 - 01.04.2019 - `compare v0.44.2...v0.45.0 <https://github.com/jedie/django-tools/compare/v0.44.2...v0.45.0>`_ 
+* v0.45.0 - 01.04.2019 - `compare v0.44.2...v0.45.0 <https://github.com/jedie/django-tools/compare/v0.44.2...v0.45.0>`_
 
     * NEW: ``OverwriteFileSystemStorage`` with backup functionality
 
@@ -968,15 +968,15 @@ history
 
     * NEW: ``assert_filenames_and_content``
 
-* v0.44.2 - 02.01.2019 - `compare v0.44.1...v0.44.2 <https://github.com/jedie/django-tools/compare/v0.44.1...v0.44.2>`_ 
+* v0.44.2 - 02.01.2019 - `compare v0.44.1...v0.44.2 <https://github.com/jedie/django-tools/compare/v0.44.1...v0.44.2>`_
 
     * Handle errors like: `https://github.com/andymccurdy/redis-py/issues/995 <https://github.com/andymccurdy/redis-py/issues/995>`_
 
-* v0.44.1 - 02.01.2019 - `compare v0.44.0...v0.44.1 <https://github.com/jedie/django-tools/compare/v0.44.0...v0.44.1>`_ 
+* v0.44.1 - 02.01.2019 - `compare v0.44.0...v0.44.1 <https://github.com/jedie/django-tools/compare/v0.44.0...v0.44.1>`_
 
     * ``LoggingBuffer``: Don't deactivate existing log handler, just append the buffer handler.
 
-* v0.44.0 - 13.12.2018 - `compare v0.43.2...v0.44.0 <https://github.com/jedie/django-tools/compare/v0.43.2...v0.44.0>`_ 
+* v0.44.0 - 13.12.2018 - `compare v0.43.2...v0.44.0 <https://github.com/jedie/django-tools/compare/v0.43.2...v0.44.0>`_
 
     * NEW: ``django_file = ImageDummy().create_django_file_info_image(text="")`` e.g.: for attach to ``models.ImageField()``
 
@@ -986,39 +986,39 @@ history
 
     * Cleanup: remove old, since v0.35 deprecated mockup image API
 
-* v0.43.2 - 11.12.2018 - `compare v0.43.1...v0.43.2 <https://github.com/jedie/django-tools/compare/v0.43.1...v0.43.2>`_ 
+* v0.43.2 - 11.12.2018 - `compare v0.43.1...v0.43.2 <https://github.com/jedie/django-tools/compare/v0.43.1...v0.43.2>`_
 
     * Bugfix Selenium refactor: Use the class with the same functionality if old usage places are used.
 
-* v0.43.1 - 11.12.2018 - `compare v0.43.0...v0.43.1 <https://github.com/jedie/django-tools/compare/v0.43.0...v0.43.1>`_ 
+* v0.43.1 - 11.12.2018 - `compare v0.43.0...v0.43.1 <https://github.com/jedie/django-tools/compare/v0.43.0...v0.43.1>`_
 
     * Bugfix: Selenium test cases: clear ``window.localStorage`` after test run
 
-* v0.43.0 - 11.12.2018 - `compare v0.42.4...v0.43.0 <https://github.com/jedie/django-tools/compare/v0.42.4...v0.43.0>`_ 
+* v0.43.0 - 11.12.2018 - `compare v0.42.4...v0.43.0 <https://github.com/jedie/django-tools/compare/v0.42.4...v0.43.0>`_
 
     * Refactor selenium helpers
 
     * Split selenium test cases: with and without Django StaticLiveServerTestCase
 
-    * NEW: Selenium helper to access ``window.localStorage`` 
+    * NEW: Selenium helper to access ``window.localStorage``
 
-* v0.42.4 - 12.10.2018 - `compare v0.42.3...v0.42.4 <https://github.com/jedie/django-tools/compare/v0.42.3...v0.42.4>`_ 
+* v0.42.4 - 12.10.2018 - `compare v0.42.3...v0.42.4 <https://github.com/jedie/django-tools/compare/v0.42.3...v0.42.4>`_
 
     * Add ``request`` object to ``TestUserMixin.login()`` (needed for e.g.: django-axes auth backend)
 
-* v0.42.3 - 10.10.2018 - `compare v0.42.2...v0.42.3 <https://github.com/jedie/django-tools/compare/v0.42.2...v0.42.3>`_ 
+* v0.42.3 - 10.10.2018 - `compare v0.42.2...v0.42.3 <https://github.com/jedie/django-tools/compare/v0.42.2...v0.42.3>`_
 
     * NEW: * ``assertments.assert_is_dir``, ``assertments.assert_is_file``, ``assertments.assert_path_not_exists``
 
-* v0.42.2 - 18.09.2018 - `compare v0.42.1...v0.42.2 <https://github.com/jedie/django-tools/compare/v0.42.1...v0.42.2>`_ 
+* v0.42.2 - 18.09.2018 - `compare v0.42.1...v0.42.2 <https://github.com/jedie/django-tools/compare/v0.42.1...v0.42.2>`_
 
     * NEW: ``assert_installed_apps()`` - Check entries in settings.INSTALLED_APPS
 
-* v0.42.1 - 17.09.2018 - `compare v0.42.0...v0.42.1 <https://github.com/jedie/django-tools/compare/v0.42.0...v0.42.1>`_ 
+* v0.42.1 - 17.09.2018 - `compare v0.42.0...v0.42.1 <https://github.com/jedie/django-tools/compare/v0.42.0...v0.42.1>`_
 
     * NEW: ``django_tools.unittest_utils.assertments.assert_language_code`` - Check if given language_code is in settings.LANGUAGES
 
-* v0.42.0 - 07.09.2018 - `compare v0.41.0...v0.42.0 <https://github.com/jedie/django-tools/compare/v0.41.0...v0.42.0>`_ 
+* v0.42.0 - 07.09.2018 - `compare v0.41.0...v0.42.0 <https://github.com/jedie/django-tools/compare/v0.41.0...v0.42.0>`_
 
     * remove all celery stuff
 
@@ -1026,25 +1026,25 @@ history
 
     * manage commands ``list_models`` and ``nice_diffsettings`` are moved from seperate apps
 
-* v0.41.0 - 28.08.2018 - `compare v0.40.6...v0.41.0 <https://github.com/jedie/django-tools/compare/v0.40.6...v0.41.0>`_ 
+* v0.41.0 - 28.08.2018 - `compare v0.40.6...v0.41.0 <https://github.com/jedie/django-tools/compare/v0.40.6...v0.41.0>`_
 
     * NEW: ``unittest_utils/assertments.py`` with some common assert functions
 
     * Remove ``@task_always_eager()`` decorator
 
-* v0.40.6 - 28.08.2018 - `compare v0.40.5...v0.40.6 <https://github.com/jedie/django-tools/compare/v0.40.5...v0.40.6>`_ 
+* v0.40.6 - 28.08.2018 - `compare v0.40.5...v0.40.6 <https://github.com/jedie/django-tools/compare/v0.40.5...v0.40.6>`_
 
     * Bugfix ``@task_always_eager()`` decorator
 
-* v0.40.5 - 27.08.2018 - `compare v0.40.4...v0.40.5 <https://github.com/jedie/django-tools/compare/v0.40.4...v0.40.5>`_ 
+* v0.40.5 - 27.08.2018 - `compare v0.40.4...v0.40.5 <https://github.com/jedie/django-tools/compare/v0.40.4...v0.40.5>`_
 
     * Bugfix ``DjangoCommandMixin.call_manage_py()``: Use the given ``manage.py`` filename
 
-* v0.40.4 - 21.08.2018 - `compare v0.40.3...v0.40.4 <https://github.com/jedie/django-tools/compare/v0.40.3...v0.40.4>`_ 
+* v0.40.4 - 21.08.2018 - `compare v0.40.3...v0.40.4 <https://github.com/jedie/django-tools/compare/v0.40.3...v0.40.4>`_
 
     * NEW: ``django_tools.debug.delay`` to simulate longer processing time by set a delay via GET parameter (see above)
 
-* v0.40.3 - 18.07.2018 - `compare v0.40.2...v0.40.3 <https://github.com/jedie/django-tools/compare/v0.40.2...v0.40.3>`_ 
+* v0.40.3 - 18.07.2018 - `compare v0.40.2...v0.40.3 <https://github.com/jedie/django-tools/compare/v0.40.2...v0.40.3>`_
 
     * Enhance selenium test cases:
 
@@ -1060,17 +1060,17 @@ history
 
         * NEW: ``assert_in_browser_log()`` in chrome test case
 
-* v0.40.2 - 04.07.2018 - `compare v0.40.1...v0.40.2 <https://github.com/jedie/django-tools/compare/v0.40.1...v0.40.2>`_ 
+* v0.40.2 - 04.07.2018 - `compare v0.40.1...v0.40.2 <https://github.com/jedie/django-tools/compare/v0.40.1...v0.40.2>`_
 
     * Bugfix selenium Test Case if driver is None
 
     * Bugfix django compatibility
 
-* v0.40.1 - 28.06.2018 - `compare v0.40.0...v0.40.1 <https://github.com/jedie/django-tools/compare/v0.40.0...v0.40.1>`_ 
+* v0.40.1 - 28.06.2018 - `compare v0.40.0...v0.40.1 <https://github.com/jedie/django-tools/compare/v0.40.0...v0.40.1>`_
 
     * Bugfix selenium test case if executable can't be found.
 
-* v0.40.0 - 15.06.2018 - `compare v0.39.6...v0.40.0 <https://github.com/jedie/django-tools/compare/v0.39.6...v0.40.0>`_ 
+* v0.40.0 - 15.06.2018 - `compare v0.39.6...v0.40.0 <https://github.com/jedie/django-tools/compare/v0.39.6...v0.40.0>`_
 
     * NEW: selenium chrome and firefox test cases in ``django_tools.unittest_utils.selenium_utils``
 
@@ -1078,35 +1078,35 @@ history
 
     * Fixing tests
 
-* v0.39.6 - 04.05.2018 - `compare v0.39.5...v0.39.6 <https://github.com/jedie/django-tools/compare/v0.39.5...v0.39.6>`_ 
+* v0.39.6 - 04.05.2018 - `compare v0.39.5...v0.39.6 <https://github.com/jedie/django-tools/compare/v0.39.5...v0.39.6>`_
 
     * Enhance model instance unittest code generator
 
-* v0.39.5 - 24.04.2018 - `compare v0.39.4...v0.39.5 <https://github.com/jedie/django-tools/compare/v0.39.4...v0.39.5>`_ 
+* v0.39.5 - 24.04.2018 - `compare v0.39.4...v0.39.5 <https://github.com/jedie/django-tools/compare/v0.39.4...v0.39.5>`_
 
     * NEW: Model instance unittest code generator (see above)
 
-* v0.39.4 - 06.04.2018 - `compare v0.39.3...v0.39.4 <https://github.com/jedie/django-tools/compare/v0.39.3...v0.39.4>`_ 
+* v0.39.4 - 06.04.2018 - `compare v0.39.3...v0.39.4 <https://github.com/jedie/django-tools/compare/v0.39.3...v0.39.4>`_
 
     * NEW: ``django_tools.unittest_utils.logging_utils.FilterAndLogWarnings`` and ``django_tools.unittest_utils.logging_utils.CutPathnameLogRecordFactory``
 
-* v0.39.3 - 22.03.2018 - `compare v0.39.2...v0.39.3 <https://github.com/jedie/django-tools/compare/v0.39.2...v0.39.3>`_ 
+* v0.39.3 - 22.03.2018 - `compare v0.39.2...v0.39.3 <https://github.com/jedie/django-tools/compare/v0.39.2...v0.39.3>`_
 
     * ``django_tools.permissions.get_filtered_permissions`` has new keyword argument: ``exclude_actions``
 
-* v0.39.2 - 22.03.2018 - `compare v0.39.1...v0.39.2 <https://github.com/jedie/django-tools/compare/v0.39.1...v0.39.2>`_ 
+* v0.39.2 - 22.03.2018 - `compare v0.39.1...v0.39.2 <https://github.com/jedie/django-tools/compare/v0.39.1...v0.39.2>`_
 
     * NEW: ``django_tools.parler_utils.parler_fixtures.ParlerDummyGenerator``
 
     * NEW: ``django_tools.fixture_tools.languages.iter_languages``
 
-* v0.39.1 - 19.03.2018 - `compare v0.39.0...v0.39.1 <https://github.com/jedie/django-tools/compare/v0.39.0...v0.39.1>`_ 
+* v0.39.1 - 19.03.2018 - `compare v0.39.0...v0.39.1 <https://github.com/jedie/django-tools/compare/v0.39.0...v0.39.1>`_
 
     * NEW: ``django_tools.unittest_utils.email.print_mailbox()``
 
     * minor updates
 
-* v0.39.0 - 02.03.2018 - `compare v0.38.9...v0.39.0 <https://github.com/jedie/django-tools/compare/v0.38.9...v0.39.0>`_ 
+* v0.39.0 - 02.03.2018 - `compare v0.38.9...v0.39.0 <https://github.com/jedie/django-tools/compare/v0.38.9...v0.39.0>`_
 
     * NEW: Isolated Filesystem decorator / context manager
 
@@ -1114,25 +1114,25 @@ history
 
     * Skip run test with Django 1.8 and run tests with Django 1.11 and 2.0
 
-* v0.38.9 - 05.02.2018 - `compare v0.38.8...v0.38.9 <https://github.com/jedie/django-tools/compare/v0.38.8...v0.38.9>`_ 
+* v0.38.9 - 05.02.2018 - `compare v0.38.8...v0.38.9 <https://github.com/jedie/django-tools/compare/v0.38.8...v0.38.9>`_
 
     * lowering log level on missing permissions from "error" to "debug"
 
-* v0.38.8 - 05.02.2018 - `compare v0.38.7...v0.38.8 <https://github.com/jedie/django-tools/compare/v0.38.7...v0.38.8>`_ 
+* v0.38.8 - 05.02.2018 - `compare v0.38.7...v0.38.8 <https://github.com/jedie/django-tools/compare/v0.38.7...v0.38.8>`_
 
     * send mail: use from celery import shared_task instead of djcelery_transactions
 
-* v0.38.7 - 15.01.2018 - `compare v0.38.6...v0.38.7 <https://github.com/jedie/django-tools/compare/v0.38.6...v0.38.7>`_ 
+* v0.38.7 - 15.01.2018 - `compare v0.38.6...v0.38.7 <https://github.com/jedie/django-tools/compare/v0.38.6...v0.38.7>`_
 
     * Add missing arguments (like "attachments", "cc" etc.) to ``django_tools.mail.send_mail.SendMailCelery``
 
-* v0.38.6 - 10.01.2018 - `compare v0.38.4...v0.38.5 <https://github.com/jedie/django-tools/compare/v0.38.4...v0.38.5>`_ 
+* v0.38.6 - 10.01.2018 - `compare v0.38.4...v0.38.5 <https://github.com/jedie/django-tools/compare/v0.38.4...v0.38.5>`_
 
     * NEW: ``./manage.py clear_cache``
 
     * Display POST data in browser debug (``django_tools.unittest_utils.BrowserDebug.debug_response``)
 
-* v0.38.5 - 02.01.2018 - `compare v0.38.4...v0.38.5`_ 
+* v0.38.5 - 02.01.2018 - `compare v0.38.4...v0.38.5`_
 
     * NEW: Helper to assert django message framework output in unittests:
 
@@ -1144,19 +1144,19 @@ history
 
     * NEW: ``BaseUnittestCase.assert_exception_startswith()``
 
-* v0.38.4 - 28.12.2017 - `compare v0.38.3...v0.38.4 <https://github.com/jedie/django-tools/compare/v0.38.3...v0.38.4>`_ 
+* v0.38.4 - 28.12.2017 - `compare v0.38.3...v0.38.4 <https://github.com/jedie/django-tools/compare/v0.38.3...v0.38.4>`_
 
     * Bugfix attach user group on existing user in: ``django_tools.unittest_utils.user.get_or_create_user``
 
-* v0.38.3 - 28.12.2017 - `compare v0.38.2...v0.38.3 <https://github.com/jedie/django-tools/compare/v0.38.2...v0.38.3>`_ 
+* v0.38.3 - 28.12.2017 - `compare v0.38.2...v0.38.3 <https://github.com/jedie/django-tools/compare/v0.38.2...v0.38.3>`_
 
     * Bugfix: ``unittest_utils.user.get_or_create_group`` also removes obsolete permissions, too.
 
-* v0.38.2 - 27.12.2017 - `compare v0.38.1...v0.38.2 <https://github.com/jedie/django-tools/compare/v0.38.1...v0.38.2>`_ 
+* v0.38.2 - 27.12.2017 - `compare v0.38.1...v0.38.2 <https://github.com/jedie/django-tools/compare/v0.38.1...v0.38.2>`_
 
     * NEW: ``./manage.py update_permissions``
 
-* v0.38.1 - 21.12.2017 - `compare v0.38.0...v0.38.1 <https://github.com/jedie/django-tools/compare/v0.38.0...v0.38.1>`_ 
+* v0.38.1 - 21.12.2017 - `compare v0.38.0...v0.38.1 <https://github.com/jedie/django-tools/compare/v0.38.0...v0.38.1>`_
 
     * refactor travis/tox/pytest/coverage stuff
 
@@ -1164,7 +1164,7 @@ history
 
     * Test also with pypy3 on Travis CI.
 
-* v0.38.0 - 19.12.2017 - `compare v0.37.0...v0.38.0 <https://github.com/jedie/django-tools/compare/v0.37.0...v0.38.0>`_ 
+* v0.38.0 - 19.12.2017 - `compare v0.37.0...v0.38.0 <https://github.com/jedie/django-tools/compare/v0.37.0...v0.38.0>`_
 
     * NEW: ``django_tools.unittest_utils.user.get_or_create_group``
 
@@ -1176,7 +1176,7 @@ history
 
     * NEW: ``BaseUnittestCase.assert_startswith()`` and ``BaseUnittestCase.assert_endswith()``
 
-* v0.37.0 - 11.12.2017 - `compare v0.36.0...v0.37.0 <https://github.com/jedie/django-tools/compare/v0.36.0...v0.37.0>`_ 
+* v0.37.0 - 11.12.2017 - `compare v0.36.0...v0.37.0 <https://github.com/jedie/django-tools/compare/v0.36.0...v0.37.0>`_
 
     * Skip official support for python v2 (remove from text matrix)
 
@@ -1188,7 +1188,7 @@ history
 
     * Bugfix/Enhance permission helpers
 
-* v0.36.0 - 20.11.2017 - `compare v0.35.0...v0.36.0 <https://github.com/jedie/django-tools/compare/v0.35.0...v0.36.0>`_ 
+* v0.36.0 - 20.11.2017 - `compare v0.35.0...v0.36.0 <https://github.com/jedie/django-tools/compare/v0.35.0...v0.36.0>`_
 
     * NEW: ``./manage.py database_info``
 
@@ -1196,17 +1196,17 @@ history
 
     * Dynamic Sites is no longer maintained and tests are deactivated. It's currently not compatible with all django versions.
 
-* v0.35.0 - 26.09.2017 - `compare v0.34.0...v0.35.0 <https://github.com/jedie/django-tools/compare/v0.34.0...v0.35.0>`_ 
+* v0.35.0 - 26.09.2017 - `compare v0.34.0...v0.35.0 <https://github.com/jedie/django-tools/compare/v0.34.0...v0.35.0>`_
 
     * CHANGE: The dummy image generation function in ``django_tools.unittest_utils.mockup`` has a new API.
 
-* v0.34.0 - 18.09.2017 - `compare v0.33.0...v0.34.0 <https://github.com/jedie/django-tools/compare/v0.33.0...v0.34.0>`_ 
+* v0.34.0 - 18.09.2017 - `compare v0.33.0...v0.34.0 <https://github.com/jedie/django-tools/compare/v0.33.0...v0.34.0>`_
 
     * CHANGE: The test usernames changed and spaces was replace with underscores e.g.: "staff test user" -> "staff_test_user"
 
     * Bugfix in mockup.create_pil_image: Created images has wrong sizes
 
-* v0.33.0 - 11.07.2017 - `compare v0.32.14...v0.33.0 <https://github.com/jedie/django-tools/compare/v0.32.14...v0.33.0>`_ 
+* v0.33.0 - 11.07.2017 - `compare v0.32.14...v0.33.0 <https://github.com/jedie/django-tools/compare/v0.32.14...v0.33.0>`_
 
     * Run tests only against Django v1.8 TLS and v1.11 TLS
 
@@ -1216,31 +1216,31 @@ history
 
     * NEW: ``django_tools.utils.html_utils.html2text()`` - Strip HTML tags with lxml Cleaner + Django 'strip_tags'
 
-* v0.32.14 - 14.06.2017 - `compare v0.32.13...v0.32.14 <https://github.com/jedie/django-tools/compare/v0.32.13...v0.32.14>`_ 
+* v0.32.14 - 14.06.2017 - `compare v0.32.13...v0.32.14 <https://github.com/jedie/django-tools/compare/v0.32.13...v0.32.14>`_
 
     * Bugfix for Python 2: ``mock`` backport package is needed and added to ``setup.install_requires``
 
-* v0.32.13 - 24.05.2017 - `compare v0.32.12...v0.32.13 <https://github.com/jedie/django-tools/compare/v0.32.12...v0.32.13>`_ 
+* v0.32.13 - 24.05.2017 - `compare v0.32.12...v0.32.13 <https://github.com/jedie/django-tools/compare/v0.32.12...v0.32.13>`_
 
     * remove some warnings
 
-* v0.32.12 - 04.05.2017 - `compare v0.32.11...v0.32.12 <https://github.com/jedie/django-tools/compare/v0.32.11...v0.32.12>`_ 
+* v0.32.12 - 04.05.2017 - `compare v0.32.11...v0.32.12 <https://github.com/jedie/django-tools/compare/v0.32.11...v0.32.12>`_
 
     * NEW: ``self.assertIn_dedent()`` in ``django_tools.unittest_utils.unittest_base.BaseUnittestCase``
 
-* v0.32.11 - 02.05.2017 - `compare v0.32.10...v0.32.11 <https://github.com/jedie/django-tools/compare/v0.32.10...v0.32.11>`_ 
+* v0.32.11 - 02.05.2017 - `compare v0.32.10...v0.32.11 <https://github.com/jedie/django-tools/compare/v0.32.10...v0.32.11>`_
 
     * Fix PyPi package mistake (``.tar.gz`` archive contains ``.tox`` ;)
 
-* v0.32.10 - 02.05.2017 - `compare v0.32.9...v0.32.10 <https://github.com/jedie/django-tools/compare/v0.32.9...v0.32.10>`_ 
+* v0.32.10 - 02.05.2017 - `compare v0.32.9...v0.32.10 <https://github.com/jedie/django-tools/compare/v0.32.9...v0.32.10>`_
 
     * NEW: ``django_tools.mail`` to send text+html mails (see above)
 
-* v0.32.9 - 21.03.2017 - `compare v0.32.8...v0.32.9 <https://github.com/jedie/django-tools/compare/v0.32.8...v0.32.9>`_ 
+* v0.32.9 - 21.03.2017 - `compare v0.32.8...v0.32.9 <https://github.com/jedie/django-tools/compare/v0.32.8...v0.32.9>`_
 
     * Bugfix ``DebugCacheLoader`` if TemplateDoesNotExist was raised
 
-* v0.32.8 - 16.03.2017 - `compare v0.32.7...v0.32.8 <https://github.com/jedie/django-tools/compare/v0.32.7...v0.32.8>`_ 
+* v0.32.8 - 16.03.2017 - `compare v0.32.7...v0.32.8 <https://github.com/jedie/django-tools/compare/v0.32.7...v0.32.8>`_
 
     * NEW: ``django_tools.template.loader.DebugCacheLoader`` to add template name as html comments
 
@@ -1248,7 +1248,7 @@ history
 
     * Bugfix in ``django_tools.middlewares.ThreadLocal.ThreadLocalMiddleware``
 
-* v0.32.7 - 10.03.2017 - `compare v0.32.6...v0.32.7 <https://github.com/jedie/django-tools/compare/v0.32.6...v0.32.7>`_ 
+* v0.32.7 - 10.03.2017 - `compare v0.32.6...v0.32.7 <https://github.com/jedie/django-tools/compare/v0.32.6...v0.32.7>`_
 
     * NEW: ``django_tools.permissions`` - helper for setup permissions
 
@@ -1258,7 +1258,7 @@ history
 
 * ``@task_always_eager()`` decorator will set ``CELERY_EAGER_PROPAGATES_EXCEPTIONS=True``, too.
 
-* v0.32.5 - 10.02.2017 - `compare v0.32.4...v0.32.5 <https://github.com/jedie/django-tools/compare/v0.32.4...v0.32.5>`_ 
+* v0.32.5 - 10.02.2017 - `compare v0.32.4...v0.32.5 <https://github.com/jedie/django-tools/compare/v0.32.4...v0.32.5>`_
 
     * NEW: Add ``template_name`` (optional) to ``self.assertResponse()`` (check with ``assertTemplateUsed()``)
 
@@ -1266,7 +1266,7 @@ history
 
 * Fix: Set "is_active" for created test users
 
-* v0.32.3 - 25.01.2017 - `compare v0.32.2...v0.32.3 <https://github.com/jedie/django-tools/compare/v0.32.2...v0.32.3>`_ 
+* v0.32.3 - 25.01.2017 - `compare v0.32.2...v0.32.3 <https://github.com/jedie/django-tools/compare/v0.32.2...v0.32.3>`_
 
     * Fix UnicodeDecodeError in BrowserDebug
 
@@ -1274,15 +1274,15 @@ history
 
     * NEW: ``@task_always_eager()`` decorator
 
-* v0.32.2 - 13.01.2017 - `compare v0.32.1...v0.32.2 <https://github.com/jedie/django-tools/compare/v0.32.1...v0.32.2>`_ 
+* v0.32.2 - 13.01.2017 - `compare v0.32.1...v0.32.2 <https://github.com/jedie/django-tools/compare/v0.32.1...v0.32.2>`_
 
     * NEW: django_tools.utils.url.GetDict
 
-* v0.32.1 - 29.12.2016 - `compare v0.32.0...v0.32.1 <https://github.com/jedie/django-tools/compare/v0.32.0...v0.32.1>`_ 
+* v0.32.1 - 29.12.2016 - `compare v0.32.0...v0.32.1 <https://github.com/jedie/django-tools/compare/v0.32.0...v0.32.1>`_
 
     * NEW: TracebackLogMiddleware
 
-* v0.32.0 - 19.12.2016 - `compare v0.31.0...v0.32.0 <https://github.com/jedie/django-tools/compare/v0.31.0...v0.32.0>`_ 
+* v0.32.0 - 19.12.2016 - `compare v0.31.0...v0.32.0 <https://github.com/jedie/django-tools/compare/v0.31.0...v0.32.0>`_
 
     * NEW: Management commands: 'nice_diffsettings', 'list_models'
 
@@ -1294,21 +1294,21 @@ history
 
     * remove outdated stuff: See 'Backwards-incompatible changes' above.
 
-* v0.31.0 - 03.11.2016 - `compare v0.30.4...v0.31.0 <https://github.com/jedie/django-tools/compare/v0.30.4...v0.31.0>`_ 
+* v0.31.0 - 03.11.2016 - `compare v0.30.4...v0.31.0 <https://github.com/jedie/django-tools/compare/v0.30.4...v0.31.0>`_
 
     * add Mockup utils to create dummy PIL/django-filer images with Text (see above)
 
     * move tests into ``/django_tools_tests/``
 
-* v0.30.4 - 27.10.2016 - `compare v0.30.2...v0.30.4 <https://github.com/jedie/django-tools/compare/v0.30.2...v0.30.4>`_ 
+* v0.30.4 - 27.10.2016 - `compare v0.30.2...v0.30.4 <https://github.com/jedie/django-tools/compare/v0.30.2...v0.30.4>`_
 
     * add DjangoCommandMixin
 
-* v0.30.2 - 05.10.2016 - `compare v0.30.1...v0.30.2 <https://github.com/jedie/django-tools/compare/v0.30.1...v0.30.2>`_ 
+* v0.30.2 - 05.10.2016 - `compare v0.30.1...v0.30.2 <https://github.com/jedie/django-tools/compare/v0.30.1...v0.30.2>`_
 
     * Bugfix Python 2 compatibility
 
-* v0.30.1 - 26.08.2016 - `compare v0.30.0...v0.30.1 <https://github.com/jedie/django-tools/compare/v0.30.0...v0.30.1>`_ 
+* v0.30.1 - 26.08.2016 - `compare v0.30.0...v0.30.1 <https://github.com/jedie/django-tools/compare/v0.30.0...v0.30.1>`_
 
     * add: ``django_tools.unittest_utils.disable_migrations.DisableMigrations`` (see above)
 
@@ -1316,19 +1316,19 @@ history
 
     * use tox
 
-* v0.30.0 - 27.04.2016 - `compare v0.29.5...v0.30.0 <https://github.com/jedie/django-tools/compare/v0.29.5...v0.30.0>`_ 
+* v0.30.0 - 27.04.2016 - `compare v0.29.5...v0.30.0 <https://github.com/jedie/django-tools/compare/v0.29.5...v0.30.0>`_
 
     * Django 1.9 and Python 3 support contributed by `naegelyd <https://github.com/jedie/django-tools/pull/9>`_
 
-* v0.29.4 and v0.29.5 - 10.08.2015 - `compare v0.29.3...v0.29.5 <https://github.com/jedie/django-tools/compare/v0.29.3...v0.29.5>`_ 
+* v0.29.4 and v0.29.5 - 10.08.2015 - `compare v0.29.3...v0.29.5 <https://github.com/jedie/django-tools/compare/v0.29.3...v0.29.5>`_
 
     * Some bugfixes for django 1.6 support
 
-* v0.29.3 - 10.08.2015 - `compare v0.29.2...v0.29.3 <https://github.com/jedie/django-tools/compare/v0.29.2...v0.29.3>`_ 
+* v0.29.3 - 10.08.2015 - `compare v0.29.2...v0.29.3 <https://github.com/jedie/django-tools/compare/v0.29.2...v0.29.3>`_
 
     * Clear ThreadLocal request atttribute after response is processed (contributed by Lucas Wiman)
 
-* v0.29.2 - 19.06.2015 - `compare v0.29.1...v0.29.2 <https://github.com/jedie/django-tools/compare/v0.29.1...v0.29.2>`_ 
+* v0.29.2 - 19.06.2015 - `compare v0.29.1...v0.29.2 <https://github.com/jedie/django-tools/compare/v0.29.1...v0.29.2>`_
 
     * Bugfix in unittest_utils.selenium_utils.selenium2fakes_response
 
@@ -1336,13 +1336,13 @@ history
 
     * Add QueryLogMiddleware (TODO: add tests)
 
-* v0.29.1 - 17.06.2015 - `compare v0.29.0...v0.29.1 <https://github.com/jedie/django-tools/compare/v0.29.0...v0.29.1>`_ 
+* v0.29.1 - 17.06.2015 - `compare v0.29.0...v0.29.1 <https://github.com/jedie/django-tools/compare/v0.29.0...v0.29.1>`_
 
     * Bugfixes for Py2 and Py3
 
     * add StdoutStderrBuffer()
 
-* v0.29.0 - 09.06.2015 - `compare v0.26.0...v0.29.0 <https://github.com/jedie/django-tools/compare/v0.26.0...v0.29.0>`_ 
+* v0.29.0 - 09.06.2015 - `compare v0.26.0...v0.29.0 <https://github.com/jedie/django-tools/compare/v0.26.0...v0.29.0>`_
 
     * WIP: Refactor unittests (DocTests must be updated for Py3 and more unittests must be written to cover all)
 
@@ -1354,13 +1354,13 @@ history
 
     * add: `django_tools.settings_utils.InternalIps <https://github.com/jedie/django-tools/blob/master/django_tools/settings_utils.py>`_
 
-* v0.28.0 - 12.02.2015 - `compare v0.26.0...v0.28.0 <https://github.com/jedie/django-tools/compare/v0.26.0...v0.28.0>`_ 
+* v0.28.0 - 12.02.2015 - `compare v0.26.0...v0.28.0 <https://github.com/jedie/django-tools/compare/v0.26.0...v0.28.0>`_
 
     * Work-a-round for import loops
 
     * (new Version number, because of PyPi stress)
 
-* v0.26.0 - 11.02.2015 - `compare v0.25.1...v0.26.0 <https://github.com/jedie/django-tools/compare/v0.25.1...v0.26.0>`_ 
+* v0.26.0 - 11.02.2015 - `compare v0.25.1...v0.26.0 <https://github.com/jedie/django-tools/compare/v0.25.1...v0.26.0>`_
 
     * Updates for Django 1.6 and Python 3
 
@@ -1667,4 +1667,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2021-11-21 18:36:04 with "python-creole"``
+``Note: this file is generated from README.creole 2021-11-22 09:53:19 with "python-creole"``

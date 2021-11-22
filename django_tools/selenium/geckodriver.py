@@ -81,16 +81,16 @@ class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
             log.debug('Browser options:\n%s', pprint.pformat(options.to_capabilities()))
             service = Service(
                 executable_path=str(executable),
-                log_path=f'{cls.filename}.log'
+                log_path=f'{cls.filename}.log',
+                env={
+                    'LANG': 'en_US',
+                    'LANGUAGE': 'en_US',
+                }
             )
             cls.driver = webdriver.Firefox(
                 options=options,
                 service=service,
             )
-
-            # Test may fail, if a other language is activated.
-            # So check this after startup:
-            assert_browser_language(driver=cls.driver, languages=('en', 'en-US'))
 
             cls.local_storage = LocalStorage(cls.driver)
 
