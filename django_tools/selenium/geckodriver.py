@@ -83,8 +83,8 @@ class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
                 executable_path=str(executable),
                 log_path=f'{cls.filename}.log',
                 env={
-                    'LANG': 'en_US',
-                    'LANGUAGE': 'en_US',
+                    'LANG': 'en_US.UTF-8',
+                    'LANGUAGE': 'en_US.UTF-8',
                 }
             )
             cls.driver = webdriver.Firefox(
