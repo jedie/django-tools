@@ -78,11 +78,10 @@ class LocalStorage:
         return self.items().__str__()
 
 
-def assert_browser_language(driver: RemoteWebDriver, languages: [list, tuple]):
+def assert_browser_language(driver: RemoteWebDriver, language: str):
     browser_languages = driver.execute_script('return window.navigator.languages')
-    browser_language = browser_languages[0]
-    assert browser_language in languages, (
-        f'Browser language "{browser_language}" is not in {languages}'
+    assert browser_languages == [language], (
+        f'Browser language "{browser_languages}" is not in {[language]}'
     )
 
 
@@ -235,5 +234,5 @@ class SeleniumBaseTestCase(unittest.TestCase):
         is_value = self.local_storage[key]
         self.assertEqual(value, is_value)
 
-    def assert_browser_language(self, languages: [list, tuple]):
-        assert_browser_language(driver=self.driver, languages=languages)
+    def assert_browser_language(self, language: str):
+        assert_browser_language(driver=self.driver, language=language)
