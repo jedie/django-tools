@@ -123,3 +123,56 @@ class ModelVersionProtectAdminTestCase(HtmlAssertionMixin, TestCase):
         instance = VersioningTestModel.objects.first()
         assert instance.name == 'A New Name'
         assert instance.version == 2
+
+    def test_fresh_migrated(self):
+        # See: https://github.com/jedie/django-tools/issues/51
+
+        # If VersionProtectBaseModel was added to a existing project
+        # All entries will have version=0 (default value, added via migration)
+        instance = VersioningTestModel(
+            id=1,
+            version=0,
+            user=self.super_user,
+            name='Old Name'
+        )
+        instance.save(auto_full_clean=False)
+        instance = VersioningTestModel.objects.first()
+        assert instance.version == 0
+
+        self.client.force_login(self.super_user)
+
+        # Check if we get version=0
+        response = self.client.get(
+            path='/admin/django_tools_test_app/versioningtestmodel/1/change/',
+        )
+        self.assert_messages(response, expected_messages=[])
+        self.assert_html_parts(response, parts=(
+            '<title>Old Name (pk:1) | Change versioning test model | Django site admin</title>',
+            '<input type="hidden" name="version" value="0" required id="id_version">',
+            'value="Old Name"'
+        ))
+
+        # Update version 0:
+
+        response = self.client.post(
+            path="/admin/django_tools_test_app/versioningtestmodel/1/change/",
+            data={
+                'version': '0',
+                'user': self.super_user.pk,
+                'name': 'A New Name',
+                '_save': 'Save',
+            },
+        )
+        self.assert_messages(response, expected_messages=[
+            'The versioning test model'
+            ' “<a href="/admin/django_tools_test_app/versioningtestmodel/1/change/">'
+            'A New Name (pk:1)</a>” was changed successfully.'
+        ])
+        self.assertRedirects(
+            response,
+            expected_url='/admin/django_tools_test_app/versioningtestmodel/',
+            fetch_redirect_response=False
+        )
+        instance = VersioningTestModel.objects.first()
+        assert instance.name == 'A New Name'
+        assert instance.version == 1
