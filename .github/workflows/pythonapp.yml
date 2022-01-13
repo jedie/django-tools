@@ -29,6 +29,7 @@ jobs:
 
     - name: Install Selenium requirements
       run: |
+        sudo apt-get update
         sudo apt-get -y install chromium-browser chromium-chromedriver firefox firefox-geckodriver
         chromium --version
         chromedriver -version
