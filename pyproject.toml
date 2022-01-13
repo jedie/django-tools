@@ -87,6 +87,12 @@ max_line_length = 120
 exclude=".*,*/htmlcov/*,*/migrations/*,*/volumes/*"
 
 
+[tool.flynt]
+# https://github.com/ikamensh/flynt
+exclude=['.*', 'migrations']
+line_length=120
+
+
 [tool.isort]
 # https://pycqa.github.io/isort/docs/configuration/config_files/#pyprojecttoml-preferred-format
 atomic=true
