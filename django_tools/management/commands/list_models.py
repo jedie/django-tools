@@ -28,5 +28,5 @@ class Command(BaseCommand):
         for no, dotname in enumerate(sorted(dotnames), 1):
             self.stdout.write(f"{no:02d} - {dotname}\n")
 
-        self.stdout.write("\nINSTALLED_APPS....: %i\n" % len(settings.INSTALLED_APPS))
-        self.stdout.write("Apps with models..: %i\n\n" % len(app_configs))
+        self.stdout.write(f"\nINSTALLED_APPS....: {len(settings.INSTALLED_APPS)}\n")
+        self.stdout.write(f"Apps with models..: {len(app_configs)}\n\n")

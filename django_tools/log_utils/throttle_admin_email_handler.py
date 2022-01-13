@@ -60,7 +60,7 @@ class ThrottledAdminEmailHandler(AdminEmailHandler):
                 return
 
         if self.skipped_subjects:
-            prefix = "\nNote: there are %i skipped mails:\n" % len(self.skipped_subjects)
+            prefix = f"\nNote: there are {len(self.skipped_subjects)} skipped mails:\n"
             prefix += "\n\t* " + "\n\t* ".join(self.skipped_subjects)
             prefix += "\n\n"
             message = prefix + message

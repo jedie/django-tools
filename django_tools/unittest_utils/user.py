@@ -283,7 +283,7 @@ class TestUserMixin:
         request.user = user
 
         ok = self.client.login(request=request, username=test_user["username"], password=test_user["password"])
-        self.assertTrue(ok, 'Can\'t login test user "%s"!' % usertype)
+        self.assertTrue(ok, f'Can\'t login test user "{usertype}"!')
 
         return self._get_user(usertype)
 

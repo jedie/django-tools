@@ -61,7 +61,7 @@ class Command(BaseCommand):
         connection_list = connections.all()
 
         self.stdout.write("")
-        self.stdout.write("There are %i connections." % len(connection_list))
+        self.stdout.write(f"There are {len(connection_list)} connections.")
 
         for no, conn in enumerate(connection_list, 1):
             self.stdout.write("")
