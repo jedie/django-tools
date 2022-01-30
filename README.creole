@@ -4,8 +4,8 @@ Miscellaneous tools for django.
 
 Look also at the siblings project: [[https://github.com/jedie/django-cms-tools|django-cms-tools]] (Tools/helpers around Django-CMS).
 
-| {{https://github.com/jedie/django-tools/workflows/test/badge.svg?branch=master|Build Status on github}} | [[https://github.com/jedie/django-tools/actions|github.com/jedie/django-tools/actions]] |
-| {{https://codecov.io/gh/jedie/django-tools/branch/master/graph/badge.svg|Coverage Status on codecov.io}} | [[https://codecov.io/gh/jedie/django-tools|codecov.io/gh/jedie/django-tools]] |
+| {{https://github.com/jedie/django-tools/workflows/test/badge.svg?branch=main|Build Status on github}} | [[https://github.com/jedie/django-tools/actions|github.com/jedie/django-tools/actions]] |
+| {{https://codecov.io/gh/jedie/django-tools/branch/main/graph/badge.svg|Coverage Status on codecov.io}} | [[https://codecov.io/gh/jedie/django-tools|codecov.io/gh/jedie/django-tools]] |
 | {{https://coveralls.io/repos/jedie/django-tools/badge.svg|Coverage Status on coveralls.io}} | [[https://coveralls.io/r/jedie/django-tools|coveralls.io/r/jedie/django-tools]] |
 
 (Logo contributed by [[https://github.com/reallinfo|@reallinfo]] see [[https://github.com/jedie/django-tools/pull/16|#16]])
@@ -41,14 +41,14 @@ start-dev-server     Start Django dev. server with the test project
 
 Serve {{{settings.MEDIA_ROOT}}} files only for allowed users.
 
-See separate README here: [[https://github.com/jedie/django-tools/tree/master/django_tools/serve_media_app|django_tools/serve_media_app]]
+See separate README here: [[https://github.com/jedie/django-tools/tree/main/django_tools/serve_media_app|django_tools/serve_media_app]]
 
 
 === Mode Version Protect
 
 Protect a model against overwriting a newer entry with an older one, by adding a auto increment version number.
 
-See separate README here: [[https://github.com/jedie/django-tools/tree/master/django_tools/model_version_protect|django_tools/model_version_protect]]
+See separate README here: [[https://github.com/jedie/django-tools/tree/main/django_tools/model_version_protect|django_tools/model_version_protect]]
 
 
 === OverwriteFileSystemStorage
@@ -745,6 +745,7 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 == Django compatibility
 
 |= django-tools    |= django version |= python         |
+| >= v0.50.0       | 2.2, 3.2, 4.0   | 3.8, 3.9, 3.10  |
 | >= v0.49.0       | 2.2, 3.1, 3.2   | 3.7, 3.8, 3.9   |
 | >= v0.47.0       | 2.2, 3.0, 3.1   | >= 3.6, pypy3   |
 | >= v0.39         | 1.11, 2.0       | 3.5, 3.6, pypy3 |
@@ -763,7 +764,10 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.49.0..master|compare v0.49.0...master]]
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.49.0..master|compare v0.49.0...main]]
+** Rename git "master" branch to "main"
+** Use [[https://github.com/akaihola/darker|darker]] for code formatting
+** Update test matrix: Add Python 3.10 and Django v4.0 (remove Python 3.7 and Django 3.1)
 ** TBC
 * v0.49.0 - 22.11.2021 - [[https://github.com/jedie/django-tools/compare/v0.48.3...v0.49.0|compare v0.48.3...v0.49.0]]
 ** NEW: {{{VersionProtectBaseModel}}} - Protect a model against overwriting a newer entry with an older one, by adding a auto increment version number.
@@ -1036,7 +1040,7 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 ** [[https://github.com/jedie/django-tools/commit/a3cf1f7b2e9dbe4964306f4793c74f1782f8b2ea|Don't use auto_now_add and auto_now in UpdateInfoBaseModel]]
 ** Bugfix in [[https://github.com/jedie/django-tools/blob/master/django_tools/limit_to_usergroups.py|UsergroupsModelField]]
 * v0.23.1
-** [[https://github.com/jedie/django-tools/tree/master/django_tools/dynamic_site#dynamic-site-id|Dynamic Site]] would be only initialised if settings.USE_DYNAMIC_SITE_MIDDLEWARE = True
+** [[https://github.com/jedie/django-tools/tree/main/django_tools/dynamic_site#dynamic-site-id|Dynamic Site]] would be only initialised if settings.USE_DYNAMIC_SITE_MIDDLEWARE = True
 * v0.23.0
 ** Use cryptographic signing tools from django 1.4 in django_tools.utils.client_storage
 * v0.22.0
@@ -1044,7 +1048,7 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 ** The old [[https://github.com/jedie/django-tools/blob/master/django_tools/fields/media_path.py|media_path.py]] which used settings.MEDIA_ROOT is deprecated and will be removed in the future.
 ** auto_add_check_unique_together() can use settings.DATABASES["default"]["ENGINE"], too.
 * v0.21.1
-** Bugfixes in [[https://github.com/jedie/django-tools/tree/master/django_tools/dynamic_site#dynamic-site-id|Dynamic Site]].
+** Bugfixes in [[https://github.com/jedie/django-tools/tree/main/django_tools/dynamic_site#dynamic-site-id|Dynamic Site]].
 * v0.21.0beta
 ** New: site alias function
 ** refractory 'DynamicSiteMiddleware' to a own app (**Backwards-incompatible change:** change your settings if you use the old DynamicSiteMiddleware.)

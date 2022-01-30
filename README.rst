@@ -14,9 +14,9 @@ Look also at the siblings project: `django-cms-tools <https://github.com/jedie/d
 | |Coverage Status on coveralls.io| | `coveralls.io/r/jedie/django-tools`_     |
 +-----------------------------------+------------------------------------------+
 
-.. |Build Status on github| image:: https://github.com/jedie/django-tools/workflows/test/badge.svg?branch=master
+.. |Build Status on github| image:: https://github.com/jedie/django-tools/workflows/test/badge.svg?branch=main
 .. _github.com/jedie/django-tools/actions: https://github.com/jedie/django-tools/actions
-.. |Coverage Status on codecov.io| image:: https://codecov.io/gh/jedie/django-tools/branch/master/graph/badge.svg
+.. |Coverage Status on codecov.io| image:: https://codecov.io/gh/jedie/django-tools/branch/main/graph/badge.svg
 .. _codecov.io/gh/jedie/django-tools: https://codecov.io/gh/jedie/django-tools
 .. |Coverage Status on coveralls.io| image:: https://coveralls.io/repos/jedie/django-tools/badge.svg
 .. _coveralls.io/r/jedie/django-tools: https://coveralls.io/r/jedie/django-tools
@@ -60,14 +60,14 @@ Serve User Media File
 
 Serve ``settings.MEDIA_ROOT`` files only for allowed users.
 
-See separate README here: `django_tools/serve_media_app <https://github.com/jedie/django-tools/tree/master/django_tools/serve_media_app>`_
+See separate README here: `django_tools/serve_media_app <https://github.com/jedie/django-tools/tree/main/django_tools/serve_media_app>`_
 
 Mode Version Protect
 ====================
 
 Protect a model against overwriting a newer entry with an older one, by adding a auto increment version number.
 
-See separate README here: `django_tools/model_version_protect <https://github.com/jedie/django-tools/tree/master/django_tools/model_version_protect>`_
+See separate README here: `django_tools/model_version_protect <https://github.com/jedie/django-tools/tree/main/django_tools/model_version_protect>`_
 
 OverwriteFileSystemStorage
 ==========================
@@ -853,6 +853,8 @@ Django compatibility
 +------------------+----------------+-----------------+
 | django-tools     | django version | python          |
 +==================+================+=================+
+| >= v0.50.0       | 2.2, 3.2, 4.0  | 3.8, 3.9, 3.10  |
++------------------+----------------+-----------------+
 | >= v0.49.0       | 2.2, 3.1, 3.2  | 3.7, 3.8, 3.9   |
 +------------------+----------------+-----------------+
 | >= v0.47.0       | 2.2, 3.0, 3.1  | >= 3.6, pypy3   |
@@ -884,7 +886,13 @@ Django compatibility
 history
 -------
 
-* *dev* - `compare v0.49.0...master <https://github.com/jedie/django-tools/compare/v0.49.0..master>`_ 
+* *dev* - `compare v0.49.0...main <https://github.com/jedie/django-tools/compare/v0.49.0..master>`_ 
+
+    * Rename git "master" branch to "main"
+
+    * Use `darker <https://github.com/akaihola/darker>`_ for code formatting
+
+    * Update test matrix: Add Python 3.10 and Django v4.0 (remove Python 3.7 and Django 3.1)
 
     * TBC
 
@@ -1430,7 +1438,7 @@ history
 
 * v0.23.1
 
-    * `Dynamic Site <https://github.com/jedie/django-tools/tree/master/django_tools/dynamic_site#dynamic-site-id>`_ would be only initialised if settings.USE_DYNAMIC_SITE_MIDDLEWARE = True
+    * `Dynamic Site <https://github.com/jedie/django-tools/tree/main/django_tools/dynamic_site#dynamic-site-id>`_ would be only initialised if settings.USE_DYNAMIC_SITE_MIDDLEWARE = True
 
 * v0.23.0
 
@@ -1667,4 +1675,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2021-11-22 18:49:45 with "python-creole"``
+``Note: this file is generated from README.creole 2022-01-30 18:30:34 with "python-creole"``
