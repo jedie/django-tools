@@ -15,6 +15,7 @@ from django.urls import reverse
 # https://github.com/jedie/django-tools
 from django_tools.unittest_utils import assertments
 from django_tools.unittest_utils.assertments import assert_equal_dedent, assert_in_dedent
+
 from .BrowserDebug import debug_response
 
 
