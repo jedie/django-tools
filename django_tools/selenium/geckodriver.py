@@ -99,6 +99,9 @@ class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
             options.set_capability(key, value)
 
         options.set_preference('intl.accept_languages', 'en-US, en')
+        
+        # https://github.com/mozilla/geckodriver/issues/284#issuecomment-458305621
+        options.set_preference('devtools.console.stdout.content', True)
 
         log.debug('Browser options:\n%s', pprint.pformat(options.to_capabilities()))
         service = cls._get_service(executable_path, ServiceClass=Service)
