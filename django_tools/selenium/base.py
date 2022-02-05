@@ -3,6 +3,7 @@
     :copyleft: 2015-2018 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
+import atexit
 import logging
 import pprint
 import sys
@@ -14,12 +15,22 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
+from webdriver_manager.manager import DriverManager
 
-# https://github.com/jedie/django-tools
 from django_tools.selenium.response import selenium2fakes_response
 
 
 log = logging.getLogger(__name__)
+
+WEB_DRIVER_INSTANCES = {}
+
+
+@atexit.register
+def quit_web_driver():
+    for driver_name, driver in WEB_DRIVER_INSTANCES.items():
+        if driver is not None:
+            print(f'Quit {driver_name} web driver: {driver}')
+            driver.quit()
 
 
 class LocalStorage:
@@ -30,11 +41,12 @@ class LocalStorage:
         * Access "window.localStorage" works only *after* a request.
         * There's no type conversion!
 
-    Otherwise it ends in:
+    Otherwise, it ends in:
 
     selenium.common.exceptions.WebDriverException:
         Message: move target out of bounds:
-            Failed to read the 'localStorage' property from 'Window': Storage is disabled inside 'data:' URLs.
+            Failed to read the 'localStorage' property from 'Window':
+            Storage is disabled inside 'data:' URLs.
     """
 
     def __init__(self, driver):
@@ -69,7 +81,9 @@ class LocalStorage:
         return value
 
     def __setitem__(self, key, value):
-        self.driver.execute_script("window.localStorage.setItem(arguments[0], arguments[1]);", key, value)
+        self.driver.execute_script(
+            "window.localStorage.setItem(arguments[0], arguments[1]);", key, value
+        )
 
     def __contains__(self, key):
         return key in self.keys()
@@ -86,18 +100,91 @@ def assert_browser_language(driver: RemoteWebDriver, languages: list):
 
 
 class SeleniumBaseTestCase(unittest.TestCase):
-    driver = None
+    verbose_browser_name = None
+    browser_binary_names = []
+    web_driver_test_url = 'about:config'
 
     @classmethod
-    def tearDownClass(cls):
-        if cls.driver is not None:
-            cls.driver.quit()
+    def get_log_path(cls):
+        return f'{cls.verbose_browser_name} {cls.__name__}.log'
 
-        super().tearDownClass()
+    @classmethod
+    def _get_service(cls, executable_path, ServiceClass):
+        service = ServiceClass(
+            executable_path=executable_path,
+            log_path=cls.get_log_path(),
+            # accept_languages doesn't work in headless mode
+            # Set browser language via environment:
+            env={
+                'LANG': 'en_US.UTF-8',
+                'LANGUAGE': 'en_US.UTF-8',
+            },
+        )
+        return service
+
+    @classmethod
+    def get_executable_path(cls, manager: DriverManager):
+        executable_path = manager.install()
+        log.debug('Executable path from %s: %r', manager, executable_path)
+        return executable_path
+
+    @classmethod
+    def check_web_driver(cls, driver):
+        # Test if everything works:
+        log.debug('Test %s requesting %r', driver, cls.web_driver_test_url)
+        driver.get(cls.web_driver_test_url)
+        current_url = driver.current_url
+        if current_url == cls.web_driver_test_url:
+            log.debug('Web driver %s works.', driver)
+            return driver
+        else:
+            log.error('Error test request %r (got %r back)', cls.web_driver_test_url, current_url)
+            driver.quit()
+
+    @classmethod
+    def _get_webdriver(cls):
+        raise NotImplementedError
+
+    @classmethod
+    def get_webdriver(cls):
+        """
+        There are some problems if web drivers instance will be recreated.
+        So use a "cache" for the instance and reuse existing instances.
+        """
+        if cls.verbose_browser_name in WEB_DRIVER_INSTANCES:
+            driver = WEB_DRIVER_INSTANCES[cls.verbose_browser_name]
+            log.info('resuse web driver %s for %s', driver, cls.verbose_browser_name)
+        else:
+            log.debug('Setup %s web driver', cls.verbose_browser_name)
+            try:
+                driver = cls._get_webdriver()
+            except Exception as err:
+                log.exception('Error init %s web driver: %s', cls.verbose_browser_name, err)
+                driver = None
+            WEB_DRIVER_INSTANCES[cls.verbose_browser_name] = driver
+
+        return driver
+
+    @classmethod
+    def avaiable(cls):
+        """
+        Can be used in @unittest.skipUnless() decorator to skip tests
+        if browser or webdriver is not available
+        """
+        driver = cls.get_webdriver()
+        return driver is not None
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.driver = cls.get_webdriver()
+        if cls.driver is not None:
+            cls.local_storage = LocalStorage(cls.driver)
 
     def setUp(self):
         super().setUp()
         if self.driver is not None:
+            self.driver.get(self.web_driver_test_url)
             self.driver.delete_all_cookies()
 
     def tearDown(self):
@@ -105,13 +192,16 @@ class SeleniumBaseTestCase(unittest.TestCase):
         if self.driver is not None:
             # we clear window.localStorage here and not in setUp(), because
             # access "window.localStorage" works only *after* a request
-            url = self.driver.current_url
-            if url.startswith('data:'):
-                # We can't execute 'window.localStorage.clear();'
-                # because Storage is disabled inside 'data:' URLs
+            try:
+                url = self.driver.current_url
+            except Exception as err:
+                log.exception('Error get current url: %s', err)
                 return
 
-            self.local_storage.clear()
+            if url.startswith('http') and '://' in url:
+                # We can't execute 'window.localStorage.clear();'
+                # because Storage is disabled inside urls like: 'data:', 'about:...'
+                self.local_storage.clear()
 
     def _wait(self, conditions, timeout=5, msg="wait timeout"):
         """
@@ -178,7 +268,9 @@ class SeleniumBaseTestCase(unittest.TestCase):
         alert = expected_conditions.alert_is_present()(self.driver)
         if alert:
             alert_text = alert.text
-            alert.accept()  # Confirm a alert dialog, otherwise access to driver.page_source will failed!
+
+            # Confirm a alert dialog, otherwise access to driver.page_source will failed:
+            alert.accept()
             try:
                 raise self.failureException(f"Alert is preset: {alert_text}")
             except AssertionError as err:
