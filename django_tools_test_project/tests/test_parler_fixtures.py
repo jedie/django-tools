@@ -10,7 +10,10 @@ from pprintpp import pprint
 
 # https://github.com/jedie/django-tools
 from django_tools.unittest_utils.assertments import assert_pformat_equal
-from django_tools_test_project.django_tools_test_app.models import SimpleParlerModel, generate_simple_parler_dummies
+from django_tools_test_project.django_tools_test_app.models import (
+    SimpleParlerModel,
+    generate_simple_parler_dummies,
+)
 
 
 class ParlerFixturesTestCase(TestCase):

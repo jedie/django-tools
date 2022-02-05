@@ -5,7 +5,10 @@ from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 
 import django_tools
-from django_tools.unittest_utils.logging_utils import CutPathnameLogRecordFactory, FilterAndLogWarnings
+from django_tools.unittest_utils.logging_utils import (
+    CutPathnameLogRecordFactory,
+    FilterAndLogWarnings,
+)
 
 
 # Store all test files into: .../django-tools/.test/
@@ -35,7 +38,12 @@ print(f'Test DB: {DATABASES["default"]["NAME"]}')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache", "LOCATION": "unique-snowflake"}}
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
+    }
+}
 
 
 MIDDLEWARE = (
@@ -119,7 +127,12 @@ LANGUAGE_CODE = "en"
 # http://django-parler.readthedocs.org/en/latest/quickstart.html#configuration
 PARLER_LANGUAGES = {
     1: [
-        {"name": _("German"), "code": "de", "fallbacks": [LANGUAGE_CODE], "hide_untranslated": False},
+        {
+            "name": _("German"),
+            "code": "de",
+            "fallbacks": [LANGUAGE_CODE],
+            "hide_untranslated": False,
+        },
         {"name": _("English"), "code": "en", "fallbacks": ["de"], "hide_untranslated": False},
     ],
     "default": {"fallbacks": [LANGUAGE_CODE], "redirect_on_fallback": False},  # all SITE_ID"s

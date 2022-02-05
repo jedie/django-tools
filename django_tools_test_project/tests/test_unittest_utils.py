@@ -14,7 +14,11 @@ from django.test import Client, SimpleTestCase
 # https://github.com/jedie/django-tools
 from django_tools.mail.send_mail import SendMail
 from django_tools.template.render import render_string_template
-from django_tools.unittest_utils.assertments import assert_equal_dedent, assert_pformat_equal, dedent
+from django_tools.unittest_utils.assertments import (
+    assert_equal_dedent,
+    assert_pformat_equal,
+    dedent,
+)
 from django_tools.unittest_utils.email import print_mailbox
 from django_tools.unittest_utils.print_sql import PrintQueries
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
@@ -130,9 +134,13 @@ class TestBaseUnittestCase(BaseUnittestCase):
         obj = PermissionTestModel.objects.create()
         url = self.get_admin_change_url(obj)
         if django.VERSION < (1, 11):
-            assert_pformat_equal(url, f"/admin/django_tools_test_app/permissiontestmodel/{obj.pk:d}/")
+            assert_pformat_equal(
+                url, f"/admin/django_tools_test_app/permissiontestmodel/{obj.pk:d}/"
+            )
         else:
-            assert_pformat_equal(url, f"/admin/django_tools_test_app/permissiontestmodel/{obj.pk:d}/change/")
+            assert_pformat_equal(
+                url, f"/admin/django_tools_test_app/permissiontestmodel/{obj.pk:d}/change/"
+            )
 
     def test_get_admin_add_url(self):
         url = self.get_admin_add_url(obj=PermissionTestModel)
@@ -285,7 +293,13 @@ class AssertResponseTest(BaseTestCase):
 
     def test_wrong_status_code(self):
         self.assertResponse(self.response, status_code=200)
-        self.assertRaises(AssertionError, self.assertResponse, self.response, status_code=404, browser_traceback=False)
+        self.assertRaises(
+            AssertionError,
+            self.assertResponse,
+            self.response,
+            status_code=404,
+            browser_traceback=False,
+        )
 
     def test_get_messages_normal_response(self):
         response = self.client.get("/create_message_normal_response/normal-response-message/")

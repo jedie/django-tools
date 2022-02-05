@@ -87,7 +87,7 @@ build-backend = "poetry.masonry.api"
 [tool.darker]
 src = ['.']
 revision = "origin/main..."
-line_length = 120
+line_length = 100
 verbose = true
 skip_string_normalization = true
 diff = false
@@ -104,7 +104,7 @@ log_level = "INFO"
 # https://pycqa.github.io/isort/docs/configuration/config_files/#pyprojecttoml-preferred-format
 atomic=true
 profile='black'
-line_length=120
+line_length=100
 skip_glob=[".*", "*/htmlcov/*","*/migrations/*"]
 known_first_party=["django_tools","django_tools_test_project"]
 lines_after_imports=2
