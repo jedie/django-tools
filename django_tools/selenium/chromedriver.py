@@ -9,42 +9,22 @@ import pprint
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.utils import ChromeType
 
-from django_tools.selenium.base import LocalStorage, SeleniumBaseTestCase
-from django_tools.selenium.utils import find_executable
-
-
-WEBDRIVER_BINARY_NAME = 'chromedriver'
-BROWSER_BINARY_NAMES = ['chrome', 'chromium']
+from django_tools.selenium.base import SeleniumBaseTestCase
 
 
 log = logging.getLogger(__name__)
 
 
-def get_chromium_webdriver_path():
-    return find_executable(WEBDRIVER_BINARY_NAME)
-
-
-def get_chromium_browser_path():
-    for name in BROWSER_BINARY_NAMES:
-        path = find_executable(name)
-        if path:
-            return path
-
-
 def chromium_available():
-    """
-    :return: True/False if Chromium WebDriver + Browser is available
-    """
-    if get_chromium_webdriver_path() and get_chromium_browser_path():
-        return True
-    else:
-        return False
+    return SeleniumChromiumTestCase.avaiable()
 
 
 class SeleniumChromiumTestCase(SeleniumBaseTestCase):
     """
-    TestCase with Selenium and the Chromium WebDriver
+    TestCase with Selenium and the Chromium/Chrome WebDriver
     Note:
         * Needs 'chromium-chromedriver' executable! See README.creole for more info
         * It's without django StaticLiveServerTestCase
@@ -66,6 +46,10 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
 
     see also: django_tools_tests/test_unittest_selenium.py
     """
+
+    verbose_browser_name = 'Chromium'
+    browser_binary_names = ['chromium', 'chrome']
+
     options = (
         '--no-sandbox',
         '--headless',
@@ -84,21 +68,14 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
 
     # Start a W3C compliant browser?
     # Note: If you would like to access browser console log, then it must be: False!
-    # But in False mode, some silenoum conditions will not work!
+    # But in False mode, some selenium conditions will not work!
     # See: https://github.com/SeleniumHQ/selenium/issues/10071
     w3c = True
 
+    CHROME_TYPES = (ChromeType.CHROMIUM, ChromeType.GOOGLE, ChromeType.MSEDGE)
+
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
-        chromium_webdriver_path = get_chromium_webdriver_path()
-        if not chromium_webdriver_path:
-            return
-
-        if not get_chromium_browser_path():
-            return
-
+    def _get_options(cls):
         options = webdriver.ChromeOptions()
 
         options.add_experimental_option('w3c', cls.w3c)
@@ -115,25 +92,38 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
             options.set_capability(key, value)
 
         log.debug('Browser options:\n%s', pprint.pformat(options.to_capabilities()))
-        service = Service(
-            executable_path=chromium_webdriver_path,
-            log_path=f'chromedriver {cls.__name__}.log',
+        return options
 
-            # accept_languages doesn't work in headless mode
-            # Set browser language via environment:
-            env={  # noqa -> https://github.com/SeleniumHQ/selenium/pull/10072
-                'LANG': 'en_US.UTF-8',
-                'LANGUAGE': 'en_US.UTF-8',
-            }
-        )
-        cls.driver = webdriver.Chrome(
-            options=options,
-            service=service,
-        )
+    @classmethod
+    def _get_webdriver(cls):
+        for chrome_type in cls.CHROME_TYPES:
+            log.debug('Try %r', chrome_type)
+            try:
+                executable_path = cls.get_executable_path(
+                    manager=ChromeDriverManager(chrome_type=chrome_type)
+                )
+                if not executable_path:
+                    continue
 
-        cls.local_storage = LocalStorage(cls.driver)
+                options = cls._get_options()
+                service = cls._get_service(executable_path, ServiceClass=Service)
+
+                driver = cls.check_web_driver(
+                    webdriver.Chrome(
+                        options=options,
+                        service=service,
+                    )
+                )
+                if driver is not None:
+                    return driver
+            except Exception as err:
+                log.exception('Can not setup %r: %s', chrome_type, err)
 
     def get_browser_log(self):
+        assert self.w3c is False, (
+            'Accessing the logs is only available in non W3C mode!'
+            ' See: https://github.com/SeleniumHQ/selenium/issues/10071'
+        )
         assert "browser" in self.driver.log_types
         browser_log = self.driver.get_log("browser")
         lines = []

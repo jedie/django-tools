@@ -322,28 +322,18 @@ See also existing unitests here:
 * [[https://github.com/jedie/django-tools/blob/master/django_tools/django_tools_tests/test_unittest_selenium.py|/django_tools/django_tools_tests/test_unittest_selenium.py]]
 
 
-**Note:**
+==== Setup Web Drivers
 
-To use Chromium test cases you need the **Chromium Browser WebDriver** e.g.: {{{apt install chromium-chromedriver}}}
+Selenium test cases needs the browser and the web driver.
 
-To use Firefox test cases you need the **Firefox Browser WebDriver** aka **geckodriver**
+{{{SeleniumChromiumTestCase}}} and {{{SeleniumFirefoxTestCase}}} will automaticly install the web driver via [[https://github.com/SergeyPirogov/webdriver_manager|webdriver-manager]]
 
-e.g.:
+There is a small CLI (called {{{django_tools_selenium}}}) to check / install the web drivers, e.g.:
+
 {{{
-~$ cd /tmp
-/tmp$ wget https://github.com/mozilla/geckodriver/releases/download/v0.20.1/geckodriver-v0.20.1-linux64.tar.gz -O geckodriver.tar.gz
-/tmp$ sudo sh -c 'tar -x geckodriver -zf geckodriver.tar.gz -O > /usr/bin/geckodriver'
-/tmp$ sudo chmod +x /usr/bin/geckodriver
-/tmp$ rm geckodriver.tar.gz
-/tmp$ geckodriver --version
-geckodriver 0.20.1
-...
+~/django-tools$ poetry run django_tools_selenium install
+~/django-tools$ poetry run django_tools_selenium info
 }}}
-Current version number can be found here:
-
-* https://github.com/mozilla/geckodriver/releases
-
-
 
 
 === Mockup utils
@@ -701,45 +691,19 @@ There exist many miscellaneous stuff. Look in the source, luke!
 
 == Backwards-incompatible changes
 
-(Older changes are [[https://github.com/jedie/django-tools/tree/f7aef5b778ba505848ba4b1a389d43cd3f559bb9#backwards-incompatible-changes|in git history]])
+Old changes archived in git history here:
 
-=== v0.39
+* [[https://github.com/jedie/django-tools/tree/v0.49.0#backwards-incompatible-changes|>=v0.47]]
+* [[https://github.com/jedie/django-tools/tree/v0.35.0#backwards-incompatible-changes|>=v0.35]]
 
-File renamed: {{{django_tools/unittest_utils/{celery.py => celery_utils.py}}}}
+=== v0.50
 
-=== v0.41
+Removed old selenium helper function, [[https://github.com/jedie/django-tools/tree/v0.43.0#v043|deprecated since v0.43]]
 
-{{{@task_always_eager()}}} decorator was removed.
+Make all Selenium web driver instances persistent for the complete test run session.
+This speedup tests and fixed some bugs in Selenium.
 
-=== v0.42
-
-* All celery related stuff was removed.
-* The pseudo app for exra manage commands was removed. The commands are always available if "django_tools" is in INSTALLED_APPS
-  * Please remove from your INSTALLED_APPS:
-    * 'django_tools.manage_commands.django_tools_list_models',
-    * 'django_tools.manage_commands.django_tools_nice_diffsettings',
-
-=== v0.43
-
-Selenium helpers moved:
-{{{
--from django_tools.unittest_utils.selenium_utils import (
--    SeleniumChromiumTestCase, SeleniumFirefoxTestCase, chromium_available, find_executable, firefox_available
--)
-+from django_tools.selenium.chromedriver import SeleniumChromiumTestCase, chromium_available
-+from django_tools.selenium.geckodriver import SeleniumFirefoxTestCase, firefox_available
-+from django_tools.selenium.utils import find_executable
-}}}
-
-Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works, but will be removed in the future!
-
-=== v0.44
-
-* remove old mockup image API (it was deprecated since v0.35)
-
-=== v0.47
-
-{{{LoggingBuffer()}}} was removed. (Use {{{self.assertLogs()}}} from Django)
+This result in the same browser/webdriver settings for all test classes!
 
 
 == Django compatibility
@@ -764,11 +728,14 @@ Using the old place {{{django_tools.unittest_utils.selenium_utils}}} still works
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.49.0..master|compare v0.49.0...main]]
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.50.0.rc1..master|compare v0.50.0.rc1...main]]
+** TBC
+* v0.50.0.rc1 - 05.02.2022 - [[https://github.com/jedie/django-tools/compare/v0.49.0...v0.50.0.rc1|compare v0.49.0...v0.50.0.rc1]]
 ** Rename git "master" branch to "main"
+** Use [[https://github.com/SergeyPirogov/webdriver_manager|webdriver-manager]] to setup selenium web drivers
+** CHANGE: Now all web driver instances are cached and reused for the complete test run!
 ** Use [[https://github.com/akaihola/darker|darker]] for code formatting
 ** Update test matrix: Add Python 3.10 and Django v4.0 (remove Python 3.7 and Django 3.1)
-** TBC
 * v0.49.0 - 22.11.2021 - [[https://github.com/jedie/django-tools/compare/v0.48.3...v0.49.0|compare v0.48.3...v0.49.0]]
 ** NEW: {{{VersionProtectBaseModel}}} - Protect a model against overwriting a newer entry with an older one, by adding a auto increment version number.
 ** NEW: {{{AlwaysLoggedInAsSuperUserMiddleware}}} useful for local dev server run to auto login into Django Admin
