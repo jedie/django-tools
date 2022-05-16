@@ -99,7 +99,7 @@ class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
             options.set_capability(key, value)
 
         options.set_preference('intl.accept_languages', 'en-US, en')
-        
+
         # https://github.com/mozilla/geckodriver/issues/284#issuecomment-458305621
         options.set_preference('devtools.console.stdout.content', True)
 
