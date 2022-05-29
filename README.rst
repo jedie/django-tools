@@ -842,11 +842,11 @@ Django compatibility
 history
 -------
 
-* *dev* - `compare v0.50.0.rc1...main <https://github.com/jedie/django-tools/compare/v0.50.0.rc1..master>`_ 
+* *dev* - `compare v0.50.0...main <https://github.com/jedie/django-tools/compare/v0.50.0...master>`_ 
 
     * TBC
 
-* v0.50.0.rc1 - 05.02.2022 - `compare v0.49.0...v0.50.0.rc1 <https://github.com/jedie/django-tools/compare/v0.49.0...v0.50.0.rc1>`_ 
+* v0.50.0 - 29.05.2022 - `compare v0.49.0...v0.50.0 <https://github.com/jedie/django-tools/compare/v0.49.0...v0.50.0>`_ 
 
     * Rename git "master" branch to "main"
 
@@ -1637,4 +1637,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2022-02-05 19:26:40 with "python-creole"``
+``Note: this file is generated from README.creole 2022-05-29 17:58:20 with "python-creole"``
