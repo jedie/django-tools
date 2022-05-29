@@ -15,7 +15,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
-from webdriver_manager.manager import DriverManager
+from webdriver_manager.core.manager import DriverManager
 
 from django_tools.selenium.response import selenium2fakes_response
 
