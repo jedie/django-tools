@@ -30,7 +30,7 @@ install: check-poetry ## install django-tools via poetry
 
 update: check-poetry ## update the sources and installation
 	git fetch --all
-	git pull origin master
+	git pull origin main
 	poetry update
 
 lint: ## Run code formatters and linter
