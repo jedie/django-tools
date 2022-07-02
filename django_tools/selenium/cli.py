@@ -6,6 +6,7 @@
 import argparse
 import logging
 import sys
+import warnings
 
 from django_tools.selenium.chromedriver import SeleniumChromiumTestCase
 from django_tools.selenium.geckodriver import SeleniumFirefoxTestCase
@@ -44,6 +45,11 @@ def setup():
 
 
 def main():
+    warnings.warn(
+        'Selenium helper are deprecated in django-tools, please migrate to Playwright',
+        DeprecationWarning,
+    )
+
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(
         title='actions', dest='action', description='valid subcommands', help='additional help'

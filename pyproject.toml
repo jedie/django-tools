@@ -66,8 +66,7 @@ easy-thumbnails = "*"
 django-filer = "*"
 django-parler = "*"
 django-debug-toolbar = "*"
-selenium = "*"
-webdriver-manager = "*"  # https://github.com/SergeyPirogov/webdriver_manager
+pytest-playwright = "*"  # https://playwright.dev/python/docs/test-runners
 model-bakery = "*"  # https://github.com/model-bakers/model_bakery
 requests-mock = "*"
 django-override-storage = "*"  # https://github.com/danifus/django-override-storage
@@ -116,7 +115,7 @@ lines_after_imports=2
 # https://docs.pytest.org/en/latest/customize.html#pyproject-toml
 minversion = "6.0"
 DJANGO_SETTINGS_MODULE="django_tools_test_project.settings.test"
-norecursedirs = ".* .git __pycache__ coverage* dist htmlcov"
+norecursedirs = ".* .git __pycache__ coverage* dist htmlcov django_tools/selenium"
 # sometimes helpfull "addopts" arguments:
 #    -vv
 #    --verbose
