@@ -33,6 +33,9 @@ pytest               Run pytest
 update-rst-readme    update README.rst from README.creole
 publish              Release new version to PyPi
 start-dev-server     Start Django dev. server with the test project
+playwright-install   Install test browser for Playwright tests
+playwright-inspector Run Playwright inspector
+playwright-tests     Run only the Playwright tests
 }}}
 
 == existing stuff
@@ -698,7 +701,7 @@ Old changes archived in git history here:
 
 === v0.51
 
-All Selenium helper are deprecated, please migrate to Playwright ;)
+All Selenium helper are deprecated, please migrate to [[https://playwright.dev/python/|Playwright]] ;)
 
 === v0.50
 
@@ -734,6 +737,7 @@ This result in the same browser/webdriver settings for all test classes!
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.50.0...master|compare v0.50.0...main]]
 ** DEPRECATE all Selenium helper, please migrate to Playwright ;)
+** NEW: [[https://playwright.dev/python/|Playwright]] base Unittest class and login helper
 ** TBC
 * v0.50.0 - 29.05.2022 - [[https://github.com/jedie/django-tools/compare/v0.49.0...v0.50.0|compare v0.49.0...v0.50.0]]
 ** Rename git "master" branch to "main"

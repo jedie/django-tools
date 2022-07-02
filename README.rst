@@ -50,6 +50,9 @@ e.g.:
     update-rst-readme    update README.rst from README.creole
     publish              Release new version to PyPi
     start-dev-server     Start Django dev. server with the test project
+    playwright-install   Install test browser for Playwright tests
+    playwright-inspector Run Playwright inspector
+    playwright-tests     Run only the Playwright tests
 
 --------------
 existing stuff
@@ -792,6 +795,11 @@ Old changes archived in git history here:
 
 * `>=v0.35 <https://github.com/jedie/django-tools/tree/v0.35.0#backwards-incompatible-changes>`_
 
+v0.51
+=====
+
+All Selenium helper are deprecated, please migrate to `Playwright <https://playwright.dev/python/>`_ ;)
+
 v0.50
 =====
 
@@ -843,6 +851,10 @@ history
 -------
 
 * *dev* - `compare v0.50.0...main <https://github.com/jedie/django-tools/compare/v0.50.0...master>`_ 
+
+    * DEPRECATE all Selenium helper, please migrate to Playwright ;)
+
+    * NEW: `Playwright`_ base Unittest class and login helper
 
     * TBC
 
@@ -1637,4 +1649,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2022-05-29 17:58:20 with "python-creole"``
+``Note: this file is generated from README.creole 2022-07-02 14:02:56 with "python-creole"``

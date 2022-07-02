@@ -114,6 +114,7 @@ lines_after_imports=2
 [tool.pytest.ini_options]
 # https://docs.pytest.org/en/latest/customize.html#pyproject-toml
 minversion = "6.0"
+markers = "playwright: marks Playwright tests (deselect with '-m \"not playwright\"')"
 DJANGO_SETTINGS_MODULE="django_tools_test_project.settings.test"
 norecursedirs = ".* .git __pycache__ coverage* dist htmlcov django_tools/selenium"
 # sometimes helpfull "addopts" arguments:

@@ -52,13 +52,9 @@ jobs:
       run: |
         make tox-listenvs
 
-    - name: 'Setup Selenium web drivers'
+    - name: 'Install Browsers for Playwright tests'
       run: |
-        poetry run django_tools_selenium setup
-
-    - name: 'Selenium web drivers info'
-      run: |
-        poetry run django_tools_selenium info
+        make playwright-install
 
     - name: 'Run tests on ${{ matrix.os }} with Python ${{ matrix.python-version }} Django ${{ matrix.django }}'
       run: |
