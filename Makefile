@@ -68,5 +68,13 @@ publish: ## Release new version to PyPi
 start-dev-server: ## Start Django dev. server with the test project
 	DJANGO_SETTINGS_MODULE=django_tools_test_project.settings.local poetry run dev_server
 
+playwright-install: ## Install test browser for Playwright tests
+	poetry run playwright install chromium firefox
 
-.PHONY: help install lint fix test publish
+playwright-inspector:  ## Run Playwright inspector
+	PWDEBUG=1 poetry run pytest -s -m playwright -x
+
+playwright-tests:  ## Run only the Playwright tests
+	poetry run pytest -m playwright
+
+.PHONY: help install lint fix test publish playwright-install playwright-inspector playwright-tests

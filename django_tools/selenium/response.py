@@ -56,6 +56,10 @@ def selenium2faked_response(driver, client, client_class):
                 faked_response = self.get_faked_response()
                 self.assertNotContains(response, "<h1>foobar</h1>", html=True)
     """
+    warnings.warn(
+        'Selenium helper are deprecated in django-tools, please migrate to Playwright',
+        DeprecationWarning,
+    )
     response = FakedHttpResponse(content=driver.page_source)
     response.client = client_class()  # Fresh Client() instance
 

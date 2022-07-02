@@ -52,17 +52,16 @@ jobs:
       run: |
         make tox-listenvs
 
-    - name: 'Setup Selenium web drivers'
+    - name: 'Install Browsers for Playwright tests'
       run: |
-        poetry run django_tools_selenium setup
-
-    - name: 'Selenium web drivers info'
-      run: |
-        poetry run django_tools_selenium info
+        make playwright-install
 
     - name: 'Run tests on ${{ matrix.os }} with Python ${{ matrix.python-version }} Django ${{ matrix.django }}'
       run: |
         poetry run tox -e python-django${{ matrix.django }}
 
     - name: 'Upload coverage report'
-      run: bash <(curl -s https://codecov.io/bash)
+      uses: codecov/codecov-action@v2
+      with:
+        fail_ci_if_error: false
+        verbose: true

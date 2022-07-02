@@ -9,13 +9,14 @@ import pprint
 import sys
 import traceback
 import unittest
+import warnings
 
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
-from webdriver_manager.core.manager import DriverManager
+from webdriver_manager.manager import DriverManager
 
 from django_tools.selenium.response import selenium2fakes_response
 
@@ -27,6 +28,10 @@ WEB_DRIVER_INSTANCES = {}
 
 @atexit.register
 def quit_web_driver():
+    warnings.warn(
+        'Selenium helper are deprecated in django-tools, please migrate to Playwright',
+        DeprecationWarning,
+    )
     for driver_name, driver in WEB_DRIVER_INSTANCES.items():
         if driver is not None:
             print(f'Quit {driver_name} web driver: {driver}')
@@ -50,6 +55,10 @@ class LocalStorage:
     """
 
     def __init__(self, driver):
+        warnings.warn(
+            'Selenium helper are deprecated in django-tools, please migrate to Playwright',
+            DeprecationWarning,
+        )
         self.driver = driver
 
     def items(self):
@@ -93,6 +102,10 @@ class LocalStorage:
 
 
 def assert_browser_language(driver: RemoteWebDriver, languages: list):
+    warnings.warn(
+        'Selenium helper are deprecated in django-tools, please migrate to Playwright',
+        DeprecationWarning,
+    )
     browser_languages = driver.execute_script('return window.navigator.languages')
     assert browser_languages == languages, (
         f'Browser language {browser_languages!r} is not in {languages!r}'
@@ -151,6 +164,10 @@ class SeleniumBaseTestCase(unittest.TestCase):
         There are some problems if web drivers instance will be recreated.
         So use a "cache" for the instance and reuse existing instances.
         """
+        warnings.warn(
+            'Selenium helper are deprecated in django-tools, please migrate to Playwright',
+            DeprecationWarning,
+        )
         if cls.verbose_browser_name in WEB_DRIVER_INSTANCES:
             driver = WEB_DRIVER_INSTANCES[cls.verbose_browser_name]
             log.info('resuse web driver %s for %s', driver, cls.verbose_browser_name)
