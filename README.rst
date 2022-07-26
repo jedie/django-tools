@@ -860,13 +860,17 @@ Django compatibility
 history
 -------
 
-* *dev* - `compare v0.50.0...main <https://github.com/jedie/django-tools/compare/v0.50.0...master>`_ 
+* *dev* - `compare v0.51.0...main <https://github.com/jedie/django-tools/compare/v0.51.0...main>`_ 
+
+    * TBC
+
+* v0.51.0 - 26.07.2022 - `compare v0.50.0...v0.51.0 <https://github.com/jedie/django-tools/compare/v0.50.0...v0.51.0>`_ 
+
+    * NEW: |check_editor_config()| to check editor config and line length in projects
 
     * DEPRECATE all Selenium helper, please migrate to Playwright ;)
 
     * NEW: `Playwright`_ base Unittest class and login helper
-
-    * TBC
 
 * v0.50.0 - 29.05.2022 - `compare v0.49.0...v0.50.0 <https://github.com/jedie/django-tools/compare/v0.49.0...v0.50.0>`_ 
 
@@ -1634,6 +1638,8 @@ history
 
     * first version cut out from PyLucid CMS – `http://www.pylucid.org <http://www.pylucid.org>`_
 
+.. |check_editor_config()| image:: check_editor_config()
+
 -----
 links
 -----
@@ -1645,7 +1651,6 @@ links
 +----------+-----------------------------------------------+
 
 .. _https://github.com/jedie/django-tools: https://github.com/jedie/django-tools
-.. _https://pypi.python.org/pypi/django-tools/: https://pypi.python.org/pypi/django-tools/
 
 --------
 donation
@@ -1659,4 +1664,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2022-07-02 14:02:56 with "python-creole"``
+``Note: this file is generated from README.creole 2022-07-26 12:40:43 with "python-creole"``

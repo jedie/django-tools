@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-tools"
-version = "0.50.0"
+version = "0.51.0"
 description = "miscellaneous tools for Django based projects"
 license = "GPL-3.0-or-later"
 authors = ["Jens Diemer <django-tools@jensdiemer.de>"]
@@ -70,15 +70,16 @@ pytest-playwright = "*"  # https://playwright.dev/python/docs/test-runners
 model-bakery = "*"  # https://github.com/model-bakers/model_bakery
 requests-mock = "*"
 django-override-storage = "*"  # https://github.com/danifus/django-override-storage
+EditorConfig = "*"  # https://github.com/editorconfig/editorconfig-core-py
+tomli = "*"  # https://github.com/hukkin/tomli
 
-darker = "*"  # https://github.com/akaihola/darker
-black = "==21.12b0" # https://github.com/akaihola/darker/issues/264
 
 [tool.poetry.scripts]
 django_tools_selenium = "django_tools.selenium.cli:main"
 update_rst_readme = "django_tools.publish:update_readme"
 publish = "django_tools.publish:publish"
 dev_server = "django_tools_test_project.manage:start_test_server"
+
 
 [build-system]
 requires = ["poetry>=0.12"]

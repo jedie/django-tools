@@ -12,6 +12,7 @@ from poetry_publish.tests.test_project_setup import test_version as assert_versi
 
 import django_tools
 from django_tools import __version__
+from django_tools.unittest_utils.project_setup import check_editor_config
 
 
 PACKAGE_ROOT = Path(django_tools.__file__).parent.parent
@@ -72,3 +73,7 @@ def test_poetry_check():
 
 def test_lint():
     subprocess.check_call(['make', 'fix-code-style'], cwd=PACKAGE_ROOT)
+
+
+def test_check_editor_config():
+    check_editor_config(package_root=PACKAGE_ROOT)
