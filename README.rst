@@ -6,20 +6,30 @@ Miscellaneous tools for django.
 
 Look also at the siblings project: `django-cms-tools <https://github.com/jedie/django-cms-tools>`_ (Tools/helpers around Django-CMS).
 
-+-----------------------------------+------------------------------------------+
-| |Build Status on github|          | `github.com/jedie/django-tools/actions`_ |
-+-----------------------------------+------------------------------------------+
-| |Coverage Status on codecov.io|   | `codecov.io/gh/jedie/django-tools`_      |
-+-----------------------------------+------------------------------------------+
-| |Coverage Status on coveralls.io| | `coveralls.io/r/jedie/django-tools`_     |
-+-----------------------------------+------------------------------------------+
++-----------------------------------+-----------------------------------------------+
+| |PyPi|                            | `https://pypi.python.org/pypi/django-tools/`_ |
++-----------------------------------+-----------------------------------------------+
+| |Build Status on github|          | `github.com/jedie/django-tools/actions`_      |
++-----------------------------------+-----------------------------------------------+
+| |Coverage Status on codecov.io|   | `codecov.io/gh/jedie/django-tools`_           |
++-----------------------------------+-----------------------------------------------+
+| |Coverage Status on coveralls.io| | `coveralls.io/r/jedie/django-tools`_          |
++-----------------------------------+-----------------------------------------------+
 
+.. |PyPi| image:: https://img.shields.io/pypi/v/django-tools?label=django-tools%20%40%20PyPi
+.. _https://pypi.python.org/pypi/django-tools/: https://pypi.python.org/pypi/django-tools/
 .. |Build Status on github| image:: https://github.com/jedie/django-tools/workflows/test/badge.svg?branch=main
 .. _github.com/jedie/django-tools/actions: https://github.com/jedie/django-tools/actions
 .. |Coverage Status on codecov.io| image:: https://codecov.io/gh/jedie/django-tools/branch/main/graph/badge.svg
 .. _codecov.io/gh/jedie/django-tools: https://codecov.io/gh/jedie/django-tools
 .. |Coverage Status on coveralls.io| image:: https://coveralls.io/repos/jedie/django-tools/badge.svg
 .. _coveralls.io/r/jedie/django-tools: https://coveralls.io/r/jedie/django-tools
+
+|Python Versions|
+|License|
+
+.. |Python Versions| image:: https://img.shields.io/pypi/pyversions/django-tools
+.. |License| image:: https://img.shields.io/pypi/l/django-tools
 
 (Logo contributed by `@reallinfo <https://github.com/reallinfo>`_ see `#16 <https://github.com/jedie/django-tools/pull/16>`_)
 
@@ -850,13 +860,17 @@ Django compatibility
 history
 -------
 
-* *dev* - `compare v0.50.0...main <https://github.com/jedie/django-tools/compare/v0.50.0...master>`_ 
+* *dev* - `compare v0.51.0...main <https://github.com/jedie/django-tools/compare/v0.51.0...main>`_ 
+
+    * TBC
+
+* v0.51.0 - 26.07.2022 - `compare v0.50.0...v0.51.0 <https://github.com/jedie/django-tools/compare/v0.50.0...v0.51.0>`_ 
+
+    * NEW: |check_editor_config()| to check editor config and line length in projects
 
     * DEPRECATE all Selenium helper, please migrate to Playwright ;)
 
     * NEW: `Playwright`_ base Unittest class and login helper
-
-    * TBC
 
 * v0.50.0 - 29.05.2022 - `compare v0.49.0...v0.50.0 <https://github.com/jedie/django-tools/compare/v0.49.0...v0.50.0>`_ 
 
@@ -1624,6 +1638,8 @@ history
 
     * first version cut out from PyLucid CMS – `http://www.pylucid.org <http://www.pylucid.org>`_
 
+.. |check_editor_config()| image:: check_editor_config()
+
 -----
 links
 -----
@@ -1635,7 +1651,6 @@ links
 +----------+-----------------------------------------------+
 
 .. _https://github.com/jedie/django-tools: https://github.com/jedie/django-tools
-.. _https://pypi.python.org/pypi/django-tools/: https://pypi.python.org/pypi/django-tools/
 
 --------
 donation
@@ -1649,4 +1664,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2022-07-02 14:02:56 with "python-creole"``
+``Note: this file is generated from README.creole 2022-07-26 12:40:43 with "python-creole"``

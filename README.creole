@@ -4,9 +4,13 @@ Miscellaneous tools for django.
 
 Look also at the siblings project: [[https://github.com/jedie/django-cms-tools|django-cms-tools]] (Tools/helpers around Django-CMS).
 
+| {{https://img.shields.io/pypi/v/django-tools?label=django-tools%20%40%20PyPi|PyPi}} | https://pypi.python.org/pypi/django-tools/ |
 | {{https://github.com/jedie/django-tools/workflows/test/badge.svg?branch=main|Build Status on github}} | [[https://github.com/jedie/django-tools/actions|github.com/jedie/django-tools/actions]] |
 | {{https://codecov.io/gh/jedie/django-tools/branch/main/graph/badge.svg|Coverage Status on codecov.io}} | [[https://codecov.io/gh/jedie/django-tools|codecov.io/gh/jedie/django-tools]] |
 | {{https://coveralls.io/repos/jedie/django-tools/badge.svg|Coverage Status on coveralls.io}} | [[https://coveralls.io/r/jedie/django-tools|coveralls.io/r/jedie/django-tools]] |
+
+{{https://img.shields.io/pypi/pyversions/django-tools|Python Versions}}
+{{https://img.shields.io/pypi/l/django-tools|License}}
 
 (Logo contributed by [[https://github.com/reallinfo|@reallinfo]] see [[https://github.com/jedie/django-tools/pull/16|#16]])
 
@@ -735,10 +739,12 @@ This result in the same browser/webdriver settings for all test classes!
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.50.0...master|compare v0.50.0...main]]
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.51.0...main|compare v0.51.0...main]]
+** TBC
+* v0.51.0 - 26.07.2022 - [[https://github.com/jedie/django-tools/compare/v0.50.0...v0.51.0|compare v0.50.0...v0.51.0]]
+** NEW: {{check_editor_config()}} to check editor config and line length in projects
 ** DEPRECATE all Selenium helper, please migrate to Playwright ;)
 ** NEW: [[https://playwright.dev/python/|Playwright]] base Unittest class and login helper
-** TBC
 * v0.50.0 - 29.05.2022 - [[https://github.com/jedie/django-tools/compare/v0.49.0...v0.50.0|compare v0.49.0...v0.50.0]]
 ** Rename git "master" branch to "main"
 ** Use [[https://github.com/SergeyPirogov/webdriver_manager|webdriver-manager]] to setup selenium web drivers
