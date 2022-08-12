@@ -101,7 +101,10 @@ def _get_cache():
     """
     if LOCAL_SYNC_CACHE_BACKEND not in settings.CACHES:
         # TODO: Not needed in django v1.4: https://code.djangoproject.com/ticket/16410
-        msg = f"You should define a '{LOCAL_SYNC_CACHE_BACKEND}' cache in your settings.CACHES (use default cache)"
+        msg = (
+            f"You should define a '{LOCAL_SYNC_CACHE_BACKEND}' cache in your settings.CACHES"
+            f" (use default cache)"
+        )
         logger.critical(msg)
         cache_name = "default"  # fallback to default cache entry
     else:
@@ -134,9 +137,8 @@ class LocalSyncCache(dict):
             for existing_cache in self.CACHES:
                 if id == existing_cache.id:
                     logger.error(
-                        "ID {!r} was already used! It must be unique! (Existing ids are: {})".format(
-                            id, repr([i.id for i in self.CACHES])
-                        )
+                        f"ID {id!r} was already used! It must be unique!"
+                        f" (Existing ids are: {repr([i.id for i in self.CACHES])})"
                     )
 
         self.id = id
@@ -150,7 +152,9 @@ class LocalSyncCache(dict):
             logger.error(f"Error: __init__ for {self.id} was called to often!")
             self.INIT_COUNTER[self.id] += 1
 
-        self.request_counter = 0  # Counts how often check_state called (Normally called one time per request)
+        # Counts how often check_state called (Normally one time per request):
+        self.request_counter = 0
+
         self.own_clear_counter = 0  # Counts how often clear called in this thread
         self.ext_clear_counter = 0  # Counts how often clears from external thread
 
@@ -184,7 +188,7 @@ class LocalSyncCache(dict):
             if self.id in self._OWN_RESET_TIMES:
                 # In this thread clear() was called in the past and now in
                 # a other thread clear() was called.
-                del(self._OWN_RESET_TIMES[self.id])
+                del self._OWN_RESET_TIMES[self.id]
                 logger.debug(f"remove {self.id!r} from _OWN_RESET_TIMES")
 
     def clear(self):

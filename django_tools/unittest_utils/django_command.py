@@ -30,7 +30,7 @@ class DjangoCommandMixin:
         # You can set env by given kwargs, too.
         env = dict(os.environ)
         if "DJANGO_SETTINGS_MODULE" in env:
-            del(env["DJANGO_SETTINGS_MODULE"])
+            del env["DJANGO_SETTINGS_MODULE"]
 
         subprocess_kwargs = {
             "env": env,
@@ -78,7 +78,9 @@ class DjangoCommandMixin:
 
         return output
 
-    def call_manage_py(self, cmd, manage_dir, manage_py="manage.py", assert_executable=True, **kwargs):
+    def call_manage_py(
+        self, cmd, manage_dir, manage_py="manage.py", assert_executable=True, **kwargs
+    ):
         """
         call manage.py from given >manage_dir<
         """

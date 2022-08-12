@@ -57,8 +57,8 @@ pytest-randomly = "*"
 pytest-cov = "*"
 pytest-django = "*"
 pytest-darker = "*"  # https://github.com/akaihola/pytest-darker
-pytest-flake8 = "*"
-pytest-isort = "*"
+flake8 = "*"
+isort = "*"
 coveralls = "*"
 autopep8 = "*"
 colorlog = "*"
@@ -138,8 +138,6 @@ addopts = """
     --no-cov-on-fail
     --showlocals
     --darker
-    --flake8
-    --isort
     --doctest-modules
     --failed-first
     --last-failed-no-failures all
@@ -154,15 +152,15 @@ addopts = """
 legacy_tox_ini = """
 [tox]
 isolated_build = True
-envlist = py{38,39,310}-django{2.2,3.2,4.0}
+envlist = py{38,39,310}-django{3.2,4.0,4.1}
 skip_missing_interpreters = True
 
 [testenv]
 passenv = *
 deps =
-    django2.2: django>=2.2,<2.3
     django3.2: django>=3.2,<3.3
     django4.0: django>=4.0,<4.1
+    django4.1: django>=4.1,<4.2
 install_dev_deps=True
 commands =
     python --version
