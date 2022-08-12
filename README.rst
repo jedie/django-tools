@@ -827,6 +827,8 @@ Django compatibility
 +------------------+----------------+-----------------+
 | django-tools     | django version | python          |
 +==================+================+=================+
+| >= v0.52.0       | 3.2, 4.0, 4.1  | 3.8, 3.9, 3.10  |
++------------------+----------------+-----------------+
 | >= v0.50.0       | 2.2, 3.2, 4.0  | 3.8, 3.9, 3.10  |
 +------------------+----------------+-----------------+
 | >= v0.49.0       | 2.2, 3.1, 3.2  | 3.7, 3.8, 3.9   |
@@ -861,6 +863,8 @@ history
 -------
 
 * *dev* - `compare v0.51.0...main <https://github.com/jedie/django-tools/compare/v0.51.0...main>`_ 
+
+    * Test with Django 3.2, 4.0 and 4.1
 
     * TBC
 
@@ -1664,4 +1668,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2022-07-26 12:40:43 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-12 08:36:31 with "python-creole"``
