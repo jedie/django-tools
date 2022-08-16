@@ -45,24 +45,25 @@ e.g.:
     ~$ cd django-tools/
     ~/django-tools$ make install
     ~/django-tools$ make
-    help                 List all commands
-    install-poetry       install or update poetry
-    install              install django-tools via poetry
-    update               update the sources and installation
-    lint                 Run code formatters and linter
-    fix-code-style       Fix code formatting
-    tox-listenvs         List all tox test environments
-    tox                  Run pytest via tox with all environments
-    tox-py37             Run pytest via tox with *python v3.7*
-    tox-py38             Run pytest via tox with *python v3.8*
-    tox-py39             Run pytest via tox with *python v3.9*
-    pytest               Run pytest
-    update-rst-readme    update README.rst from README.creole
-    publish              Release new version to PyPi
-    start-dev-server     Start Django dev. server with the test project
-    playwright-install   Install test browser for Playwright tests
-    playwright-inspector Run Playwright inspector
-    playwright-tests     Run only the Playwright tests
+    help                       List all commands
+    install-poetry             install or update poetry
+    install                    install django-tools via poetry
+    update                     update the sources and installation
+    lint                       Run code formatters and linter
+    fix-code-style             Fix code formatting
+    tox-listenvs               List all tox test environments
+    tox                        Run pytest via tox with all environments
+    tox-py37                   Run pytest via tox with *python v3.7*
+    tox-py38                   Run pytest via tox with *python v3.8*
+    tox-py39                   Run pytest via tox with *python v3.9*
+    pytest                     Run pytest
+    update-test-snapshot-files Update all snapshot files (by remove and recreate all snapshot files)
+    update-rst-readme          update README.rst from README.creole
+    publish                    Release new version to PyPi
+    start-dev-server           Start Django dev. server with the test project
+    playwright-install         Install test browser for Playwright tests
+    playwright-inspector       Run Playwright inspector
+    playwright-tests           Run only the Playwright tests
 
 --------------
 existing stuff
@@ -1668,4 +1669,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2022-08-12 08:36:31 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-16 11:36:07 with "python-creole"``

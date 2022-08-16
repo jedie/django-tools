@@ -49,7 +49,6 @@ python-creole = "*"  # https://github.com/jedie/python-creole
 bx_django_utils = "*"  # https://github.com/boxine/bx_django_utils
 beautifulsoup4 = "*"
 tox = "*"
-tox-poetry = "*"  # https://github.com/tkukushkin/tox-poetry
 poetry = "*"
 poetry-core = "*"
 pytest = "*"
@@ -152,18 +151,15 @@ addopts = """
 legacy_tox_ini = """
 [tox]
 isolated_build = True
-envlist = py{38,39,310}-django{3.2,4.0,4.1}
+envlist = py{37,38,39,310}-django{3.2,4.0,4.1}
 skip_missing_interpreters = True
 
 [testenv]
-passenv = *
 deps =
     django3.2: django>=3.2,<3.3
     django4.0: django>=4.0,<4.1
     django4.1: django>=4.1,<4.2
-install_dev_deps=True
+whitelist_externals = make
 commands =
-    python --version
-    django-admin --version
-    python -m pytest
+    make pytest
 """
