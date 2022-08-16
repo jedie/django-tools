@@ -3,7 +3,7 @@ MAX_LINE_LENGTH := 119
 POETRY_VERSION := $(shell poetry --version 2>/dev/null)
 
 help: ## List all commands
-	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z0-9 -]+:.*?## / {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z0-9 -]+:.*?## / {printf "\033[36m%-26s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 check-poetry:
 	@if [[ "${POETRY_VERSION}" == *"Poetry"* ]] ; \
@@ -57,7 +57,13 @@ tox-py39: check-poetry ## Run pytest via tox with *python v3.9*
 	poetry run tox -e py39
 
 pytest: check-poetry ## Run pytest
+	poetry run python --version
+	poetry run django-admin --version
 	poetry run pytest
+
+update-test-snapshot-files:   ## Update all snapshot files (by remove and recreate all snapshot files)
+	find . -type f -name '*.snapshot.*' -delete
+	RAISE_SNAPSHOT_ERRORS=0 poetry run pytest
 
 update-rst-readme: ## update README.rst from README.creole
 	poetry run update_rst_readme
