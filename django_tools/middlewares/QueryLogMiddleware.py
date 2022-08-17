@@ -23,7 +23,7 @@ class QueryLogMiddleware(MiddlewareMixin):
                 sql = query["sql"]
                 queries.setdefault(sql, 0)
                 queries[sql] += 1
-            duplicates = sum([count - 1 for count in list(queries.values())])
+            duplicates = sum(count - 1 for count in list(queries.values()))
             print("------------------------------------------------------")
             print(f"Total Queries:     {len(queries)}")
             print(f"Duplicate Queries: {duplicates}")
