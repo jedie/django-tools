@@ -48,10 +48,8 @@ Available subcommands:
     logging_info
     nice_diffsettings
     permission_info
-    update_permissions
-
-[django_tools_test_app]
     run_testserver
+    update_permissions
 
 [easy_thumbnails]
     thumbnail_cleanup

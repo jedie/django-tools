@@ -741,14 +741,17 @@ This result in the same browser/webdriver settings for all test classes!
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.51.0...main|compare v0.51.0...main]]
-** Test with Django 3.2, 4.0 and 4.1
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.52.0...main|compare v0.52.0...main]]
 ** TBC
-* v0.51.0 - 26.07.2022 - [[https://github.com/jedie/django-tools/compare/v0.50.0...v0.51.0|compare v0.50.0...v0.51.0]]
+* [[https://github.com/jedie/django-tools/compare/v0.51.0...v0.52.0|v0.52.0 - 17.08.2022]]
+** Move `run_testserver` management command from `django_tools_test_app` to `django_tools` and polish it.
+** Restrict `AlwaysLoggedInAsSuperUserMiddleware` to the admin.
+** Test with Django 3.2, 4.0 and 4.1
+* [[https://github.com/jedie/django-tools/compare/v0.50.0...v0.51.0|v0.51.0 - 26.07.2022]]
 ** NEW: {{check_editor_config()}} to check editor config and line length in projects
 ** DEPRECATE all Selenium helper, please migrate to Playwright ;)
 ** NEW: [[https://playwright.dev/python/|Playwright]] base Unittest class and login helper
-* v0.50.0 - 29.05.2022 - [[https://github.com/jedie/django-tools/compare/v0.49.0...v0.50.0|compare v0.49.0...v0.50.0]]
+* [[https://github.com/jedie/django-tools/compare/v0.49.0...v0.50.0|v0.50.0 - 29.05.2022]]
 ** Rename git "master" branch to "main"
 ** Use [[https://github.com/SergeyPirogov/webdriver_manager|webdriver-manager]] to setup selenium web drivers
 ** CHANGE: Now all web driver instances are cached and reused for the complete test run!

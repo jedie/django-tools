@@ -19,7 +19,7 @@ try:
     from django.core.exceptions import FieldDoesNotExist
 except ImportError:
     # Old Django version
-    from django.db.models.fields import FieldDoesNotExist
+    from django.core.exceptions import FieldDoesNotExist
 
 
 def check_unique_together(sender, **kwargs):

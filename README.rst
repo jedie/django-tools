@@ -863,13 +863,19 @@ Django compatibility
 history
 -------
 
-* *dev* - `compare v0.51.0...main <https://github.com/jedie/django-tools/compare/v0.51.0...main>`_ 
-
-    * Test with Django 3.2, 4.0 and 4.1
+* *dev* - `compare v0.52.0...main <https://github.com/jedie/django-tools/compare/v0.52.0...main>`_ 
 
     * TBC
 
-* v0.51.0 - 26.07.2022 - `compare v0.50.0...v0.51.0 <https://github.com/jedie/django-tools/compare/v0.50.0...v0.51.0>`_ 
+* `v0.52.0 - 17.08.2022 <https://github.com/jedie/django-tools/compare/v0.51.0...v0.52.0>`_ 
+
+    * Move `run_testserver` management command from `django_tools_test_app` to `django_tools` and polish it.
+
+    * Restrict `AlwaysLoggedInAsSuperUserMiddleware` to the admin.
+
+    * Test with Django 3.2, 4.0 and 4.1
+
+* `v0.51.0 - 26.07.2022 <https://github.com/jedie/django-tools/compare/v0.50.0...v0.51.0>`_ 
 
     * NEW: |check_editor_config()| to check editor config and line length in projects
 
@@ -877,7 +883,7 @@ history
 
     * NEW: `Playwright`_ base Unittest class and login helper
 
-* v0.50.0 - 29.05.2022 - `compare v0.49.0...v0.50.0 <https://github.com/jedie/django-tools/compare/v0.49.0...v0.50.0>`_ 
+* `v0.50.0 - 29.05.2022 <https://github.com/jedie/django-tools/compare/v0.49.0...v0.50.0>`_ 
 
     * Rename git "master" branch to "main"
 
@@ -1669,4 +1675,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2022-08-16 11:36:07 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-17 09:24:23 with "python-creole"``
