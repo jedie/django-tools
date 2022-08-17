@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-tools"
-version = "0.51.0"
+version = "0.52.0"
 description = "miscellaneous tools for Django based projects"
 license = "GPL-3.0-or-later"
 authors = ["Jens Diemer <django-tools@jensdiemer.de>"]
@@ -116,7 +116,7 @@ lines_after_imports=2
 minversion = "6.0"
 markers = "playwright: marks Playwright tests (deselect with '-m \"not playwright\"')"
 DJANGO_SETTINGS_MODULE="django_tools_test_project.settings.test"
-norecursedirs = ".* .git __pycache__ coverage* dist htmlcov django_tools/selenium"
+norecursedirs = ".* __pycache__ coverage* dist htmlcov migrations django_tools/selenium"
 # sometimes helpfull "addopts" arguments:
 #    -vv
 #    --verbose
