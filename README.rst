@@ -870,6 +870,7 @@ history
     * TBC
 
 * v0.51.0 - 26.07.2022 - `compare v0.50.0...v0.51.0 <https://github.com/jedie/django-tools/compare/v0.50.0...v0.51.0>`_ 
+    * Move `run_testserver` management command from `django_tools_test_app` to `django_tools` and polish it.
 
     * NEW: |check_editor_config()| to check editor config and line length in projects
 

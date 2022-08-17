@@ -745,6 +745,7 @@ This result in the same browser/webdriver settings for all test classes!
 ** Test with Django 3.2, 4.0 and 4.1
 ** TBC
 * v0.51.0 - 26.07.2022 - [[https://github.com/jedie/django-tools/compare/v0.50.0...v0.51.0|compare v0.50.0...v0.51.0]]
+** Move `run_testserver` management command from `django_tools_test_app` to `django_tools` and polish it.
 ** NEW: {{check_editor_config()}} to check editor config and line length in projects
 ** DEPRECATE all Selenium helper, please migrate to Playwright ;)
 ** NEW: [[https://playwright.dev/python/|Playwright]] base Unittest class and login helper
