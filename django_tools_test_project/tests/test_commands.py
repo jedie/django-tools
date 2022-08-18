@@ -173,8 +173,6 @@ class CommandTestCase(TestUserMixin, DjangoCommandMixin, TestCase):
         # From django.core.management.commands.runserver command:
         assert '[addrport]' in output
 
-        assert_text_snapshot(got=self.clean_manage_output(output))
-
     def test_run_testserver_invalid_addr(self):
         output = self.call_manage_py(
             ['run_testserver', '--nomigrate', '--nomakemigrations', 'invalid:addr'],
