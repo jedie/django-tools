@@ -26,7 +26,9 @@ class Command(BaseCommand):
 
             info = f'Call "{self.style.SQL_FIELD(command_name)}"'
             if kwargs:
-                info += f' {kwargs!r}'
+                for k, v in sorted(kwargs.items()):
+                    if v is not None:
+                        info += f' {self.style.SQL_KEYWORD(k)}:{v!r}'
 
             self.stdout.write('\n')
             self.stdout.write(self.style.WARNING('_' * 79))

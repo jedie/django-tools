@@ -6,6 +6,6 @@ Test DB: .../django-tools/test_project_db.sqlite3
 Use settings: .../django-tools/django_tools_test_project/settings/test.py
 
 _______________________________________________________________________________
-Call "runserver" {'verbosity': 1, 'settings': None, 'pythonpath': None, 'traceback': False, 'no_color': False, 'force_color': False, 'addrport': 'invalid:addr', 'use_ipv6': False, 'use_threading': True, 'use_reloader': True}
+Call "runserver" addrport:'invalid:addr' force_color:False no_color:False traceback:False use_ipv6:False use_reloader:True use_threading:True verbosity:1
 
 CommandError: "invalid:addr" is not a valid port number or address:port pair.

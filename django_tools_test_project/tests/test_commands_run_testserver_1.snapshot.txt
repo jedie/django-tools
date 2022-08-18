@@ -8,5 +8,5 @@ Call "migrate"
 
 
 _______________________________________________________________________________
-Call "runserver" {'verbosity': 1, 'settings': None, 'pythonpath': None, 'traceback': False, 'no_color': False, 'force_color': False, 'addrport': None, 'use_ipv6': False, 'use_threading': True, 'use_reloader': True, 'stdout': <captured_call_command StringIO buffer>, 'stderr': <captured_call_command StringIO buffer>, 'skip_checks': True}
+Call "runserver" force_color:False no_color:False skip_checks:True stderr:<captured_call_command StringIO buffer> stdout:<captured_call_command StringIO buffer> traceback:False use_ipv6:False use_reloader:True use_threading:True verbosity:1
 
