@@ -745,11 +745,11 @@ This result in the same browser/webdriver settings for all test classes!
 ** NEW: MassContextManagerBase, DenyStdWrite + Updated: StdoutStderrBuffer
 ** TBC
 * [[https://github.com/jedie/django-tools/compare/v0.51.0...v0.52.0|v0.52.0 - 17.08.2022]]
-** Move `run_testserver` management command from `django_tools_test_app` to `django_tools` and polish it.
+** Move {{{run_testserver}}} management command from {{{django_tools_test_app}}} to {{{django_tools}}} and polish it.
 ** Restrict `AlwaysLoggedInAsSuperUserMiddleware` to the admin.
 ** Test with Django 3.2, 4.0 and 4.1
 * [[https://github.com/jedie/django-tools/compare/v0.50.0...v0.51.0|v0.51.0 - 26.07.2022]]
-** NEW: {{check_editor_config()}} to check editor config and line length in projects
+** NEW: {{{check_editor_config()}}} to check editor config and line length in projects
 ** DEPRECATE all Selenium helper, please migrate to Playwright ;)
 ** NEW: [[https://playwright.dev/python/|Playwright]] base Unittest class and login helper
 * [[https://github.com/jedie/django-tools/compare/v0.49.0...v0.50.0|v0.50.0 - 29.05.2022]]
