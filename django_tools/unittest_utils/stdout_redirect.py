@@ -1,27 +1,12 @@
 import io
-import sys
+from contextlib import redirect_stderr, redirect_stdout
 
-from django.utils.encoding import smart_str
-
-
-# origin_stderr = sys.stderr
-
-class StringBuffer(io.StringIO):
-    def write(self, data):
-        # origin_stderr.write("\nwrite to StringBuffer:\n%s\n\n" % repr(data))
-        data = smart_str(data)
-        super().write(data)
+from django_tools.context_managers import MassContextManagerBase
 
 
-class StdoutStderrBuffer():
+class StdoutStderrBuffer(MassContextManagerBase):
     """
-    redirect stderr and stdout for Py2 and Py3
-
-    contextlib.redirect_stdout is new in Python 3.4!
-    and we redirect stderr, too.
-
-    We use django.utils.encoding.smart_str in StringBuffer()
-    So output of bytes will only work, if there are encoded in UTF-8!
+    redirect stderr and stdout
 
     e.g:
 
@@ -32,26 +17,33 @@ class StdoutStderrBuffer():
     """
 
     def __init__(self):
-        sys.stdout.flush()
-        sys.stderr.flush()
-        self.old_stdout = sys.stdout
-        self.old_stderr = sys.stderr
-
-        self.buffer = StringBuffer()
-
-        sys.stdout = sys.stderr = self.buffer
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        self.old_stdout.flush()
-        self.old_stderr.flush()
-        sys.stdout = self.old_stdout
-        sys.stderr = self.old_stderr
+        self.buffer = io.StringIO()
+        self.context_managers = [
+            redirect_stdout(self.buffer),
+            redirect_stderr(self.buffer),
+        ]
 
     def get_output(self):
-        self.old_stdout.flush()
-        self.old_stderr.flush()
         output = self.buffer.getvalue()
         return output
+
+
+class DenyStdWriteHandler:
+    def __init__(self, name, std_type):
+        self.name = name
+        self.std_type = std_type
+
+    def write(self, *args, **kwargs):
+        raise AssertionError(f'{self.name} writes to std{self.std_type} !')
+
+
+class DenyStdWrite(MassContextManagerBase):
+    """
+    ContextManager that raise an AssertionError on std(out|err).write calls.
+    """
+
+    def __init__(self, name):
+        self.context_managers = [
+            redirect_stdout(DenyStdWriteHandler(name=name, std_type='out')),
+            redirect_stderr(DenyStdWriteHandler(name=name, std_type='err')),
+        ]
