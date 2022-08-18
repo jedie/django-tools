@@ -25,7 +25,7 @@ class Command(BaseCommand):
         command_name = command.__name__
         command_name = command_name.rsplit('.', 1)[-1]
 
-        info = f'Call {command_name!r}'
+        info = f'Call "{self.style.SQL_FIELD(command_name)}"'
         if args or kwargs:
             info += ' with:'
         if args:
@@ -33,8 +33,10 @@ class Command(BaseCommand):
         if kwargs:
             info += f' {kwargs!r}'
 
-        self.stderr.write('_' * 79)
+        self.stdout.write('\n')
+        self.stdout.write(self.style.WARNING('_' * 79))
         self.stdout.write(info)
+        self.stdout.write('\n')
 
         command = command.Command()
         call_command(command, *args, **kwargs)
