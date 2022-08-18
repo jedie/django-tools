@@ -37,10 +37,7 @@ class TestMockupImage(TestUserMixin, BaseTestCase):
         assert_pformat_equal(pil_image.verify(), None)
 
     def test_create_temp_filer_info_image(self):
-        assert_endswith(
-            settings.MEDIA_ROOT,
-            '/django-tools/.test/media'
-        )
+        assert_endswith(settings.MEDIA_ROOT, '/django-tools/media')
         user = self.login(usertype="normal")
 
         filer_info_image = ImageDummy(
@@ -55,7 +52,7 @@ class TestMockupImage(TestUserMixin, BaseTestCase):
         self.assertIn(".png", filer_info_image.path)
 
         path = filer_info_image.path
-        self.assertIn("/django-tools/.test/media/filer_public/", path)
+        self.assertIn("/django-tools/media/filer_public/", path)
 
     def test_create_django_file_info_image(self):
         django_file = ImageDummy(width=100, height=50).create_django_file_info_image(text="foo bar")

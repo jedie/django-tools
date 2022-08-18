@@ -5,10 +5,10 @@
 !.flake8
 !.travis.yml
 
-/.git
-*.py[co]
+__pycache__
+
+/media/
 *~
-*.egg-info
 /dist
 /build
 *.log

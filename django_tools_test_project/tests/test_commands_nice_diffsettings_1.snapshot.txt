@@ -1,12 +1,13 @@
 
 Use DJANGO_SETTINGS_MODULE='django_tools_test_project.settings.test'
 manage.py nice_diffsettings
-Test DB: .../django-tools/.test/test_project_db.sqlite3
+BASE_PATH:.../django-tools
+Test DB: .../django-tools/test_project_db.sqlite3
 Use settings: .../django-tools/django_tools_test_project/settings/test.py
 -------------------------------------------------------------------------------
 ALLOWED_HOSTS = ['*']
 
-BASE_DIR = PosixPath('.../django-tools/.test')
+BASE_PATH = PosixPath('.../django-tools')
 
 CACHES = {'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
              'LOCATION': 'unique-snowflake'}}
@@ -16,7 +17,7 @@ DATABASES = {'default': {'ATOMIC_REQUESTS': False,
              'CONN_MAX_AGE': 0,
              'ENGINE': 'django.db.backends.sqlite3',
              'HOST': '',
-             'NAME': '.../django-tools/.test/test_project_db.sqlite3',
+             'NAME': '.../django-tools/test_project_db.sqlite3',
              'OPTIONS': {'timeout': 20},
              'PASSWORD': '',
              'PORT': '',
@@ -76,7 +77,7 @@ LOGGING = {'disable_existing_loggers': True,
                                           'propagate': False}},
  'version': 1}
 
-MEDIA_ROOT = '.../django-tools/.test/media'
+MEDIA_ROOT = '.../django-tools/media'
 
 MEDIA_URL = '/media/'
 
@@ -120,12 +121,12 @@ SETTINGS_MODULE = 'django_tools_test_project.settings.test'
 
 SITE_ID = 1
 
-STATIC_ROOT = '.../django-tools/.test/static'
+STATIC_ROOT = '.../django-tools/static'
 
 STATIC_URL = '/static/'
 
 TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates',
-  'DIRS': [PosixPath('.../django-tools/.test/templates')],
+  'DIRS': ['.../django-tools/django_tools/templates'],
   'OPTIONS': {'context_processors': ['django.contrib.auth.context_processors.auth',
                                      'django.contrib.messages.context_processors.messages',
                                      'django.template.context_processors.i18n',
