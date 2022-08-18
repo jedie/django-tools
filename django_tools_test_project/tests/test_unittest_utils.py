@@ -178,21 +178,6 @@ class TestStdoutStderrBuffer(BaseUnittestCase):
         """,
         )
 
-    def test_binary_type(self):
-        # The print function will use repr
-        with StdoutStderrBuffer() as buffer:
-            print(b"print binary_type")
-            sys.stdout.write(b"stdout.write binary_type\n")
-            sys.stderr.write(b"stderr.write binary_type")
-        assert_equal_dedent(
-            buffer.get_output(),
-            """
-            b'print binary_type'
-            stdout.write binary_type
-            stderr.write binary_type
-            """,
-        )
-
 
 class TestBaseTestCase(TestUserMixin, BaseTestCase):
     def test_print_sql(self):

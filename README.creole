@@ -742,6 +742,7 @@ This result in the same browser/webdriver settings for all test classes!
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.52.0...main|compare v0.52.0...main]]
+** NEW: MassContextManagerBase, DenyStdWrite + Updated: StdoutStderrBuffer
 ** TBC
 * [[https://github.com/jedie/django-tools/compare/v0.51.0...v0.52.0|v0.52.0 - 17.08.2022]]
 ** Move `run_testserver` management command from `django_tools_test_app` to `django_tools` and polish it.
