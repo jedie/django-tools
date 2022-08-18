@@ -21,7 +21,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from pprint import pprint
+from pprint import pformat
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
@@ -66,7 +66,7 @@ class Command(BaseCommand):
         for no, conn in enumerate(connection_list, 1):
             self.stdout.write("")
             self.stdout.write(f"connection {no:d} alias: {conn.alias!r} settings_dict:")
-            pprint(conn.settings_dict)
+            self.stdout.write(pformat(conn.settings_dict))
 
         self.stdout.write("")
         self.stdout.write("-" * 79)
