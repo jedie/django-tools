@@ -6,6 +6,11 @@ from django.core.management import BaseCommand, call_command
 from django_tools.unittest_utils.stdout_redirect import DenyStdWrite
 
 
+class Buffer(io.StringIO):
+    def __repr__(self):
+        return '<captured_call_command StringIO buffer>'
+
+
 def captured_call_command(command, **kwargs) -> tuple[str, str]:
     """
     Call django manage command and return stdout + stderr
@@ -22,8 +27,8 @@ def captured_call_command(command, **kwargs) -> tuple[str, str]:
 
     command_instance = CommandClass()
 
-    capture_stdout = io.StringIO()
-    capture_stderr = io.StringIO()
+    capture_stdout = Buffer()
+    capture_stderr = Buffer()
     kwargs.update(
         dict(
             stdout=capture_stdout,

@@ -1,4 +1,5 @@
 
+existing models in app_label.ModelName format:
 
 01 - admin.LogEntry
 02 - auth.Group
@@ -29,3 +30,4 @@
 
 INSTALLED_APPS....: 16
 Apps with models..: 16
+
