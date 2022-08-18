@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-tools"
-version = "0.52.0"
+version = "0.53.0"
 description = "miscellaneous tools for Django based projects"
 license = "GPL-3.0-or-later"
 authors = ["Jens Diemer <django-tools@jensdiemer.de>"]
@@ -127,7 +127,6 @@ norecursedirs = ".* __pycache__ coverage* dist htmlcov migrations django_tools/s
 # Add this to local test runs:
 #    -x -p no:randomly
 addopts = """
-    --import-mode=importlib
     --reuse-db
     --nomigrations
     --cov=.

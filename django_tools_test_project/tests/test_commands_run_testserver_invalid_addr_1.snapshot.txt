@@ -1,0 +1,11 @@
+
+Use DJANGO_SETTINGS_MODULE='django_tools_test_project.settings.test'
+manage.py run_testserver --nomigrate --nomakemigrations invalid:addr
+BASE_PATH:.../django-tools
+Test DB: .../django-tools/test_project_db.sqlite3
+Use settings: .../django-tools/django_tools_test_project/settings/test.py
+
+_______________________________________________________________________________
+Call "runserver" addrport:'invalid:addr' force_color:False no_color:False traceback:False use_ipv6:False use_reloader:True use_threading:True verbosity:1
+
+CommandError: "invalid:addr" is not a valid port number or address:port pair.

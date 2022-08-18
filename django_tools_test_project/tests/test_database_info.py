@@ -1,7 +1,7 @@
 """
     Test /django_tools/management/commands/database_info.py
 
-    :copyleft: 2017-2020 by the django-tools team, see AUTHORS for more details.
+    :copyleft: 2017-2022 by the django-tools team, see AUTHORS for more details.
     :created: 2017 by Jens Diemer
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
@@ -10,13 +10,12 @@
 from pathlib import Path
 from unittest import TestCase
 
-from django.core.management import call_command
 from django.test import SimpleTestCase
 
-# https://github.com/jedie/django-tools
 import django_tools_test_project
+from django_tools.management.commands import database_info
+from django_tools.unittest_utils.call_management_commands import captured_call_command
 from django_tools.unittest_utils.django_command import DjangoCommandMixin
-from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 
 
 MANAGE_DIR = Path(django_tools_test_project.__file__).parent
@@ -30,10 +29,8 @@ class DatabaseInfoCallCommandTests(SimpleTestCase):
     """
 
     def test_database_info(self):
-        with StdoutStderrBuffer() as buff:
-            call_command("database_info")
-        output = buff.get_output()
-        print(output)
+        output, stderr = captured_call_command(command=database_info)
+        assert stderr == ''
 
         self.assertIn("engine...............: 'sqlite3'", output)
 

@@ -863,15 +863,21 @@ Django compatibility
 history
 -------
 
-* *dev* - `compare v0.52.0...main <https://github.com/jedie/django-tools/compare/v0.52.0...main>`_ 
-
-    * NEW: MassContextManagerBase, DenyStdWrite + Updated: StdoutStderrBuffer
+* *dev* - `compare v0.53.0...main <https://github.com/jedie/django-tools/compare/v0.53.0...main>`_ 
 
     * TBC
 
+* `v0.53.0 - 18.08.2022 <https://github.com/jedie/django-tools/compare/v0.52.0...v0.53.0>`_ 
+
+    * NEW: MassContextManagerBase, DenyStdWrite + Updated: StdoutStderrBuffer
+
+    * Enhance ``run_testserver`` command
+
+    * Small test project setup updates
+
 * `v0.52.0 - 17.08.2022 <https://github.com/jedie/django-tools/compare/v0.51.0...v0.52.0>`_ 
 
-    * Move `run_testserver` management command from `django_tools_test_app` to `django_tools` and polish it.
+    * Move ``run_testserver`` management command from ``django_tools_test_app`` to ``django_tools`` and polish it.
 
     * Restrict `AlwaysLoggedInAsSuperUserMiddleware` to the admin.
 
@@ -879,7 +885,7 @@ history
 
 * `v0.51.0 - 26.07.2022 <https://github.com/jedie/django-tools/compare/v0.50.0...v0.51.0>`_ 
 
-    * NEW: |check_editor_config()| to check editor config and line length in projects
+    * NEW: ``check_editor_config()`` to check editor config and line length in projects
 
     * DEPRECATE all Selenium helper, please migrate to Playwright ;)
 
@@ -1651,8 +1657,6 @@ history
 
     * first version cut out from PyLucid CMS – `http://www.pylucid.org <http://www.pylucid.org>`_
 
-.. |check_editor_config()| image:: check_editor_config()
-
 -----
 links
 -----
@@ -1677,4 +1681,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2022-08-18 09:51:55 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-18 19:59:56 with "python-creole"``

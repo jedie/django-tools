@@ -1,20 +1,23 @@
 import logging
 import warnings
-from pathlib import Path
+from pathlib import Path as __Path
 
 from django.utils.translation import gettext_lazy as _
 
-import django_tools
 from django_tools.unittest_utils.logging_utils import (
     CutPathnameLogRecordFactory,
     FilterAndLogWarnings,
 )
 
 
-# Store all test files into: .../django-tools/.test/
-BASE_DIR = Path(django_tools.__file__).parent.parent / '.test'
-assert str(BASE_DIR).endswith('/django-tools/.test'), BASE_DIR
-BASE_DIR.mkdir(exist_ok=True)
+###############################################################################
+
+# Build paths relative to the project root:
+BASE_PATH = __Path(__file__).parent.parent.parent
+print(f'BASE_PATH:{BASE_PATH}')
+assert __Path(BASE_PATH, 'django_tools').is_dir()
+
+###############################################################################
 
 DEBUG = True
 
@@ -26,7 +29,7 @@ ALLOWED_HOSTS = ["*"]  # Allow any domain/subdomain
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": str(BASE_DIR / "test_project_db.sqlite3"),
+        "NAME": str(BASE_PATH / "test_project_db.sqlite3"),
         # 'NAME': ":memory:",
         'OPTIONS': {
             # https://docs.djangoproject.com/en/2.2/ref/databases/#database-is-locked-errors
@@ -91,7 +94,7 @@ INSTALLED_APPS = (
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [str(__Path(BASE_PATH, 'django_tools', 'templates'))],
         "OPTIONS": {
             "loaders": [
                 (
@@ -157,17 +160,15 @@ EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 # ==============================================================================
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.8/howto/static-files/
+STATIC_URL = '/static/'
+STATIC_ROOT = __Path(BASE_PATH, 'static')
+STATIC_ROOT.mkdir(exist_ok=True)
+STATIC_ROOT = str(STATIC_ROOT)
 
-STATIC_URL = "/static/"
-STATIC_ROOT = str(BASE_DIR / "static")
-assert str(STATIC_ROOT).endswith('/django-tools/.test/static'), STATIC_ROOT
-Path(STATIC_ROOT).mkdir(parents=True, exist_ok=True)
-
-MEDIA_URL = "/media/"
-MEDIA_ROOT = str(BASE_DIR / "media")
-assert str(MEDIA_ROOT).endswith('/django-tools/.test/media'), MEDIA_ROOT
-Path(MEDIA_ROOT).mkdir(parents=True, exist_ok=True)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = __Path(BASE_PATH, 'media')
+MEDIA_ROOT.mkdir(exist_ok=True)
+MEDIA_ROOT = str(MEDIA_ROOT)
 
 # ==============================================================================
 

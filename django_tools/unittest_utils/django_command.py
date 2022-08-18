@@ -35,7 +35,7 @@ class DjangoCommandMixin:
         subprocess_kwargs = {
             "env": env,
             "shell": True,
-            "universal_newlines": True,
+            "text": True,
             "stderr": subprocess.STDOUT,
         }
         subprocess_kwargs.update(kwargs)
@@ -55,7 +55,7 @@ class DjangoCommandMixin:
 
         output = output.rstrip('\n\x1b[0m')
 
-        if status != excepted_exit_code or debug:
+        if (excepted_exit_code is not None and status != excepted_exit_code) or debug:
             msg = (
                 "subprocess exist status == %(status)r (excepted: %(excepted_exit_code)r)\n"
                 "Call %(cmd)r with:\n"
