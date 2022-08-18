@@ -127,7 +127,6 @@ norecursedirs = ".* __pycache__ coverage* dist htmlcov migrations django_tools/s
 # Add this to local test runs:
 #    -x -p no:randomly
 addopts = """
-    --import-mode=importlib
     --reuse-db
     --nomigrations
     --cov=.
