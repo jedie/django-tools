@@ -161,10 +161,14 @@ EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATIC_ROOT = str(__Path(BASE_PATH, 'static'))
+STATIC_ROOT = __Path(BASE_PATH, 'static')
+STATIC_ROOT.mkdir(exist_ok=True)
+STATIC_ROOT = str(STATIC_ROOT)
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = str(__Path(BASE_PATH, 'media'))
+MEDIA_ROOT = __Path(BASE_PATH, 'media')
+MEDIA_ROOT.mkdir(exist_ok=True)
+MEDIA_ROOT = str(MEDIA_ROOT)
 
 # ==============================================================================
 
