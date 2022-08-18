@@ -863,11 +863,17 @@ Django compatibility
 history
 -------
 
-* *dev* - `compare v0.52.0...main <https://github.com/jedie/django-tools/compare/v0.52.0...main>`_ 
+* *dev* - `compare v0.53.0...main <https://github.com/jedie/django-tools/compare/v0.53.0...main>`_ 
+
+    * TBC
+
+* `v0.53.0 - 18.08.2022 <https://github.com/jedie/django-tools/compare/v0.52.0...v0.53.0>`_ 
 
     * NEW: MassContextManagerBase, DenyStdWrite + Updated: StdoutStderrBuffer
 
-    * TBC
+    * Enhance ``run_testserver`` command
+
+    * Small test project setup updates
 
 * `v0.52.0 - 17.08.2022 <https://github.com/jedie/django-tools/compare/v0.51.0...v0.52.0>`_ 
 
@@ -1675,4 +1681,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2022-08-18 09:51:55 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-18 19:59:56 with "python-creole"``
