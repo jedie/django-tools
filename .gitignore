@@ -2,6 +2,7 @@
 
 !.github
 !.editorconfig
+!.gitignore
 !.flake8
 !.travis.yml
 
@@ -12,6 +13,7 @@ __pycache__
 /dist
 /build
 *.log
+*.sqlite3
 
 /htmlcov/
 coverage.xml
