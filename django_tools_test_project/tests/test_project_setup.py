@@ -6,7 +6,6 @@ import re
 import subprocess
 from pathlib import Path
 
-from creole.setup_utils import update_rst_readme
 from poetry_publish.tests.test_project_setup import test_poetry_check as assert_poetry_check
 from poetry_publish.tests.test_project_setup import test_version as assert_version
 
@@ -45,23 +44,12 @@ def test_make_help_up2date():
         # make output if not in same directory ;)
         help_text = '\n'.join(lines[1:-1])
 
-    readme_content = Path(PACKAGE_ROOT, 'README.creole').read_text()
+    readme_content = Path(PACKAGE_ROOT, 'README.md').read_text()
     if help_text not in readme_content:
         print('-' * 100)
         print(help_text)  # for easy copy&paste ;)
         print('-' * 100)
-        raise AssertionError(f'README.creole not up2date, missing:\n{help_text}')
-
-
-def test_update_rst_readme(capsys):
-    rest_readme_path = update_rst_readme(
-        package_root=PACKAGE_ROOT, filename='README.creole'
-    )
-    captured = capsys.readouterr()
-    assert captured.out == 'Generate README.rst from README.creole...nothing changed, ok.\n'
-    assert captured.err == ''
-    assert isinstance(rest_readme_path, Path)
-    assert str(rest_readme_path).endswith('/README.rst')
+        raise AssertionError(f'README.md not up2date, missing:\n{help_text}')
 
 
 def test_poetry_check():

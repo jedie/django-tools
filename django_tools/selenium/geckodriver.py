@@ -26,7 +26,7 @@ class SeleniumFirefoxTestCase(SeleniumBaseTestCase):
     """
     TestCase with Selenium and the Firefox WebDriver
     Note:
-        * Needs 'geckodriver' executable! See README.creole for more info
+        * Needs 'geckodriver' executable! See README.md for more info
         * It's without django StaticLiveServerTestCase
 
     usage e.g.:

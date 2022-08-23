@@ -1,7 +1,7 @@
 include MANIFEST.in
 include AUTHORS
 include LICENSE
-include README.creole
+include README.md
 include tox.ini
 
 recursive-include django_tools *.py
