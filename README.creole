@@ -741,10 +741,12 @@ This result in the same browser/webdriver settings for all test classes!
 
 == history
 
-* *dev* - [[https://github.com/jedie/django-tools/compare/v0.53.0...main|compare v0.53.0...main]]
+* *dev* - [[https://github.com/jedie/django-tools/compare/v0.54.0rc1...main|compare v0.54.0rc1...main]]
 ** TBC
+* [[https://github.com/jedie/django-tools/compare/v0.53.0...v0.54.0rc1|v0.54.0rc1 - 25.08.2022]]
+** NEW: {{{SyslogHandler}}} for easy logging to {{{syslog}}}
 * [[https://github.com/jedie/django-tools/compare/v0.52.0...v0.53.0|v0.53.0 - 18.08.2022]]
-** NEW: MassContextManagerBase, DenyStdWrite + Updated: StdoutStderrBuffer
+** NEW: {{{MassContextManagerBase}}}, {{{DenyStdWrite}}} + Updated: {{{StdoutStderrBuffer}}}
 ** Enhance {{{run_testserver}}} command
 ** Small test project setup updates
 * [[https://github.com/jedie/django-tools/compare/v0.51.0...v0.52.0|v0.52.0 - 17.08.2022]]
