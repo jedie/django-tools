@@ -863,13 +863,17 @@ Django compatibility
 history
 -------
 
-* *dev* - `compare v0.53.0...main <https://github.com/jedie/django-tools/compare/v0.53.0...main>`_ 
+* *dev* - `compare v0.54.0rc1...main <https://github.com/jedie/django-tools/compare/v0.54.0rc1...main>`_ 
 
     * TBC
 
+* `v0.54.0rc1 - 25.08.2022 <https://github.com/jedie/django-tools/compare/v0.53.0...v0.54.0rc1>`_ 
+
+    * NEW: ``SyslogHandler`` for easy logging to ``syslog``
+
 * `v0.53.0 - 18.08.2022 <https://github.com/jedie/django-tools/compare/v0.52.0...v0.53.0>`_ 
 
-    * NEW: MassContextManagerBase, DenyStdWrite + Updated: StdoutStderrBuffer
+    * NEW: ``MassContextManagerBase``, ``DenyStdWrite`` + Updated: ``StdoutStderrBuffer``
 
     * Enhance ``run_testserver`` command
 
@@ -1681,4 +1685,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2022-08-18 19:59:56 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-25 02:50:56 with "python-creole"``

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-tools"
-version = "0.53.0"
+version = "0.54.0rc1"
 description = "miscellaneous tools for Django based projects"
 license = "GPL-3.0-or-later"
 authors = ["Jens Diemer <django-tools@jensdiemer.de>"]
