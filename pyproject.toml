@@ -61,7 +61,6 @@ isort = "*"
 coveralls = "*"
 autopep8 = "*"
 colorlog = "*"
-easy-thumbnails = "*"
 django-filer = "*"
 django-parler = "*"
 django-debug-toolbar = "*"
@@ -71,7 +70,7 @@ requests-mock = "*"
 django-override-storage = "*"  # https://github.com/danifus/django-override-storage
 EditorConfig = "*"  # https://github.com/editorconfig/editorconfig-core-py
 tomli = "*"  # https://github.com/hukkin/tomli
-
+safety = "*"  # https://github.com/pyupio/safety
 
 [tool.poetry.scripts]
 django_tools_selenium = "django_tools.selenium.cli:main"

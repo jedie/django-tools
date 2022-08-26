@@ -58,6 +58,10 @@ jobs:
       run: |
         poetry run tox -e python-django${{ matrix.django }}
 
+    - name: 'Run https://github.com/pyupio/safety check'
+      run: |
+        make safety
+
     - name: 'Upload coverage report'
       uses: codecov/codecov-action@v2
       with:

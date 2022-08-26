@@ -64,6 +64,7 @@ e.g.:
     playwright-install         Install test browser for Playwright tests
     playwright-inspector       Run Playwright inspector
     playwright-tests           Run only the Playwright tests
+    safety                     Run https://github.com/pyupio/safety
 
 --------------
 existing stuff
@@ -864,6 +865,8 @@ history
 -------
 
 * *dev* - `compare v0.54.0rc1...main <https://github.com/jedie/django-tools/compare/v0.54.0rc1...main>`_ 
+
+    * Run `safety <https://github.com/pyupio/safety>`_ in CI pipeline.
 
     * TBC
 
@@ -1685,4 +1688,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2022-08-25 02:50:56 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-26 09:02:10 with "python-creole"``
