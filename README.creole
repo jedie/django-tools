@@ -41,6 +41,7 @@ start-dev-server           Start Django dev. server with the test project
 playwright-install         Install test browser for Playwright tests
 playwright-inspector       Run Playwright inspector
 playwright-tests           Run only the Playwright tests
+safety                     Run https://github.com/pyupio/safety
 }}}
 
 == existing stuff
@@ -742,6 +743,7 @@ This result in the same browser/webdriver settings for all test classes!
 == history
 
 * *dev* - [[https://github.com/jedie/django-tools/compare/v0.54.0rc1...main|compare v0.54.0rc1...main]]
+** Run [[https://github.com/pyupio/safety|safety]] in CI pipeline.
 ** TBC
 * [[https://github.com/jedie/django-tools/compare/v0.53.0...v0.54.0rc1|v0.54.0rc1 - 25.08.2022]]
 ** NEW: {{{SyslogHandler}}} for easy logging to {{{syslog}}}

@@ -83,4 +83,10 @@ playwright-inspector:  ## Run Playwright inspector
 playwright-tests:  ## Run only the Playwright tests
 	poetry run pytest -m playwright
 
-.PHONY: help install lint fix test publish playwright-install playwright-inspector playwright-tests
+# We ignore 39642: A generic information about "reportlab" usage
+# reportlab is a dev dependencies, installed by "django-filer" / "easy-thumbnails"
+# Used only to test code around "django-filer" tools
+safety:  ## Run https://github.com/pyupio/safety
+	poetry run safety check --full-report --ignore=39642
+
+.PHONY: help install lint fix test publish playwright-install playwright-inspector playwright-tests safety
