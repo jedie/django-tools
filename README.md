@@ -726,9 +726,9 @@ This result in the same browser/webdriver settings for all test classes!
 ## history
 
 
-* *dev* - [compare v0.54.0rc2...main](https://github.com/jedie/django-tools/compare/v0.54.0rc2...main)
+* *dev* - [compare v0.54.0...main](https://github.com/jedie/django-tools/compare/v0.54.0...main)
   * TBC
-* [v0.54.0rc2 - 15.09.2022](https://github.com/jedie/django-tools/compare/v0.53.0...v0.54.0rc2)
+* [v0.54.0 - 15.09.2022](https://github.com/jedie/django-tools/compare/v0.53.0...v0.54.0)
   * Run [safety](https://github.com/pyupio/safety) in CI pipeline.
   * NEW: `SyslogHandler` for easy logging to `syslog`
   * Replace creole README with markdown
