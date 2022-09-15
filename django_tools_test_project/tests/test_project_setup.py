@@ -6,8 +6,8 @@ import re
 import subprocess
 from pathlib import Path
 
+from poetry_publish.tests.test_project_setup import assert_file_contains_string
 from poetry_publish.tests.test_project_setup import test_poetry_check as assert_poetry_check
-from poetry_publish.tests.test_project_setup import test_version as assert_version
 
 import django_tools
 from django_tools import __version__
@@ -29,7 +29,14 @@ def test_version():
     Check if current version exists in README
     Check if current version is in pyproject.toml
     """
-    assert_version(package_root=PACKAGE_ROOT, version=__version__)
+    assert_file_contains_string(
+        file_path=Path(PACKAGE_ROOT, 'README.md'),
+        string=f'v{__version__}',
+    )
+    assert_file_contains_string(
+        file_path=PACKAGE_ROOT / 'pyproject.toml',
+        string=f'version = "{__version__}"',
+    )
 
 
 def test_make_help_up2date():
