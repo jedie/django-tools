@@ -26,7 +26,7 @@ class SeleniumChromiumTestCase(SeleniumBaseTestCase):
     """
     TestCase with Selenium and the Chromium/Chrome WebDriver
     Note:
-        * Needs 'chromium-chromedriver' executable! See README.creole for more info
+        * Needs 'chromium-chromedriver' executable! See README.md for more info
         * It's without django StaticLiveServerTestCase
 
     usage e.g.:

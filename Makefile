@@ -65,9 +65,6 @@ update-test-snapshot-files:   ## Update all snapshot files (by remove and recrea
 	find . -type f -name '*.snapshot.*' -delete
 	RAISE_SNAPSHOT_ERRORS=0 poetry run pytest
 
-update-rst-readme: ## update README.rst from README.creole
-	poetry run update_rst_readme
-
 publish: ## Release new version to PyPi
 	poetry run publish
 
