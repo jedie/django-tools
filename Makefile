@@ -47,12 +47,6 @@ tox-listenvs: check-poetry ## List all tox test environments
 tox: check-poetry ## Run pytest via tox with all environments
 	poetry run tox
 
-tox-py37: check-poetry ## Run pytest via tox with *python v3.7*
-	poetry run tox -e py37
-
-tox-py38: check-poetry ## Run pytest via tox with *python v3.8*
-	poetry run tox -e py38
-
 tox-py39: check-poetry ## Run pytest via tox with *python v3.9*
 	poetry run tox -e py39
 

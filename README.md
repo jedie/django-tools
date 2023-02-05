@@ -705,7 +705,8 @@ This result in the same browser/webdriver settings for all test classes!
 ## Django compatibility
 
 | django-tools     | django version | python          |
-| ---------------- | -------------- | --------------- |
+|------------------| -------------- |-----------------|
+| >= v0.54.0       | 3.2, 4.0, 4.1  | 3.9, 3.10       |
 | >= v0.52.0       | 3.2, 4.0, 4.1  | 3.8, 3.9, 3.10  |
 | >= v0.50.0       | 2.2, 3.2, 4.0  | 3.8, 3.9, 3.10  |
 | >= v0.49.0       | 2.2, 3.1, 3.2  | 3.7, 3.8, 3.9   |
@@ -726,8 +727,10 @@ This result in the same browser/webdriver settings for all test classes!
 ## history
 
 
-* *dev* - [compare v0.54.0...main](https://github.com/jedie/django-tools/compare/v0.54.0...main)
+* *dev* - [compare v0.55.0...main](https://github.com/jedie/django-tools/compare/v0.55.0...main)
   * TBC
+* [v0.55.0 - 05.02.2023](https://github.com/jedie/django-tools/compare/v0.54.0...v0.55.0)
+  * Remove Python 3.8 support
 * [v0.54.0 - 15.09.2022](https://github.com/jedie/django-tools/compare/v0.53.0...v0.54.0)
   * Run [safety](https://github.com/pyupio/safety) in CI pipeline.
   * NEW: `SyslogHandler` for easy logging to `syslog`

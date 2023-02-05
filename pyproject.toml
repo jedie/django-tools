@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-tools"
-version = "0.54.0"
+version = "0.55.0"
 description = "miscellaneous tools for Django based projects"
 license = "GPL-3.0-or-later"
 authors = ["Jens Diemer <django-tools@jensdiemer.de>"]
@@ -13,8 +13,6 @@ classifiers = [
     "Intended Audience :: End Users/Desktop",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3 :: Only",
@@ -35,7 +33,7 @@ packages = [
 readme='README.md'
 
 [tool.poetry.dependencies]
-python = ">=3.7,<4.0.0"
+python = ">=3.9,<4.0.0"
 bx_py_utils = "*"  # https://github.com/boxine/bx_py_utils
 icdiff = "*"  # https://github.com/jeffkaufman/icdiff
 pprintpp = "*"  # https://github.com/wolever/pprintpp
@@ -47,12 +45,11 @@ poetry-publish = "*"  # https://github.com/jedie/poetry-publish
 bx_django_utils = "*"  # https://github.com/boxine/bx_django_utils
 beautifulsoup4 = "*"
 tox = "*"
-poetry = ">1.1,!=1.2.0"
 pytest = "*"
 pytest-randomly = "*"
 pytest-cov = "*"
 pytest-django = "*"
-pytest-darker = "*"  # https://github.com/akaihola/pytest-darker
+darker = "*"  # https://github.com/akaihola/darker
 flake8 = "*"
 isort = "*"
 coveralls = "*"
@@ -145,7 +142,7 @@ addopts = """
 legacy_tox_ini = """
 [tox]
 isolated_build = True
-envlist = py{37,38,39,310}-django{3.2,4.0,4.1}
+envlist = py{39,310}-django{3.2,4.0,4.1}
 skip_missing_interpreters = True
 
 [testenv]
