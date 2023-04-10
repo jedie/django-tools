@@ -39,7 +39,7 @@ def add_warning():
             warn_msg = str(self)  # get the complete message encoded in UTF-8
             if len(warn_msg) > MAX_LEN:
                 warn_msg = warn_msg[:MAX_LEN] + "..."
-            warnings.warn(warn_msg, category=InvalidTemplateKey)
+            warnings.warn(warn_msg, category=InvalidTemplateKey, stacklevel=2)
 
     template.VariableDoesNotExist = WarnVariableDoesNotExist
 

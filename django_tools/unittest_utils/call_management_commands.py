@@ -1,6 +1,5 @@
 import inspect
 import io
-from typing import Tuple
 
 from django.core.management import BaseCommand, call_command
 
@@ -12,13 +11,13 @@ class Buffer(io.StringIO):
         return '<captured_call_command StringIO buffer>'
 
 
-def captured_call_command(command, **kwargs) -> Tuple[str, str]:
+def captured_call_command(command, **kwargs) -> tuple[str, str]:
     """
     Call django manage command and return stdout + stderr
     """
     try:
         assert inspect.ismodule(command)
-        CommandClass = getattr(command, 'Command')
+        CommandClass = command.Command
         assert issubclass(CommandClass, BaseCommand)
     except Exception as err:
         raise AssertionError(f'{command!r} is no Django Management command: {err}')

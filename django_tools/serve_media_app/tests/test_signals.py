@@ -15,6 +15,7 @@ from django_tools.serve_media_app.constants import USER_TOKEN_LENGTH
 from django_tools.serve_media_app.models import UserMediaTokenModel, generate_media_path
 from django_tools.serve_media_app.views.serve_user_files import serve_file_request
 from django_tools.unittest_utils.signals import SignalsContextManager
+from django_tools.unittest_utils.temp_media_root import TempMediaRoot
 
 
 class SignalsTestCase(TestCase):
@@ -35,6 +36,7 @@ class SignalsTestCase(TestCase):
         assert instance.token == token1
 
     @locmem_stats_override_storage()
+    @TempMediaRoot()  # Move settings.MEDIA_ROOT into /tmp/
     def test_serve_file_request_signal(self):
         with mock.patch('secrets.token_urlsafe', return_value='ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
             super_user = baker.make(get_user_model(), is_superuser=True, email='super@user.tld')
@@ -51,7 +53,7 @@ class SignalsTestCase(TestCase):
         assert settings.MEDIA_URL == '/media/'
         url = reverse(
             'serve_media_app:serve-media',
-            kwargs={'user_token': 'abcdefghijkl', 'path': 'abcdefghijklmnopqrstuvwx/foobar.ext'}
+            kwargs={'user_token': 'abcdefghijkl', 'path': 'abcdefghijklmnopqrstuvwx/foobar.ext'},
         )
         assert url == '/media/abcdefghijkl/abcdefghijklmnopqrstuvwx/foobar.ext'
 

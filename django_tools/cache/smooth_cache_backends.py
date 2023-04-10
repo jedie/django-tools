@@ -17,18 +17,10 @@ from django.conf import settings
 from django.core.cache.backends.db import DatabaseCache
 from django.core.cache.backends.filebased import FileBasedCache
 from django.core.cache.backends.locmem import LocMemCache
-from django.core.cache.backends.memcached import MemcachedCache, PyLibMCCache
+from django.core.cache.backends.memcached import PyLibMCCache, PyMemcacheCache
 
 
-logger = logging.getLogger("django-tools.SmoothCache")
-if not logger.handlers:
-    # ensures we don't get any 'No handlers could be found...' messages
-    logger.addHandler(logging.NullHandler())
-
-# if "runserver" in sys.argv or "tests" in sys.argv:
-#    log.logging.basicConfig(format='%(created)f pid:%(process)d %(message)s')
-#    logger.setLevel(log.logging.DEBUG)
-#    logger.addHandler(log.logging.StreamHandler())
+logger = logging.getLogger(__name__)
 
 
 SMOOTH_CACHE_CHANGE_TIME = getattr(settings, "SMOOTH_CACHE_CHANGE_TIME", "DJANGO_TOOLS_SMOOTH_CACHE_CHANGE_TIME")
@@ -57,17 +49,14 @@ def get_max_age(load_average):
 
     >>> get_max_age(0)
     5
-    >>> get_max_age(0.09)
-    5
-    >>> get_max_age(0.1)
-    5
-    >>> get_max_age(0.11)
-    10
+    >>> get_max_age(1.25)
+    60
+    >>> get_max_age(999)
+    3600
     """
     for load, max_age in SMOOTH_CACHE_TIMES:
-        if load_average > load:
-            break
-    return max_age
+        if load_average >= load:
+            return max_age
 
 
 class SmoothCacheTime(int):
@@ -200,7 +189,7 @@ class SmoothLocMemCache(_SmoothCache, LocMemCache):
     pass
 
 
-class SmoothMemcachedCache(_SmoothCache, MemcachedCache):
+class SmoothMemcachedCache(_SmoothCache, PyMemcacheCache):
     pass
 
 

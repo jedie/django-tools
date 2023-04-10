@@ -7,7 +7,7 @@ from django.test import TestCase
 from model_bakery import baker
 
 from django_tools.model_version_protect.tests.utils import shorten_logs
-from django_tools_test_project.django_tools_test_app.models import VersioningTestModel
+from django_tools_project.django_tools_test_app.models import VersioningTestModel
 
 
 class ModelVersionProtectTestCase(TestCase):

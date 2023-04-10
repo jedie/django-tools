@@ -1,0 +1,84 @@
+<div class="colM" id="content">
+ <h1>
+  Add versioning test model
+ </h1>
+ <div id="content-main">
+  <form id="versioningtestmodel_form" method="post" novalidate="">
+   MockedCsrfTokenNode
+   <div>
+    <!-- START 'admin/includes/fieldset.html' -->
+    <fieldset class="module aligned">
+     <div class="form-row field-id field-version">
+      <div class="fieldBox field-id">
+       <label>
+        ID:
+       </label>
+       <div class="readonly">
+        -
+       </div>
+      </div>
+      <div class="fieldBox field-version">
+       <label class="required inline" for="id_version">
+        Version:
+       </label>
+       <input id="id_version" name="version" required="" type="hidden" value="0"/>
+       0
+       <div class="help" id="id_version_helptext">
+        Internal version number of this entry. Used to protect the overwriting of an older entry.
+       </div>
+      </div>
+     </div>
+     <div class="form-row field-user">
+      <div>
+       <label class="required" for="id_user">
+        User:
+       </label>
+       <div class="related-widget-wrapper" data-model-ref="user">
+        <select id="id_user" name="user" required="">
+         <option selected="" value="">
+          ---------
+         </option>
+         <option value="1">
+          TestUser
+         </option>
+        </select>
+        <a class="related-widget-wrapper-link change-related" data-href-template="/admin/auth/user/__fk__/change/?_to_field=id&amp;_popup=1" data-popup="yes" id="change_id_user" title="Change selected user">
+         <img alt="Change" src="/static/admin/img/icon-changelink.svg"/>
+        </a>
+        <a class="related-widget-wrapper-link add-related" data-popup="yes" href="/admin/auth/user/add/?_to_field=id&amp;_popup=1" id="add_id_user" title="Add another user">
+         <img alt="Add" src="/static/admin/img/icon-addlink.svg"/>
+        </a>
+        <a class="related-widget-wrapper-link view-related" data-href-template="/admin/auth/user/__fk__/change/?_to_field=id" id="view_id_user" title="View selected user">
+         <img alt="View" src="/static/admin/img/icon-viewlink.svg"/>
+        </a>
+       </div>
+      </div>
+     </div>
+     <div class="form-row field-name">
+      <div>
+       <label class="required" for="id_name">
+        Name:
+       </label>
+       <input class="vTextField" id="id_name" maxlength="100" name="name" required="" type="text"/>
+      </div>
+     </div>
+    </fieldset>
+    <!-- END 'admin/includes/fieldset.html' -->
+    <!-- START 'admin/submit_line.html' -->
+    <div class="submit-row">
+     <input class="default" name="_save" type="submit" value="Save"/>
+     <input name="_addanother" type="submit" value="Save and add another"/>
+     <input name="_continue" type="submit" value="Save and continue editing"/>
+    </div>
+    <!-- END 'admin/submit_line.html' -->
+    <script async="" data-model-name="versioningtestmodel" id="django-admin-form-add-constants" src="/static/admin/js/change_form.js">
+    </script>
+    <!-- START 'admin/prepopulated_fields_js.html' -->
+    <script data-prepopulated-fields="[]" id="django-admin-prepopulated-fields-constants" src="/static/admin/js/prepopulate_init.js">
+    </script>
+    <!-- END 'admin/prepopulated_fields_js.html' -->
+   </div>
+  </form>
+ </div>
+ <br class="clear"/>
+</div>

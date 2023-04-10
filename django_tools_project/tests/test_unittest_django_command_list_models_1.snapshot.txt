@@ -1,0 +1,23 @@
+
+existing models in app_label.ModelName format:
+
+01 - admin.LogEntry
+02 - auth.Group
+03 - auth.Permission
+04 - auth.User
+05 - contenttypes.ContentType
+06 - django_tools_test_app.LimitToUsergroupsTestModel
+07 - django_tools_test_app.OverwriteFileSystemStorageModel
+08 - django_tools_test_app.PermissionTestModel
+09 - django_tools_test_app.SimpleParlerModel
+10 - django_tools_test_app.SimpleParlerModelTranslation
+11 - django_tools_test_app.UserMediaFiles
+12 - django_tools_test_app.VersioningTestModel
+13 - flatpages.FlatPage
+14 - serve_media_app.UserMediaTokenModel
+15 - sessions.Session
+16 - sites.Site
+
+INSTALLED_APPS....: 15
+Apps with models..: 15
+

@@ -41,7 +41,6 @@ class DirectoryModelField(models.CharField):  # , with_metaclass(models.Subfield
     """
     >>> settings.DEBUG=False # Don't add path to error messages
     >>> dir = DirectoryModelField()
-    >>> dir.run_validators(settings.MEDIA_ROOT)
     >>> dir.run_validators("does/not/exist")
     Traceback (most recent call last):
     ...

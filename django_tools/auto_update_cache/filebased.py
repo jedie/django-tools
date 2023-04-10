@@ -21,6 +21,9 @@ except ImportError:
     import pickle
 
 
+logger = logging.getLogger(__name__)
+
+
 AUTOUPDATECACHE_CHANGE_TIME = getattr(settings, "AUTOUPDATECACHE_CHANGE_TIME", "AUTOUPDATECACHE_CHANGE_TIME")
 AUTOUPDATECACHE_UPDATE_TIMESTAMP = getattr(settings, "AUTOUPDATECACHE_UPDATE_TIMESTAMP", 10)
 AUTOUPDATECACHE_TIMES = getattr(settings, "AUTOUPDATECACHE_TIMES", (
@@ -40,25 +43,19 @@ AUTOUPDATECACHE_TIMES.sort(reverse=True)
 AUTOUPDATECACHE_TIMES = tuple(AUTOUPDATECACHE_TIMES)
 
 
-def get_max_age(load_average):
-    """ return max age for the given load average. """
-    load_average += 0.1
+def get_max_age(load_average) -> int:
+    """
+    return max age for the given load average.
+    >>> get_max_age(0)
+    10
+    >>> get_max_age(1.25)
+    60
+    >>> get_max_age(999)
+    3600
+    """
     for load, max_age in AUTOUPDATECACHE_TIMES:
-        if load_average > load:
-            break
-    return max_age
-
-
-logger = logging.getLogger("SmoothyFileBasedCache")
-
-# if "runserver" in sys.argv or "tests" in sys.argv:
-#    log.logging.basicConfig(format='%(created)f pid:%(process)d %(message)s')
-#    logger.setLevel(log.logging.DEBUG)
-#    logger.addHandler(log.logging.StreamHandler())
-#
-# if not logger.handlers:
-#    # ensures we don't get any 'No handlers could be found...' messages
-#    logger.addHandler(log.NullHandler())
+        if load_average >= load:
+            return max_age
 
 
 class AutoUpdateFileBasedCache(FileBasedCache):
@@ -70,7 +67,8 @@ class AutoUpdateFileBasedCache(FileBasedCache):
         import warnings
         warnings.warn(
             "django-tools AutoUpdateFileBasedCache is deprecated, use new SmoothCacheBackends!",
-            category=DeprecationWarning
+            category=DeprecationWarning,
+            stacklevel=2,
         )
 
     def save_change_time(self):

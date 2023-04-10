@@ -16,7 +16,7 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 
 
-logger = logging.getLogger("DjangoToolsImportLib")
+logger = logging.getLogger(__name__)
 
 
 def get_attr_from_string(path, obj_name=""):

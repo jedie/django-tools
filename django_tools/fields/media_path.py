@@ -68,9 +68,9 @@ class MediaPathWidget(forms.Select):
                 failsafe_message(f"Can't read MEDIA_ROOT: {err}")
 
         warnings.warn(
-            "MediaPathWidget is deprecated and will removed in the future!"
-            " Please use StaticPathWidget.",
-            PendingDeprecationWarning
+            "MediaPathWidget is deprecated and will removed in the future!" " Please use StaticPathWidget.",
+            PendingDeprecationWarning,
+            stacklevel=2,
         )
 
     def _get_path_choices(self):
@@ -89,9 +89,9 @@ class MediaPathModelField(models.TextField):
         """ Use always own widget and form field. """
 
         warnings.warn(
-            "MediaPathModelField is deprecated and will removed in the future!"
-            " Please use StaticPathModelField.",
-            PendingDeprecationWarning
+            "MediaPathModelField is deprecated and will removed in the future!" " Please use StaticPathModelField.",
+            PendingDeprecationWarning,
+            stacklevel=2,
         )
 
         kwargs["widget"] = MediaPathWidget
