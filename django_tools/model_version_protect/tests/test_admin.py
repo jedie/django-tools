@@ -9,7 +9,7 @@ from django.template.defaulttags import CsrfTokenNode
 from django.test import TestCase
 from model_bakery import baker
 
-from django_tools_test_project.django_tools_test_app.models import VersioningTestModel
+from django_tools_project.django_tools_test_app.models import VersioningTestModel
 
 
 class ModelVersionProtectAdminTestCase(HtmlAssertionMixin, TestCase):
@@ -37,6 +37,7 @@ class ModelVersionProtectAdminTestCase(HtmlAssertionMixin, TestCase):
             response = self.client.get(
                 path="/admin/django_tools_test_app/versioningtestmodel/add/"
             )
+        self.assertEqual(response.status_code, 200, response)
         self.assert_html_parts(response, parts=(
             '<title>Add versioning test model | Django site admin</title>',
             '<input type="hidden" name="version" value="0" required id="id_version">'

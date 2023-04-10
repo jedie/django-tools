@@ -17,9 +17,12 @@ __pycache__
 
 /htmlcov/
 coverage.xml
+*.egg-info
 
 # Migration of test app are always generated on-the-fly, so ignore them:
 django_tools_test_project/django_tools_test_app/migrations/*
 !django_tools_test_project/django_tools_test_app/migrations/__init__.py
 
+# Test project
+secret.txt
 

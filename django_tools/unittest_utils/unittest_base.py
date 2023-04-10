@@ -9,6 +9,7 @@
 
 import warnings
 
+from bx_django_utils.test_utils.html_assertion import HtmlAssertionMixin
 from django.test import TestCase
 from django.urls import reverse
 
@@ -104,7 +105,7 @@ class BaseUnittestCase(TestCase):
         return [str(message) for message in response.wsgi_request._messages]
 
 
-class BaseTestCase(BaseUnittestCase):
+class BaseTestCase(HtmlAssertionMixin, BaseUnittestCase):
     # Should we open a browser traceback?
     browser_traceback = True
 
@@ -122,46 +123,23 @@ class BaseTestCase(BaseUnittestCase):
         msg = f'assertStatusCode error: "{response.status_code}" != "{excepted_code}"'
         self.raise_browser_traceback(response, msg)
 
-    # def _assert_and_parse_html(self, html, user_msg, msg):
-    #     """
-    #     convert a html snippet into a DOM tree.
-    #     raise error if snippet is no valid html.
-    #     """
-    #     try:
-    #         return parse_html(html)
-    #     except HTMLParseError as e:
-    #         self.fail('html code is not valid: %s - code: "%s"' % (e, html))
-    #
-    # def _assert_and_parse_html_response(self, response):
-    #     """
-    #     convert html response content into a DOM tree.
-    #     raise browser traceback, if content is no valid html.
-    #     """
-    #     try:
-    #         return parse_html(response.content)
-    #     except HTMLParseError as e:
-    #         self.raise_browser_traceback(response, "Response's content is no valid html: %s' % e)
-
     def assertDOM(self, response, must_contain=(), must_not_contain=(), use_browser_traceback=True):
         """
         Asserts that html response contains 'must_contain' nodes, but no
         nodes from must_not_contain.
         """
-        for txt in must_contain:
-            try:
-                self.assertContains(response, txt, html=True)
-            except AssertionError as err:
-                if use_browser_traceback:
-                    self.raise_browser_traceback(response, err)
-                raise
+        warnings.warn(
+            "Use functions from bx_django_utils.test_utils.html_assertion.HtmlAssertionMixin",
+            category=DeprecationWarning,
+        )
+        if must_contain:
+            self.assert_html_parts(response, parts=must_contain)
 
-        for txt in must_not_contain:
-            try:
+        if must_not_contain:
+            for txt in must_not_contain:
                 self.assertNotContains(response, txt, html=True)
-            except AssertionError as err:
-                if use_browser_traceback:
-                    self.raise_browser_traceback(response, err)
-                raise
+
+            self.assert_parts_not_in_html(response, parts=must_not_contain)
 
     def assertMessages(self, response, messages):
         self.assertEqual(self.get_messages(response), messages)
@@ -182,33 +160,18 @@ class BaseTestCase(BaseUnittestCase):
         must_contain - a list with string how must be exists in the response.
         must_not_contain - a list of string how should not exists.
         """
+        warnings.warn(
+            "Use functions from bx_django_utils.test_utils.html_assertion.HtmlAssertionMixin",
+            category=DeprecationWarning,
+        )
+
+        self.assertEqual(response.status_code, status_code, response)
+
         if must_contain is not None:
-            for must_contain_snippet in must_contain:
-                try:
-                    self.assertContains(response, must_contain_snippet, status_code=status_code, html=html)
-                except AssertionError as err:
-                    if browser_traceback:
-                        msg = f'Text not in response: "{must_contain_snippet}": {err}'
-                        debug_response(response, self.browser_traceback, msg, display_tb=True)
-                    raise
+            self.assert_html_parts(response, parts=must_contain)
 
         if must_not_contain is not None:
-            for must_not_contain_snippet in must_not_contain:
-                try:
-                    self.assertNotContains(response, must_not_contain_snippet, status_code=status_code, html=html)
-                except AssertionError as err:
-                    if browser_traceback:
-                        msg = f'Text should not be in response: "{must_not_contain_snippet}": {err}'
-                        debug_response(response, self.browser_traceback, msg, display_tb=True)
-                    raise
-
-        try:
-            self.assertEqual(response.status_code, status_code)
-        except AssertionError as err:
-            if browser_traceback:
-                msg = f"Wrong status code: {err}"
-                debug_response(response, self.browser_traceback, msg, display_tb=True)
-            raise
+            self.assert_parts_not_in_html(response, parts=must_contain)
 
         if template_name is not None:
             try:

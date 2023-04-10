@@ -1,0 +1,8 @@
+DJANGO_SETTINGS_MODULE=django_tools_project.settings.tests
+
+BASE_PATH:.../django-tools
+
+_______________________________________________________________________________
+Call "runserver" addrport:'invalid:addr' force_color:False no_color:False skip_checks:False traceback:False use_ipv6:False use_reloader:True use_threading:True verbosity:1
+
+CommandError: "invalid:addr" is not a valid port number or address:port pair.
