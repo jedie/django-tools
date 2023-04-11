@@ -248,7 +248,7 @@ class ModelPermissionMixin:
             FooModel.has_extra_permission_permission(request.user, raise_exception=True)
 
     See also model used in our tests:
-        django_tools_test_project.django_tools_test_app.models.PermissionTestModel
+        django_tools_project.django_tools_test_app.models.PermissionTestModel
     """
     @classmethod
     def default_permission_name(cls, action):

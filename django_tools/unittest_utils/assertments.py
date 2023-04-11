@@ -4,6 +4,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 import textwrap
+import warnings
 from pathlib import Path
 from warnings import WarningMessage
 
@@ -62,19 +63,20 @@ def assert_is_dir(path):
     """
     Check if given path is a directory
     """
-    if not isinstance(path, Path):
-        path = Path(path)
-    assert path.is_dir(), f"Directory not exists: {path}"
+    warnings.warn('Deprecated: Use bx_py_utils.path.assert_is_dir()', DeprecationWarning)
+    from bx_py_utils.path import assert_is_dir
+
+    assert_is_dir(path)
 
 
 def assert_is_file(path):
     """
     Check if given path is a file
     """
-    if not isinstance(path, Path):
-        path = Path(path)
-    assert_is_dir(path.parent)
-    assert path.is_file(), f"File not exists: {path}"
+    warnings.warn('Deprecated: Use bx_py_utils.path.assert_is_file()', DeprecationWarning)
+    from bx_py_utils.path import assert_is_file
+
+    assert_is_file(path)
 
 
 def assert_path_not_exists(path):

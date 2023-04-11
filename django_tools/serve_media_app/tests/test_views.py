@@ -16,7 +16,7 @@ from model_bakery import baker
 from django_tools.serve_media_app.exceptions import NoUserToken
 from django_tools.serve_media_app.models import UserMediaTokenModel, generate_media_path
 from django_tools.unittest_utils.mockup import ImageDummy
-from django_tools_test_project.django_tools_test_app.models import UserMediaFiles
+from django_tools_project.django_tools_test_app.models import UserMediaFiles
 
 
 class UserMediaViewsTestCase(TestCase):
