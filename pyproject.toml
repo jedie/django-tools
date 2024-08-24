@@ -1,90 +1,111 @@
-[tool.poetry]
+[project]
 name = "django-tools"
-version = "0.54.0"
+dynamic = ["version"]
 description = "miscellaneous tools for Django based projects"
-license = "GPL-3.0-or-later"
-authors = ["Jens Diemer <django-tools@jensdiemer.de>"]
-homepage = "https://github.com/jedie/django-tools/"
-keywords=["django", "helpers", "tools", "utilities"]
-classifiers = [
-    # http://pypi.python.org/pypi?%3Aaction=list_classifiers
-    "Development Status :: 5 - Production/Stable",
-    "Environment :: Web Environment",
-    "Intended Audience :: End Users/Desktop",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3 :: Only",
-    'Framework :: Django',
-    "Topic :: Database :: Front-Ends",
-    "Topic :: Documentation",
-    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
-    "Topic :: Internet :: WWW/HTTP :: Site Management",
-    "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
-    "Operating System :: OS Independent",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Utilities",
+license = {text = "GPL-3.0-or-later"}
+readme = "README.md"
+authors = [
+    {name = 'Jens Diemer', email = 'django-tools@jensdiemer.de'}
 ]
-packages = [
-    { include = "django_tools" },
-    { include = "django_tools_test_project" },
+requires-python = ">=3.11"
+dependencies = [
+    "django",
+
+    "colorlog",  # https://github.com/borntyping/python-colorlog
+    "gunicorn",  # https://github.com/benoimyproject.wsgitc/gunicorn
+
+    "icdiff",  # https://github.com/jeffkaufman/icdiff
+    "pprintpp",  # https://github.com/wolever/pprintpp
+    "bleach",
+
+    "bx_py_utils",  # https://github.com/boxine/bx_py_utils
+    "bx_django_utils",  # https://github.com/boxine/bx_django_utils
 ]
-readme='README.md'
+[project.optional-dependencies]
+dev = [
+    "rich",  # https://github.com/Textualize/rich/
+    "django-parler",
+    "beautifulsoup4",
+    "Pillow",  # https://github.com/python-pillow/Pillow/
 
-[tool.poetry.dependencies]
-python = ">=3.7,<4.0.0"
-bx_py_utils = "*"  # https://github.com/boxine/bx_py_utils
-icdiff = "*"  # https://github.com/jeffkaufman/icdiff
-pprintpp = "*"  # https://github.com/wolever/pprintpp
-bleach = "*"
-django = "*"
+    "django-debug-toolbar",  # http://django-debug-toolbar.readthedocs.io/en/stable/changes.html
+    "manage_django_project",  # https://github.com/jedie/manage_django_project
+    "tblib",   # https://github.com/ionelmc/python-tblib
+    "pip-tools",  # https://github.com/jazzband/pip-tools/
+    "tox",  # https://github.com/tox-dev/tox
+    "coverage",  # https://github.com/nedbat/coveragepy
+    "autopep8",  # https://github.com/hhatto/autopep8
+    "pyupgrade",  # https://github.com/asottile/pyupgrade
+    "flake8",  # https://github.com/pycqa/flake8
+    "pyflakes",  # https://github.com/PyCQA/pyflakes
+    "codespell",  # https://github.com/codespell-project/codespell
+    "EditorConfig",  # https://github.com/editorconfig/editorconfig-core-py
+    "pip-audit",  # https://github.com/pypa/pip-audit
+    "mypy",  # https://github.com/python/mypy
+    "twine",  # https://github.com/pypa/twine
 
-[tool.poetry.dev-dependencies]
-poetry-publish = "*"  # https://github.com/jedie/poetry-publish
-bx_django_utils = "*"  # https://github.com/boxine/bx_django_utils
-beautifulsoup4 = "*"
-tox = "*"
-poetry = ">1.1,!=1.2.0"
-pytest = "*"
-pytest-randomly = "*"
-pytest-cov = "*"
-pytest-django = "*"
-pytest-darker = "*"  # https://github.com/akaihola/pytest-darker
-flake8 = "*"
-isort = "*"
-coveralls = "*"
-autopep8 = "*"
-colorlog = "*"
-django-filer = "*"
-django-parler = "*"
-django-debug-toolbar = "*"
-pytest-playwright = "*"  # https://playwright.dev/python/docs/test-runners
-model-bakery = "*"  # https://github.com/model-bakers/model_bakery
-requests-mock = "*"
-django-override-storage = "*"  # https://github.com/danifus/django-override-storage
-EditorConfig = "*"  # https://github.com/editorconfig/editorconfig-core-py
-tomli = "*"  # https://github.com/hukkin/tomli
-safety = "*"  # https://github.com/pyupio/safety
+    # https://github.com/akaihola/darker
+    # https://github.com/ikamensh/flynt
+    # https://github.com/pycqa/isort
+    # https://github.com/pygments/pygments
+    "darker[flynt, isort, color]",
 
-[tool.poetry.scripts]
-django_tools_selenium = "django_tools.selenium.cli:main"
-publish = "django_tools.publish:publish"
-dev_server = "django_tools_test_project.manage:start_test_server"
+    "model_bakery",  # https://github.com/model-bakers/model_bakery
+    "requests-mock",
+    "django-override-storage",  # https://github.com/danifus/django-override-storage
+
+    # Work-a-round for: https://github.com/jazzband/pip-tools/issues/1866
+    "backports.tarfile", # via jaraco-context -> keyring -> twine
+]
+django41=["django>=4.1,<4.2"]
+django42=["django>=4.2,<4.3"]
+django51=["django>=5.1,<5.2"]
+
+[project.urls]
+Documentation = "https://github.com/jedie/django-tools/"
+Source = "https://github.com/jedie/django-tools/"
+
+
+[project.scripts]
+django_tools_project = "django_tools_project.__main__:main"
+
+[manage_django_project]
+module_name="django_tools_project"
+
+# Django settings used for all commands except test/coverage/tox:
+local_settings='django_tools_project.settings.local'
+
+# Django settings used for test/coverage/tox commands:
+test_settings='django_tools_project.settings.tests'
+
+
+[tool.cli_base.pip_audit]
+requirements=["requirements.dev.txt"]
+strict=true
+require_hashes=true
+ignore-vuln=[
+#    "CVE-2019-8341", # Jinja2: Side Template Injection (SSTI)
+]
+
 
 
 [build-system]
-requires = ["poetry>=1.1"]
-build-backend = "poetry.masonry.api"
+requires = ["setuptools>=61.0", "setuptools_scm>=7.1"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["django_tools*", "django_tools_project*"]
+
+[tool.setuptools.dynamic]
+version = {attr = "django_tools.__version__"}
 
 
 [tool.darker]
 src = ['.']
 revision = "origin/main..."
-line_length = 100
-verbose = true
+line_length = 119
+color = true
 skip_string_normalization = true
 diff = false
 check = false
@@ -100,60 +121,81 @@ log_level = "INFO"
 # https://pycqa.github.io/isort/docs/configuration/config_files/#pyprojecttoml-preferred-format
 atomic=true
 profile='black'
-line_length=100
-skip_glob=[".*", "*/htmlcov/*","*/migrations/*"]
-known_first_party=["django_tools","django_tools_test_project"]
+skip_glob=['.*', '*/htmlcov/*','*/migrations/*']
+known_first_party=['django_tools']
+line_length=119
 lines_after_imports=2
 
 
-[tool.pytest.ini_options]
-# https://docs.pytest.org/en/latest/customize.html#pyproject-toml
-minversion = "6.0"
-markers = "playwright: marks Playwright tests (deselect with '-m \"not playwright\"')"
-DJANGO_SETTINGS_MODULE="django_tools_test_project.settings.test"
-norecursedirs = ".* __pycache__ coverage* dist htmlcov migrations django_tools/selenium"
-# sometimes helpfull "addopts" arguments:
-#    -vv
-#    --verbose
-#    --capture=no
-#    --trace-config
-#    --full-trace
-#    -p no:warnings
-# Add this to local test runs:
-#    -x -p no:randomly
-addopts = """
-    --reuse-db
-    --nomigrations
-    --cov=.
-    --cov-report term-missing
-    --cov-report html
-    --cov-report xml
-    --no-cov-on-fail
-    --showlocals
-    --darker
-    --doctest-modules
-    --failed-first
-    --last-failed-no-failures all
-    --new-first
-    --maxfail 3
-    -p no:randomly
-"""
+[tool.coverage.run]  # https://coverage.readthedocs.io/en/latest/config.html#run
+branch = true
+parallel = true
+concurrency = ["multiprocessing"]
+source = ['.']
+command_line = '-m django_tools_project test --shuffle --parallel --buffer'
+
+[tool.coverage.report]
+omit = ['.*', '*/tests/*', '*/migrations/*']
+skip_empty = true
+fail_under = 30
+show_missing = true
+exclude_lines = [
+    'if self.debug:',
+    'pragma: no cover',
+    'raise NotImplementedError',
+    'if __name__ == .__main__.:',
+]
 
 
-[tool.tox]
-# https://tox.readthedocs.io/en/latest/example/basic.html#pyproject-toml-tox-legacy-ini
+[tool.tox]  # https://tox.wiki/en/latest/config.html#pyproject-toml
 legacy_tox_ini = """
 [tox]
 isolated_build = True
-envlist = py{37,38,39,310}-django{3.2,4.0,4.1}
+envlist = py{312,311}-django{51,42,41}
 skip_missing_interpreters = True
 
 [testenv]
-deps =
-    django3.2: django>=3.2,<3.3
-    django4.0: django>=4.0,<4.1
-    django4.1: django>=4.1,<4.2
-whitelist_externals = make
+passenv = *
+skip_install = true
+commands_pre =
+    pip install -U pip
+    pip install -U pip-tools
+    django41: pip-sync requirements.django41.txt
+    django42: pip-sync requirements.django42.txt
+    django51: pip-sync requirements.django51.txt
 commands =
-    make pytest
+    django41: {envpython} -m coverage run --context='{envname}'
+    django42: {envpython} -m coverage run --context='{envname}'
+    django51: {envpython} -m coverage run --context='{envname}'
 """
+
+
+[tool.mypy]
+warn_unused_configs = true
+ignore_missing_imports = true
+allow_redefinition = true  # https://github.com/python/mypy/issues/7165
+show_error_codes = true
+plugins = []
+exclude = ['.venv', 'tests', 'migrations']
+
+
+[manageprojects] # https://github.com/jedie/manageprojects
+initial_revision = "53a7e85"
+initial_date = 2023-04-10T19:08:56+02:00
+cookiecutter_template = "https://github.com/jedie/cookiecutter_templates/"
+cookiecutter_directory = "managed-django-project"
+applied_migrations = [
+    "52669d0", # 2024-08-02T15:47:04+02:00
+]
+
+[manageprojects.cookiecutter_context.cookiecutter]
+full_name = "Jens Diemer"
+github_username = "jedie"
+author_email = "django-tools@jensdiemer.de"
+project_name = "django-tools"
+package_name = "django_tools"
+package_version = "0.55.0"
+package_description = "miscellaneous tools for Django based projects"
+package_url = "https://github.com/jedie/django-tools/"
+license = "GPL-3.0-or-later"
+_template = "https://github.com/jedie/cookiecutter_templates/"

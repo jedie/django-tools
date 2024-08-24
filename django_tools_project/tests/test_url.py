@@ -1,0 +1,152 @@
+"""
+    :copyleft: 2017-2019 by the django-tools team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
+"""
+
+import os
+from pathlib import Path
+
+from bx_py_utils.path import assert_is_dir
+from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.test import SimpleTestCase
+from django.test.utils import override_settings
+
+# https://github.com/jedie/django-tools
+import django_tools
+from django_tools.unittest_utils.assertments import assert_pformat_equal
+from django_tools.unittest_utils.temp_media_root import TempMediaRoot
+from django_tools.validators import ExistingDirValidator, URLValidator2
+
+
+class ExistingDirValidatorTestCase(SimpleTestCase):
+    def test_defaults(self):
+        media_root_validator = ExistingDirValidator()
+        self.assertEqual(Path(media_root_validator.base_path), Path(settings.MEDIA_ROOT))
+
+
+@TempMediaRoot()  # Move settings.MEDIA_ROOT into /tmp/
+@override_settings(DEBUG=False)
+class TestExistingDirValidator(SimpleTestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        assert_is_dir(settings.MEDIA_ROOT)
+        cls.media_root_validator = ExistingDirValidator(base_path=settings.MEDIA_ROOT)
+
+    def test_default_media_root(self):
+        with self.settings(DEBUG=True):
+            self.media_root_validator(settings.MEDIA_ROOT)
+
+        try:
+            self.media_root_validator("does/not/exist")
+        except ValidationError as err:
+            assert_pformat_equal(str(err.message), "Directory doesn't exist!")
+
+    @override_settings(DEBUG=True)
+    def test_debug_message(self):
+        path = str(Path(settings.MEDIA_ROOT, "does/not/exist"))
+        print(path)
+        try:
+            self.media_root_validator(path)
+        except ValidationError as err:
+            assert_pformat_equal(str(err.message), f"Directory '{path}' doesn't exist!")
+
+    def test_existing_dirs(self):
+        BASE_PATH = os.path.abspath(os.path.dirname(django_tools.__file__))
+        validator = ExistingDirValidator(BASE_PATH)
+        for root, dirs, _ in os.walk(BASE_PATH):
+            for dir in dirs:
+                path = os.path.join(root, dir)
+                validator(path)
+
+    def test_not_in_media_root1(self):
+        try:
+            self.media_root_validator("../")
+        except ValidationError as err:
+            assert_pformat_equal(str(err.message), "Directory is not in base path!")
+
+    def test_not_in_media_root2(self):
+        try:
+            self.media_root_validator("//")
+        except ValidationError as err:
+            assert_pformat_equal(str(err.message), "Directory is not in base path!")
+
+    def test_directory_traversal_attack_encodings(self):
+        parts = (
+            # URI encoded directory traversal:
+            "%2e%2e%2f",  # ../
+            "%2e%2e/",  # ../
+            "..%2f",  # ../
+            "%2e%2e%5c",  # ..\
+            # Unicode / UTF-8 encoded directory traversal:
+            "..%c1%1c",  # ../
+            "..%c0%af",  # ..\
+            "%c0%ae",  # .
+        )
+        for part in parts:
+            try:
+                self.media_root_validator(part)
+            except ValidationError as err:
+                assert_pformat_equal(str(err.message), "Directory doesn't exist!")
+
+
+class TestUrlValidator(SimpleTestCase):
+    def test_scheme_without_netloc(self):
+        try:
+            URLValidator2(allow_all_schemes=True, allow_netloc=False)
+        except AssertionError as err:
+            assert_pformat_equal(str(err), "Can't allow schemes without netloc!")
+
+    def test_no_allow_all_schemes(self):
+        try:
+            URLValidator2(allow_schemes=("http", "ftp"), allow_all_schemes=True)
+        except Warning as err:
+            assert_pformat_equal(str(err), "allow_schemes would be ignored, while allow_all_schemes==True!")
+
+    def test_not_start_with_allow_all_schemes(self):
+        URLValidator2(allow_schemes=("svn",))("svn://domain.test")
+        try:
+            URLValidator2(allow_schemes=("http", "ftp"))("svn://domain.test")
+        except ValidationError as err:
+            assert_pformat_equal(str(err.message), "The URL doesn't start with a allowed scheme.")
+
+    def test_allow_query(self):
+        validator = URLValidator2(allow_query=False)
+        validator("http://www.domain.test/without/query/")
+        try:
+            validator("http://www.domain.test/with/?query")
+        except ValidationError as err:
+            assert_pformat_equal(str(err.message), "Enter a valid URL without a query.")
+
+    def test_allow_fragment(self):
+        validator = URLValidator2(allow_fragment=False)
+        validator("http://www.domain.test/without/fragment/")
+        try:
+            validator("http://www.domain.test/with/a/#fragment")
+        except ValidationError as err:
+            assert_pformat_equal(str(err.message), "Enter a valid URL without a fragment.")
+
+    def test_only_local_path1(self):
+        validator = URLValidator2(allow_schemes=None, allow_netloc=False)
+        validator("/path/?query#fragment")
+        try:
+            validator("http://domain.test/path/?query#fragment")
+        except ValidationError as err:
+            assert_pformat_equal(str(err.message), "Please enter a local URL (without protocol/domain).")
+
+    def test_only_local_path2(self):
+        """
+        **Note:** Validating the network location (netloc):
+        Following the syntax specifications in RFC 1808, urlparse recognizes a
+        netloc only if it is properly introduced by '//'. Otherwise the input is
+        presumed to be a relative URL and thus to start with a path component.
+        See: http://docs.python.org/library/urlparse.html#urlparse.urlparse
+        """
+        validator = URLValidator2(allow_schemes=None, allow_netloc=False)
+        validator("www.pylucid.org/path?query#fragment")
+        try:
+            validator("//www.pylucid.org/path?query#fragment")
+        except ValidationError as err:
+            assert_pformat_equal(str(err.message), "Please enter a local URL (without protocol/domain).")

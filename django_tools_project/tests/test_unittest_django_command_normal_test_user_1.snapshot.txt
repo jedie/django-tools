@@ -1,0 +1,69 @@
+
+_______________________________________________________________________________
+Display effective user permissions in the same format as user.has_perm() argument: <appname>.<codename>
+
+All permissions for user 'normal_test_user':
+	is_active    : yes
+	is_staff     : no
+	is_superuser : no
+[ ] admin.add_logentry
+[ ] admin.change_logentry
+[ ] admin.delete_logentry
+[ ] admin.view_logentry
+[ ] auth.add_group
+[ ] auth.change_group
+[ ] auth.delete_group
+[ ] auth.view_group
+[ ] auth.add_permission
+[ ] auth.change_permission
+[ ] auth.delete_permission
+[ ] auth.view_permission
+[ ] auth.add_user
+[ ] auth.change_user
+[ ] auth.delete_user
+[ ] auth.view_user
+[ ] contenttypes.add_contenttype
+[ ] contenttypes.change_contenttype
+[ ] contenttypes.delete_contenttype
+[ ] contenttypes.view_contenttype
+[ ] django_tools_test_app.add_limittousergroupstestmodel
+[ ] django_tools_test_app.change_limittousergroupstestmodel
+[ ] django_tools_test_app.delete_limittousergroupstestmodel
+[ ] django_tools_test_app.view_limittousergroupstestmodel
+[ ] django_tools_test_app.add_overwritefilesystemstoragemodel
+[ ] django_tools_test_app.change_overwritefilesystemstoragemodel
+[ ] django_tools_test_app.delete_overwritefilesystemstoragemodel
+[ ] django_tools_test_app.view_overwritefilesystemstoragemodel
+[ ] django_tools_test_app.add_permissiontestmodel
+[ ] django_tools_test_app.change_permissiontestmodel
+[ ] django_tools_test_app.delete_permissiontestmodel
+[ ] django_tools_test_app.extra_permission
+[ ] django_tools_test_app.view_permissiontestmodel
+[ ] django_tools_test_app.add_simpleparlermodel
+[ ] django_tools_test_app.change_simpleparlermodel
+[ ] django_tools_test_app.delete_simpleparlermodel
+[ ] django_tools_test_app.view_simpleparlermodel
+[ ] django_tools_test_app.add_usermediafiles
+[ ] django_tools_test_app.change_usermediafiles
+[ ] django_tools_test_app.delete_usermediafiles
+[ ] django_tools_test_app.view_usermediafiles
+[ ] django_tools_test_app.add_versioningtestmodel
+[ ] django_tools_test_app.change_versioningtestmodel
+[ ] django_tools_test_app.delete_versioningtestmodel
+[ ] django_tools_test_app.view_versioningtestmodel
+[ ] flatpages.add_flatpage
+[ ] flatpages.change_flatpage
+[ ] flatpages.delete_flatpage
+[ ] flatpages.view_flatpage
+[ ] serve_media_app.add_usermediatokenmodel
+[ ] serve_media_app.change_usermediatokenmodel
+[ ] serve_media_app.delete_usermediatokenmodel
+[ ] serve_media_app.view_usermediatokenmodel
+[ ] sessions.add_session
+[ ] sessions.change_session
+[ ] sessions.delete_session
+[ ] sessions.view_session
+[ ] sites.add_site
+[ ] sites.change_site
+[ ] sites.delete_site
+[ ] sites.view_site

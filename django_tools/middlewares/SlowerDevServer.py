@@ -40,7 +40,7 @@ except ImportError:
 
 class SlowerDevServerMiddleware(MiddlewareMixin):
     def __init__(self):
-        warnings.warn("Slower developer server used!")
+        warnings.warn("Slower developer server used!", stacklevel=2)
 
     def process_response(self, request, response):
         if response.status_code == 200:

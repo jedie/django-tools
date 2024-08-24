@@ -21,7 +21,7 @@ from django.utils.cache import get_max_age, patch_response_headers
 from django_tools.utils.importlib import get_attr_from_settings
 
 
-logger = logging.getLogger("django-tools.CacheMiddleware")
+logger = logging.getLogger(__name__)
 
 CACHE_MIDDLEWARE_ANONYMOUS_ONLY = getattr(settings, 'CACHE_MIDDLEWARE_ANONYMOUS_ONLY', False)
 RUN_WITH_DEV_SERVER = getattr(settings, "RUN_WITH_DEV_SERVER", "runserver" in sys.argv)

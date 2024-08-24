@@ -88,7 +88,7 @@ from django.conf import settings
 from django.core.cache import caches
 
 
-logger = logging.getLogger("django_tools.local_sync_cache")
+logger = logging.getLogger(__name__)
 
 
 LOCAL_SYNC_CACHE_BACKEND = getattr(settings, "LOCAL_SYNC_CACHE_BACKEND", "local_sync_cache")

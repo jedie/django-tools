@@ -3,13 +3,14 @@ from unittest import mock
 from bx_django_utils.test_utils.html_assertion import (
     HtmlAssertionMixin,
     assert_html_response_snapshot,
+    get_django_name_suffix,
 )
 from django.contrib.auth import get_user_model
 from django.template.defaulttags import CsrfTokenNode
 from django.test import TestCase
 from model_bakery import baker
 
-from django_tools_test_project.django_tools_test_app.models import VersioningTestModel
+from django_tools_project.django_tools_test_app.models import VersioningTestModel
 
 
 class ModelVersionProtectAdminTestCase(HtmlAssertionMixin, TestCase):
@@ -37,11 +38,15 @@ class ModelVersionProtectAdminTestCase(HtmlAssertionMixin, TestCase):
             response = self.client.get(
                 path="/admin/django_tools_test_app/versioningtestmodel/add/"
             )
-        self.assert_html_parts(response, parts=(
-            '<title>Add versioning test model | Django site admin</title>',
-            '<input type="hidden" name="version" value="0" required id="id_version">'
-        ))
-        assert_html_response_snapshot(response, validate=False)
+        self.assertEqual(response.status_code, 200, response)
+        self.assert_html_parts(
+            response,
+            parts=(
+                '<title>Add versioning test model | Django site admin</title>',
+                '<label class="required inline" for="id_version">Version:</label>',
+            ),
+        )
+        assert_html_response_snapshot(response, validate=False, name_suffix=get_django_name_suffix())
 
         assert VersioningTestModel.objects.count() == 0
 
@@ -119,7 +124,7 @@ class ModelVersionProtectAdminTestCase(HtmlAssertionMixin, TestCase):
             '<li>changes between version 2 and 1:'
             '<pre>- &quot;A New Name&quot;\n   + &quot;Overwrite this!&quot;</pre></li>'
         ))
-        assert_html_response_snapshot(response, validate=False)
+        assert_html_response_snapshot(response, validate=False, name_suffix=get_django_name_suffix())
 
         # Check that it's still version 2:
         instance = VersioningTestModel.objects.first()

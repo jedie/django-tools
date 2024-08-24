@@ -127,4 +127,4 @@ def failsafe_message(msg, level=messages.INFO):
             return
 
     # fallback: Create a warning
-    warnings.warn(msg)
+    warnings.warn(msg, stacklevel=2)

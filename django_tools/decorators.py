@@ -49,7 +49,7 @@ def check_permissions(superuser_only, permissions=()):
                 # FIXME: HttpResponseRedirect to admin login?
                 msg = _("Permission denied for anonymous user. Please log in.")
                 if settings.DEBUG:  # Usefull??
-                    warnings.warn(msg)
+                    warnings.warn(msg, stacklevel=2)
                 raise PermissionDenied(msg)
 
             if not user.has_perms(permissions):
@@ -58,7 +58,7 @@ def check_permissions(superuser_only, permissions=()):
                     f" (existing permissions: {user.get_all_permissions()!r})"
                 )
                 if settings.DEBUG:  # Usefull??
-                    warnings.warn(msg)
+                    warnings.warn(msg, stacklevel=2)
                 raise PermissionDenied(msg)
             return view_function(request, *args, **kwargs)
 
@@ -173,11 +173,11 @@ def warn_class_usage(message, category=DeprecationWarning):
     def cls_wrapper(cls):
         class Wrapped(cls):
             def __init__(self, *args, **kwargs):
-                warnings.warn(message, category)
+                warnings.warn(message, category, stacklevel=2)
                 super().__init__(*args, **kwargs)
 
             def __new__(cls, *args, **kwargs):
-                warnings.warn(message, category)
+                warnings.warn(message, category, stacklevel=2)
                 return object.__new__(cls)
 
         return Wrapped
@@ -193,7 +193,7 @@ def warn_function_usage(message, category=DeprecationWarning):
     def decorator(function):
         @wraps(function)
         def emit_warning(*args, **kwargs):
-            warnings.warn(message, category)
+            warnings.warn(message, category, stacklevel=2)
             return function(*args, **kwargs)
 
         return emit_warning

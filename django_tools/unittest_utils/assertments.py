@@ -4,14 +4,18 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 import textwrap
+import warnings
 from pathlib import Path
 from warnings import WarningMessage
 
 import icdiff
 import pprintpp
+from cli_base.cli_tools.test_utils.assertion import assert_in
 from django.conf import settings
 from django.core import mail
 from django.core.mail import get_connection
+from rich import print
+from rich.rule import Rule
 
 
 def assert_startswith(text, prefix):
@@ -62,19 +66,20 @@ def assert_is_dir(path):
     """
     Check if given path is a directory
     """
-    if not isinstance(path, Path):
-        path = Path(path)
-    assert path.is_dir(), f"Directory not exists: {path}"
+    warnings.warn('Deprecated: Use bx_py_utils.path.assert_is_dir()', DeprecationWarning, stacklevel=2)
+    from bx_py_utils.path import assert_is_dir
+
+    assert_is_dir(path)
 
 
 def assert_is_file(path):
     """
     Check if given path is a file
     """
-    if not isinstance(path, Path):
-        path = Path(path)
-    assert_is_dir(path.parent)
-    assert path.is_file(), f"File not exists: {path}"
+    warnings.warn('Deprecated: Use bx_py_utils.path.assert_is_file()', DeprecationWarning, stacklevel=2)
+    from bx_py_utils.path import assert_is_file
+
+    assert_is_file(path)
 
 
 def assert_path_not_exists(path):
@@ -149,9 +154,7 @@ def assert_equal_dedent(first, second, msg=""):
 
 
 def assert_in_dedent(member, container):
-    member = dedent(member)
-    container = dedent(container)
-    assert member in container, f"{member!r} not found in {container!r}"
+    assert_in(content=dedent(container), parts=(dedent(member),))
 
 
 def assert_filenames_and_content(*, path, reference, fromfile="current", tofile="reference", **pformat_kwargs):
@@ -217,4 +220,8 @@ def assert_in_logs(logs, line):
             assert_in_logs(logs, line="ERROR:foo.bar:Foo Bar!")
     """
     output = [str(entry) for entry in logs.output]
-    assert line in output
+    if line not in output:
+        print(Rule(title='Logs'))
+        print('\n'.join(output))
+        print(Rule())
+        assert line in output, f'{line=} not fount in logs! (see above)'

@@ -4,6 +4,7 @@
 """
 import io
 import tempfile
+import warnings
 
 from django.core.files import File as DjangoFile
 from PIL import Image, ImageDraw, ImageFont
@@ -42,6 +43,11 @@ def create_filer_image(pil_image, user):
     """
     Create from a PIL image a filer.models.Image() instance
     """
+    warnings.warn(
+        'django_tools.unittest_utils.mockup.create_filer_image is deprecated',
+        category=DeprecationWarning,
+        stacklevel=2,
+    )
     if FilerImage is None:
         # Django-Filer is not available: raise the origin error
         raise ImportError(FILER_IMPORT_ERROR)
@@ -176,6 +182,11 @@ class ImageDummy:
             1. fill a PIL image with a colorful gradient
             2. draw the given >text< on it
         """
+        warnings.warn(
+            'django_tools.unittest_utils.mockup.create_filer_image is deprecated',
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
         if FilerImage is None:
             # Django-Filer is not available: raise the origin error
             raise ImportError(FILER_IMPORT_ERROR)

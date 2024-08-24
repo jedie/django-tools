@@ -20,27 +20,7 @@ e.g.:
 ```
 ~$ git clone https://github.com/jedie/django-tools.git
 ~$ cd django-tools/
-~/django-tools$ make install
-~/django-tools$ make
-help                       List all commands
-install-poetry             install or update poetry
-install                    install django-tools via poetry
-update                     update the sources and installation
-lint                       Run code formatters and linter
-fix-code-style             Fix code formatting
-tox-listenvs               List all tox test environments
-tox                        Run pytest via tox with all environments
-tox-py37                   Run pytest via tox with *python v3.7*
-tox-py38                   Run pytest via tox with *python v3.8*
-tox-py39                   Run pytest via tox with *python v3.9*
-pytest                     Run pytest
-update-test-snapshot-files Update all snapshot files (by remove and recreate all snapshot files)
-publish                    Release new version to PyPi
-start-dev-server           Start Django dev. server with the test project
-playwright-install         Install test browser for Playwright tests
-playwright-inspector       Run Playwright inspector
-playwright-tests           Run only the Playwright tests
-safety                     Run https://github.com/pyupio/safety
+~/django-tools$ ./manage.py
 ```
 
 ## existing stuff
@@ -702,10 +682,18 @@ This speedup tests and fixed some bugs in Selenium.
 
 This result in the same browser/webdriver settings for all test classes!
 
+### v0.55
+
+Move supported Django/Python min. versions to:
+* Django 4.1, 4.2, 5.1
+* Python 3.11, 3.12
+
+
 ## Django compatibility
 
 | django-tools     | django version | python          |
-| ---------------- | -------------- | --------------- |
+|------------------|----------------|-----------------|
+| >= v0.56.0       | 4.1, 4.2, 5.1  | 3.11, 3.12      |
 | >= v0.52.0       | 3.2, 4.0, 4.1  | 3.8, 3.9, 3.10  |
 | >= v0.50.0       | 2.2, 3.2, 4.0  | 3.8, 3.9, 3.10  |
 | >= v0.49.0       | 2.2, 3.1, 3.2  | 3.7, 3.8, 3.9   |

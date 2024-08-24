@@ -51,7 +51,7 @@ urlpatterns = [
     # ...
 ]
 ```
-(See: `django_tools_test_project/urls.py`)
+(See: `django_tools_project/urls.py`)
 
 
 You can use it in models like this (optional):
@@ -68,7 +68,7 @@ class ExampleModel(models.Model):
     foo = models.FileField(upload_to=user_directory_path)
     bar = models.ImageField(upload_to=user_directory_path)
 ```
-(see: ```django_tools_test_project.django_tools_test_app.models.UserMediaFiles```)
+(see: ```django_tools_project.django_tools_test_app.models.UserMediaFiles```)
 
 Note: The model will not checked in file request!
 You can add own access checks by signals, e.g.:

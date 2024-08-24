@@ -1,0 +1,133 @@
+<div class="colM" id="content">
+ <h1>
+  Change versioning test model
+ </h1>
+ <h2>
+  Overwrite this! (pk:1)
+ </h2>
+ <div id="content-main">
+  <ul class="object-tools">
+   <!-- START 'admin/change_form_object_tools.html' -->
+   <li>
+    <a class="historylink" href="/admin/django_tools_test_app/versioningtestmodel/1/history/">
+     History
+    </a>
+   </li>
+   <!-- END 'admin/change_form_object_tools.html' -->
+  </ul>
+  <form id="versioningtestmodel_form" method="post" novalidate="">
+   MockedCsrfTokenNode
+   <div>
+    <p class="errornote">
+     Please correct the errors below.
+    </p>
+    <ul class="errorlist nonfield">
+     <li>
+      Version error: Overwrite version 2 with 1 is forbidden!
+     </li>
+    </ul>
+    <!-- START 'admin/includes/fieldset.html' -->
+    <fieldset class="module aligned">
+     <div class="form-row field-id field-version">
+      <div class="flex-container form-multiline">
+       <div>
+        <div class="flex-container fieldBox field-id">
+         <label>
+          ID:
+         </label>
+         <div class="readonly">
+          1
+         </div>
+        </div>
+       </div>
+       <div>
+        <ul class="errorlist">
+         <li>
+          Version changed:
+          <pre>- 2
++ 1</pre>
+         </li>
+        </ul>
+        <div class="flex-container fieldBox field-version errors">
+         <label class="required inline" for="id_version">
+          Version:
+         </label>
+         <input id="id_version" name="version" required="" type="hidden" value="1"/>
+         1
+        </div>
+        <div class="help" id="id_version_helptext">
+         <div>
+          Internal version number of this entry. Used to protect the overwriting of an older entry.
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="form-row field-user">
+      <div>
+       <div class="flex-container">
+        <label class="required" for="id_user">
+         User:
+        </label>
+        <div class="related-widget-wrapper" data-model-ref="user">
+         <select id="id_user" name="user" required="">
+          <option value="">
+           ---------
+          </option>
+          <option selected="" value="1">
+           TestUser
+          </option>
+         </select>
+         <a class="related-widget-wrapper-link change-related" data-href-template="/admin/auth/user/__fk__/change/?_to_field=id&amp;_popup=1" data-popup="yes" id="change_id_user" title="Change selected user">
+          <img alt="Change" src="/static/admin/img/icon-changelink.svg"/>
+         </a>
+         <a class="related-widget-wrapper-link add-related" data-popup="yes" href="/admin/auth/user/add/?_to_field=id&amp;_popup=1" id="add_id_user" title="Add another user">
+          <img alt="Add" src="/static/admin/img/icon-addlink.svg"/>
+         </a>
+         <a class="related-widget-wrapper-link view-related" data-href-template="/admin/auth/user/__fk__/change/?_to_field=id" id="view_id_user" title="View selected user">
+          <img alt="View" src="/static/admin/img/icon-viewlink.svg"/>
+         </a>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="form-row errors field-name">
+      <ul class="errorlist">
+       <li>
+        changes between version 2 and 1:
+        <pre>- "A New Name"
++ "Overwrite this!"</pre>
+       </li>
+      </ul>
+      <div>
+       <div class="flex-container">
+        <label class="required" for="id_name">
+         Name:
+        </label>
+        <input class="vTextField" id="id_name" maxlength="100" name="name" required="" type="text" value="Overwrite this!"/>
+       </div>
+      </div>
+     </div>
+    </fieldset>
+    <!-- END 'admin/includes/fieldset.html' -->
+    <!-- START 'admin/submit_line.html' -->
+    <div class="submit-row">
+     <input class="default" name="_save" type="submit" value="Save"/>
+     <input name="_addanother" type="submit" value="Save and add another"/>
+     <input name="_continue" type="submit" value="Save and continue editing"/>
+     <a class="deletelink" href="/admin/django_tools_test_app/versioningtestmodel/1/delete/">
+      Delete
+     </a>
+    </div>
+    <!-- END 'admin/submit_line.html' -->
+    <script async="" id="django-admin-form-add-constants" src="/static/admin/js/change_form.js">
+    </script>
+    <!-- START 'admin/prepopulated_fields_js.html' -->
+    <script data-prepopulated-fields="[]" id="django-admin-prepopulated-fields-constants" src="/static/admin/js/prepopulate_init.js">
+    </script>
+    <!-- END 'admin/prepopulated_fields_js.html' -->
+   </div>
+  </form>
+ </div>
+ <br class="clear"/>
+</div>

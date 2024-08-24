@@ -1,19 +1,8 @@
-#!/usr/bin/env python
-
-"""
-    stack information
-    ~~~~~~~~~~~~~~~~~
-
-    :copyleft: 2011 by the django-tools team, see AUTHORS for more details.
-    :license: GNU GPL v3 or above, see LICENSE for more details.
-"""
-
-
 import inspect
+from pathlib import Path
 
 
 STACK_LIMIT = 6  # Display only the last X stack lines
-MAX_FILEPATH_LEN = 50  # Cut filepath in stack info message
 
 
 def format_list(extracted_list):
@@ -21,32 +10,39 @@ def format_list(extracted_list):
     Format a list of traceback entry tuples.
     """
     list = []
+    cwd = Path.cwd()
     for _, filename, lineno, func_name, line, _ in extracted_list:
+        filename = Path(filename)
+        try:
+            filename = filename.relative_to(cwd)
+        except ValueError:
+            pass
         code = "".join(line).strip()
-        item = (
-            'File "%s", line %d, in %s\n'
-            '  %s\n'
-        ) % (filename, lineno, func_name, code)
+        item = ('File "%s", line %d, in %s\n' '  %s') % (filename, lineno, func_name, code)
         list.append(item)
     return list
 
 
-def get_stack_info(filepath_filter, stack_limit=STACK_LIMIT, max_filepath_len=MAX_FILEPATH_LEN):
+def get_stack_info(filepath_filter):
     """
     return stack_info: Where from the announcement comes?
     """
-    stack_list = inspect.stack()
-    stack_list.reverse()
+    before = True  # before we visit filepath_filter
+    after = False  # after we left filepath_filter
 
-    # go forward in the stack, till outside of this file.
-    for no, stack_line in enumerate(stack_list):
-        filepath = stack_line[1]
-        if filepath_filter in filepath:
-            break
+    stack_list = []
+    for frame in reversed(inspect.stack()):
+        filepath = frame[1]
 
-    # Display only the last entries, till outside of this file
-    stack_list = stack_list[:no]
-    stack_list = stack_list[-stack_limit:]
+        if before and filepath_filter not in filepath:
+            before = False
+            continue
+
+        if not after and filepath_filter in filepath:
+            after = True
+
+        if after:
+            stack_list.append(frame)
 
     stack_info = format_list(stack_list)
     return stack_info

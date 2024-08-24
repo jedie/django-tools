@@ -32,12 +32,8 @@ class BaseDebugTemplateCache(dict):
 
         :param template: a django.template.base.Template instance
         """
-        template.nodelist.insert(0,
-                                 TextNode(f"<!-- START '{template.name}' -->\n")
-                                 )
-        template.nodelist.append(
-            TextNode(f"\n<!-- END '{template.name}' -->")
-        )
+        template.nodelist.insert(0, TextNode(f"<!-- START '{template.name}' -->\n"))
+        template.nodelist.append(TextNode(f"\n<!-- END '{template.name}' -->"))
 
 
 class DebugTemplateCache(BaseDebugTemplateCache):

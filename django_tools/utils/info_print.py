@@ -84,7 +84,7 @@ def redirect_stdout():
     if not __redirected:
         __redirected = True
         try:
-            warnings.warn("Redirect stdout/stderr for info print!")
+            warnings.warn("Redirect stdout/stderr for info print!", stacklevel=2)
             orig_stdout = sys.stdout
             sys.stdout = InfoStdout(orig_stdout)
             orig_stderr = sys.stderr

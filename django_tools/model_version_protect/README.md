@@ -38,7 +38,7 @@ class FooBarModel(VersionProtectBaseModel):
 
 ## Examples
 
-Test project model `VersioningTestModel` is here: django_tools_test_project/django_tools_test_app/models.py
+Test project model `VersioningTestModel` is here: django_tools_project/django_tools_test_app/models.py
 Tests are here: django_tools/model_version_protect/tests/*.py
 
 How a admin overwrite error looks, can you see here: django_tools/model_version_protect/tests/test_admin_basic_2.snapshot.html

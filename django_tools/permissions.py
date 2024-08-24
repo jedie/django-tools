@@ -248,7 +248,7 @@ class ModelPermissionMixin:
             FooModel.has_extra_permission_permission(request.user, raise_exception=True)
 
     See also model used in our tests:
-        django_tools_test_project.django_tools_test_app.models.PermissionTestModel
+        django_tools_project.django_tools_test_app.models.PermissionTestModel
     """
     @classmethod
     def default_permission_name(cls, action):
@@ -340,7 +340,6 @@ def get_filtered_permissions(
     if exclude_app_labels is not None:
         # SQLite doesn't support .distinct, so we can't do this:
         app_lables = set(ContentType.objects.all().values_list("app_label", flat=True))
-
         exclude_content_types = []
         for app_label in exclude_app_labels:
             if app_label not in app_lables:

@@ -50,10 +50,11 @@ class StaticPathWidget(forms.Select):
     """
     Select a sub directory in settings.STATIC_ROOT
 
-    >>> import os, django_tools
-    >>> settings.STATIC_ROOT = os.path.dirname(os.path.abspath(django_tools.__file__))
+    >>> import django_tools
+    >>> from pathlib import Path
+    >>> settings.STATIC_ROOT = Path(django_tools.__file__).parent
     >>> StaticPathWidget().choices[:2]
-    [('__pycache__', '__pycache__'), ('admin_tools', 'admin_tools')]
+    [('__pycache__', '__pycache__'), ('admin', 'admin')]
     """
 
     def __init__(self, attrs=None):

@@ -1,0 +1,64 @@
+
+
+name: tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  schedule:
+    - cron: '0 8 * * *'
+
+jobs:
+  test:
+    name: 'Python ${{ matrix.python-version }} Django ${{ matrix.django-version }}'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.11"]
+        django-version: ["5.1", "4.2", "4.1"]
+    steps:
+    - name: Checkout
+      run: |
+        echo $GITHUB_REF $GITHUB_SHA
+        git clone https://github.com/$GITHUB_REPOSITORY.git .
+        git fetch origin $GITHUB_SHA:temporary-ci-branch
+        git checkout $GITHUB_SHA || (git fetch && git checkout $GITHUB_SHA)
+
+    - name: 'Set up Python ${{ matrix.python-version }}'
+      uses: actions/setup-python@v5
+      # https://github.com/marketplace/actions/setup-python
+      with:
+        python-version: '${{ matrix.python-version }}'
+        cache: 'pip' # caching pip dependencies
+        cache-dependency-path: '**/requirements.*.txt'
+
+    - name: 'Bootstrap'
+      # The first manage.py call will create the .venv
+      run: |
+        ./manage.py version
+
+    - name: 'Display all Django commands'
+      run: |
+        ./manage.py --help
+
+    - name: 'pip-audit'
+      run: |
+        ./manage.py pip_audit
+
+    - name: 'Python ${{ matrix.python-version }} Django ${{ matrix.django-version }}'
+      env:
+        PYTHONUNBUFFERED: 1
+        PYTHONWARNINGS: always
+      run: |
+        ./manage.py tox -e $(echo py${{ matrix.python-version }}-django${{ matrix.django-version }} | tr -d .)
+
+    - name: 'Upload coverage report'
+      uses: codecov/codecov-action@v4
+      # https://github.com/marketplace/actions/codecov
+      with:
+        fail_ci_if_error: false
+        verbose: true
+

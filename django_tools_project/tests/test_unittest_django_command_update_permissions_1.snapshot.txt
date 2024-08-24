@@ -1,0 +1,16 @@
+Create permissions for:
+ * auth
+ * contenttypes
+ * sessions
+ * sites
+ * admin
+ * staticfiles
+ * admindocs
+ * flatpages
+ * messages
+ * local_sync_cache
+ * django_tools_test_app
+ * serve_media_app
+ * model_version_protect
+ * django_tools
+ * manage_django_project

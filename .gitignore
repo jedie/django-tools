@@ -1,25 +1,30 @@
 .*
+*.egg-info
+__pycache__
+/dist/
+/build/
+/coverage.*
+*.orig
 
 !.github
 !.editorconfig
-!.gitignore
 !.flake8
-!.travis.yml
+!.gitignore
+!.gitkeep
 
-__pycache__
-
+# from test projects:
+/static/
 /media/
-*~
-/dist
-/build
-*.log
 *.sqlite3
+*.json
 
-/htmlcov/
-coverage.xml
+# Include "ignored" *.json:
+!**/fixtures/*.json
 
 # Migration of test app are always generated on-the-fly, so ignore them:
-django_tools_test_project/django_tools_test_app/migrations/*
-!django_tools_test_project/django_tools_test_app/migrations/__init__.py
+django_tools_project/django_tools_test_app/migrations/*
+!django_tools_project/django_tools_test_app/migrations/__init__.py
 
+# Test project
+secret.txt
 

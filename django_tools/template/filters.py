@@ -7,10 +7,10 @@
 """
 
 
-import datetime
+import warnings
 
+from bx_django_utils.humanize.time import human_timedelta
 from django.template.defaultfilters import stringfilter
-from django.utils.translation import gettext as _
 
 
 CHMOD_TRANS_DATA = (
@@ -41,10 +41,15 @@ chmod_symbol = stringfilter(chmod_symbol)
 def get_oct(value):
     """
     Convert an integer number to an octal string.
+
+    >>> get_oct(123)
+    '0o173'
+    >>> get_oct('abc')
+    'abc'
     """
     try:
         return oct(value)
-    except BaseException:
+    except TypeError:
         return value
 
 
@@ -55,59 +60,17 @@ def human_duration(t):
     """
     Converts a time duration into a friendly text representation.
 
-    >>> human_duration("type error")
-    Traceback (most recent call last):
-        ...
-    TypeError: human_duration() argument must be timedelta, integer or float)
-
-
-    >>> human_duration(datetime.timedelta(microseconds=1000))
-    '1.0 ms'
     >>> human_duration(0.01)
-    '10.0 ms'
-    >>> human_duration(0.9)
-    '900.0 ms'
-    >>> human_duration(datetime.timedelta(seconds=1))
-    '1.0 sec'
-    >>> human_duration(65.5)
-    '1.1 min'
-    >>> human_duration(59 * 60)
-    '59.0 min'
-    >>> human_duration(60*60)
-    '1.0 hours'
+    '10.0\xa0ms'
+    >>> human_timedelta(59 * 60)
+    '59.0\xa0minutes'
     >>> human_duration(1.05*60*60)
-    '1.1 hours'
-    >>> human_duration(datetime.timedelta(hours=24))
-    '1.0 days'
+    '1.1\xa0hours'
     >>> human_duration(2.54 * 60 * 60 * 24 * 365)
-    '2.5 years'
+    '2.5\xa0years'
     """
-    if isinstance(t, datetime.timedelta):
-        t = t.total_seconds()
-    elif not isinstance(t, (int, float)):
-        raise TypeError("human_duration() argument must be timedelta, integer or float)")
-
-    chunks = (
-        (60 * 60 * 24 * 365, _('years')),
-        (60 * 60 * 24 * 30, _('months')),
-        (60 * 60 * 24 * 7, _('weeks')),
-        (60 * 60 * 24, _('days')),
-        (60 * 60, _('hours')),
-    )
-
-    if t < 1:
-        return _("%.1f ms") % round(t * 1000, 1)
-    if t < 60:
-        return _("%.1f sec") % round(t, 1)
-    if t < 60 * 60:
-        return _("%.1f min") % round(t / 60, 1)
-
-    for seconds, name in chunks:
-        count = t / seconds
-        if count >= 1:
-            count = round(count, 1)
-            break
-    return f"{count:.1f} {name}"
+    warnings.warn("Use bx_django_utils.humanize.time.human_timedelta!", DeprecationWarning, stacklevel=2)
+    return human_timedelta(t)
 
 
 human_duration.is_safe = True
