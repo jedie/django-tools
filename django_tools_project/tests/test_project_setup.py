@@ -88,3 +88,13 @@ class ProjectSetupTestCase(TestCase):
         # Check if we still have some flat test function that will be not executed by unittests
         assert_no_flat_tests_functions(BASE_PATH / 'django_tools')
         assert_no_flat_tests_functions(BASE_PATH / 'django_tools_project')
+
+    def test_deny_empty_packages(self):
+        empty_packages = []
+        for init_file_path in BASE_PATH.rglob('__init__.py'):
+            if init_file_path.stat().st_size > 0:
+                continue
+            package_path = init_file_path.parent
+            if len(list(package_path.iterdir())) == 1:
+                empty_packages.append(package_path)
+        self.assertFalse(empty_packages, f"Empty packages found: {empty_packages}")
