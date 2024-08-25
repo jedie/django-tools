@@ -43,6 +43,8 @@ dev = [
     "pip-audit",  # https://github.com/pypa/pip-audit
     "mypy",  # https://github.com/python/mypy
     "twine",  # https://github.com/pypa/twine
+    # TODO: "typeguard",  # https://github.com/agronholm/typeguard/
+    "pre-commit",  # https://github.com/pre-commit/pre-commit
 
     # https://github.com/akaihola/darker
     # https://github.com/ikamensh/flynt
@@ -78,6 +80,10 @@ local_settings='django_tools_project.settings.local'
 
 # Django settings used for test/coverage/tox commands:
 test_settings='django_tools_project.settings.tests'
+
+
+[tool.cli_base]
+version_module_name = "django_tools"  # Used by update_readme_history()
 
 
 [tool.cli_base.pip_audit]

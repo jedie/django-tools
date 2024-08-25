@@ -113,6 +113,10 @@ def main(argv):
         verbose_check_call(PIP_PATH, 'install', '--no-deps', '-e', '.')
         store_dep_hash()
 
+        # Activate git pre-commit hooks:
+        verbose_check_call(PYTHON_PATH, '-m', 'pre_commit', 'install')
+        verbose_check_call(PYTHON_PATH, '-m', 'pre_commit', 'autoupdate')
+
     signal.signal(signal.SIGINT, noop_sigint_handler)  # ignore "Interrupt from keyboard" signals
 
     # Call our entry point CLI:
