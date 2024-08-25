@@ -715,6 +715,8 @@ Move supported Django/Python min. versions to:
 
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
+* [v0.56.2](https://github.com/jedie/django-tools/compare/v0.56.1...v0.56.2)
+  * 2024-08-25 - Bugfix: Remove empty package that shadows existing codes
 * [v0.56.1](https://github.com/jedie/django-tools/compare/v0.56.0...v0.56.1)
   * 2024-08-25 - Use typeguard in tests
   * 2024-08-25 - Use cli_base update-readme-history
@@ -728,6 +730,9 @@ Move supported Django/Python min. versions to:
   * 2022-08-23 - Replace README.creole with README.md
   * 2022-08-26 - Run safety check in CI
   * 2022-08-25 - NEW: SyslogHandler for easy logging to syslog
+
+<details><summary>Expand older history entries ...</summary>
+
 * [v0.53.0](https://github.com/jedie/django-tools/compare/v0.52.0...v0.53.0)
   * 2022-08-18 - v0.53.0
   * 2022-08-18 - fix readme
@@ -742,9 +747,6 @@ Move supported Django/Python min. versions to:
   * 2022-08-18 - Fix manage.sh by set "local" settings
   * 2022-08-18 - run-server: do not make stderr output -> use style
   * 2022-08-18 - NEW: MassContextManagerBase, DenyStdWrite + Updated: StdoutStderrBuffer
-
-<details><summary>Expand older history entries ...</summary>
-
 * [v0.52.0](https://github.com/jedie/django-tools/compare/v0.51.0...v0.52.0)
   * 2022-08-17 - code cleanup
   * 2022-08-17 - Restrict `AlwaysLoggedInAsSuperUserMiddleware` to the admin.

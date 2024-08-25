@@ -54,7 +54,7 @@ class StaticPathWidget(forms.Select):
     >>> from pathlib import Path
     >>> settings.STATIC_ROOT = Path(django_tools.__file__).parent
     >>> StaticPathWidget().choices[:2]
-    [('__pycache__', '__pycache__'), ('admin', 'admin')]
+    [('__pycache__', '__pycache__'), ('admin_tools', 'admin_tools')]
     """
 
     def __init__(self, attrs=None):
