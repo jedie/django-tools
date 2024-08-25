@@ -187,6 +187,7 @@ cookiecutter_template = "https://github.com/jedie/cookiecutter_templates/"
 cookiecutter_directory = "managed-django-project"
 applied_migrations = [
     "52669d0", # 2024-08-02T15:47:04+02:00
+    "3084867", # 2024-08-25T14:35:25+02:00
 ]
 
 [manageprojects.cookiecutter_context.cookiecutter]
