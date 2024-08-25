@@ -33,8 +33,8 @@ class DenyStdWriteHandler:
         self.name = name
         self.std_type = std_type
 
-    def write(self, *args, **kwargs):
-        raise AssertionError(f'{self.name} writes to std{self.std_type} !')
+    def write(self, out, *args, **kwargs):
+        raise AssertionError(f'{self.name} writes to std{self.std_type}:\n{out}')
 
 
 class DenyStdWrite(MassContextManagerBase):

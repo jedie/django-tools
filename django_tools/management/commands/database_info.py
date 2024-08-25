@@ -50,8 +50,8 @@ class Command(BaseCommand):
             if engine == "sqlite3":
                 # https://docs.python.org/3/library/sqlite3.html#module-functions-and-constants
                 import sqlite3
-                self.stdout.write(f"sqlite lib version...: {sqlite3.sqlite_version!r}")
-                self.stdout.write(f"sqlite module version: {sqlite3.version!r}")
+
+                self.stdout.write(f"sqlite version.......: {sqlite3.sqlite_version!r}")
 
             self.stdout.write(f"name.................: {settings_dict['NAME']!r}")
             self.stdout.write(f"user.................: {settings_dict['USER']!r}")

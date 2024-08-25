@@ -1,3 +1,7 @@
++ .../django-tools/.venv/bin/django_tools_project --help
+
+[replaced django_tools.__version__]
+
 DJANGO_SETTINGS_MODULE=django_tools_project.settings.tests
 
 BASE_PATH:.../django-tools
@@ -70,5 +74,3 @@ Available subcommands:
     collectstatic
     findstatic
     runserver
-
-+ .../django-tools/.venv/bin/django_tools_project --help

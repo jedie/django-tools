@@ -10,11 +10,11 @@ class StdoutRedirectTestCase(SimpleTestCase):
         with DenyStdWrite(name='foo'):
             pass
 
-        with self.assertRaisesMessage(AssertionError, 'foo writes to stdout !'):
+        with self.assertRaisesMessage(AssertionError, 'foo writes to stdout:\nbar'):
             with DenyStdWrite(name='foo'):
                 print('bar')
 
-        with self.assertRaisesMessage(AssertionError, 'bar writes to stderr !'):
+        with self.assertRaisesMessage(AssertionError, 'bar writes to stderr:\nfoo'):
             with DenyStdWrite(name='bar'):
                 print('foo', file=sys.stderr)
 
