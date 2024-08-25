@@ -242,9 +242,14 @@ class TestDjangoCommand(TestUserMixin, DjangoCommandMixin, TestCase):
             output, stderr = captured_call_command(command=run_testserver)
             assert stderr == ''
 
-            assert 'Call "makemigrations"' in output
-            assert 'Call "migrate"' in output
-            assert 'Call "runserver"' in output
+            assert_in(
+                output,
+                parts=(
+                    'Call "makemigrations"',
+                    'Call "migrate"',
+                    'Call "runserver"',
+                ),
+            )
 
         call_info = call_command_mock.call_info
         self.assertEqual(
