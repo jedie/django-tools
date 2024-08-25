@@ -43,7 +43,7 @@ dev = [
     "pip-audit",  # https://github.com/pypa/pip-audit
     "mypy",  # https://github.com/python/mypy
     "twine",  # https://github.com/pypa/twine
-    # TODO: "typeguard",  # https://github.com/agronholm/typeguard/
+    "typeguard",  # https://github.com/agronholm/typeguard/
     "pre-commit",  # https://github.com/pre-commit/pre-commit
 
     # https://github.com/akaihola/darker

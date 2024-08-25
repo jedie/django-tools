@@ -716,6 +716,7 @@ Move supported Django/Python min. versions to:
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
 * [v0.56.1](https://github.com/jedie/django-tools/compare/v0.56.0...v0.56.1)
+  * 2024-08-25 - Use typeguard in tests
   * 2024-08-25 - Use cli_base update-readme-history
   * 2024-08-25 - Update via manageprojects
 * [v0.56.0](https://github.com/jedie/django-tools/compare/v0.54.0...v0.56.0)
