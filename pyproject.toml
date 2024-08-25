@@ -43,6 +43,8 @@ dev = [
     "pip-audit",  # https://github.com/pypa/pip-audit
     "mypy",  # https://github.com/python/mypy
     "twine",  # https://github.com/pypa/twine
+    "typeguard",  # https://github.com/agronholm/typeguard/
+    "pre-commit",  # https://github.com/pre-commit/pre-commit
 
     # https://github.com/akaihola/darker
     # https://github.com/ikamensh/flynt
@@ -78,6 +80,10 @@ local_settings='django_tools_project.settings.local'
 
 # Django settings used for test/coverage/tox commands:
 test_settings='django_tools_project.settings.tests'
+
+
+[tool.cli_base]
+version_module_name = "django_tools"  # Used by update_readme_history()
 
 
 [tool.cli_base.pip_audit]
@@ -187,6 +193,7 @@ cookiecutter_template = "https://github.com/jedie/cookiecutter_templates/"
 cookiecutter_directory = "managed-django-project"
 applied_migrations = [
     "52669d0", # 2024-08-02T15:47:04+02:00
+    "3084867", # 2024-08-25T14:35:25+02:00
 ]
 
 [manageprojects.cookiecutter_context.cookiecutter]

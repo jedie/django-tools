@@ -49,7 +49,7 @@ else:
 BASE_PATH = Path(__file__).parent
 VENV_PATH = BASE_PATH / '.venv'
 BIN_PATH = VENV_PATH / BIN_NAME
-PYTHON_PATH = BIN_PATH / f'python{FILE_EXT}'
+PYTHON_PATH = BIN_PATH / f'python3{FILE_EXT}'
 PIP_PATH = BIN_PATH / f'pip{FILE_EXT}'
 PIP_SYNC_PATH = BIN_PATH / f'pip-sync{FILE_EXT}'
 
@@ -112,6 +112,10 @@ def main(argv):
         # install project
         verbose_check_call(PIP_PATH, 'install', '--no-deps', '-e', '.')
         store_dep_hash()
+
+        # Activate git pre-commit hooks:
+        verbose_check_call(PYTHON_PATH, '-m', 'pre_commit', 'install')
+        verbose_check_call(PYTHON_PATH, '-m', 'pre_commit', 'autoupdate')
 
     signal.signal(signal.SIGINT, noop_sigint_handler)  # ignore "Interrupt from keyboard" signals
 

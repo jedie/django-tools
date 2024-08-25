@@ -10,6 +10,8 @@ __pycache__
 !.editorconfig
 !.flake8
 !.gitignore
+!.pre-commit-config.yaml
+!.pre-commit-hooks.yaml
 !.gitkeep
 
 # from test projects:
