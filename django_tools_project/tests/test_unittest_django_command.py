@@ -22,18 +22,21 @@ from django_tools.unittest_utils.user import TestUserMixin
 from django_tools_project.constants import PACKAGE_ROOT
 
 
-REPO_PATH = str(PACKAGE_ROOT.parent)
+REPO_PATH = str(PACKAGE_ROOT)
 
 
 class TestDjangoCommand(TestUserMixin, DjangoCommandMixin, TestCase):
 
-    def clean_manage_output(self, output):
+    def clean_manage_output(self, output: str) -> str:
         lines = output.splitlines()
-        if django_tools.__version__ in lines[0]:
-            output = '\n'.join(lines[1:])
+        for index, line in enumerate(lines):
+            if django_tools.__version__ in line:
+                lines[index] = '[replaced django_tools.__version__]'
+                output = '\n'.join(lines)
+                break
 
+        output = output.replace(REPO_PATH, '.../django-tools')
         output = output.strip()
-        output = output.replace(REPO_PATH, '...')
         return output
 
     def test_help(self):

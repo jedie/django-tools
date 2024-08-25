@@ -1,6 +1,7 @@
 import inspect
 import io
 
+from cli_base.cli_tools.test_utils.rich_test_utils import NoColorEnvRichClick
 from django.core.management import BaseCommand, call_command
 
 from django_tools.unittest_utils.stdout_redirect import DenyStdWrite
@@ -35,7 +36,7 @@ def captured_call_command(command, **kwargs) -> tuple[str, str]:
             stderr=capture_stderr,
         )
     )
-    with DenyStdWrite(name=command_name):
+    with NoColorEnvRichClick(), DenyStdWrite(name=command_name):
         call_command(command_instance, **kwargs)
 
     stdout_output = capture_stdout.getvalue()

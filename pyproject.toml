@@ -55,7 +55,8 @@ dev = [
     "django-override-storage",  # https://github.com/danifus/django-override-storage
 
     # Work-a-round for: https://github.com/jazzband/pip-tools/issues/1866
-    "backports.tarfile", # via jaraco-context -> keyring -> twine
+    # backports.tarfile is needed for python <3.12
+    'backports.tarfile', # via jaraco-context -> keyring -> twine
 ]
 django41=["django>=4.1,<4.2"]
 django42=["django>=4.2,<4.3"]

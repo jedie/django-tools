@@ -21,6 +21,9 @@ __pycache__
 # Include "ignored" *.json:
 !**/fixtures/*.json
 
+# Include all test snapshot files:
+!**/*.snapshot.*
+
 # Migration of test app are always generated on-the-fly, so ignore them:
 django_tools_project/django_tools_test_app/migrations/*
 !django_tools_project/django_tools_test_app/migrations/__init__.py

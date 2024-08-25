@@ -13,6 +13,8 @@ import subprocess
 import sys
 from shlex import quote
 
+from cli_base.cli_tools.test_utils.rich_test_utils import get_fixed_env_copy
+
 
 class DjangoCommandMixin:
     def subprocess_getstatusoutput(self, cmd, debug=False, excepted_exit_code=0, **kwargs):
@@ -101,6 +103,8 @@ class DjangoCommandMixin:
         if 'env' not in kwargs:
             # e.g.: transfer DJANGO_SETTINGS_MODULE ;)
             kwargs['env'] = os.environ.copy()
+
+        kwargs['env'].update(get_fixed_env_copy(exclude_none=True))
 
         cmd = [sys.executable, manage_py] + list(cmd)
         kwargs.update({
