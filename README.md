@@ -4,13 +4,11 @@ Miscellaneous tools for django.
 
 Look also at the siblings project: [django-cms-tools](https://github.com/jedie/django-cms-tools) (Tools/helpers around Django-CMS).
 
-| ![PyPi](https://img.shields.io/pypi/v/django-tools?label=django-tools%20%40%20PyPi "PyPi")                                             | [https://pypi.python.org/pypi/django-tools/](https://pypi.python.org/pypi/django-tools/) |
-| ![Build Status on github](https://github.com/jedie/django-tools/workflows/test/badge.svg?branch=main "Build Status on github")         | [github.com/jedie/django-tools/actions](https://github.com/jedie/django-tools/actions)   |
-| ![Coverage Status on codecov.io](https://codecov.io/gh/jedie/django-tools/branch/main/graph/badge.svg "Coverage Status on codecov.io") | [codecov.io/gh/jedie/django-tools](https://codecov.io/gh/jedie/django-tools)             |
-| ![Coverage Status on coveralls.io](https://coveralls.io/repos/jedie/django-tools/badge.svg "Coverage Status on coveralls.io")          | [coveralls.io/r/jedie/django-tools](https://coveralls.io/r/jedie/django-tools)           |
-
-![Python Versions](https://img.shields.io/pypi/pyversions/django-tools "Python Versions")
-![License](https://img.shields.io/pypi/l/django-tools "License")
++[![tests](https://github.com/jedie/django-tools//actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/jedie/django-tools//actions/workflows/tests.yml)
++[![codecov](https://codecov.io/github/jedie/django_tools/branch/main/graph/badge.svg)](https://app.codecov.io/github/jedie/django_tools)
++[![django-tools @ PyPi](https://img.shields.io/pypi/v/django-tools?label=django-tools%20%40%20PyPi)](https://pypi.org/project/django-tools/)
++[![Python Versions](https://img.shields.io/pypi/pyversions/django-tools)](https://github.com/jedie/django-tools//blob/main/pyproject.toml)
++[![License GPL-3.0-or-later](https://img.shields.io/pypi/l/django-tools)](https://github.com/jedie/django-tools//blob/main/LICENSE)
 
 (Logo contributed by [@reallinfo](https://github.com/reallinfo) see [#16](https://github.com/jedie/django-tools/pull/16))
 
@@ -715,6 +713,8 @@ Move supported Django/Python min. versions to:
 
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
+* [v0.57.0](https://github.com/jedie/django-tools/compare/v0.56.2...v0.57.0)
+  * 2025-09-21 - Apply manageprojects updates
 * [v0.56.2](https://github.com/jedie/django-tools/compare/v0.56.1...v0.56.2)
   * 2024-08-25 - Bugfix: Remove empty package that shadows existing codes
 * [v0.56.1](https://github.com/jedie/django-tools/compare/v0.56.0...v0.56.1)
@@ -725,14 +725,14 @@ Move supported Django/Python min. versions to:
   * 2024-08-25 - Bugfix local test run with a real terminal ;)
   * 2024-08-25 - Fix CI
   * 2023-04-10 - Upgrade: use managed-django-projec, Remove deprecations, update supported versions
+
+<details><summary>Expand older history entries ...</summary>
+
 * [v0.54.0](https://github.com/jedie/django-tools/compare/v0.53.0...v0.54.0)
   * 2022-09-15 - Bugfix version check
   * 2022-08-23 - Replace README.creole with README.md
   * 2022-08-26 - Run safety check in CI
   * 2022-08-25 - NEW: SyslogHandler for easy logging to syslog
-
-<details><summary>Expand older history entries ...</summary>
-
 * [v0.53.0](https://github.com/jedie/django-tools/compare/v0.52.0...v0.53.0)
   * 2022-08-18 - v0.53.0
   * 2022-08-18 - fix readme

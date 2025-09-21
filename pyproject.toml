@@ -9,7 +9,7 @@ authors = [
 ]
 requires-python = ">=3.11"
 dependencies = [
-    "django",
+    "django",  # https://docs.djangoproject.com
 
     "colorlog",  # https://github.com/borntyping/python-colorlog
     "gunicorn",  # https://github.com/benoimyproject.wsgitc/gunicorn
@@ -18,10 +18,11 @@ dependencies = [
     "pprintpp",  # https://github.com/wolever/pprintpp
     "bleach",
 
+    "django-debug-toolbar",  # http://django-debug-toolbar.readthedocs.io/en/stable/changes.html
     "bx_py_utils",  # https://github.com/boxine/bx_py_utils
     "bx_django_utils",  # https://github.com/boxine/bx_django_utils
 ]
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
     "rich",  # https://github.com/Textualize/rich/
     "django-parler",
@@ -29,40 +30,26 @@ dev = [
     "Pillow",  # https://github.com/python-pillow/Pillow/
 
     "django-debug-toolbar",  # http://django-debug-toolbar.readthedocs.io/en/stable/changes.html
-    "manage_django_project",  # https://github.com/jedie/manage_django_project
+    "manage_django_project>=0.10.0",  # https://github.com/jedie/manage_django_project
+    "uv",  # https://github.com/astral-sh/uv
+    "hatchling",  # https://github.com/pypa/hatch/tree/master/backend
+    "playwright",  # https://github.com/microsoft/playwright-python
     "tblib",   # https://github.com/ionelmc/python-tblib
-    "pip-tools",  # https://github.com/jazzband/pip-tools/
-    "tox",  # https://github.com/tox-dev/tox
+    "nox",  # https://github.com/wntrblm/nox
     "coverage",  # https://github.com/nedbat/coveragepy
-    "autopep8",  # https://github.com/hhatto/autopep8
-    "pyupgrade",  # https://github.com/asottile/pyupgrade
-    "flake8",  # https://github.com/pycqa/flake8
-    "pyflakes",  # https://github.com/PyCQA/pyflakes
+    "ruff", # https://github.com/astral-sh/ruff
     "codespell",  # https://github.com/codespell-project/codespell
     "EditorConfig",  # https://github.com/editorconfig/editorconfig-core-py
     "pip-audit",  # https://github.com/pypa/pip-audit
     "mypy",  # https://github.com/python/mypy
     "twine",  # https://github.com/pypa/twine
-    "typeguard",  # https://github.com/agronholm/typeguard/
     "pre-commit",  # https://github.com/pre-commit/pre-commit
-
-    # https://github.com/akaihola/darker
-    # https://github.com/ikamensh/flynt
-    # https://github.com/pycqa/isort
-    # https://github.com/pygments/pygments
-    "darker[flynt, isort, color]",
-
+    "typeguard",  # https://github.com/agronholm/typeguard/
+    #
     "model_bakery",  # https://github.com/model-bakers/model_bakery
     "requests-mock",
     "django-override-storage",  # https://github.com/danifus/django-override-storage
-
-    # Work-a-round for: https://github.com/jazzband/pip-tools/issues/1866
-    # backports.tarfile is needed for python <3.12
-    'backports.tarfile', # via jaraco-context -> keyring -> twine
 ]
-django41=["django>=4.1,<4.2"]
-django42=["django>=4.2,<4.3"]
-django51=["django>=5.1,<5.2"]
 
 [project.urls]
 Documentation = "https://github.com/jedie/django-tools/"
@@ -70,6 +57,7 @@ Source = "https://github.com/jedie/django-tools/"
 
 
 [project.scripts]
+# Must be set in ./manage.py and PROJECT_SHELL_SCRIPT:
 django_tools_project = "django_tools_project.__main__:main"
 
 [manage_django_project]
@@ -82,8 +70,19 @@ local_settings='django_tools_project.settings.local'
 test_settings='django_tools_project.settings.tests'
 
 
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["django_tools", "django_tools_project"]
+
+[tool.hatch.version]
+path = "django_tools/__init__.py"
+
+
 [tool.cli_base]
-version_module_name = "django_tools"  # Used by update_readme_history()
+version_module_name = "django_tools" # Used by "update-readme-history" pre-commit hook
 
 
 [tool.cli_base.pip_audit]
@@ -95,43 +94,31 @@ ignore-vuln=[
 ]
 
 
-
-[build-system]
-requires = ["setuptools>=61.0", "setuptools_scm>=7.1"]
-build-backend = "setuptools.build_meta"
-
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["django_tools*", "django_tools_project*"]
-
-[tool.setuptools.dynamic]
-version = {attr = "django_tools.__version__"}
-
-
-[tool.darker]
-src = ['.']
-revision = "origin/main..."
-line_length = 119
-color = true
-skip_string_normalization = true
-diff = false
-check = false
-stdout = false
-isort = true
-lint = [
-    "flake8",
+[tool.ruff]
+# https://docs.astral.sh/ruff/configuration/
+line-length = 120
+exclude = [
+    ".*/",
+    "*/migrations/*"
 ]
-log_level = "INFO"
 
+[tool.ruff.lint]
+preview = true  # Needed for some of the rules
+extend-select = [
+    "E", # pycodestyle: https://docs.astral.sh/ruff/rules/#error-e
+    "I", # isort: https://docs.astral.sh/ruff/rules/#isort-i
+]
+ignore = [
+    "E402", # https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file/
+    "E731", # https://docs.astral.sh/ruff/rules/lambda-assignment/
+]
 
-[tool.isort]
-# https://pycqa.github.io/isort/docs/configuration/config_files/#pyprojecttoml-preferred-format
-atomic=true
-profile='black'
-skip_glob=['.*', '*/htmlcov/*','*/migrations/*']
-known_first_party=['django_tools']
-line_length=119
-lines_after_imports=2
+[tool.ruff.lint.isort]
+# https://docs.astral.sh/ruff/settings/#lintisort
+lines-after-imports = 2
+
+[tool.ruff.format]
+quote-style = "single"
 
 
 [tool.coverage.run]  # https://coverage.readthedocs.io/en/latest/config.html#run
@@ -153,30 +140,6 @@ exclude_lines = [
     'if __name__ == .__main__.:',
 ]
 
-
-[tool.tox]  # https://tox.wiki/en/latest/config.html#pyproject-toml
-legacy_tox_ini = """
-[tox]
-isolated_build = True
-envlist = py{312,311}-django{51,42,41}
-skip_missing_interpreters = True
-
-[testenv]
-passenv = *
-skip_install = true
-commands_pre =
-    pip install -U pip
-    pip install -U pip-tools
-    django41: pip-sync requirements.django41.txt
-    django42: pip-sync requirements.django42.txt
-    django51: pip-sync requirements.django51.txt
-commands =
-    django41: {envpython} -m coverage run --context='{envname}'
-    django42: {envpython} -m coverage run --context='{envname}'
-    django51: {envpython} -m coverage run --context='{envname}'
-"""
-
-
 [tool.mypy]
 warn_unused_configs = true
 ignore_missing_imports = true
@@ -194,6 +157,7 @@ cookiecutter_directory = "managed-django-project"
 applied_migrations = [
     "52669d0", # 2024-08-02T15:47:04+02:00
     "3084867", # 2024-08-25T14:35:25+02:00
+    "ae399b9", # 2025-09-21T09:34:36+02:00
 ]
 
 [manageprojects.cookiecutter_context.cookiecutter]

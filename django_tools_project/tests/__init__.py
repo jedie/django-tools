@@ -2,12 +2,20 @@ import os
 import unittest.util
 from pathlib import Path
 
+import django
 from bx_py_utils.test_utils.deny_requests import deny_any_real_request
+from manage_django_project.config import project_info
+from rich import print
 from typeguard import install_import_hook
+
+import django_tools
 
 
 # Check type annotations via typeguard in all tests:
 install_import_hook(packages=('django_tools', 'django_tools_project'))
+
+
+PROJECT_ROOT = Path(django_tools.__file__).parent.parent
 
 
 def pre_configure_tests() -> None:
@@ -22,10 +30,26 @@ def pre_configure_tests() -> None:
     deny_any_real_request()
 
 
+def init_django4unittests() -> None:
+    """
+    Make it possible to run tests via:
+      .venv/bin/python -m unittest
+    by setup Django with test settings
+    """
+    project_info.initialize()
+
+    DJANGO_SETTINGS_MODULE: str = project_info.config.test_settings
+    print(f'Force {DJANGO_SETTINGS_MODULE=}')
+    os.environ['DJANGO_SETTINGS_MODULE'] = DJANGO_SETTINGS_MODULE
+
+    django.setup()
+
+
 def load_tests(loader, tests, pattern):
     """
     Use unittest "load_tests Protocol" as a hook to setup test environment before running tests.
     https://docs.python.org/3/library/unittest.html#load-tests-protocol
     """
     pre_configure_tests()
+    init_django4unittests()
     return loader.discover(start_dir=Path(__file__).parent, pattern=pattern)

@@ -7,8 +7,8 @@ __pycache__
 *.orig
 
 !.github
+!.run
 !.editorconfig
-!.flake8
 !.gitignore
 !.pre-commit-config.yaml
 !.pre-commit-hooks.yaml
@@ -23,6 +23,7 @@ __pycache__
 # Include "ignored" *.json:
 !**/fixtures/*.json
 
+# Django
 # Include all test snapshot files:
 !**/*.snapshot.*
 
