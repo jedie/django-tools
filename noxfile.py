@@ -26,9 +26,3 @@ def tests(session: Session, django: str):
         env={'UV_PROJECT_ENVIRONMENT': session.virtualenv.location},
     )
     session.run('python', '-m', 'coverage', 'run', '--context', f'py{session.python}-django{django}')
-
-
-@nox.session
-def lint(session: Session):
-    session.install('flake8', 'flake8-bugbear')
-    session.run('flake8', 'django_tools')

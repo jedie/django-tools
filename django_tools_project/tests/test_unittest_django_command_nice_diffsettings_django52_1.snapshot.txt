@@ -211,9 +211,6 @@ TIME_ZONE = 'Europe/Paris'
 USE_DYNAMIC_SITE_MIDDLEWARE = True
 
 
-USE_L10N = True
-
-
 WSGI_APPLICATION = 'django_tools_project.wsgi.application'
 
 
