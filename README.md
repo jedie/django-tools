@@ -694,31 +694,33 @@ Move supported Django/Python min. versions to:
 
 ## Django compatibility
 
-| django-tools     | django version | python          |
-|------------------|----------------|-----------------|
-| >= v0.56.0       | 4.1, 4.2, 5.1  | 3.11, 3.12      |
-| >= v0.52.0       | 3.2, 4.0, 4.1  | 3.8, 3.9, 3.10  |
-| >= v0.50.0       | 2.2, 3.2, 4.0  | 3.8, 3.9, 3.10  |
-| >= v0.49.0       | 2.2, 3.1, 3.2  | 3.7, 3.8, 3.9   |
-| >= v0.47.0       | 2.2, 3.0, 3.1  | >= 3.6, pypy3   |
-| >= v0.39         | 1.11, 2.0      | 3.5, 3.6, pypy3 |
-| >= v0.38.1       | 1.8, 1.11      | 3.5, 3.6, pypy3 |
-| >= v0.38.0       | 1.8, 1.11      | 3.5, 3.6        |
-| >= v0.37.0       | 1.8, 1.11      | 3.4, 3.5        |
-| >= v0.33.0       | 1.8, 1.11      | 2.7, 3.4, 3.5   |
-| v0.30.1-v0.32.14 | 1.8, 1.9, 1.10 | 2.7, 3.4, 3.5   |
-| v0.30            | 1.8, 1.9       | 2.7, 3.4        |
-| v0.29            | 1.6 - 1.8      | 2.7, 3.4        |
-| v0.26            | <=1.6          |                 |
-| v0.25            | <=1.4          |                 |
+| django-tools     | django version | python           |
+|------------------|----------------|------------------|
+| >= v0.57.0       | 4.2, 5.1, 5.2  | 3.11, 3.12, 3.13 |
+| >= v0.56.0       | 4.1, 4.2, 5.1  | 3.11, 3.12       |
+| >= v0.52.0       | 3.2, 4.0, 4.1  | 3.8, 3.9, 3.10   |
+| >= v0.50.0       | 2.2, 3.2, 4.0  | 3.8, 3.9, 3.10   |
+| >= v0.49.0       | 2.2, 3.1, 3.2  | 3.7, 3.8, 3.9    |
+| >= v0.47.0       | 2.2, 3.0, 3.1  | >= 3.6, pypy3    |
+| >= v0.39         | 1.11, 2.0      | 3.5, 3.6, pypy3  |
+| >= v0.38.1       | 1.8, 1.11      | 3.5, 3.6, pypy3  |
+| >= v0.38.0       | 1.8, 1.11      | 3.5, 3.6         |
+| >= v0.37.0       | 1.8, 1.11      | 3.4, 3.5         |
+| >= v0.33.0       | 1.8, 1.11      | 2.7, 3.4, 3.5    |
+| v0.30.1-v0.32.14 | 1.8, 1.9, 1.10 | 2.7, 3.4, 3.5    |
+| v0.30            | 1.8, 1.9       | 2.7, 3.4         |
+| v0.29            | 1.6 - 1.8      | 2.7, 3.4         |
+| v0.26            | <=1.6          |                  |
+| v0.25            | <=1.4          |                  |
 
-(See also combinations for [tox in pyproject.toml](https://github.com/jedie/django-tools/blob/master/pyproject.toml))
+(See also combinations in [noxfile.py](https://github.com/jedie/django-tools/blob/master/noxfile.py))
 
 ## history
 
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
 * [v0.57.0](https://github.com/jedie/django-tools/compare/v0.56.2...v0.57.0)
+  * 2025-09-21 - Add PyCharm nox run config and update README
   * 2025-09-21 - Remove old BrowserDebug
   * 2025-09-21 - update test_deny_empty_packages()
   * 2025-09-21 - Update nox config and run
