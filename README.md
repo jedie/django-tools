@@ -714,6 +714,8 @@ Move supported Django/Python min. versions to:
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
 * [v0.57.0](https://github.com/jedie/django-tools/compare/v0.56.2...v0.57.0)
+  * 2025-09-21 - minor compatibility updates
+  * 2025-09-21 - Update StaticPathWidget implementation
   * 2025-09-21 - Cleanup + test updates
   * 2025-09-21 - Apply manageprojects updates
 * [v0.56.2](https://github.com/jedie/django-tools/compare/v0.56.1...v0.56.2)
