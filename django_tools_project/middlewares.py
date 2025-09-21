@@ -1,7 +1,6 @@
 import logging
 from pathlib import Path
 
-from debug_toolbar.middleware import show_toolbar
 from django.conf import settings
 
 
@@ -19,5 +18,7 @@ def djdt_show(request):
         # We run in a docker container
         # skip the `request.META['REMOTE_ADDR'] in settings.INTERNAL_IPS` check.
         return True
+
+    from debug_toolbar.middleware import show_toolbar
 
     return show_toolbar(request)
