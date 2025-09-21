@@ -1,0 +1,14 @@
+Check 'admin'
+Check 'sites'
+remove permission: Authentication and Authorization | user | Can delete user
+remove permission: Content Types | content type | Can add content type
+remove permission: Sessions | session | Can add session
+remove permission: Sessions | session | Can change session
+remove permission: Sessions | session | Can delete session
+remove permission: Sessions | session | Can view session
+remove permission: Sites | site | Can add site
+remove permission: Sites | site | Can change site
+remove permission: Sites | site | Can delete site
+remove permission: Sites | site | Can view site
+Add 45 permissions to 'testgroup'
+Group testgroup has 45 permissions

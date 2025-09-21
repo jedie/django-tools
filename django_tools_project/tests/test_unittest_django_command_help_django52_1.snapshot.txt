@@ -1,0 +1,76 @@
++ .../django-tools/.venv/bin/django_tools_project --help
+
+[replaced django_tools.__version__]
+
+DJANGO_SETTINGS_MODULE=django_tools_project.settings.tests
+
+BASE_PATH:.../django-tools
+
+Type 'django_tools_project help <subcommand>' for help on a specific subcommand.
+
+Available subcommands:
+
+[auth]
+    changepassword
+    createsuperuser
+
+[contenttypes]
+    remove_stale_contenttypes
+
+[django]
+    check
+    compilemessages
+    createcachetable
+    dbshell
+    diffsettings
+    dumpdata
+    flush
+    inspectdb
+    loaddata
+    makemessages
+    makemigrations
+    migrate
+    optimizemigration
+    sendtestemail
+    showmigrations
+    sqlflush
+    sqlmigrate
+    sqlsequencereset
+    squashmigrations
+    startapp
+    startproject
+    test
+    testserver
+
+[django_tools]
+    clear_cache
+    database_info
+    generate_model_test_code
+    list_models
+    logging_info
+    nice_diffsettings
+    permission_info
+    run_testserver
+    update_permissions
+
+[manage_django_project]
+    code_style
+    coverage
+    install
+    nox
+    pip_audit
+    playwright
+    project_info
+    publish
+    run_dev_server
+    shell
+    update_req
+    update_test_snapshot_files
+
+[sessions]
+    clearsessions
+
+[staticfiles]
+    collectstatic
+    findstatic
+    runserver

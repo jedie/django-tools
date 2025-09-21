@@ -7,7 +7,6 @@ from bx_py_utils.test_utils.unittest_utils import assert_no_flat_tests_functions
 from cli_base.cli_tools.code_style import assert_code_style
 from django.conf import settings
 from django.core.cache import cache
-from django.core.management import call_command
 from manageprojects.test_utils.project_setup import check_editor_config, get_py_max_line_length
 from packaging.version import Version
 

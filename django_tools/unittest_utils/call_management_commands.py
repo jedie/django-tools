@@ -1,7 +1,7 @@
 import inspect
 import io
 
-from cli_base.cli_tools.test_utils.rich_test_utils import NoColorEnvRichClick
+from cli_base.cli_tools.test_utils.rich_test_utils import NoColorEnvRich
 from click._compat import strip_ansi as strip_ansi_codes
 from django.core.management import BaseCommand, call_command
 
@@ -17,7 +17,7 @@ def captured_call_command(command, **kwargs) -> tuple[str, str]:
     """
     Call django manage command and return stdout + stderr
     """
-    with NoColorEnvRichClick():
+    with NoColorEnvRich():
         try:
             assert inspect.ismodule(command)
             CommandClass = command.Command
