@@ -714,6 +714,8 @@ Move supported Django/Python min. versions to:
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
 * [v0.57.0](https://github.com/jedie/django-tools/compare/v0.56.2...v0.57.0)
+  * 2025-09-21 - update test_deny_empty_packages()
+  * 2025-09-21 - Update nox config and run
   * 2025-09-21 - minor compatibility updates
   * 2025-09-21 - Update StaticPathWidget implementation
   * 2025-09-21 - Cleanup + test updates
