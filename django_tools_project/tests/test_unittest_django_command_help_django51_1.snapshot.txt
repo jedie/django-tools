@@ -57,13 +57,13 @@ Available subcommands:
     code_style
     coverage
     install
+    nox
     pip_audit
     playwright
     project_info
     publish
     run_dev_server
     shell
-    tox
     update_req
     update_test_snapshot_files
 

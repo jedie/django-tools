@@ -36,7 +36,7 @@ class ModelTestGeneratorAdminTestCase(TestUserMixin, HtmlAssertionMixin, TestCas
         response = self.client.post(
             path="/admin/auth/user/",
             data={"action": "generate_test_code", ACTION_CHECKBOX_NAME: user_pks, "index": 0},
-            HTTP_ACCEPT_LANGUAGE="en",
+            headers={"accept-language": "en"}
         )
         # TODO: check content-type and filename!
 

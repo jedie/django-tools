@@ -4,13 +4,11 @@ Miscellaneous tools for django.
 
 Look also at the siblings project: [django-cms-tools](https://github.com/jedie/django-cms-tools) (Tools/helpers around Django-CMS).
 
-| ![PyPi](https://img.shields.io/pypi/v/django-tools?label=django-tools%20%40%20PyPi "PyPi")                                             | [https://pypi.python.org/pypi/django-tools/](https://pypi.python.org/pypi/django-tools/) |
-| ![Build Status on github](https://github.com/jedie/django-tools/workflows/test/badge.svg?branch=main "Build Status on github")         | [github.com/jedie/django-tools/actions](https://github.com/jedie/django-tools/actions)   |
-| ![Coverage Status on codecov.io](https://codecov.io/gh/jedie/django-tools/branch/main/graph/badge.svg "Coverage Status on codecov.io") | [codecov.io/gh/jedie/django-tools](https://codecov.io/gh/jedie/django-tools)             |
-| ![Coverage Status on coveralls.io](https://coveralls.io/repos/jedie/django-tools/badge.svg "Coverage Status on coveralls.io")          | [coveralls.io/r/jedie/django-tools](https://coveralls.io/r/jedie/django-tools)           |
-
-![Python Versions](https://img.shields.io/pypi/pyversions/django-tools "Python Versions")
-![License](https://img.shields.io/pypi/l/django-tools "License")
++[![tests](https://github.com/jedie/django-tools//actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/jedie/django-tools//actions/workflows/tests.yml)
++[![codecov](https://codecov.io/github/jedie/django_tools/branch/main/graph/badge.svg)](https://app.codecov.io/github/jedie/django_tools)
++[![django-tools @ PyPi](https://img.shields.io/pypi/v/django-tools?label=django-tools%20%40%20PyPi)](https://pypi.org/project/django-tools/)
++[![Python Versions](https://img.shields.io/pypi/pyversions/django-tools)](https://github.com/jedie/django-tools//blob/main/pyproject.toml)
++[![License GPL-3.0-or-later](https://img.shields.io/pypi/l/django-tools)](https://github.com/jedie/django-tools//blob/main/LICENSE)
 
 (Logo contributed by [@reallinfo](https://github.com/reallinfo) see [#16](https://github.com/jedie/django-tools/pull/16))
 
@@ -689,32 +687,47 @@ Move supported Django/Python min. versions to:
 * Python 3.11, 3.12
 
 
+### v0.57
+
+* Remove `BrowserDebug`
+
+
 ## Django compatibility
 
-| django-tools     | django version | python          |
-|------------------|----------------|-----------------|
-| >= v0.56.0       | 4.1, 4.2, 5.1  | 3.11, 3.12      |
-| >= v0.52.0       | 3.2, 4.0, 4.1  | 3.8, 3.9, 3.10  |
-| >= v0.50.0       | 2.2, 3.2, 4.0  | 3.8, 3.9, 3.10  |
-| >= v0.49.0       | 2.2, 3.1, 3.2  | 3.7, 3.8, 3.9   |
-| >= v0.47.0       | 2.2, 3.0, 3.1  | >= 3.6, pypy3   |
-| >= v0.39         | 1.11, 2.0      | 3.5, 3.6, pypy3 |
-| >= v0.38.1       | 1.8, 1.11      | 3.5, 3.6, pypy3 |
-| >= v0.38.0       | 1.8, 1.11      | 3.5, 3.6        |
-| >= v0.37.0       | 1.8, 1.11      | 3.4, 3.5        |
-| >= v0.33.0       | 1.8, 1.11      | 2.7, 3.4, 3.5   |
-| v0.30.1-v0.32.14 | 1.8, 1.9, 1.10 | 2.7, 3.4, 3.5   |
-| v0.30            | 1.8, 1.9       | 2.7, 3.4        |
-| v0.29            | 1.6 - 1.8      | 2.7, 3.4        |
-| v0.26            | <=1.6          |                 |
-| v0.25            | <=1.4          |                 |
+| django-tools     | django version | python           |
+|------------------|----------------|------------------|
+| >= v0.57.0       | 4.2, 5.1, 5.2  | 3.11, 3.12, 3.13 |
+| >= v0.56.0       | 4.1, 4.2, 5.1  | 3.11, 3.12       |
+| >= v0.52.0       | 3.2, 4.0, 4.1  | 3.8, 3.9, 3.10   |
+| >= v0.50.0       | 2.2, 3.2, 4.0  | 3.8, 3.9, 3.10   |
+| >= v0.49.0       | 2.2, 3.1, 3.2  | 3.7, 3.8, 3.9    |
+| >= v0.47.0       | 2.2, 3.0, 3.1  | >= 3.6, pypy3    |
+| >= v0.39         | 1.11, 2.0      | 3.5, 3.6, pypy3  |
+| >= v0.38.1       | 1.8, 1.11      | 3.5, 3.6, pypy3  |
+| >= v0.38.0       | 1.8, 1.11      | 3.5, 3.6         |
+| >= v0.37.0       | 1.8, 1.11      | 3.4, 3.5         |
+| >= v0.33.0       | 1.8, 1.11      | 2.7, 3.4, 3.5    |
+| v0.30.1-v0.32.14 | 1.8, 1.9, 1.10 | 2.7, 3.4, 3.5    |
+| v0.30            | 1.8, 1.9       | 2.7, 3.4         |
+| v0.29            | 1.6 - 1.8      | 2.7, 3.4         |
+| v0.26            | <=1.6          |                  |
+| v0.25            | <=1.4          |                  |
 
-(See also combinations for [tox in pyproject.toml](https://github.com/jedie/django-tools/blob/master/pyproject.toml))
+(See also combinations in [noxfile.py](https://github.com/jedie/django-tools/blob/master/noxfile.py))
 
 ## history
 
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
+* [v0.57.0](https://github.com/jedie/django-tools/compare/v0.56.2...v0.57.0)
+  * 2025-09-21 - Add PyCharm nox run config and update README
+  * 2025-09-21 - Remove old BrowserDebug
+  * 2025-09-21 - update test_deny_empty_packages()
+  * 2025-09-21 - Update nox config and run
+  * 2025-09-21 - minor compatibility updates
+  * 2025-09-21 - Update StaticPathWidget implementation
+  * 2025-09-21 - Cleanup + test updates
+  * 2025-09-21 - Apply manageprojects updates
 * [v0.56.2](https://github.com/jedie/django-tools/compare/v0.56.1...v0.56.2)
   * 2024-08-25 - Bugfix: Remove empty package that shadows existing codes
 * [v0.56.1](https://github.com/jedie/django-tools/compare/v0.56.0...v0.56.1)
@@ -725,14 +738,14 @@ Move supported Django/Python min. versions to:
   * 2024-08-25 - Bugfix local test run with a real terminal ;)
   * 2024-08-25 - Fix CI
   * 2023-04-10 - Upgrade: use managed-django-projec, Remove deprecations, update supported versions
+
+<details><summary>Expand older history entries ...</summary>
+
 * [v0.54.0](https://github.com/jedie/django-tools/compare/v0.53.0...v0.54.0)
   * 2022-09-15 - Bugfix version check
   * 2022-08-23 - Replace README.creole with README.md
   * 2022-08-26 - Run safety check in CI
   * 2022-08-25 - NEW: SyslogHandler for easy logging to syslog
-
-<details><summary>Expand older history entries ...</summary>
-
 * [v0.53.0](https://github.com/jedie/django-tools/compare/v0.52.0...v0.53.0)
   * 2022-08-18 - v0.53.0
   * 2022-08-18 - fix readme

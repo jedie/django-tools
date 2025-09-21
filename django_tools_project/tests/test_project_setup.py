@@ -4,10 +4,9 @@ from unittest import TestCase
 
 from bx_py_utils.path import assert_is_dir, assert_is_file
 from bx_py_utils.test_utils.unittest_utils import assert_no_flat_tests_functions
+from cli_base.cli_tools.code_style import assert_code_style
 from django.conf import settings
 from django.core.cache import cache
-from django.core.management import call_command
-from manage_django_project.management.commands import code_style
 from manageprojects.test_utils.project_setup import check_editor_config, get_py_max_line_length
 from packaging.version import Version
 
@@ -75,7 +74,8 @@ class ProjectSetupTestCase(TestCase):
         self.assertIn("No changes detected", output)
 
     def test_code_style(self):
-        call_command(code_style.Command())
+        return_code = assert_code_style(package_root=BASE_PATH)
+        self.assertEqual(return_code, 0, 'Code style error, see output above!')
 
     def test_check_editor_config(self):
         check_editor_config(package_root=BASE_PATH)
@@ -90,11 +90,19 @@ class ProjectSetupTestCase(TestCase):
         assert_no_flat_tests_functions(BASE_PATH / 'django_tools_project')
 
     def test_deny_empty_packages(self):
-        empty_packages = []
-        for init_file_path in BASE_PATH.rglob('__init__.py'):
-            if init_file_path.stat().st_size > 0:
-                continue
-            package_path = init_file_path.parent
-            if len(list(package_path.iterdir())) == 1:
-                empty_packages.append(package_path)
-        self.assertFalse(empty_packages, f"Empty packages found: {empty_packages}")
+        empty_packages = set()
+
+        def scan(path: Path):
+            for init_file_path in path.rglob('__init__.py'):
+                if init_file_path.stat().st_size > 0:
+                    continue
+                package_path = init_file_path.parent
+                if len(list(package_path.iterdir())) == 1:
+                    empty_packages.add(package_path)
+
+        scan(BASE_PATH / 'django_tools')
+        scan(BASE_PATH / 'django_tools_project')
+
+        if empty_packages:
+            empty_packages = '\n'.join(sorted(empty_packages))
+            self.assertFalse(empty_packages, f'Empty packages found:\n{empty_packages}')

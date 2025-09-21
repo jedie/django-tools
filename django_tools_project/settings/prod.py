@@ -1,11 +1,10 @@
 """
-    Base Django settings
+    Django settings for production
 """
 
 import logging
 from pathlib import Path as __Path
 
-from bx_py_utils.path import assert_is_dir
 from django.utils.translation import gettext_lazy as _
 
 
@@ -14,7 +13,7 @@ from django.utils.translation import gettext_lazy as _
 # Build paths relative to the project root:
 BASE_PATH = __Path(__file__).parent.parent.parent
 print(f'BASE_PATH:{BASE_PATH}')
-assert_is_dir(BASE_PATH / 'django_tools_project')
+assert __Path(BASE_PATH, 'django_tools_project').is_dir()
 
 ###############################################################################
 
@@ -88,8 +87,8 @@ MIDDLEWARE = [
     "django_tools.middlewares.TracebackLogMiddleware.TracebackLogMiddleware",
 ]
 
-__TEMPLATE_DIR = __Path(BASE_PATH, 'django_tools', 'templates')
-assert_is_dir(__TEMPLATE_DIR)
+__TEMPLATE_DIR = __Path(BASE_PATH, 'django_tools_project', 'templates')
+assert __TEMPLATE_DIR.is_dir(), f'Directory not exists: {__TEMPLATE_DIR}'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
