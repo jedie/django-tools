@@ -6,7 +6,7 @@ PYTHON_VERSIONS = ['3.13', '3.12', '3.11']
 DJANGO_VERSIONS = ['5.2', '5.1', '4.2']
 
 
-@nox.session(python=PYTHON_VERSIONS)
+@nox.session(python=PYTHON_VERSIONS, download_python='auto')
 @nox.parametrize('django', DJANGO_VERSIONS)
 def tests(session: Session, django: str):
     session.install('uv')

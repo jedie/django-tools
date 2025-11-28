@@ -57,6 +57,7 @@ Available subcommands:
     code_style
     coverage
     install
+    make_messages
     nox
     pip_audit
     playwright
