@@ -86,12 +86,9 @@ version_module_name = "django_tools" # Used by "update-readme-history" pre-commi
 
 
 [tool.cli_base.pip_audit]
-requirements=["requirements.dev.txt"]
 strict=true
 require_hashes=true
-ignore-vuln=[
-#    "CVE-2019-8341", # Jinja2: Side Template Injection (SSTI)
-]
+ignore-vuln=[]
 
 
 [tool.ruff]
@@ -158,6 +155,7 @@ applied_migrations = [
     "52669d0", # 2024-08-02T15:47:04+02:00
     "3084867", # 2024-08-25T14:35:25+02:00
     "ae399b9", # 2025-09-21T09:34:36+02:00
+    "f6b909f", # 2025-11-28T21:13:33+01:00
 ]
 
 [manageprojects.cookiecutter_context.cookiecutter]
