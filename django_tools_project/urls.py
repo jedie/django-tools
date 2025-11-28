@@ -2,6 +2,7 @@ from django.conf import settings
 from django.conf.urls import static
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import RedirectView
 
 from django_tools_project.django_tools_test_app.views import (
     TemplateDoesNotExists,
@@ -30,6 +31,8 @@ urlpatterns = [
     #
     # Django Admin:
     path('admin/', admin.site.urls),
+    # Redirect root to admin:
+    path('', RedirectView.as_view(url='admin/')),
 ]
 
 

@@ -203,13 +203,14 @@ class TestDjangoCommand(TestUserMixin, DjangoCommandMixin, TestCase):
         # From own run_testserver command:
         assert '--nomakemigrations' in output
         assert '--nomigrate' in output
+        assert '--nocollectstatic' in output
 
         # From django.core.management.commands.runserver command:
         assert '[addrport]' in output
 
     def test_run_testserver_invalid_addr(self):
         output = self.call_manage_py(
-            ['run_testserver', '--nomigrate', '--nomakemigrations', 'invalid:addr'],
+            ['run_testserver', '--nomigrate', '--nomakemigrations', '--nocollectstatic', 'invalid:addr'],
             manage_dir=PACKAGE_ROOT,
             excepted_exit_code=1,
             # debug=True,
@@ -264,6 +265,15 @@ class TestDjangoCommand(TestUserMixin, DjangoCommandMixin, TestCase):
                     'kwargs': {'stdout': 'OutputWrapper', 'stderr': 'OutputWrapper'},
                 },
                 {
+                    'command': 'django.contrib.staticfiles.management.commands.collectstatic',
+                    'kwargs': {
+                        'interactive': 'bool',
+                        'link': 'bool',
+                        'stdout': 'OutputWrapper',
+                        'stderr': 'OutputWrapper',
+                    },
+                },
+                {
                     'command': 'django.contrib.staticfiles.management.commands.runserver',
                     'kwargs': {
                         'verbosity': 'int',
@@ -272,11 +282,11 @@ class TestDjangoCommand(TestUserMixin, DjangoCommandMixin, TestCase):
                         'traceback': 'bool',
                         'no_color': 'bool',
                         'force_color': 'bool',
+                        'skip_checks': 'bool',
                         'addrport': 'NoneType',
                         'use_ipv6': 'bool',
                         'use_threading': 'bool',
                         'use_reloader': 'bool',
-                        'skip_checks': 'bool',
                         'stdout': 'OutputWrapper',
                         'stderr': 'OutputWrapper',
                     },
