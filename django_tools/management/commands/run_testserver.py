@@ -1,7 +1,7 @@
 import inspect
 import os
 
-from django.contrib.staticfiles.management.commands import runserver
+from django.contrib.staticfiles.management.commands import collectstatic, runserver
 from django.core.management import call_command
 from django.core.management.commands import makemigrations, migrate
 from django.core.management.commands.runserver import Command as BaseCommand
@@ -58,7 +58,7 @@ class Command(BaseCommand):
         """
         pass
 
-    def setup(self, call_migrate=True, call_makemigrations=True) -> None:
+    def setup(self, call_migrate=True, call_makemigrations=True, call_collectstatic=True) -> None:
         """
         May be overwritten with own logic.
         """
@@ -68,6 +68,9 @@ class Command(BaseCommand):
 
         if call_migrate:
             self.verbose_call(migrate)
+
+        if call_collectstatic:
+            self.verbose_call(collectstatic, interactive=False, link=True)
 
     def add_arguments(self, parser):
         super().add_arguments(parser)
@@ -84,15 +87,21 @@ class Command(BaseCommand):
             dest='call_migrate',
             help='Do not run "migrate" in setup step',
         )
+        parser.add_argument(
+            '--nocollectstatic',
+            action='store_false',
+            dest='call_collectstatic',
+            help='Do not run "collectstatic" in setup step',
+        )
 
     def handle(self, **options):
-
         # RUN_MAIN added by auto reloader, see: django/utils/autoreload.py
-        run_main = "RUN_MAIN" in os.environ
+        run_main = 'RUN_MAIN' in os.environ
 
         setup_kwargs = {
             'call_makemigrations': options.pop('call_makemigrations'),
             'call_migrate': options.pop('call_migrate'),
+            'call_collectstatic': options.pop('call_collectstatic'),
         }
 
         if not run_main:

@@ -7,4 +7,8 @@ Call "migrate"
 
 
 _______________________________________________________________________________
+Call "collectstatic" interactive:False link:True
+
+
+_______________________________________________________________________________
 Call "runserver" force_color:False no_color:False skip_checks:True stderr:<captured_call_command StringIO buffer> stdout:<captured_call_command StringIO buffer> traceback:False use_ipv6:False use_reloader:True use_threading:True verbosity:1
