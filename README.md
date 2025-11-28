@@ -719,6 +719,8 @@ Move supported Django/Python min. versions to:
 
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
+* [**dev**](https://github.com/jedie/django-tools/compare/v0.57.0...main)
+  * 2025-11-28 - Update requirements
 * [v0.57.0](https://github.com/jedie/django-tools/compare/v0.56.2...v0.57.0)
   * 2025-09-21 - Add PyCharm nox run config and update README
   * 2025-09-21 - Remove old BrowserDebug
@@ -734,13 +736,13 @@ Move supported Django/Python min. versions to:
   * 2024-08-25 - Use typeguard in tests
   * 2024-08-25 - Use cli_base update-readme-history
   * 2024-08-25 - Update via manageprojects
+
+<details><summary>Expand older history entries ...</summary>
+
 * [v0.56.0](https://github.com/jedie/django-tools/compare/v0.54.0...v0.56.0)
   * 2024-08-25 - Bugfix local test run with a real terminal ;)
   * 2024-08-25 - Fix CI
   * 2023-04-10 - Upgrade: use managed-django-projec, Remove deprecations, update supported versions
-
-<details><summary>Expand older history entries ...</summary>
-
 * [v0.54.0](https://github.com/jedie/django-tools/compare/v0.53.0...v0.54.0)
   * 2022-09-15 - Bugfix version check
   * 2022-08-23 - Replace README.creole with README.md
