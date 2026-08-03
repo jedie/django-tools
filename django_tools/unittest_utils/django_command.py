@@ -48,6 +48,7 @@ class DjangoCommandMixin:
             kwargs['env'] = os.environ.copy()
 
         kwargs['env'].update(get_fixed_env_copy(width=width, exclude_none=True))
+        kwargs['env']['NO_AUTO_UV_UPGRADE'] = '1'  # Speedup: Disable auto uv upgrade in manage.py
         kwargs['cwd'] = manage_dir
 
         cmd = [sys.executable, manage_py] + list(cmd)
