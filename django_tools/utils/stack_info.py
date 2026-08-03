@@ -17,7 +17,7 @@ def format_list(extracted_list):
             filename = filename.relative_to(cwd)
         except ValueError:
             pass
-        code = "".join(line).strip()
+        code = "".join(line).strip() if line else ''
         item = f'File "{filename}", line {lineno}, in {func_name}\n  {code}'
         list.append(item)
     return list
