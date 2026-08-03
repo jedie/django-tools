@@ -720,6 +720,7 @@ Move supported Django/Python min. versions to:
 
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
+* [**dev**](https://github.com/jedie/django-tools/compare/v0.58.0...main)
 * [v0.58.0](https://github.com/jedie/django-tools/compare/v0.57.0...v0.58.0)
   * 2025-11-28 - Run dev server command: Call "collectstatic", too
   * 2025-11-28 - Expand test matrix with Python v3.14
@@ -735,13 +736,13 @@ Move supported Django/Python min. versions to:
   * 2025-09-21 - Apply manageprojects updates
 * [v0.56.2](https://github.com/jedie/django-tools/compare/v0.56.1...v0.56.2)
   * 2024-08-25 - Bugfix: Remove empty package that shadows existing codes
+
+<details><summary>Expand older history entries ...</summary>
+
 * [v0.56.1](https://github.com/jedie/django-tools/compare/v0.56.0...v0.56.1)
   * 2024-08-25 - Use typeguard in tests
   * 2024-08-25 - Use cli_base update-readme-history
   * 2024-08-25 - Update via manageprojects
-
-<details><summary>Expand older history entries ...</summary>
-
 * [v0.56.0](https://github.com/jedie/django-tools/compare/v0.54.0...v0.56.0)
   * 2024-08-25 - Bugfix local test run with a real terminal ;)
   * 2024-08-25 - Fix CI

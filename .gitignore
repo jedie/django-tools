@@ -34,3 +34,5 @@ django_tools_project/django_tools_test_app/migrations/*
 # Test project
 secret.txt
 
+# This is a library, not an application, so don't add the lock file into the repository:
+uv.lock
