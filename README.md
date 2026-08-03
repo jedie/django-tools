@@ -721,6 +721,7 @@ Move supported Django/Python min. versions to:
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
 * [**dev**](https://github.com/jedie/django-tools/compare/v0.58.0...main)
+  * 2026-08-03 - update github CI config
   * 2026-08-03 - Add AGENTS.md for AI coding agent guidance
   * 2026-08-03 - Modernize code base
   * 2026-08-03 - modernize project
