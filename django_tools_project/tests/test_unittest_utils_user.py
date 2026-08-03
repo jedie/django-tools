@@ -163,7 +163,7 @@ class TestUserFixtures(TestUserMixin, HtmlAssertionMixin, TestCase):
         group1, created = get_or_create_group(groupname="group1", permissions=())
         self.assertTrue(created)
 
-        user, created = get_or_create_user(username="foo", group=group1, encrypted_password=encrypted_password)
+        _user, created = get_or_create_user(username="foo", group=group1, encrypted_password=encrypted_password)
         self.assertTrue(created)
 
         assert_pformat_equal(list(self.UserModel.objects.get(username="foo").groups.all()), [group1])
@@ -173,7 +173,7 @@ class TestUserFixtures(TestUserMixin, HtmlAssertionMixin, TestCase):
         group2, created = get_or_create_group(groupname="group2", permissions=())
         self.assertTrue(created)
 
-        user, created = get_or_create_user(username="foo", group=group2, encrypted_password=encrypted_password)
+        _user, created = get_or_create_user(username="foo", group=group2, encrypted_password=encrypted_password)
         self.assertFalse(created)
 
         assert_pformat_equal(list(self.UserModel.objects.get(username="foo").groups.all()), [group2])

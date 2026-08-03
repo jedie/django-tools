@@ -12,8 +12,10 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.timezone import now
 
+from django_tools.middlewares import threadlocal
+
+
 # https://github.com/jedie/django-tools
-from django_tools.middlewares import ThreadLocal
 
 
 class UpdateTimeBaseModel(models.Model):
@@ -73,7 +75,7 @@ class UpdateUserBaseModel(models.Model):
         return f"model instance ID:{self.pk}"
 
     def save(self, *args, **kwargs):
-        current_user = ThreadLocal.get_current_user()
+        current_user = threadlocal.get_current_user()
 
         if current_user:
             User = get_user_model()

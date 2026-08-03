@@ -7,7 +7,6 @@
         django.core.management.commands.diffsettings
 """
 
-
 from django_rich.management import RichCommand
 from rich.highlighter import ReprHighlighter
 from rich.pretty import pretty_repr
@@ -25,7 +24,7 @@ class Command(RichCommand):
     help = """Displays differences between the current settings.py and Django's
     default settings in a pretty-printed representation."""
 
-    requires_system_checks = []
+    requires_system_checks = ()
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -52,22 +51,14 @@ class Command(RichCommand):
 
         for key in sorted(user_settings):
             display = False
-            if key not in default_settings:
-                display = True
-            elif user_settings[key] != default_settings[key]:
-                display = True
-            elif options["all"]:
+            if key not in default_settings or user_settings[key] != default_settings[key] or options["all"]:
                 display = True
 
             if display:
-
                 value = user_settings[key]
-                try:
-                    pformated = pretty_repr(value, expand_all=True)
-                    pformated = highlighter(pformated)
-                except Exception as err:
-                    # e.g.: https://github.com/andymccurdy/redis-py/issues/995
-                    pformated = f"<Error: {err}>"
+
+                pformated = pretty_repr(value, expand_all=True)
+                pformated = highlighter(pformated)
 
                 self.console.print(f"{key} = {pformated}\n\n")
 

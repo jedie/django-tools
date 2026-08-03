@@ -168,9 +168,9 @@ class ModelVersionProtectTestCase(TestCase):
                 'Version error: Overwrite version 2 with 1 is forbidden!'
             ]
             assert error_dict['name'] == [
-                'changes between version 2 and 1:'
+                ('changes between version 2 and 1:'
                 '<pre>'
                 '- &quot;The New Name&quot;\n'
                 '+ &quot;Other Name&quot;'
-                '</pre>'
+                '</pre>')
             ]

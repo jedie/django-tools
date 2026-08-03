@@ -76,10 +76,14 @@ class VersionProtectBaseModel(models.Model):
                 logger.error('Old Version: %s is not current version %s', old_version, self.version)
 
                 # Add a generic error message on the top of the form/page:
-                errors = {NON_FIELD_ERRORS: _(
-                    'Version error:'
-                    f' Overwrite version {old_version} with {self.version} is forbidden!'
-                )}
+                errors = {
+                    NON_FIELD_ERRORS: _(
+                        'Version error: Overwrite version {old_version} with {new_version} is forbidden!'
+                    ).format(
+                        old_version=old_version,
+                        new_version=self.version,
+                    )
+                }
 
                 # Add errors to every changed field.
                 # FIXME: How to check relations, too?!?
@@ -87,7 +91,10 @@ class VersionProtectBaseModel(models.Model):
                     if model_field == 'version':
                         msg = _('Version changed:')  # The diff contains old/current version ;)
                     else:
-                        msg = _(f'changes between version {old_version} and {self.version}:')
+                        msg = _('changes between version {old_version} and {new_version}:').format(
+                            old_version=old_version,
+                            new_version=self.version,
+                        )
 
                     # Display the changed part of this model field in the form error:
                     diff = escape(pformat_ndiff(value1, value2))

@@ -3,7 +3,6 @@
     ~~~~~~~
 """
 import io
-import tempfile
 import warnings
 
 from django.core.files import File as DjangoFile
@@ -175,24 +174,3 @@ class ImageDummy:
 
         django_file = DjangoFile(temp, name=filename)
         return django_file
-
-    def create_temp_filer_info_image(self, text, user):
-        """
-        Create a filer.models.Image() instance:
-            1. fill a PIL image with a colorful gradient
-            2. draw the given >text< on it
-        """
-        warnings.warn(
-            'django_tools.unittest_utils.mockup.create_filer_image is deprecated',
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        if FilerImage is None:
-            # Django-Filer is not available: raise the origin error
-            raise ImportError(FILER_IMPORT_ERROR)
-
-        f = tempfile.NamedTemporaryFile(prefix=self.temp_prefix, suffix=f".{self.format}")
-        image = self.create_info_image(text)
-        image.save(f, format=self.format)
-        filer_image = create_filer_image(f, user)
-        return filer_image

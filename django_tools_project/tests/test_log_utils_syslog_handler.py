@@ -43,7 +43,7 @@ class SyslogHandlerMock(MassContextManagerBase):
 
 class SyslogHandlerTestCase(TestCase):
     def setUp(self) -> None:
-        logger = logging.getLogger(__file__)
+        logger = logging.getLogger(__name__)
         handler = SyslogHandler()
         handler.setLevel(1)
         logger.addHandler(handler)

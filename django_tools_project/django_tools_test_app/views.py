@@ -18,7 +18,7 @@ from django.views.generic import TemplateView
 
 # https://github.com/jedie/django-tools
 from django_tools.debug.delay import SessionDelay
-from django_tools.middlewares.ThreadLocal import get_current_request
+from django_tools.middlewares.threadlocal import get_current_request
 
 
 log = logging.getLogger(__name__)

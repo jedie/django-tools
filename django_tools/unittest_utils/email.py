@@ -37,7 +37,7 @@ def print_mailbox(outbox, max_length=120):
             if callable(attr) or not isinstance(attr, (str, list, tuple, bool)):
                 continue
 
-            print("%20s:" % attr_name, end=" ", flush=True)
+            print(f"{attr_name:>20}:", end=" ", flush=True)
 
             if attr_name == "alternatives":
                 for data in attr:

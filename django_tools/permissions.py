@@ -5,9 +5,9 @@
     create 03.03.2017 by Jens Diemer
 """
 
-
 import logging
 
+from bx_py_utils.error_handling import exception2str
 from django.conf import settings
 from django.contrib.admin.sites import site
 from django.contrib.auth.models import Permission
@@ -34,8 +34,8 @@ def get_permission(app_label, codename):
             content_type__app_label=app_label,
             codename=codename
         )
-    except Permission.DoesNotExist as err:
-        log.exception("Error get permission '%s.%s':%s", app_label, codename, err)
+    except Permission.DoesNotExist:
+        log.exception("Error get permission '%s.%s'", app_label, codename)
 
         content_types = ContentType.objects.all().filter(app_label=app_label)
         if content_types.count() == 0:
@@ -46,19 +46,19 @@ def get_permission(app_label, codename):
                 # e.g.: sqlite has no distinct
                 app_lables = ", ".join(set(qs))
             raise PermissionDenied(
-                (
-                    "App label '%s' from permission '%s.%s' doesn't exists!"
-                    " All existing labels are: %s"
-                ) % (app_label, app_label, codename, app_lables)
+
+                    f"App label '{app_label}' from permission '{app_label}.{codename}' doesn't exists!"
+                    f" All existing labels are: {app_lables}"
+
             )
         qs = Permission.objects.all().filter(content_type__in=content_types)
         if qs.filter(codename=codename).count() == 0:
             codenames = qs.values_list("codename", flat=True).order_by("codename")
             raise PermissionDenied(
                 (
-                    "Codename '%s' from permission '%s.%s' doesn't exists!"
-                    " All existing codenames are: %s"
-                ) % (codename, app_label, codename, ", ".join(codenames))
+                    "Codename '{}' from permission '{}.{}' doesn't exists!"
+                    " All existing codenames are: {}"
+                ).format(codename, app_label, codename, ", ".join(codenames))
             )
     else:
         return perm_obj
@@ -69,7 +69,7 @@ def get_permission_by_string(permission):
         app_label, codename = permission.split(".")
     except ValueError as err:
         raise PermissionDenied(
-            f"Wrong permission string format '{permission}': {err}"
+            f"Wrong permission string format '{permission}': {exception2str(err)}"
         )
     return get_permission(app_label, codename)
 
@@ -159,7 +159,7 @@ def get_admin_permissions():
     """
     # Create a content type list of all models that are registered in the admin
     admin_content_types = []
-    for model in site._registry.keys():
+    for model in site._registry:
         content_type = ContentType.objects.get_for_model(model)
         admin_content_types.append(content_type)
 

@@ -3,7 +3,7 @@ _______________________________________________________________________________
 Display effective user permissions in the same format as user.has_perm() argument: <appname>.<codename>
 
 All permissions for user 'not existing username':
-Username 'not existing username' doesn't exists: User matching query does not exist.
+Username 'not existing username' doesn't exists: DoesNotExist: User matching query does not exist.
 
 All existing users are:
 normal_test_user, staff_test_user, superuser

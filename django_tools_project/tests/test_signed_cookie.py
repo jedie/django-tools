@@ -3,7 +3,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-import warnings
 
 from django.http import HttpResponse
 from django.test import SimpleTestCase
@@ -11,7 +10,7 @@ from django.test.client import RequestFactory
 
 # https://github.com/jedie/django-tools
 from django_tools.unittest_utils.assertments import assert_pformat_equal
-from django_tools.utils.client_storage import ClientCookieStorage, SignedCookieStorage, SignedCookieStorageError
+from django_tools.utils.client_storage import SignedCookieStorage, SignedCookieStorageError
 
 
 class TestSignedCookieStorage(SimpleTestCase):
@@ -58,27 +57,7 @@ class TestSignedCookieStorage(SimpleTestCase):
         try:
             c.get_data(request)
         except SignedCookieStorageError as err:
-            assert_pformat_equal(
+            self.assertEqual(
                 str(err),
-                """Can't load data: Signature "wrong_dataABCDEFGHIJKLMNOPQ" does not match""",
+                """Can't load data: BadSignature: Signature "wrong_dataABCDEFGHIJKLMNOPQ" does not match""",
             )
-
-    def test_old_api(self):
-        with warnings.catch_warnings(record=True) as w:
-            warnings.simplefilter("always")  # trigger all warnings
-
-            ClientCookieStorage(cookie_key="foo")
-
-            assert_pformat_equal(len(w), 1)
-            assert_pformat_equal(
-                str(w[-1].message),
-                (
-                    "ClientCookieStorage is old API!"
-                    " Please change to SignedCookieStorage!"
-                    " This will be removed in the future!"
-                ),
-            )
-            # self.assertIsInstance(w[-1].category, FutureWarning) # FIXME:
-            # AssertionError: <class 'FutureWarning'> is not an instance of <class
-            # 'FutureWarning'>
-            self.assertTrue(issubclass(w[-1].category, FutureWarning))

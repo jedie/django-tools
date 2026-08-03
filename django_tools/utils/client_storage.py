@@ -1,39 +1,39 @@
 """
-    Client storage
-    ~~~~~~~~~~~~~~
+Client storage
+~~~~~~~~~~~~~~
 
-    Use dumps() and loads() from django.core.signing to store data into a Cookie.
+Use dumps() and loads() from django.core.signing to store data into a Cookie.
 
-    See:
-    https://docs.djangoproject.com/en/1.4/topics/signing/#verifying-timestamped-values
+See:
+https://docs.djangoproject.com/en/1.4/topics/signing/#verifying-timestamped-values
 
-    Usage e.g.:
-    --------------------------------------------------------------------------
-    from django_tools.utils.client_storage import SignedCookieStorageError, SignedCookieStorage
+Usage e.g.:
+--------------------------------------------------------------------------
+from django_tools.utils.client_storage import SignedCookieStorageError, SignedCookieStorage
 
-    def view1(request):
-        response = HttpResponse("Hello World!")
-        c = SignedCookieStorage(cookie_key="my_key", max_age=60)
-        response = c.save_data(my_data, response)
-        return response
+def view1(request):
+    response = HttpResponse("Hello World!")
+    c = SignedCookieStorage(cookie_key="my_key", max_age=60)
+    response = c.save_data(my_data, response)
+    return response
 
-    def view2(request):
-        c = SignedCookieStorage(cookie_key="my_key", max_age=60)
-        try:
-            data = c.get_data(request)
-        except SignedCookieStorageError, err:
-            ...cookie missing or outdated or wrong data...
-        else:
-           ...do something with the data...
-    --------------------------------------------------------------------------
+def view2(request):
+    c = SignedCookieStorage(cookie_key="my_key", max_age=60)
+    try:
+        data = c.get_data(request)
+    except SignedCookieStorageError, err:
+        ...cookie missing or outdated or wrong data...
+    else:
+       ...do something with the data...
+--------------------------------------------------------------------------
 
-    :copyleft: 2010-2015 by the django-tools team, see AUTHORS for more details.
-    :license: GNU GPL v3 or above, see LICENSE for more details.
+:copyleft: 2010-2015 by the django-tools team, see AUTHORS for more details.
+:license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+import zlib
 
-import warnings
-
+from bx_py_utils.error_handling import exception2str
 from django.core import signing
 
 
@@ -67,26 +67,7 @@ class SignedCookieStorage:
 
         try:
             data = signing.loads(raw_data, max_age=self.max_age)
-        except Exception as err:
-            raise SignedCookieStorageError(f"Can't load data: {err}")
+        except (signing.BadSignature, ValueError, zlib.error) as err:
+            raise SignedCookieStorageError(f"Can't load data: {exception2str(err)}")
 
         return data
-
-
-class ClientCookieStorage:
-    """
-    Support the old API
-
-    TODO: remove in future
-    """
-
-    def __new__(self, *args, **kwargs):
-        warnings.warn(
-            (
-                "ClientCookieStorage is old API!"
-                " Please change to SignedCookieStorage!"
-                " This will be removed in the future!"
-            ),
-            FutureWarning,
-            stacklevel=2)
-        return SignedCookieStorage(*args, **kwargs)

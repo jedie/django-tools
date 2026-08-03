@@ -85,8 +85,8 @@ def clean_posixpath(path, up_level_references=False):
             # Strip empty path components.
             continue
 
-        drive, part = ntpath.splitdrive(part)
-        head, part = posixpath.split(part)
+        _drive, part = ntpath.splitdrive(part)
+        _head, part = posixpath.split(part)
         if part in (".", ".."):
             continue
         newpath = posixpath.join(newpath, part)

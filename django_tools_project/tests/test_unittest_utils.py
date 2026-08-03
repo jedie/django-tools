@@ -101,10 +101,15 @@ class TestBaseUnittestCase(BaseUnittestCase):
             assert_in_dedent(member="foo", container="only bar")
 
         (error_message,) = cm.exception.args
-        self.assertEqual(error_message, 'assert_in(): 1 parts not found in content, see output above')
-
-        output = buffer.get_output()
-        assert_in(output, parts=('foo', 'only bar'))
+        assert_in(
+            error_message,
+            parts=(
+                '\nassert_in(): 1 parts not found in content:\n',
+                '\nonly bar\n',
+                '\nMissing parts are:\nfoo\n',
+            ),
+        )
+        self.assertEqual(buffer.get_output(), '')  # All output should be in the AssertionError message
 
     def test_assert_path_not_exists(self):
         assert_path_not_exists("foobar_dir")
@@ -166,9 +171,8 @@ class TestStdoutStderrBuffer(BaseUnittestCase):
 
 class TestBaseTestCase(TestUserMixin, HtmlAssertionMixin, TestCase):
     def test_print_sql(self):
-        with StdoutStderrBuffer() as buffer:
-            with PrintQueries("Create object"):
-                self.UserModel.objects.all().count()
+        with StdoutStderrBuffer() as buffer, PrintQueries('Create object'):
+            self.UserModel.objects.all().count()
 
         output = buffer.get_output()
         # print(output)

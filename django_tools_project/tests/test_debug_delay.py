@@ -44,18 +44,22 @@ class CacheDelayTests(SimpleTestCase):
             "WARNING:django_tools.debug.delay:Save 2 sec. from 'delay' for 'delay' into cache",
         ]
 
-        with self.assertLogs(logger="django_tools.debug.delay", level=logging.DEBUG) as log:
-            with mock.patch.object(time, 'sleep', return_value=None) as mock_method:
-                CacheDelay(key="delay", only_debug=False).sleep()
+        with (
+            self.assertLogs(logger='django_tools.debug.delay', level=logging.DEBUG) as log,
+            mock.patch.object(time, 'sleep', return_value=None) as mock_method,
+        ):
+            CacheDelay(key='delay', only_debug=False).sleep()
 
         assert log.output == ["WARNING:django_tools.debug.delay:Delay 2 sec. for 'delay'"]
 
         mock_method.assert_called_once_with(2)
 
     def test_not_set(self):
-        with self.assertLogs(logger="django_tools.debug.delay", level=logging.DEBUG) as log:
-            with mock.patch.object(time, 'sleep', return_value=None) as mock_method:
-                CacheDelay(key="test_not_set", only_debug=False).sleep()
+        with (
+            self.assertLogs(logger='django_tools.debug.delay', level=logging.DEBUG) as log,
+            mock.patch.object(time, 'sleep', return_value=None) as mock_method,
+        ):
+            CacheDelay(key='test_not_set', only_debug=False).sleep()
 
         assert log.output == ["DEBUG:django_tools.debug.delay:No delay for 'test_not_set' from cache"]
 
@@ -88,9 +92,11 @@ class CacheDelayTests(SimpleTestCase):
             "WARNING:django_tools.debug.delay:Save 123 sec. from 'test_default_value' for 'delay' into cache",
         ]
 
-        with self.assertLogs(logger="django_tools.debug.delay", level=logging.DEBUG) as log:
-            with mock.patch.object(time, 'sleep', return_value=None) as mock_method:
-                CacheDelay(key="delay", only_debug=False).sleep()
+        with (
+            self.assertLogs(logger='django_tools.debug.delay', level=logging.DEBUG) as log,
+            mock.patch.object(time, 'sleep', return_value=None) as mock_method,
+        ):
+            CacheDelay(key='delay', only_debug=False).sleep()
 
         assert log.output == ["WARNING:django_tools.debug.delay:Delay 123 sec. for 'delay'"]
 
@@ -125,9 +131,11 @@ class SessionDelayTests(TestUserMixin, HtmlAssertionMixin, TestCase):
         self.client.logout()
 
     def test_delay(self):
-        with self.assertLogs(logger="django_tools.debug.delay", level=logging.DEBUG) as log:
-            with mock.patch.object(time, 'sleep', return_value=None) as mock_method:
-                response = self.client.get("/delay/?sec=0.02")
+        with (
+            self.assertLogs(logger='django_tools.debug.delay', level=logging.DEBUG) as log,
+            mock.patch.object(time, 'sleep', return_value=None) as mock_method,
+        ):
+            response = self.client.get('/delay/?sec=0.02')
 
         self.assertEqual(response.status_code, 200, response)
         self.assertEqual(response.resolver_match.func, delay_view, response)
@@ -146,9 +154,11 @@ class SessionDelayTests(TestUserMixin, HtmlAssertionMixin, TestCase):
         self.assert_messages(response, expected_messages=[])
 
     def test_not_set(self):
-        with self.assertLogs(logger="django_tools.debug.delay", level=logging.DEBUG) as log:
-            with mock.patch.object(time, 'sleep', return_value=None) as mock_method:
-                response = self.client.get("/delay/")
+        with (
+            self.assertLogs(logger='django_tools.debug.delay', level=logging.DEBUG) as log,
+            mock.patch.object(time, 'sleep', return_value=None) as mock_method,
+        ):
+            response = self.client.get('/delay/')
 
         self.assertEqual(response.status_code, 200, response)
         self.assertEqual(response.resolver_match.func, delay_view, response)
@@ -161,9 +171,11 @@ class SessionDelayTests(TestUserMixin, HtmlAssertionMixin, TestCase):
 
     def test_message(self):
         self.login(usertype="normal")
-        with self.assertLogs(logger="django_tools.debug.delay", level=logging.DEBUG) as log:
-            with mock.patch.object(time, 'sleep', return_value=None) as mock_method:
-                response = self.client.get("/delay/?sec=3")
+        with (
+            self.assertLogs(logger='django_tools.debug.delay', level=logging.DEBUG) as log,
+            mock.patch.object(time, 'sleep', return_value=None) as mock_method,
+        ):
+            response = self.client.get('/delay/?sec=3')
 
         self.assertEqual(response.status_code, 200, response)
         self.assertEqual(response.resolver_match.func, delay_view, response)
@@ -173,7 +185,7 @@ class SessionDelayTests(TestUserMixin, HtmlAssertionMixin, TestCase):
             log.output,
             [
                 "INFO:django_tools.debug.delay:Add 'sec' value to session",
-                "WARNING:django_tools.debug.delay:Save 3 sec. from 'sec' for 'delay_view' " 'into session',
+                ("WARNING:django_tools.debug.delay:Save 3 sec. from 'sec' for 'delay_view' into session"),
                 "WARNING:django_tools.debug.delay:Delay 3 sec. for 'delay_view'",
             ],
         )

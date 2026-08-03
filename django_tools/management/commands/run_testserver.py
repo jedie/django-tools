@@ -37,10 +37,10 @@ class Command(BaseCommand):
 
         # Sub command should use the same stdout/err:
         kwargs.update(
-            dict(
-                stdout=self.stdout,
-                stderr=self.stderr,
-            )
+            {
+                "stdout": self.stdout,
+                "stderr": self.stderr,
+            }
         )
 
         command = command.Command()
@@ -50,13 +50,11 @@ class Command(BaseCommand):
         """
         May be overwritten with own logic.
         """
-        pass
 
     def post_setup(self, **options) -> None:
         """
         May be overwritten with own logic.
         """
-        pass
 
     def setup(self, call_migrate=True, call_makemigrations=True, call_collectstatic=True) -> None:
         """

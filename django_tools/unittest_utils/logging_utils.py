@@ -10,6 +10,7 @@
 """
 
 import logging
+import typing
 
 
 class CutPathnameLogRecordFactory:
@@ -66,7 +67,7 @@ class FilterAndLogWarnings:
         warnings.showwarning = FilterAndLogWarnings()
     """
 
-    skipped_filenames = []
+    skipped_filenames: typing.ClassVar = set()
 
     def __init__(self, logger_name=None, external_package_paths=None):
         if logger_name is None:
@@ -84,7 +85,7 @@ class FilterAndLogWarnings:
         for path_part in self.external_package_paths:
             if path_part in filename:
                 if filename not in self.skipped_filenames:
-                    self.skipped_filenames.append(filename)
+                    self.skipped_filenames.add(filename)
                     self.logger.warning(f"There are warnings in: {filename}")
                 return
 

@@ -74,7 +74,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 MIDDLEWARE = [
-    "django_tools.middlewares.LogHeaders.LogRequestHeadersMiddleware",
+    "django_tools.middlewares.logheaders.LogRequestHeadersMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -83,8 +83,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.security.SecurityMiddleware",
-    "django_tools.middlewares.ThreadLocal.ThreadLocalMiddleware",
-    "django_tools.middlewares.TracebackLogMiddleware.TracebackLogMiddleware",
+    "django_tools.middlewares.threadlocal.ThreadLocalMiddleware",
+    "django_tools.middlewares.tracebacklogmiddleware.TracebackLogMiddleware",
 ]
 
 __TEMPLATE_DIR = __Path(BASE_PATH, 'django_tools_project', 'templates')

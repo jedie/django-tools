@@ -49,7 +49,7 @@
     :copyleft: 2011-2015 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
+from typing import ClassVar
 
 from django.contrib.auth.models import Group
 from django.db import models
@@ -154,13 +154,13 @@ class UsergroupsModelField(models.IntegerField):
     SUPERUSERS = -2
     NORMAL_USERS = -3
 
-    USER_TYPES_CHOICES = [
+    USER_TYPES_CHOICES: ClassVar = [
         (ANONYMOUS_USERS, _("anonymous users")),
         (NORMAL_USERS, _("normal users")),
         (STAFF_USERS, _("staff users")),
         (SUPERUSERS, _("superusers")),
     ]
-    USER_TYPES_DICT = dict(USER_TYPES_CHOICES)
+    USER_TYPES_DICT: ClassVar = dict(USER_TYPES_CHOICES)
 
     def __init__(self, *args, **kwargs):
         """

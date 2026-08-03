@@ -12,11 +12,9 @@ class FilemanagerError(Exception):
     for errors with a message to staff/admin users.
     e.g.: Gallery filesystem path doesn't exist anymore.
     """
-    pass
 
 
 class DirectoryTraversalAttack(FilemanagerError):
     """
     Some unauthorized signs are found or the path is out of the base path.
     """
-    pass

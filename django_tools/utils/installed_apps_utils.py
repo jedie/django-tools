@@ -1,5 +1,6 @@
 from importlib import import_module
 
+from bx_py_utils.error_handling import exception2str
 from django.apps import apps
 from django.urls import Resolver404
 from django.urls.resolvers import RegexPattern, URLResolver
@@ -42,7 +43,7 @@ def get_filtered_apps(resolve_url="/", no_args=True, debug=False, skip_fail=Fals
                 raise
         except Exception as err:
             if debug:
-                print(f"Error importing {app_pkg!r}: {err}")
+                print(f'Error importing {app_pkg!r}: {exception2str(err)}')
             if not skip_fail:
                 raise
             else:
@@ -60,10 +61,10 @@ def get_filtered_apps(resolve_url="/", no_args=True, debug=False, skip_fail=Fals
 
         resolver = URLResolver(RegexPattern(r'^'), urlpatterns)
         try:
-            func, func_args, func_kwargs = resolver.resolve(resolve_url)
+            _func, func_args, func_kwargs = resolver.resolve(resolve_url)
         except Resolver404 as err:
             if debug:
-                print(f"Skip {app_pkg!r}: Can't handle root url. ({err})")
+                print(f"Skip {app_pkg!r}: Can't handle root url. ({exception2str(err)})")
             continue
         if not no_args or func_args == () and func_kwargs == {}:
             root_apps.append(app_pkg)

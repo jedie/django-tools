@@ -25,7 +25,7 @@
          <label class="required inline" for="id_version">
           Version:
          </label>
-         <input id="id_version" name="version" required="" type="hidden" value="0"/>
+         <input aria-describedby="id_version_helptext" id="id_version" name="version" required="" type="hidden" value="0"/>
          0
         </div>
         <div class="help" id="id_version_helptext">
@@ -43,7 +43,7 @@
          User:
         </label>
         <div class="related-widget-wrapper" data-model-ref="user">
-         <select id="id_user" name="user" required="">
+         <select data-context="available-source" id="id_user" name="user" required="">
           <option selected="" value="">
            ---------
           </option>
@@ -52,13 +52,13 @@
           </option>
          </select>
          <a class="related-widget-wrapper-link change-related" data-href-template="/admin/auth/user/__fk__/change/?_to_field=id&amp;_popup=1" data-popup="yes" id="change_id_user" title="Change selected user">
-          <img alt="Change" src="/static/admin/img/icon-changelink.svg"/>
+          <img alt="" height="24" src="/static/admin/img/icon-changelink.svg" width="24"/>
          </a>
          <a class="related-widget-wrapper-link add-related" data-popup="yes" href="/admin/auth/user/add/?_to_field=id&amp;_popup=1" id="add_id_user" title="Add another user">
-          <img alt="Add" src="/static/admin/img/icon-addlink.svg"/>
+          <img alt="" height="24" src="/static/admin/img/icon-addlink.svg" width="24"/>
          </a>
          <a class="related-widget-wrapper-link view-related" data-href-template="/admin/auth/user/__fk__/change/?_to_field=id" id="view_id_user" title="View selected user">
-          <img alt="View" src="/static/admin/img/icon-viewlink.svg"/>
+          <img alt="" height="24" src="/static/admin/img/icon-viewlink.svg" width="24"/>
          </a>
         </div>
        </div>

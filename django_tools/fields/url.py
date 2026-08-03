@@ -7,7 +7,7 @@
     :copyleft: 2011-2016 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
+from typing import ClassVar
 
 from django.db.models.fields import CharField as OriginModelCharField
 from django.forms.fields import CharField as OriginFormsCharField
@@ -47,7 +47,7 @@ class URLFormField2(OriginFormsCharField):
     ...     print(err.__class__.__name__, err)
     ValidationError ["The URL doesn't start with a allowed scheme."]
     """
-    default_error_messages = {
+    default_error_messages: ClassVar = {
         'invalid': _('Enter a valid URL.'),
         'invalid_link': _('This URL appears to be a broken link.'),
     }

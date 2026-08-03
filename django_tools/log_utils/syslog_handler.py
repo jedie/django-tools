@@ -1,5 +1,6 @@
 import logging
 import syslog
+from typing import ClassVar
 
 
 class SyslogHandler(logging.Handler):
@@ -8,7 +9,7 @@ class SyslogHandler(logging.Handler):
     Just use syslog.syslog() to emit a log message.
     """
 
-    LEVEL_MAP = {
+    LEVEL_MAP: ClassVar = {
         logging.CRITICAL: syslog.LOG_EMERG,
         logging.ERROR: syslog.LOG_ERR,
         logging.WARNING: syslog.LOG_WARNING,

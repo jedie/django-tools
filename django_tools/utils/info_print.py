@@ -69,25 +69,14 @@ class InfoStdout:
             if len(filename) >= MAX_FILEPATH_LEN:
                 filename = f"...{filename[-MAX_FILEPATH_LEN:]}"
             fileinfo = f"{filename} line {lineno}"
-        except Exception as e:
+        except IndexError as e:
             fileinfo = f"(inspect Error: {e})"
 
         return fileinfo
 
 
-__redirected = False
-
-
 def redirect_stdout():
-    global __redirected
-
-    if not __redirected:
-        __redirected = True
-        try:
-            warnings.warn("Redirect stdout/stderr for info print!", stacklevel=2)
-            orig_stdout = sys.stdout
-            sys.stdout = InfoStdout(orig_stdout)
-            orig_stderr = sys.stderr
-            sys.stderr = InfoStdout(orig_stderr)
-        except Exception as err:
-            print("Error:", err)
+    if not isinstance(sys.stdout, InfoStdout):
+        warnings.warn('Redirect stdout/stderr for info print!', stacklevel=2)
+        sys.stdout = InfoStdout(sys.stdout)
+        sys.stderr = InfoStdout(sys.stderr)

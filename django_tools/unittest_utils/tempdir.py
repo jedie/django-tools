@@ -2,7 +2,7 @@ import shutil
 import tempfile
 
 
-class TempDir():
+class TempDir:
     def __init__(self, prefix=""):
         self.tempfolder = tempfile.mkdtemp(prefix=prefix)
 

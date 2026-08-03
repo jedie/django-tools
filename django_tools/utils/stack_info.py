@@ -18,7 +18,7 @@ def format_list(extracted_list):
         except ValueError:
             pass
         code = "".join(line).strip()
-        item = ('File "%s", line %d, in %s\n' '  %s') % (filename, lineno, func_name, code)
+        item = f'File "{filename}", line {lineno}, in {func_name}\n  {code}'
         list.append(item)
     return list
 

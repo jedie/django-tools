@@ -8,11 +8,11 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-
 import logging
 import os
 import time
 
+from bx_py_utils.error_handling import exception2str
 from django.conf import settings
 from django.core.cache.backends.db import DatabaseCache
 from django.core.cache.backends.filebased import FileBasedCache
@@ -150,14 +150,15 @@ class _SmoothCache:
 
         try:
             create_time, value = value
-            assert isinstance(create_time, SmoothCacheTime), (
-                f"create_time is not SmoothCacheTime instance, it's: {type(create_time)}"
-            )
-        except Exception as err:
+        except (TypeError, ValueError) as err:
             # e.g: entry is saved before smooth cache used.
-            logger.error(f"Can't get 'create_time' from: {err} (Maybe {key!r} is a old cache entry?)")
+            logger.error(f"Can't get 'create_time' from: {exception2str(err)} (Maybe {key!r} is a old cache entry?)")
             self.delete(key, version)
             return default
+
+        assert isinstance(create_time, SmoothCacheTime), (
+            f"create_time is not SmoothCacheTime instance, it's: {type(create_time)}"
+        )
 
         if self.__must_updated(key, create_time):
             # is too old -> delete the item
