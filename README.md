@@ -721,6 +721,8 @@ Move supported Django/Python min. versions to:
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
 * [v0.59.0](https://github.com/jedie/django-tools/compare/v0.58.0...v0.59.0)
+  * 2026-08-03 - Speedup tests: Disable auto uv upgrade in manage.py
+  * 2026-08-03 - Fix TypeError when code_context is None
   * 2026-08-03 - add test project migration file
   * 2026-08-03 - Fix github CI
   * 2026-08-03 - enhance django_tools.unittest_utils.call_management_commands.captured_call_command()
