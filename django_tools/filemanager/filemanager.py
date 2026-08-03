@@ -13,11 +13,13 @@
 import datetime
 import grp
 import os
+import pathlib
 import pwd
 import stat
 from operator import attrgetter
 
 from django.contrib import messages
+from django.utils import timezone
 
 from django_tools.filemanager.exceptions import FilemanagerError
 from django_tools.filemanager.filesystem_browser import BaseFilesystemBrowser
@@ -34,7 +36,7 @@ class BaseFilesystemObject:
         self.stat = os.stat(self.abs_path)
         self.size = self.stat[stat.ST_SIZE]
         self.mode = self.stat[stat.ST_MODE]
-        self.mtime = datetime.datetime.fromtimestamp(self.stat[stat.ST_MTIME])
+        self.mtime = datetime.datetime.fromtimestamp(self.stat[stat.ST_MTIME], tz=timezone.get_current_timezone())
 
         self.mode_octal = oct(self.mode)
         self.mode_symbol = symbolic_notation(self.mode)
@@ -131,11 +133,9 @@ class BaseFilemanager(BaseFilesystemBrowser):
         if not self.allow_upload:
             raise FilemanagerError("Upload not allowed here!")
 
-        path = os.path.join(self.absolute_path, f.name)
-        destination = open(path, 'wb+')
-        for chunk in f.chunks():
-            destination.write(chunk)
-        destination.close()
+        path = pathlib.Path(self.absolute_path) / f.name
+        with path.open('wb+') as destination:
+            destination.writelines(f.chunks())
 
         messages.success(self.request,
                          f"File '{f.name}' ({f.size:d} Bytes) uploaded to {self.absolute_path}"

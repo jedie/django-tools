@@ -16,10 +16,10 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-
 import os
 import warnings
 
+from bx_py_utils.error_handling import exception2str
 from django import forms
 from django.conf import settings
 from django.db import models
@@ -65,7 +65,7 @@ class MediaPathWidget(forms.Select):
         except OSError as err:
             self.choices = []
             if settings.DEBUG:
-                failsafe_message(f"Can't read MEDIA_ROOT: {err}")
+                failsafe_message(f"Can't read MEDIA_ROOT: {exception2str(err)}")
 
         warnings.warn(
             "MediaPathWidget is deprecated and will removed in the future!" " Please use StaticPathWidget.",

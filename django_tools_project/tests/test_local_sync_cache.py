@@ -15,7 +15,7 @@ from django.core.cache import cache
 
 # https://github.com/jedie/django-tools
 from django_tools.local_sync_cache.local_sync_cache import LocalSyncCache
-from django_tools.local_sync_cache.LocalSyncCacheMiddleware import LocalSyncCacheMiddleware
+from django_tools.local_sync_cache.localsynccachemiddleware import LocalSyncCacheMiddleware
 from django_tools.unittest_utils.assertments import assert_in_logs, assert_pformat_equal
 
 

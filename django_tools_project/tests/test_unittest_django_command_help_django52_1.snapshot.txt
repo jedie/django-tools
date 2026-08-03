@@ -1,12 +1,8 @@
-+ .../django-tools/.venv/bin/django_tools_project --help
-
-[replaced django_tools.__version__]
-
 DJANGO_SETTINGS_MODULE=django_tools_project.settings.tests
 
 BASE_PATH:.../django-tools
 
-Type 'django_tools_project help <subcommand>' for help on a specific subcommand.
+Type 'python -m django help <subcommand>' for help on a specific subcommand.
 
 Available subcommands:
 

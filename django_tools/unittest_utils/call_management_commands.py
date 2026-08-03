@@ -18,12 +18,9 @@ def captured_call_command(command, **kwargs) -> tuple[str, str]:
     Call django manage command and return stdout + stderr
     """
     with NoColorEnvRich():
-        try:
-            assert inspect.ismodule(command)
-            CommandClass = command.Command
-            assert issubclass(CommandClass, BaseCommand)
-        except Exception as err:
-            raise AssertionError(f'{command!r} is no Django Management command: {err}')
+        assert inspect.ismodule(command), f'{command=} is no module'
+        CommandClass = command.Command
+        assert issubclass(CommandClass, BaseCommand), f'{command=} is no Django Management command'
 
         command_name = command.__name__
         command_name = command_name.rsplit('.', 1)[-1]
@@ -33,10 +30,10 @@ def captured_call_command(command, **kwargs) -> tuple[str, str]:
         capture_stdout = Buffer()
         capture_stderr = Buffer()
         kwargs.update(
-            dict(
-                stdout=capture_stdout,
-                stderr=capture_stderr,
-            )
+            {
+                'stdout': capture_stdout,
+                'stderr': capture_stderr,
+            }
         )
         with DenyStdWrite(name=command_name):
             call_command(command_instance, **kwargs)

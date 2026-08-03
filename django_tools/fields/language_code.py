@@ -5,7 +5,7 @@
     :copyleft: 2010-2016 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
+from typing import ClassVar
 
 from django import forms
 from django.db import models
@@ -55,5 +55,5 @@ class LanguageCodeModelField(models.CharField):
     ...     print(err.__class__.__name__, err)
     ValidationError ['Enter a valid language code (Accept-Language header format, see RFC2616)']
     """
-    default_validators = [validators.validate_language_code]
+    default_validators: ClassVar = [validators.validate_language_code]
     description = _("Language Code in Accept-Language header format defined in RFC 2616")

@@ -52,8 +52,8 @@ class isolated_filesystem(TestContextDecorator):
         os.chdir(str(self.cwd))  # str() needed for older python <=3.5
         try:
             shutil.rmtree(self.temp_path)
-        except OSError as err:
-            logger.exception('Cleanup error: %s', err)
+        except OSError:
+            logger.exception('Cleanup error')
 
     def __exit__(self, exc_type, exc_value, traceback):
         temp_path = Path(self.temp_path)

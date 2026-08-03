@@ -11,104 +11,95 @@ import os
 import pprint
 import subprocess
 import sys
-from shlex import quote
+from pathlib import Path
 
-from cli_base.cli_tools.test_utils.rich_test_utils import get_fixed_env_copy
+from bx_py_utils.path import assert_is_dir
+from cli_base.cli_tools.test_utils.rich_test_utils import BASE_WIDTH, get_fixed_env_copy, strip_ansi_codes
 
 
 class DjangoCommandMixin:
-    def subprocess_getstatusoutput(self, cmd, debug=False, excepted_exit_code=0, **kwargs):
-        """
-        Return (status, output) of executing cmd in a shell.
-
-        similar to subprocess.getstatusoutput but pass though kwargs
-        """
-        assert isinstance(cmd, (list, tuple))
-
-        # Assume that DJANGO_SETTINGS_MODULE not in environment
-        # e.g:
-        #   manage.py use os.environ.setdefault("DJANGO_SETTINGS_MODULE",...)
-        #   so it will ignore the own module path!
-        # You can set env by given kwargs, too.
-        env = dict(os.environ)
-        if "DJANGO_SETTINGS_MODULE" in env:
-            del env["DJANGO_SETTINGS_MODULE"]
-
-        subprocess_kwargs = {
-            "env": env,
-            "shell": True,
-            "text": True,
-            "stderr": subprocess.STDOUT,
-        }
-        subprocess_kwargs.update(kwargs)
-        if "cwd" in subprocess_kwargs:
-            cwd = subprocess_kwargs["cwd"]
-            assert os.path.isdir(cwd), f"cwd {cwd!r} doesn't exists!"
-            if debug:
-                print(f"DEBUG: cwd {cwd!r}, ok")
-
-        cmd = ' '.join(quote(arg) for arg in cmd)
-        try:
-            output = subprocess.check_output(cmd, **subprocess_kwargs)
-            status = 0
-        except subprocess.CalledProcessError as ex:
-            output = ex.output
-            status = ex.returncode
-
-        output = output.rstrip('\n\x1b[0m')
-
-        if (excepted_exit_code is not None and status != excepted_exit_code) or debug:
-            msg = (
-                "subprocess exist status == %(status)r (excepted: %(excepted_exit_code)r)\n"
-                "Call %(cmd)r with:\n"
-                "%(kwargs)s\n"
-                "subprocess output:\n"
-                "------------------------------------------------------------\n"
-                "%(output)s\n"
-                "------------------------------------------------------------\n"
-            ) % {
-                "status": status,
-                "excepted_exit_code": excepted_exit_code,
-                "cmd": cmd,
-                "kwargs": pprint.pformat(subprocess_kwargs),
-                "output": output
-            }
-            if status != excepted_exit_code:
-                raise AssertionError(msg)
-            else:
-                print(msg)
-
-        return output
-
     def call_manage_py(
-        self, cmd, manage_dir, manage_py="manage.py", assert_executable=True, **kwargs
+        self,
+        cmd,
+        manage_dir,
+        manage_py='manage.py',
+        assert_executable=True,
+        width: int = BASE_WIDTH,
+        strip_line_prefix: str = 'django-tools-project v',  # Should be set to project prefix to skip header lines
+        strip_ansi: bool = True,
+        debug=False,
+        excepted_exit_code=0,
+        **kwargs,
     ):
         """
         call manage.py from given >manage_dir<
         """
-        test_path = os.path.join(manage_dir, manage_py)
-        if not os.path.isfile(test_path):
-            msg = (
-                "File doesn't exists: %r"
-                " (given <manage_dir> path wrong?!?)"
-            ) % manage_dir
-            raise AssertionError(msg)
+        assert isinstance(cmd, (list, tuple)), f'{cmd=}'
+
+        test_path = Path(manage_dir) / manage_py
+        if not test_path.is_file():
+            raise AssertionError(f"File doesn't exists: {manage_dir!r} (given <manage_dir> path wrong?!?)")
 
         if assert_executable and not os.access(test_path, os.X_OK):
-            msg = (
-                "Manage file %r is not executable!"
-            ) % test_path
-            raise AssertionError(msg)
+            raise AssertionError(f'Manage file {test_path!r} is not executable!')
 
         if 'env' not in kwargs:
             # e.g.: transfer DJANGO_SETTINGS_MODULE ;)
             kwargs['env'] = os.environ.copy()
 
-        kwargs['env'].update(get_fixed_env_copy(exclude_none=True))
+        kwargs['env'].update(get_fixed_env_copy(width=width, exclude_none=True))
+        kwargs['cwd'] = manage_dir
 
         cmd = [sys.executable, manage_py] + list(cmd)
-        kwargs.update({
-            'cwd': manage_dir,
-            # "debug": True,
-        })
-        return self.subprocess_getstatusoutput(cmd, **kwargs)
+
+        subprocess_kwargs = {
+            'text': True,
+            'stderr': subprocess.STDOUT,
+        }
+        subprocess_kwargs.update(kwargs)
+        if 'cwd' in subprocess_kwargs:
+            cwd = subprocess_kwargs['cwd']
+            assert_is_dir(cwd)
+            if debug:
+                print(f'DEBUG: cwd {cwd!r}, ok')
+
+        try:
+            stdout = subprocess.check_output(cmd, **subprocess_kwargs)
+            status = 0
+        except subprocess.CalledProcessError as ex:
+            stdout = ex.output
+            status = ex.returncode
+
+        if strip_ansi:
+            stdout = strip_ansi_codes(stdout)
+
+        if (excepted_exit_code is not None and status != excepted_exit_code) or debug:
+            msg = (
+                f'subprocess exist status == {status!r} (excepted: {excepted_exit_code!r})\n'
+                f'Call {cmd!r} with:\n'
+                f'{pprint.pformat(subprocess_kwargs)}\n'
+                'subprocess output:\n'
+                '------------------------------------------------------------\n'
+                f'{stdout}\n'
+                '------------------------------------------------------------\n'
+            )
+            if status != excepted_exit_code:
+                raise AssertionError(msg)
+            else:
+                print(msg)
+
+        if strip_line_prefix:
+            # Skip header lines:
+            lines = stdout.splitlines()
+            found = False
+            for pos, line in enumerate(lines, start=1):
+                if line.lstrip().startswith(strip_line_prefix):
+                    stdout = '\n'.join(lines[pos:])
+                    found = True
+                    break
+
+            assert found is True, f'Line that starts with {strip_line_prefix=} not found in: {stdout!r}'
+
+            stdout = '\n'.join(line.rstrip() for line in stdout.splitlines())
+
+        return stdout

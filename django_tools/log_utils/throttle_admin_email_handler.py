@@ -53,11 +53,10 @@ class ThrottledAdminEmailHandler(AdminEmailHandler):
         self.skipped_subjects = []
 
     def send_mail(self, subject, message, *args, **kwargs):
-        if self.next_mail:
-            if self.next_mail > time.time():
-                log.debug("Throttle error mail: %r", subject)
-                self.skipped_subjects.append(subject)
-                return
+        if self.next_mail and self.next_mail > time.time():
+            log.debug("Throttle error mail: %r", subject)
+            self.skipped_subjects.append(subject)
+            return
 
         if self.skipped_subjects:
             prefix = f"\nNote: there are {len(self.skipped_subjects)} skipped mails:\n"

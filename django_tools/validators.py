@@ -35,7 +35,7 @@ class ExistingDirValidator:
 
         if not abs_path.startswith(self.base_path):
             if settings.DEBUG:
-                msg = _(f"Directory {abs_path!r} is not in base path ('{self.base_path}')")
+                msg = _("Directory %r is not in base path ('%s')") % (abs_path, self.base_path)
             else:
                 msg = _("Directory is not in base path!")
             raise ValidationError(msg)
@@ -83,7 +83,7 @@ class URLValidator2(URLValidator):
         self.allow_fragment = allow_fragment
 
     def __call__(self, value):
-        scheme, netloc, path, query, fragment = urlsplit(value)
+        scheme, netloc, _path, query, fragment = urlsplit(value)
 
         if (scheme or netloc) and \
                 not self.allow_schemes and \
@@ -93,9 +93,8 @@ class URLValidator2(URLValidator):
                 _("Please enter a local URL (without protocol/domain)."), code="local"
             )
 
-        if scheme:
-            if not self.allow_all_schemes and scheme not in self.allow_schemes:
-                raise ValidationError(_("The URL doesn't start with a allowed scheme."), "scheme")
+        if scheme and not self.allow_all_schemes and scheme not in self.allow_schemes:
+            raise ValidationError(_("The URL doesn't start with a allowed scheme."), "scheme")
 
         if netloc and not self.allow_netloc:
             raise ValidationError(_('Enter a valid URL without domain.'), code='netloc')

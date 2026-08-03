@@ -1,9 +1,7 @@
-# ruff: noqa: F405
-
 """
     Django settings for running tests
 """
-from django_tools_project.settings.prod import *  # noqa
+from django_tools_project.settings.prod import *
 
 
 ALLOWED_HOSTS = ['testserver']

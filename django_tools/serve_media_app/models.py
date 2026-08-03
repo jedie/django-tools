@@ -84,7 +84,7 @@ class UserMediaTokenModel(models.Model):
 @receiver(post_save, sender=get_user_model())
 def create_token(sender, created=None, instance=None, **kwargs):
     assert instance is not None
-    token_instance, created = UserMediaTokenModel.objects.get_or_create(user_id=instance.pk)
+    _token_instance, created = UserMediaTokenModel.objects.get_or_create(user_id=instance.pk)
     if created:
         log.info('User media token created for: %s', instance)
     else:

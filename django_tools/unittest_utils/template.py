@@ -17,7 +17,7 @@ class set_string_if_invalid(override_settings):
     """
 
     def __init__(self):
-        string_if_invalid = '%s%%s***' % TEMPLATE_INVALID_PREFIX
+        string_if_invalid = f'{TEMPLATE_INVALID_PREFIX}%s***'
 
         TEMPLATES = deepcopy(settings.TEMPLATES)
         for template_settings in TEMPLATES:

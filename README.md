@@ -721,6 +721,8 @@ Move supported Django/Python min. versions to:
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
 * [**dev**](https://github.com/jedie/django-tools/compare/v0.58.0...main)
+  * 2026-08-03 - Modernize code base
+  * 2026-08-03 - modernize project
   * 2026-08-03 - Remove uv.lock from git: It's a lib and not a project!
 * [v0.58.0](https://github.com/jedie/django-tools/compare/v0.57.0...v0.58.0)
   * 2025-11-28 - Run dev server command: Call "collectstatic", too

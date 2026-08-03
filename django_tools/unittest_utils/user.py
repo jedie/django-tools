@@ -1,6 +1,8 @@
 import logging
 import sys
+import types
 
+from bx_py_utils.error_handling import exception2str
 from django.contrib import auth
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
@@ -203,7 +205,7 @@ class TestUserMixin:
 
     """
 
-    TEST_USERS = {
+    TEST_USERS = types.MappingProxyType({
         "superuser": {
             "username": "superuser",
             "email": "superuser@example.org",
@@ -225,7 +227,7 @@ class TestUserMixin:
             "is_staff": False,
             "is_superuser": False,
         },
-    }
+    })
 
     @classmethod
     def setUpClass(cls):
@@ -251,7 +253,7 @@ class TestUserMixin:
         except KeyError as err:
             etype, evalue, etb = sys.exc_info()
             evalue = etype(
-                f"Wrong usetype {err}! Existing usertypes are: {', '.join(list(self.TEST_USERS.keys()))}"
+                f"Wrong usetype {exception2str(err)}! Existing usertypes are: {', '.join(list(self.TEST_USERS.keys()))}"
             )
             raise etype(evalue).with_traceback(etb)
 

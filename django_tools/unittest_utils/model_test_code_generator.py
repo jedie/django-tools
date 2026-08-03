@@ -46,11 +46,10 @@ class ModelTestGenerator:
     def test_code_for_instance(self, instance):
         prefix_lines = []
         lines = [
-            "#", "# pk:{pk} from {label} {type}".format(
-                pk=instance.pk,
-                label=instance._meta.label,
-                type=type(instance),
-            ), "#", f"{instance._meta.model_name} = {instance._meta.object_name}.objects.create("
+            '#',
+            f'# pk:{instance.pk} from {instance._meta.label} {type(instance)}',
+            '#',
+            f'{instance._meta.model_name} = {instance._meta.object_name}.objects.create(',
         ]
         for field in instance._meta.fields:
             # field == django.db.models.fields.Field

@@ -8,7 +8,7 @@ import json
 from django.test import TestCase
 
 # https://github.com/jedie/django-tools
-from django_tools.middlewares.ThreadLocal import get_current_request
+from django_tools.middlewares.threadlocal import get_current_request
 from django_tools.unittest_utils.assertments import assert_pformat_equal
 from django_tools_project.django_tools_test_app.views import ExampleException
 

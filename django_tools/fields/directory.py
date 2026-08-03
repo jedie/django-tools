@@ -8,6 +8,7 @@
 
 
 import os
+from typing import ClassVar
 
 from django import forms
 from django.conf import settings
@@ -21,7 +22,6 @@ class DirectoryWidget(forms.TextInput):
     """
     TODO: Add AJAX Stuff for easy select a existing directory path.
     """
-    pass
 
 
 class DirectoryFormField(forms.CharField):
@@ -60,7 +60,7 @@ class DirectoryModelField(models.CharField):  # , with_metaclass(models.Subfield
     ...
     django.core.exceptions.ValidationError: ["Directory doesn't exist!"]
     """
-    default_validators = []
+    default_validators: ClassVar = []
     description = _("A existing/accessible directory")
 
     def __init__(self, max_length=256, base_path=settings.MEDIA_ROOT, *args, **kwargs):

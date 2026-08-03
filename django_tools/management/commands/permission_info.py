@@ -21,7 +21,7 @@
     :created: 2017 by Jens Diemer
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
+from bx_py_utils.error_handling import exception2str
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.core.management.base import BaseCommand
@@ -75,7 +75,7 @@ class Command(BaseCommand):
         try:
             user = UserModel.objects.get(username=username)
         except UserModel.DoesNotExist as err:
-            self.stderr.write(f"Username {username!r} doesn't exists: {err}")
+            self.stderr.write(f"Username {username!r} doesn't exists: {exception2str(err)}")
             self.list_usernames()
             return
 

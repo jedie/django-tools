@@ -2,6 +2,7 @@ import io
 import logging
 from unittest import mock
 
+from cli_base.cli_tools.test_utils.assertion import assert_in
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
@@ -30,9 +31,8 @@ class UserMediaViewsTestCase(TestCase):
 
         # Test whats happen, if token was deleted
         UserMediaTokenModel.objects.all().delete()
-        with self.assertLogs(logger='django_tools', level=logging.ERROR) as log:
-            with self.assertRaises(NoUserToken):
-                generate_media_path(user=user, filename='Foo Bar!.ext')
+        with self.assertLogs(logger='django_tools', level=logging.ERROR) as log, self.assertRaises(NoUserToken):
+            generate_media_path(user=user, filename='Foo Bar!.ext')
         assert log.output == [
             'ERROR:django_tools.serve_media_app.exceptions:Current user "owner" has no token!'
         ]
@@ -77,7 +77,12 @@ class UserMediaViewsTestCase(TestCase):
         with self.assertLogs(logger='django_tools', level=logging.ERROR) as log:
             response = self.client.get(url)
         assert response.status_code == 400  # SuspiciousOperation -> HttpResponseBadRequest
-        assert log.output == ['ERROR:django_tools.serve_media_app.exceptions:Current user "owner" has no token!']
+        assert_in(
+            '\n'.join(log.output),
+            parts=(
+                'Current user "owner" has no token!',
+            ),
+        )
 
     @TempMediaRoot()  # Move settings.MEDIA_ROOT into /tmp/
     def test_via_model(self):

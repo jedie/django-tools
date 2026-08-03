@@ -83,9 +83,11 @@ import datetime
 import logging
 import sys
 import time
+from typing import ClassVar
 
 from django.conf import settings
 from django.core.cache import caches
+from django.utils import timezone
 
 
 logger = logging.getLogger(__name__)
@@ -121,13 +123,13 @@ def _get_cache():
 
 
 class LocalSyncCache(dict):
-    INIT_COUNTER = {}  # Counts how often __init__ used, should always be 1!
+    INIT_COUNTER: ClassVar = {}  # Counts how often __init__ used, should always be 1!
 
     # Stores all existing instance, used in middleware to call check_state()
-    CACHES = []
+    CACHES: ClassVar = []
 
     # Store the last reset times secondary in this local thread.
-    _OWN_RESET_TIMES = {}
+    _OWN_RESET_TIMES: ClassVar = {}
 
     def __init__(self, id=None, unique_ids=True):
         if id is None:
@@ -138,7 +140,7 @@ class LocalSyncCache(dict):
                 if id == existing_cache.id:
                     logger.error(
                         f"ID {id!r} was already used! It must be unique!"
-                        f" (Existing ids are: {repr([i.id for i in self.CACHES])})"
+                        f" (Existing ids are: {[i.id for i in self.CACHES]!r})"
                     )
 
         self.id = id
@@ -226,9 +228,10 @@ class LocalSyncCache(dict):
             cleared = id in LocalSyncCache._OWN_RESET_TIMES
             global_update_time = django_cache.get(id)
 
-            last_reset_datetime = datetime.datetime.fromtimestamp(instance.last_reset)
+            current_tz = timezone.get_current_timezone()
+            last_reset_datetime = datetime.datetime.fromtimestamp(instance.last_reset, tz=current_tz)
             if global_update_time:
-                global_update_datetime = datetime.datetime.fromtimestamp(global_update_time)
+                global_update_datetime = datetime.datetime.fromtimestamp(global_update_time, tz=current_tz)
             else:
                 global_update_datetime = None
 

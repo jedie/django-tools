@@ -40,10 +40,10 @@ class FilemanagerBaseTestCase(unittest.TestCase):
         cls.ATTACK_PARTS = ("..", "..\\", "../",
                             # from
                             # https://en.wikipedia.org/wiki/Directory_traversal_attack#URI_encoded_directory_traversal
-                            "%2e%2e%2f", "%2e%2e/", "..%2f", "%2e%2e%5c"
+                            "%2e%2e%2f", "%2e%2e/", "..%2f", ("%2e%2e%5c"
                             # from
                             # https://en.wikipedia.org/wiki/Directory_traversal_attack#Unicode_.2F_UTF-8_encoded_directory_traversal
-                            "..%c1%1c", "..%c0%af",
+                            "..%c1%1c"), "..%c0%af",
                             "..\xc1\x1c", "..\xc0\xaf",
                             )
 

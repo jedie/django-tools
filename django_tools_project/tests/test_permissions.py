@@ -215,7 +215,7 @@ class TestPermissions(TestUserMixin, HtmlAssertionMixin, BaseUnittestCase):
         with self.assertLogs(logger="django_tools.permissions", level=logging.DEBUG) as log:
             assert_pformat_equal(has_perm(self.normal_user, "foo.bar1"), False)
 
-        assert log.output == ["DEBUG:django_tools.permissions:" "User normal_test_user has not foo.bar1"]
+        assert log.output == [("DEBUG:django_tools.permissions:" "User normal_test_user has not foo.bar1")]
 
     def test_log_user_permissions1(self):
         with self.assertLogs(logger="django_tools.permissions", level=logging.DEBUG) as log:
@@ -228,11 +228,11 @@ class TestPermissions(TestUserMixin, HtmlAssertionMixin, BaseUnittestCase):
             log_user_permissions(self.staff_user)
 
         assert log.output == [
-            "DEBUG:django_tools.permissions:User 'staff_test_user' has permissions:\n"
+            ("DEBUG:django_tools.permissions:User 'staff_test_user' has permissions:\n"
             '* django_tools_test_app.add_permissiontestmodel\n'
             '* django_tools_test_app.change_permissiontestmodel\n'
             '* django_tools_test_app.delete_permissiontestmodel\n'
-            '* django_tools_test_app.extra_permission',
+            '* django_tools_test_app.extra_permission'),
         ]
 
     def test_log_group_permissions1(self):
@@ -246,11 +246,11 @@ class TestPermissions(TestUserMixin, HtmlAssertionMixin, BaseUnittestCase):
             log_group_permissions(self.staff_group)
 
         assert log.output == [
-            "DEBUG:django_tools.permissions:User group 'Staff User Group' has permissions:\n"
+            ("DEBUG:django_tools.permissions:User group 'Staff User Group' has permissions:\n"
             '* django_tools_test_app.add_permissiontestmodel\n'
             '* django_tools_test_app.change_permissiontestmodel\n'
             '* django_tools_test_app.delete_permissiontestmodel\n'
-            '* django_tools_test_app.extra_permission',
+            '* django_tools_test_app.extra_permission'),
         ]
 
     def test_superuser_check(self):

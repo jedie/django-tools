@@ -48,7 +48,7 @@ class TestStringAssertments(unittest.TestCase):
             assert_no_warnings(w)
 
             warnings.simplefilter("always")  # trigger all warnings
-            warnings.warn('test')  # noqa: B028
+            warnings.warn('test')
             warnings.warn("deprecated", DeprecationWarning, stacklevel=2)
 
             assert_warnings(messages=w, reference=["UserWarning('test')", "DeprecationWarning('deprecated')"])

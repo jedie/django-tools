@@ -9,6 +9,7 @@
 
 import logging
 import os
+import pathlib
 import time
 
 from django.conf import settings
@@ -16,7 +17,7 @@ from django.core.cache.backends.filebased import FileBasedCache
 
 
 try:
-    import pickle as pickle
+    import pickle
 except ImportError:
     import pickle
 
@@ -128,10 +129,9 @@ class AutoUpdateFileBasedCache(FileBasedCache):
         key = self.make_key(key, version=version)
         self.validate_key(key)
 
-        fname = self._key_to_file(key)
+        fname = pathlib.Path(self._key_to_file(key))
         try:
-            f = open(fname, 'rb')
-            try:
+            with fname.open('rb') as f:
                 exp = pickle.load(f)
                 now = time.time()
                 if exp < now:
@@ -150,8 +150,6 @@ class AutoUpdateFileBasedCache(FileBasedCache):
 
                     # END area of changes to the original function.
                     # ----------------------------------------------------------
-            finally:
-                f.close()
         except (OSError, EOFError, pickle.PickleError):
             pass
         return default

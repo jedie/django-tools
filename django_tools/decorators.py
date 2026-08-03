@@ -8,12 +8,12 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-
 import sys
 import traceback
 import warnings
 from functools import wraps
 
+from bx_py_utils.error_handling import exception2str
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
@@ -158,7 +158,7 @@ def display_admin_error(func):
         except Exception as err:
             traceback.print_exc(file=sys.stderr)
             if settings.DEBUG:
-                return f"{err.__class__.__name__}: {err}"
+                return exception2str(err)
             else:
                 raise
 

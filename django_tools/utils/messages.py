@@ -8,14 +8,15 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-
 import warnings
 
+from bx_py_utils.error_handling import exception2str
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.messages.api import MessageFailure
 from django.contrib.messages.storage.fallback import FallbackStorage
 
-from django_tools.middlewares import ThreadLocal
+from django_tools.middlewares import threadlocal
 from django_tools.utils.stack_info import get_stack_info
 
 
@@ -113,16 +114,16 @@ def failsafe_message(msg, level=messages.INFO):
     Use ThreadLocalMiddleware to get the current request object.
     If no request object is available, create a warning.
     """
-    request = ThreadLocal.get_current_request()
+    request = threadlocal.get_current_request()
     if request:
         # create a normal user message
         try:
             messages.add_message(request, level, msg)
-        except Exception as err:
+        except (TypeError, MessageFailure) as err:
             # e.g.:
             # Without the django.contrib.messages middleware,
             # messages can only be added to authenticated users.
-            msg += f" (Error create a message: {err})"
+            msg += f' (Error create a message: {exception2str(err)})'
         else:
             return
 

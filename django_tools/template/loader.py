@@ -39,7 +39,7 @@ class BaseDebugTemplateCache(dict):
 class DebugTemplateCache(BaseDebugTemplateCache):
     def __setitem__(self, key, value):
         try:
-            template, origin = value
+            template, _origin = value
         except TypeError:
             # e.g.: value is TemplateDoesNotExist class instance ;)
             pass

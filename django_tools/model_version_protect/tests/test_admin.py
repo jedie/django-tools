@@ -62,9 +62,9 @@ class ModelVersionProtectAdminTestCase(HtmlAssertionMixin, TestCase):
             },
         )
         self.assert_messages(response, expected_messages=[
-            "The versioning test model"
+            ("The versioning test model"
             " “<a href=\"/admin/django_tools_test_app/versioningtestmodel/1/change/\">"
-            "Add first Version (pk:1)</a>” was added successfully."
+            "Add first Version (pk:1)</a>” was added successfully.")
         ])
         self.assertRedirects(
             response,
@@ -91,9 +91,9 @@ class ModelVersionProtectAdminTestCase(HtmlAssertionMixin, TestCase):
             },
         )
         self.assert_messages(response, expected_messages=[
-            'The versioning test model'
+            ('The versioning test model'
             ' “<a href="/admin/django_tools_test_app/versioningtestmodel/1/change/">'
-            'A New Name (pk:1)</a>” was changed successfully.'
+            'A New Name (pk:1)</a>” was changed successfully.')
         ])
         self.assertRedirects(
             response,
@@ -121,8 +121,8 @@ class ModelVersionProtectAdminTestCase(HtmlAssertionMixin, TestCase):
 
             '<pre>- 2\n   + 1</pre>',
 
-            '<li>changes between version 2 and 1:'
-            '<pre>- &quot;A New Name&quot;\n   + &quot;Overwrite this!&quot;</pre></li>'
+            ('<li>changes between version 2 and 1:'
+            '<pre>- &quot;A New Name&quot;\n   + &quot;Overwrite this!&quot;</pre></li>')
         ))
         assert_html_response_snapshot(response, validate=False, name_suffix=get_django_name_suffix())
 

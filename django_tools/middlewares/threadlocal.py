@@ -10,7 +10,7 @@
     --------------------------------------------------------------------------
         MIDDLEWARE_CLASSES = (
             ...
-            'django_tools.middlewares.ThreadLocal.ThreadLocalMiddleware',
+            'django_tools.middlewares.threadlocal.ThreadLocalMiddleware',
             ...
         )
     --------------------------------------------------------------------------
@@ -18,13 +18,13 @@
 
     Usage:
     --------------------------------------------------------------------------
-    from django_tools.middlewares import ThreadLocal
+    from django_tools.middlewares import threadlocal
 
     # Get the current request object:
-    request = ThreadLocal.get_current_request()
+    request = threadlocal.get_current_request()
 
     # You can get the current user directly with:
-    user = ThreadLocal.get_current_user()
+    user = threadlocal.get_current_user()
     --------------------------------------------------------------------------
 
     :copyleft: 2009-2017 by the django-tools team, see AUTHORS for more details.
