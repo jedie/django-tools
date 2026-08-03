@@ -720,7 +720,8 @@ Move supported Django/Python min. versions to:
 
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
-* [**dev**](https://github.com/jedie/django-tools/compare/v0.58.0...main)
+* [v0.59.0](https://github.com/jedie/django-tools/compare/v0.58.0...v0.59.0)
+  * 2026-08-03 - enhance django_tools.unittest_utils.call_management_commands.captured_call_command()
   * 2026-08-03 - update github CI config
   * 2026-08-03 - Add AGENTS.md for AI coding agent guidance
   * 2026-08-03 - Modernize code base
